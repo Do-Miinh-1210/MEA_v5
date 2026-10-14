@@ -1,10 +1,17 @@
 import json
 import os
+import sys
 from pathlib import Path
 import urllib.request
 import urllib.parse
 import zipfile
 import subprocess
+
+if sys.stdout.encoding.lower() != 'utf-8':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
 
 def get_github_token():
     token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
@@ -39,7 +46,7 @@ def build_patch_zip(publish_dir: Path, output_zip: Path):
             if fpath.exists():
                 zf.write(fpath, arcname=fname)
                 print(f"  + Added to patch: {fname} ({fpath.stat().st_size} bytes)")
-    print(f"[OK] Created patch zip: {output_zip} ({output_zip.stat().st_size} bytes)")
+    print(f"[OK] Created patch zip: {output_zip.name} ({output_zip.stat().st_size} bytes)")
 
 def create_release_and_upload():
     token = get_github_token()
