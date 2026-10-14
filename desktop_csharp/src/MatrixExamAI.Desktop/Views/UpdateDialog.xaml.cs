@@ -19,8 +19,17 @@ public partial class UpdateDialog : FluentWindow
 
         TxtVersionTitle.Text = $"Đã có phiên bản mới: {_updateInfo.TagName}";
         double mb = _updateInfo.FileSize > 0 ? _updateInfo.FileSize / (1024.0 * 1024.0) : 0;
-        string sizeText = mb > 0 ? $"{mb:F1} MB" : "Tự động";
-        TxtVersionSubtitle.Text = $"Phiên bản hiện tại: v{GitHubUpdateService.Instance.CurrentVersion} • Dung lượng: {sizeText}";
+        string sizeText;
+        if (_updateInfo.IsPatch)
+        {
+            double kb = _updateInfo.FileSize > 0 ? _updateInfo.FileSize / 1024.0 : 0;
+            sizeText = kb > 0 ? $"{kb:F0} KB (Bản vá vi mô Delta-Patch)" : "Bản vá vi mô Delta-Patch";
+        }
+        else
+        {
+            sizeText = mb > 0 ? $"{mb:F1} MB (Bộ cài đầy đủ)" : "Tự động";
+        }
+        TxtVersionSubtitle.Text = $"Phiên bản hiện tại: v{GitHubUpdateService.Instance.CurrentVersion} • {sizeText}";
 
         TxtReleaseNotes.Text = string.IsNullOrWhiteSpace(_updateInfo.ReleaseNotes)
             ? "Bản cập nhật nâng cấp các tính năng mới, cải tiến tốc độ và sửa lỗi hệ thống."
@@ -40,23 +49,35 @@ public partial class UpdateDialog : FluentWindow
             ProgressBarDownload.Value = p.Percentage;
             double curMb = p.BytesReceived / (1024.0 * 1024.0);
             double totMb = p.TotalBytesToReceive / (1024.0 * 1024.0);
-            TxtProgressStatus.Text = $"Đang tải: {curMb:F1} MB / {totMb:F1} MB ({p.Percentage:F0}%)";
+            if (totMb < 1.0)
+            {
+                double curKb = p.BytesReceived / 1024.0;
+                double totKb = p.TotalBytesToReceive / 1024.0;
+                TxtProgressStatus.Text = $"Đang tải: {curKb:F0} KB / {totKb:F0} KB ({p.Percentage:F0}%)";
+            }
+            else
+            {
+                TxtProgressStatus.Text = $"Đang tải: {curMb:F1} MB / {totMb:F1} MB ({p.Percentage:F0}%)";
+            }
         });
 
         try
         {
-            string installerPath = await GitHubUpdateService.Instance.DownloadUpdateAsync(
+            string downloadedPath = await GitHubUpdateService.Instance.DownloadUpdateAsync(
                 _updateInfo.DownloadUrl,
+                _updateInfo.AssetName,
                 progress,
                 _cts.Token
             );
 
-            TxtProgressStatus.Text = "Tải thành công! Đang tự động cập nhật ngầm...";
+            TxtProgressStatus.Text = _updateInfo.IsPatch
+                ? "Tải xong bản vá! Đang thay thế mã nguồn..."
+                : "Tải thành công! Đang tự động cập nhật ngầm...";
             TxtStatus.Text = "Ứng dụng sẽ tự khởi động lại trong 2 giây...";
 
             await System.Threading.Tasks.Task.Delay(500);
 
-            GitHubUpdateService.Instance.ApplyAndExit(installerPath, verySilent: true);
+            GitHubUpdateService.Instance.ApplyAndExit(downloadedPath, verySilent: true, isPatch: _updateInfo.IsPatch);
         }
         catch (Exception ex)
         {

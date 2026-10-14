@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 import urllib.request
 import urllib.parse
-
+import zipfile
 import subprocess
 
 def get_github_token():
@@ -20,9 +20,26 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.1.3.1"
-TITLE = "MatrixExamAI Pro v5.1.3.1"
-BODY = "Bản phát hành MatrixExamAI Pro v5.1.3.1: Tối ưu hóa toàn diện giao diện ôm sát thanh công cụ, mở rộng không gian hiển thị, loại bỏ khoảng trống lơ lửng, co giãn toàn màn hình; chuẩn hóa Ngân hàng câu hỏi SQLite và cập nhật ngầm 1 chạm (In-Place Update)."
+TAG = "v5.1.3.2"
+TITLE = "MatrixExamAI Pro v5.1.3.2 (Delta-Patch Update)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.1.3.2: Tích hợp cơ chế cập nhật vi mô siêu tốc (Delta / Hot-Patch In-Place Update) chỉ 500 KB thay vì tải lại toàn bộ installer 11 MB; tự động ghi đè file code mới và khởi động lại sau 1 giây."
+
+def build_patch_zip(publish_dir: Path, output_zip: Path):
+    output_zip.parent.mkdir(parents=True, exist_ok=True)
+    files_to_pack = [
+        "MatrixExamAI.Desktop.dll",
+        "MatrixExamAI.Desktop.exe",
+        "MatrixExamAI.Shared.dll",
+        "MatrixExamAI.Desktop.deps.json",
+        "MatrixExamAI.Desktop.runtimeconfig.json"
+    ]
+    with zipfile.ZipFile(output_zip, "w", zipfile.ZIP_DEFLATED) as zf:
+        for fname in files_to_pack:
+            fpath = publish_dir / fname
+            if fpath.exists():
+                zf.write(fpath, arcname=fname)
+                print(f"  + Added to patch: {fname} ({fpath.stat().st_size} bytes)")
+    print(f"[OK] Created patch zip: {output_zip} ({output_zip.stat().st_size} bytes)")
 
 def create_release_and_upload():
     token = get_github_token()
@@ -30,6 +47,17 @@ def create_release_and_upload():
         print("[ERROR] GitHub token not found.")
         return
 
+    base_dir = Path(__file__).resolve().parent.parent
+    publish_dir = base_dir / "desktop_csharp" / "publish"
+    dist_dir = base_dir / "dist" / "installer"
+    patch_zip_path = dist_dir / "MatrixExamAI_Patch.zip"
+    installer_path = dist_dir / "MatrixExamAI_Pro_Setup.exe"
+
+    # 1. Build patch zip
+    if publish_dir.exists():
+        build_patch_zip(publish_dir, patch_zip_path)
+
+    # 2. Create or fetch release
     url = f"https://api.github.com/repos/{REPO}/releases"
     headers = {
         "Authorization": f"Bearer {token}",
@@ -52,47 +80,52 @@ def create_release_and_upload():
     except urllib.error.HTTPError as e:
         err_body = e.read().decode('utf-8')
         print(f"HTTPError: {e.code} - {err_body}")
-        # If release already exists, fetch it
         req_get = urllib.request.Request(f"https://api.github.com/repos/{REPO}/releases/tags/{TAG}", headers=headers)
         with urllib.request.urlopen(req_get) as resp_get:
             data = json.loads(resp_get.read().decode("utf-8"))
 
-    # Delete existing asset if it exists
-    for asset in data.get("assets", []):
-        if asset["name"] == "MatrixExamAI_Pro_Setup.exe":
-            print(f"Deleting existing asset ID {asset['id']}...")
-            del_req = urllib.request.Request(f"https://api.github.com/repos/{REPO}/releases/assets/{asset['id']}", headers=headers, method="DELETE")
+    release_id = data['id']
+    upload_url_template = data["upload_url"].split("{")[0]
+    print(f"Release ID: {release_id}, Tag: {data['tag_name']}")
+
+    # 3. List of files to upload
+    files_to_upload = []
+    if patch_zip_path.exists():
+        files_to_upload.append(patch_zip_path)
+    if installer_path.exists():
+        files_to_upload.append(installer_path)
+
+    # Delete existing assets if they have matching names
+    existing_assets = {a["name"]: a["id"] for a in data.get("assets", [])}
+    for file_path in files_to_upload:
+        asset_name = file_path.name
+        if asset_name in existing_assets:
+            asset_id = existing_assets[asset_name]
+            print(f"Deleting existing asset '{asset_name}' (ID: {asset_id})...")
+            del_req = urllib.request.Request(f"https://api.github.com/repos/{REPO}/releases/assets/{asset_id}", headers=headers, method="DELETE")
             try:
                 urllib.request.urlopen(del_req)
-                print("[OK] Deleted old asset.")
+                print(f"[OK] Deleted old asset: {asset_name}")
             except Exception as ex:
-                print(f"[WARN] Failed to delete old asset: {ex}")
+                print(f"[WARN] Failed to delete old asset {asset_name}: {ex}")
 
-    upload_url_template = data["upload_url"] # e.g. https://uploads.github.com/repos/.../assets{?name,label}
-    upload_url = upload_url_template.split("{")[0] + f"?name=MatrixExamAI_Pro_Setup.exe"
+    # 4. Upload Assets
+    for file_path in files_to_upload:
+        asset_name = file_path.name
+        upload_url = f"{upload_url_template}?name={urllib.parse.quote(asset_name)}"
+        file_bytes = file_path.read_bytes()
+        upload_headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/octet-stream",
+            "User-Agent": "MatrixExamAI-Publisher"
+        }
 
-    print(f"Release ID: {data['id']}, Tag: {data['tag_name']}")
-    print(f"Upload URL: {upload_url}")
-
-    # 2. Upload Asset
-    installer_path = Path(r"M:\IT\Phần mềm biên soạn tài liệu\MEA_v5.0\dist\installer\MatrixExamAI_Pro_Setup.exe")
-    if not installer_path.exists():
-        print(f"[ERROR] Installer not found at: {installer_path}")
-        return
-
-    file_bytes = installer_path.read_bytes()
-    upload_headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/octet-stream",
-        "User-Agent": "MatrixExamAI-Publisher"
-    }
-
-    print(f"Uploading installer ({len(file_bytes)} bytes)...")
-    up_req = urllib.request.Request(upload_url, data=file_bytes, headers=upload_headers, method="POST")
-    with urllib.request.urlopen(up_req) as up_resp:
-        up_data = json.loads(up_resp.read().decode("utf-8"))
-        print(f"[OK] Upload complete: {up_data['name']} (Size: {up_data['size']} bytes)")
-        print(f"Download URL: {up_data['browser_download_url']}")
+        print(f"Uploading {asset_name} ({len(file_bytes)} bytes)...")
+        up_req = urllib.request.Request(upload_url, data=file_bytes, headers=upload_headers, method="POST")
+        with urllib.request.urlopen(up_req) as up_resp:
+            up_data = json.loads(up_resp.read().decode("utf-8"))
+            print(f"[OK] Upload complete: {up_data['name']} (Size: {up_data['size']} bytes)")
+            print(f"     Download URL: {up_data['browser_download_url']}")
 
 if __name__ == "__main__":
     create_release_and_upload()

@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -19,7 +20,8 @@ public record UpdateInfo(
     string DownloadUrl,
     long FileSize,
     string AssetName,
-    DateTimeOffset? PublishedAt
+    DateTimeOffset? PublishedAt,
+    bool IsPatch = false
 );
 
 public record UpdateProgressInfo(
@@ -32,8 +34,8 @@ public class GitHubUpdateService
 {
     public static GitHubUpdateService Instance { get; } = new();
 
-    public string CurrentVersion { get; set; } = "5.1.3.1";
-    public string DisplayVersion => "5.1.3.1";
+    public string CurrentVersion { get; set; } = "5.1.3.2";
+    public string DisplayVersion => "5.1.3.2";
     public string GitHubRepo { get; set; } = "Do-Miinh-1210/MEA_v5";
 
     private readonly HttpClient _httpClient;
@@ -152,42 +154,61 @@ public class GitHubUpdateService
                 publishedAt = dto;
             }
 
-            // Find best installer .exe asset
+            // Find patch zip or installer exe asset
             string downloadUrl = "";
             string assetName = "";
             long fileSize = 0;
+            bool isPatch = false;
 
             if (root.TryGetProperty("assets", out var assetsProp) && assetsProp.ValueKind == JsonValueKind.Array)
             {
-                var candidates = assetsProp.EnumerateArray()
-                    .Where(a =>
+                var patchCandidate = assetsProp.EnumerateArray()
+                    .FirstOrDefault(a =>
                     {
                         string name = a.TryGetProperty("name", out var np) ? np.GetString() ?? "" : "";
-                        return name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) && !name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase);
-                    })
-                    .Select(a =>
-                    {
-                        string name = a.TryGetProperty("name", out var np) ? np.GetString() ?? "" : "";
-                        string dUrl = a.TryGetProperty("browser_download_url", out var bp) ? bp.GetString() ?? "" : "";
-                        long size = a.TryGetProperty("size", out var sp) ? sp.GetInt64() : 0;
-                        int score = 0;
-                        string low = name.ToLowerInvariant();
-                        if (low.Contains("setup") || low.Contains("installer")) score += 4;
-                        if (low.Contains("mea") || low.Contains("matrixexam")) score += 2;
-                        if (low.Contains("v5") || low.Contains("5.")) score += 2;
-                        if (low.Contains("x64") || low.Contains("win64")) score += 1;
-                        if (low.Contains("admin") || low.Contains("portable") || low.Contains("debug")) score -= 3;
-                        return (Name: name, Url: dUrl, Size: size, Score: score);
-                    })
-                    .OrderByDescending(c => c.Score)
-                    .ToList();
+                        return name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) &&
+                               (name.Contains("patch", StringComparison.OrdinalIgnoreCase) || name.Contains("delta", StringComparison.OrdinalIgnoreCase));
+                    });
 
-                if (candidates.Count > 0)
+                if (patchCandidate.ValueKind != JsonValueKind.Undefined)
                 {
-                    var best = candidates[0];
-                    assetName = best.Name;
-                    downloadUrl = best.Url;
-                    fileSize = best.Size;
+                    isPatch = true;
+                    assetName = patchCandidate.TryGetProperty("name", out var np) ? np.GetString() ?? "" : "";
+                    downloadUrl = patchCandidate.TryGetProperty("browser_download_url", out var bp) ? bp.GetString() ?? "" : "";
+                    fileSize = patchCandidate.TryGetProperty("size", out var sp) ? sp.GetInt64() : 0;
+                }
+                else
+                {
+                    var candidates = assetsProp.EnumerateArray()
+                        .Where(a =>
+                        {
+                            string name = a.TryGetProperty("name", out var np) ? np.GetString() ?? "" : "";
+                            return name.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) && !name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase);
+                        })
+                        .Select(a =>
+                        {
+                            string name = a.TryGetProperty("name", out var np) ? np.GetString() ?? "" : "";
+                            string dUrl = a.TryGetProperty("browser_download_url", out var bp) ? bp.GetString() ?? "" : "";
+                            long size = a.TryGetProperty("size", out var sp) ? sp.GetInt64() : 0;
+                            int score = 0;
+                            string low = name.ToLowerInvariant();
+                            if (low.Contains("setup") || low.Contains("installer")) score += 4;
+                            if (low.Contains("mea") || low.Contains("matrixexam")) score += 2;
+                            if (low.Contains("v5") || low.Contains("5.")) score += 2;
+                            if (low.Contains("x64") || low.Contains("win64")) score += 1;
+                            if (low.Contains("admin") || low.Contains("portable") || low.Contains("debug")) score -= 3;
+                            return (Name: name, Url: dUrl, Size: size, Score: score);
+                        })
+                        .OrderByDescending(c => c.Score)
+                        .ToList();
+
+                    if (candidates.Count > 0)
+                    {
+                        var best = candidates[0];
+                        assetName = best.Name;
+                        downloadUrl = best.Url;
+                        fileSize = best.Size;
+                    }
                 }
             }
 
@@ -203,7 +224,8 @@ public class GitHubUpdateService
                 DownloadUrl: downloadUrl,
                 FileSize: fileSize,
                 AssetName: assetName,
-                PublishedAt: publishedAt
+                PublishedAt: publishedAt,
+                IsPatch: isPatch
             );
         }
         catch
@@ -212,10 +234,24 @@ public class GitHubUpdateService
         }
     }
 
-    public async Task<string> DownloadUpdateAsync(string downloadUrl, IProgress<UpdateProgressInfo>? progress = null, CancellationToken ct = default)
+    public async Task<string> DownloadUpdateAsync(string downloadUrl, string? preferredFileName = null, IProgress<UpdateProgressInfo>? progress = null, CancellationToken ct = default)
     {
         string tempDir = Path.GetTempPath();
-        string destPath = Path.Combine(tempDir, "MatrixExamAI_Setup_Update.exe");
+        string fileName = preferredFileName;
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            try
+            {
+                var uri = new Uri(downloadUrl);
+                fileName = Path.GetFileName(uri.LocalPath);
+            }
+            catch
+            {
+                fileName = "MatrixExamAI_Update.bin";
+            }
+        }
+
+        string destPath = Path.Combine(tempDir, fileName);
 
         if (File.Exists(destPath))
         {
@@ -248,6 +284,82 @@ public class GitHubUpdateService
         return destPath;
     }
 
+    public void ApplyPatchAndExit(string zipPath)
+    {
+        if (!File.Exists(zipPath)) return;
+
+        string tempDir = Path.GetTempPath();
+        string patchStaging = Path.Combine(tempDir, "MEA_Patch_" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(patchStaging);
+
+        ZipFile.ExtractToDirectory(zipPath, patchStaging, overwriteFiles: true);
+
+        string targetDir = AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\', '/');
+        string exeName = "MatrixExamAI.Desktop.exe";
+        int currentPid = Environment.ProcessId;
+
+        string batPath = Path.Combine(tempDir, $"mea_patch_{Guid.NewGuid():N}.bat");
+        string batContent = $"""
+        @echo off
+        chcp 65001 >nul
+        set "PID={currentPid}"
+        set "TARGET={targetDir}"
+        set "PATCH={patchStaging}"
+        set "EXENAME={exeName}"
+
+        :WAIT_PROC
+        timeout /t 1 /nobreak >nul
+        tasklist /fi "PID eq %PID%" 2>nul | find "%PID%" >nul
+        if not errorlevel 1 goto WAIT_PROC
+
+        xcopy /s /e /y "%PATCH%\*" "%TARGET%\" >nul 2>&1
+        rmdir /s /q "%PATCH%" 2>nul
+        if exist "{zipPath}" del /f /q "{zipPath}" 2>nul
+
+        start "" "%TARGET%\%EXENAME%"
+        del "%~f0" 2>nul
+        """;
+
+        File.WriteAllText(batPath, batContent);
+
+        bool canWrite = CanWriteToDirectory(targetDir);
+        var startInfo = new ProcessStartInfo
+        {
+            FileName = "cmd.exe",
+            Arguments = $"/c \"{batPath}\"",
+            CreateNoWindow = canWrite,
+            UseShellExecute = !canWrite,
+            Verb = canWrite ? "" : "runas",
+            WindowStyle = canWrite ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal
+        };
+
+        Process.Start(startInfo);
+
+        if (Application.Current != null)
+        {
+            Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown());
+        }
+        else
+        {
+            Environment.Exit(0);
+        }
+    }
+
+    private static bool CanWriteToDirectory(string dir)
+    {
+        try
+        {
+            string testFile = Path.Combine(dir, ".mea_perm_test_" + Guid.NewGuid().ToString("N"));
+            File.WriteAllText(testFile, "test");
+            File.Delete(testFile);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public Process? LaunchInstaller(string installerPath, bool verySilent = false)
     {
         if (!File.Exists(installerPath) || !installerPath.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
@@ -265,16 +377,23 @@ public class GitHubUpdateService
         return Process.Start(startInfo);
     }
 
-    public void ApplyAndExit(string installerPath, bool verySilent = false)
+    public void ApplyAndExit(string filePath, bool verySilent = false, bool isPatch = false)
     {
-        LaunchInstaller(installerPath, verySilent);
-        if (Application.Current != null)
+        if (isPatch || filePath.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
         {
-            Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown());
+            ApplyPatchAndExit(filePath);
         }
         else
         {
-            Environment.Exit(0);
+            LaunchInstaller(filePath, verySilent);
+            if (Application.Current != null)
+            {
+                Application.Current.Dispatcher.Invoke(() => Application.Current.Shutdown());
+            }
+            else
+            {
+                Environment.Exit(0);
+            }
         }
     }
 }

@@ -22,10 +22,48 @@ public class GitHubUpdateServiceTests
     [InlineData("5.1.0-alpha", "5.1.0-beta", false)]
     [InlineData("5.1.3.1", "5.1.3", true)]
     [InlineData("v5.1.3.1", "5.1.2.1", true)]
+    [InlineData("5.1.3.2", "5.1.3.1", true)]
+    [InlineData("5.1.3.2", "5.1.3", true)]
     public void IsNewerVersion_ShouldCorrectlyCompareSemver(string remote, string local, bool expected)
     {
         bool result = GitHubUpdateService.IsNewerVersion(remote, local);
         result.Should().Be(expected);
+    }
+
+    [Fact]
+    public void ParseReleaseJson_WithPatchZip_ShouldPrioritizePatchOverInstaller()
+    {
+        var service = new GitHubUpdateService { CurrentVersion = "5.1.0" };
+
+        string json = """
+        {
+            "tag_name": "v5.1.3.2",
+            "name": "MatrixExamAI Pro v5.1.3.2",
+            "body": "Delta patch release",
+            "published_at": "2026-10-15T00:00:00Z",
+            "draft": false,
+            "assets": [
+                {
+                    "name": "MatrixExamAI_Pro_Setup.exe",
+                    "browser_download_url": "https://example.com/MatrixExamAI_Pro_Setup.exe",
+                    "size": 11000000
+                },
+                {
+                    "name": "MatrixExamAI_Patch.zip",
+                    "browser_download_url": "https://example.com/MatrixExamAI_Patch.zip",
+                    "size": 520000
+                }
+            ]
+        }
+        """;
+
+        var updateInfo = service.ParseReleaseJson(json);
+
+        updateInfo.Should().NotBeNull();
+        updateInfo!.IsPatch.Should().BeTrue();
+        updateInfo.AssetName.Should().Be("MatrixExamAI_Patch.zip");
+        updateInfo.DownloadUrl.Should().Be("https://example.com/MatrixExamAI_Patch.zip");
+        updateInfo.FileSize.Should().Be(520000);
     }
 
     [Fact]
