@@ -43,5 +43,7 @@ crash.log
 *.lnk
 test_*.docx
 test_export.docx
+publish/
+desktop_csharp/publish/
 
 
