@@ -411,6 +411,52 @@ namespace MatrixExamAI.Desktop.Views
 
             return count;
         }
+
+        public static async Task<int> DeleteQuestionsAsync(IEnumerable<long> ids, string? connectionString = null)
+        {
+            if (ids == null) return 0;
+            var idList = ids.ToList();
+            if (idList.Count == 0) return 0;
+
+            string connStr = connectionString ?? GetActiveConnectionString();
+            int deleted = 0;
+            using (var conn = new SqliteConnection(connStr))
+            {
+                await conn.OpenAsync();
+                using var trans = conn.BeginTransaction();
+                using var cmd = conn.CreateCommand();
+                cmd.Transaction = trans;
+                cmd.CommandText = "DELETE FROM questions WHERE id = @id;";
+                var p = cmd.Parameters.Add("@id", SqliteType.Integer);
+
+                foreach (var id in idList)
+                {
+                    p.Value = id;
+                    deleted += await cmd.ExecuteNonQueryAsync();
+                }
+
+                await trans.CommitAsync();
+            }
+            return deleted;
+        }
+
+        public static async Task<int> ClearAllQuestionsAsync(string? connectionString = null)
+        {
+            string connStr = connectionString ?? GetActiveConnectionString();
+            int deleted = 0;
+            using (var conn = new SqliteConnection(connStr))
+            {
+                await conn.OpenAsync();
+                using var cmd = conn.CreateCommand();
+                cmd.CommandText = "DELETE FROM questions;";
+                deleted = await cmd.ExecuteNonQueryAsync();
+
+                using var vacCmd = conn.CreateCommand();
+                vacCmd.CommandText = "VACUUM;";
+                await vacCmd.ExecuteNonQueryAsync();
+            }
+            return deleted;
+        }
     }
 
     public partial class QuestionBankView : UserControl
@@ -433,11 +479,11 @@ namespace MatrixExamAI.Desktop.Views
             }
             catch (Exception ex)
             {
-                // Fallback nạp mẫu nếu SQLite ban đầu có trục trặc
-                LoadFallbackQuestions();
+                TxtEmptyBankHint.Visibility = Visibility.Visible;
+                TxtBankCount.Text = "Tổng số: 0 câu hỏi";
                 InfoBankNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Warning;
                 InfoBankNotification.Title = "Thông báo kết nối SQLite";
-                InfoBankNotification.Message = $"Đang chạy ở chế độ dự phòng. Lỗi nạp: {ex.Message}";
+                InfoBankNotification.Message = $"Không thể tải ngân hàng câu hỏi: {ex.Message}";
                 InfoBankNotification.IsOpen = true;
             }
         }
@@ -450,13 +496,6 @@ namespace MatrixExamAI.Desktop.Views
             var items = await SqliteSchemaAdapter.LoadQuestionsFromDatabaseAsync(null, kw, lvl);
 
             _loadedQuestions.Clear();
-            if (items.Count == 0 && string.IsNullOrEmpty(kw) && (lvl == "Tất cả mức độ" || lvl == "Tất cả"))
-            {
-                // Nếu DB hoàn toàn rỗng, nạp câu hỏi mẫu chuẩn THPT
-                LoadFallbackQuestions();
-                return;
-            }
-
             foreach (var item in items)
             {
                 string preview = item.Content ?? "";
@@ -479,31 +518,13 @@ namespace MatrixExamAI.Desktop.Views
 
             GridQuestions.ItemsSource = null;
             GridQuestions.ItemsSource = _loadedQuestions;
-            TxtBankCount.Text = $"Cơ sở dữ liệu: {_loadedQuestions.Count} câu hỏi ({Path.GetFileName(_activeDbPath)})";
+            TxtBankCount.Text = $"Tổng số: {_loadedQuestions.Count} câu hỏi";
+            TxtEmptyBankHint.Visibility = _loadedQuestions.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
 
             InfoBankNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
-            InfoBankNotification.Title = "Ngân hàng câu hỏi SQLite Native";
-            InfoBankNotification.Message = $"Đã nạp thành công {_loadedQuestions.Count} câu hỏi từ {_activeDbPath}.";
+            InfoBankNotification.Title = "Ngân hàng câu hỏi SQLite";
+            InfoBankNotification.Message = $"Đã tải {_loadedQuestions.Count} câu hỏi từ cơ sở dữ liệu ({Path.GetFileName(_activeDbPath)}).";
             InfoBankNotification.IsOpen = true;
-        }
-
-        private void LoadFallbackQuestions()
-        {
-            _loadedQuestions.Clear();
-            _loadedQuestions.Add(new QuestionViewModel { Id = "Q0001", Level = "Nhận biết", Topic = "Hàm số bậc ba", ContentPreview = "Cho hàm số y = x^3 - 3x. Tìm khoảng đồng biến của hàm số...", CorrectAnswer = "A", QuestionType = "MultipleChoice4" });
-            _loadedQuestions.Add(new QuestionViewModel { Id = "Q0002", Level = "Thông hiểu", Topic = "Hàm số bậc ba", ContentPreview = "Tìm giá trị cực đại và cực tiểu của hàm số y = -x^3 + 3x^2 - 4...", CorrectAnswer = "C", QuestionType = "MultipleChoice4" });
-            _loadedQuestions.Add(new QuestionViewModel { Id = "Q0003", Level = "Vận dụng", Topic = "Hàm số phân thức", ContentPreview = "Tìm tất cả các giá trị của m để đồ thị hàm số có 2 đường tiệm cận đứng...", CorrectAnswer = "B", QuestionType = "MultipleChoice4" });
-            _loadedQuestions.Add(new QuestionViewModel { Id = "Q0004", Level = "Vận dụng cao", Topic = "Hàm số hợp", ContentPreview = "Cho hàm số f(x). Có bao nhiêu giá trị nguyên của m để phương trình f(f(x)) = m có 6 nghiệm...", CorrectAnswer = "D", QuestionType = "MultipleChoice4" });
-            _loadedQuestions.Add(new QuestionViewModel { Id = "Q0005", Level = "Nhận biết", Topic = "Nguyên hàm", ContentPreview = "Tìm nguyên hàm của hàm số f(x) = e^(2x) + cos(x)...", CorrectAnswer = "A", QuestionType = "MultipleChoice4" });
-            _loadedQuestions.Add(new QuestionViewModel { Id = "Q0006", Level = "Thông hiểu", Topic = "Tích phân", ContentPreview = "Tính tích phân I = int_0^1 (2x + 1)e^x dx bằng phương pháp từng phần...", CorrectAnswer = "B", QuestionType = "MultipleChoice4" });
-            _loadedQuestions.Add(new QuestionViewModel { Id = "Q0007", Level = "Vận dụng", Topic = "Ứng dụng tích phân", ContentPreview = "Tính diện tích hình phẳng giới hạn bởi parabol y = x^2 và đường thẳng y = 2x...", CorrectAnswer = "A", QuestionType = "MultipleChoice4" });
-            _loadedQuestions.Add(new QuestionViewModel { Id = "Q0008", Level = "Nhận biết", Topic = "Hình Oxyz", ContentPreview = "Trong không gian Oxyz, tìm tọa độ tâm và bán kính mặt cầu (S): x^2+y^2+z^2-2x+4y-6z-1=0...", CorrectAnswer = "C", QuestionType = "MultipleChoice4" });
-            _loadedQuestions.Add(new QuestionViewModel { Id = "Q0009", Level = "Thông hiểu", Topic = "Mặt phẳng Oxyz", ContentPreview = "Viết phương trình mặt phẳng đi qua điểm M(1;2;3) và vuông góc với đường thẳng d...", CorrectAnswer = "D", QuestionType = "MultipleChoice4" });
-            _loadedQuestions.Add(new QuestionViewModel { Id = "Q0010", Level = "Vận dụng", Topic = "Khoảng cách Oxyz", ContentPreview = "Tính khoảng cách từ điểm A(1;-2;3) đến mặt phẳng (P): 2x - y + 2z - 5 = 0...", CorrectAnswer = "B", QuestionType = "MultipleChoice4" });
-
-            GridQuestions.ItemsSource = null;
-            GridQuestions.ItemsSource = _loadedQuestions;
-            TxtBankCount.Text = $"Hiển thị: {_loadedQuestions.Count} câu hỏi mẫu";
         }
 
         private async void BtnSearch_Click(object sender, RoutedEventArgs e)
@@ -612,6 +633,64 @@ namespace MatrixExamAI.Desktop.Views
             }
         }
 
+        private async void BtnDeleteQuestion_Click(object sender, RoutedEventArgs e)
+        {
+            var selected = GridQuestions.SelectedItems.Cast<QuestionViewModel>().ToList();
+            if (selected.Count == 0)
+            {
+                MessageBox.Show("Vui lòng chọn ít nhất một câu hỏi trong danh sách để xóa.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var confirm = MessageBox.Show(
+                $"Bạn có chắc chắn muốn xóa {selected.Count} câu hỏi đã chọn khỏi ngân hàng dữ liệu?",
+                "Xác nhận xóa câu hỏi",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (confirm != MessageBoxResult.Yes) return;
+
+            try
+            {
+                var ids = selected.Where(s => s.RawItem != null).Select(s => s.RawItem!.Id).ToList();
+                int deleted = await SqliteSchemaAdapter.DeleteQuestionsAsync(ids);
+                await RefreshQuestionsFromDatabaseAsync();
+                MessageBox.Show($"Đã xóa thành công {deleted} câu hỏi khỏi ngân hàng dữ liệu.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xóa câu hỏi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void BtnClearAll_Click(object sender, RoutedEventArgs e)
+        {
+            if (_loadedQuestions.Count == 0)
+            {
+                MessageBox.Show("Ngân hàng câu hỏi hiện đang trống.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var confirm = MessageBox.Show(
+                "Bạn có chắc chắn muốn XÓA SẠCH toàn bộ câu hỏi trong ngân hàng dữ liệu không?\n\nThao tác này không thể hoàn tác!",
+                "Cảnh báo xóa sạch ngân hàng câu hỏi",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (confirm != MessageBoxResult.Yes) return;
+
+            try
+            {
+                await SqliteSchemaAdapter.ClearAllQuestionsAsync();
+                await RefreshQuestionsFromDatabaseAsync();
+                MessageBox.Show("Đã xóa sạch toàn bộ dữ liệu ngân hàng câu hỏi.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xóa sạch dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void BtnExportSelected_Click(object sender, RoutedEventArgs e)
         {
             var list = GridQuestions.ItemsSource as IEnumerable<QuestionViewModel> ?? _loadedQuestions;
@@ -624,8 +703,8 @@ namespace MatrixExamAI.Desktop.Views
             foreach (var q in list)
             {
                 sb.AppendLine($"% Câu {i++} [{q.Level}]_[{q.Topic}] (Mã: {q.Id})");
-                sb.AppendLine(q.ContentPreview);
-                sb.AppendLine($"Đáp án đúng: {q.CorrectAnswer}");
+                string content = !string.IsNullOrEmpty(q.RawItem?.Content) ? q.RawItem.Content : q.ContentPreview;
+                sb.AppendLine(content);
                 sb.AppendLine();
             }
 

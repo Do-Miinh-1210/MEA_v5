@@ -45,6 +45,8 @@
                 <ui:Button x:Name="BtnRefreshBank" Appearance="Secondary" Icon="{ui:SymbolIcon ArrowSync24}" Content="Làm mới" Padding="10,5" Margin="0,0,6,4" FontSize="11" Click="BtnRefreshBank_Click" ToolTip="Tải lại toàn bộ câu hỏi từ SQLite Database (F5)" />
                 <ui:Button x:Name="BtnImportConvert" Appearance="Secondary" Icon="{ui:SymbolIcon ArrowDownload24}" Content="Nạp từ ConvertView" Padding="10,5" Margin="0,0,6,4" FontSize="11" Click="BtnImportConvert_Click" ToolTip="Nhập nhanh các câu hỏi vừa nhận diện từ ConvertView vào Ngân hàng SQLite" />
                 <ui:Button x:Name="BtnAddQuestion" Appearance="Primary" Icon="{ui:SymbolIcon Add24}" Content="Thêm câu hỏi mới" Padding="12,5" Margin="0,0,6,4" FontSize="11" Click="BtnAddQuestion_Click" ToolTip="Thêm câu hỏi mới vào ngân hàng câu hỏi SQLite" />
+                <ui:Button x:Name="BtnDeleteQuestion" Appearance="Danger" Icon="{ui:SymbolIcon Delete24}" Content="Xóa câu hỏi" Padding="10,5" Margin="0,0,6,4" FontSize="11" Click="BtnDeleteQuestion_Click" ToolTip="Xóa câu hỏi đang chọn khỏi ngân hàng" />
+                <ui:Button x:Name="BtnClearAll" Appearance="Transparent" Icon="{ui:SymbolIcon Broom24}" Content="Xóa sạch" Padding="10,5" Margin="0,0,6,4" FontSize="11" Click="BtnClearAll_Click" ToolTip="Xóa sạch toàn bộ câu hỏi mẫu/dữ liệu trong ngân hàng" />
                 <ui:Button x:Name="BtnExportSelected" Appearance="Success" Icon="{ui:SymbolIcon DocumentArrowRight24}" Content="Xuất đề thi Word" Padding="12,5" Margin="0,0,0,4" FontSize="11" Click="BtnExportSelected_Click" ToolTip="Xuất danh sách câu hỏi đã chọn ra tệp Word (Ctrl + S)" />
             </WrapPanel>
         </ui:Card>
@@ -59,22 +61,28 @@
 
                 <Grid Grid.Row="0" Margin="0,0,0,10">
                     <TextBlock Text="Danh sách câu hỏi trong Ngân hàng dữ liệu (SQLite)" FontWeight="SemiBold" FontSize="13" />
-                    <TextBlock x:Name="TxtBankCount" Text="Hiển thị: 25 câu hỏi mẫu" FontSize="11" HorizontalAlignment="Right" 
+                    <TextBlock x:Name="TxtBankCount" Text="Tổng số: 0 câu hỏi" FontSize="11" HorizontalAlignment="Right" 
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                 </Grid>
 
                 <DataGrid x:Name="GridQuestions" Grid.Row="1" AutoGenerateColumns="False" 
                           CanUserAddRows="False" HeadersVisibility="Column" 
                           GridLinesVisibility="Horizontal" RowHeight="36"
-                          BorderThickness="0" Background="Transparent">
+                          BorderThickness="0" Background="Transparent"
+                          SelectionMode="Extended">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Mã ID" Binding="{Binding Id}" Width="70" />
+                        <DataGridTextColumn Header="Mã ID" Binding="{Binding Id}" Width="100" />
                         <DataGridTextColumn Header="Mức độ" Binding="{Binding Level}" Width="110" />
-                        <DataGridTextColumn Header="Chuyên đề" Binding="{Binding Topic}" Width="160" />
+                        <DataGridTextColumn Header="Chuyên đề" Binding="{Binding Topic}" Width="180" />
                         <DataGridTextColumn Header="Nội dung tóm tắt câu hỏi" Binding="{Binding ContentPreview}" Width="*" />
-                        <DataGridTextColumn Header="Đáp án" Binding="{Binding CorrectAnswer}" Width="80" />
                     </DataGrid.Columns>
                 </DataGrid>
+
+                <TextBlock x:Name="TxtEmptyBankHint" Grid.Row="1" 
+                           Text="Ngân hàng câu hỏi hiện đang trống. Hãy bấm 'Nạp từ ConvertView' hoặc 'Thêm câu hỏi mới' để bổ sung câu hỏi." 
+                           HorizontalAlignment="Center" VerticalAlignment="Center" 
+                           FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" 
+                           Visibility="Collapsed" />
             </Grid>
         </ui:Card>
 

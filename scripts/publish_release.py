@@ -20,9 +20,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.1.1"
-TITLE = "MatrixExamAI Pro v5.1.1"
-BODY = "Bản phát hành chính thức MatrixExamAI Pro v5.1.1 (.NET 10 Fluent + Logo Linh vật Đỗ Miinh Math mới)."
+TAG = "v5.1.2"
+TITLE = "MatrixExamAI Pro v5.1.2"
+BODY = "Bản phát hành MatrixExamAI Pro v5.1.2: Chuẩn hóa phân hệ Ngân hàng câu hỏi (NHCH) theo app cũ - Bỏ toàn bộ ví dụ mẫu mặc định, xóa cột Đáp án và bổ sung nút Xóa câu hỏi / Xóa sạch."
 
 def create_release_and_upload():
     token = get_github_token()

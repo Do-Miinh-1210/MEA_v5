@@ -371,6 +371,41 @@ D. $(-2; 2)$.
             retrieved[0].CorrectAnswer.Should().Be("A");
         }
 
+        [Fact]
+        public async Task SqliteSchemaAdapter_DeleteAndClearQuestionsAsync_ShouldRemoveRecordsCorrectly()
+        {
+            // Arrange
+            string dbPath = GetTempPath(".db");
+            string connStr = $"Data Source={dbPath};";
+
+            var items = new List<QuestionItem>
+            {
+                new QuestionItem { QuestionCode = "DEL_01", Content = "Câu hỏi xóa 1", CognitiveLevel = "NB" },
+                new QuestionItem { QuestionCode = "DEL_02", Content = "Câu hỏi xóa 2", CognitiveLevel = "TH" },
+                new QuestionItem { QuestionCode = "DEL_03", Content = "Câu hỏi xóa 3", CognitiveLevel = "VD" }
+            };
+
+            await SqliteSchemaAdapter.ImportQuestionsAsync(items, connStr);
+            var loaded = await SqliteSchemaAdapter.LoadQuestionsFromDatabaseAsync(connStr);
+            loaded.Should().HaveCount(3);
+
+            // Act 1: Xóa 1 câu hỏi
+            long targetId = loaded.First(x => x.QuestionCode == "DEL_01").Id;
+            int deletedCount = await SqliteSchemaAdapter.DeleteQuestionsAsync(new[] { targetId }, connStr);
+            deletedCount.Should().Be(1);
+
+            var remaining = await SqliteSchemaAdapter.LoadQuestionsFromDatabaseAsync(connStr);
+            remaining.Should().HaveCount(2);
+            remaining.Should().NotContain(x => x.QuestionCode == "DEL_01");
+
+            // Act 2: Xóa sạch toàn bộ ngân hàng
+            int clearedCount = await SqliteSchemaAdapter.ClearAllQuestionsAsync(connStr);
+            clearedCount.Should().Be(2);
+
+            var afterClear = await SqliteSchemaAdapter.LoadQuestionsFromDatabaseAsync(connStr);
+            afterClear.Should().BeEmpty();
+        }
+
         #endregion
 
         #region 4. QcView & QcInspectionService Tests
