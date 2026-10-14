@@ -7,6 +7,7 @@
         xmlns:views="clr-namespace:MatrixExamAI.Desktop.Views"
         mc:Ignorable="d"
         Title="MatrixExamAI Pro v5.1" 
+        Icon="Assets/app.ico"
         Height="720" Width="1280"
         MinHeight="680" MinWidth="1024"
         WindowStartupLocation="CenterScreen"
@@ -24,9 +25,7 @@
         <ui:TitleBar Grid.Row="0" Title="MatrixExamAI Pro v5.1 • Trợ lý Soạn đề &amp; Chuyển đổi Tài liệu AI (.NET 10)">
             <ui:TitleBar.Header>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
-                    <Border Width="22" Height="22" CornerRadius="5" Background="#0D9488" Margin="0,0,8,0">
-                        <TextBlock Text="π" FontWeight="Bold" FontSize="13" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                    </Border>
+                    <Image Source="Assets/logo.png" Width="24" Height="24" Margin="0,0,8,0" RenderOptions.BitmapScalingMode="HighQuality" />
                     <TextBlock Text="MatrixExamAI Pro" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" />
                     <Border Background="#1A0D9488" CornerRadius="4" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
                         <TextBlock Text=".NET 10 Fluent" FontSize="10" Foreground="#0D9488" FontWeight="SemiBold" />

@@ -14,13 +14,16 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <StackPanel>
-                    <TextBlock Text="Chào mừng Thầy Đỗ Minh 👋" 
-                               FontSize="24" FontWeight="Bold" 
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                    <TextBlock Text="Hệ thống biên soạn đề thi thông minh MatrixExamAI Pro (.NET 10 Native C# Engine)" 
-                               FontSize="13" Margin="0,4,0,0"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Image Source="/MatrixExamAI.Desktop;component/Assets/logo.png" Width="52" Height="52" Margin="0,0,16,0" RenderOptions.BitmapScalingMode="HighQuality" />
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Chào mừng Thầy Đỗ Minh 👋" 
+                                   FontSize="24" FontWeight="Bold" 
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <TextBlock Text="Hệ thống biên soạn đề thi thông minh MatrixExamAI Pro (.NET 10 Native C# Engine)" 
+                                   FontSize="13" Margin="0,4,0,0"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
                 </StackPanel>
                 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
