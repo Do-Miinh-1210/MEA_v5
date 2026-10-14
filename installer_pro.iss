@@ -65,11 +65,17 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDi
 [Run]
 Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -NoProfile -File ""{app}\word_addon\register_addin.ps1"""; StatusMsg: "Đang kích hoạt MatrixExamAI Word Add-in..."; Flags: runhidden; Tasks: wordaddin
 Filename: "{app}\{#MyAppExeName}"; Description: "Chạy MatrixExamAI Pro ngay sau khi cài đặt"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Flags: nowait; Check: ShouldLaunchSilent
 
 [UninstallRun]
 Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -NoProfile -File ""{app}\word_addon\uninstall_addin.ps1"""; Flags: runhidden
 
 [Code]
+function ShouldLaunchSilent: Boolean;
+begin
+  Result := WizardSilent;
+end;
+
 function GetUninstallString(AppIdStr: String): String;
 var
   sUnInstPath: String;
@@ -103,7 +109,6 @@ begin
   if (CurStep = ssInstall) then begin
     Exec('cmd.exe', '/c taskkill /f /im MatrixExamAI.Desktop.exe', '', SW_HIDE, ewWaitUntilTerminated, iResultCode);
     if WizardIsTaskSelected('cleanold') then begin
-      UnInstallOldVersion('{E6B4A3C2-1F5D-4E8A-9C7B-3A2F1E4D6C85}');
       UnInstallOldVersion('{B8E5F3A2-7C4D-4E9F-A1B3-2D8F6E4C9A71}');
       UnInstallOldVersion('{C9F2E7B1-8D5C-4F3A-B2E8-1C9A7E5F4D60}');
       UnInstallOldVersion('MEA_v5');

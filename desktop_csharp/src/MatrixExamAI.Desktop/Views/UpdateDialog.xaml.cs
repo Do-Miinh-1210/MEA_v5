@@ -51,12 +51,12 @@ public partial class UpdateDialog : FluentWindow
                 _cts.Token
             );
 
-            TxtProgressStatus.Text = "Tải thành công! Đang kích hoạt bộ cài...";
-            TxtStatus.Text = "Đang khởi động trình cài đặt...";
+            TxtProgressStatus.Text = "Tải thành công! Đang tự động cập nhật ngầm...";
+            TxtStatus.Text = "Ứng dụng sẽ tự khởi động lại trong 2 giây...";
 
             await System.Threading.Tasks.Task.Delay(500);
 
-            GitHubUpdateService.Instance.ApplyAndExit(installerPath, verySilent: false);
+            GitHubUpdateService.Instance.ApplyAndExit(installerPath, verySilent: true);
         }
         catch (Exception ex)
         {
