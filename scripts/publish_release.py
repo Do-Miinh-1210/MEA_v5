@@ -57,6 +57,17 @@ def create_release_and_upload():
         with urllib.request.urlopen(req_get) as resp_get:
             data = json.loads(resp_get.read().decode("utf-8"))
 
+    # Delete existing asset if it exists
+    for asset in data.get("assets", []):
+        if asset["name"] == "MatrixExamAI_Pro_Setup.exe":
+            print(f"Deleting existing asset ID {asset['id']}...")
+            del_req = urllib.request.Request(f"https://api.github.com/repos/{REPO}/releases/assets/{asset['id']}", headers=headers, method="DELETE")
+            try:
+                urllib.request.urlopen(del_req)
+                print("[OK] Deleted old asset.")
+            except Exception as ex:
+                print(f"[WARN] Failed to delete old asset: {ex}")
+
     upload_url_template = data["upload_url"] # e.g. https://uploads.github.com/repos/.../assets{?name,label}
     upload_url = upload_url_template.split("{")[0] + f"?name=MatrixExamAI_Pro_Setup.exe"
 
