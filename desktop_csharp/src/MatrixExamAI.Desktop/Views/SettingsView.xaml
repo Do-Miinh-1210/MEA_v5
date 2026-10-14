@@ -186,7 +186,7 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel>
                             <TextBlock Text="Phiên bản hiện tại:" FontWeight="Medium" />
-                            <TextBlock Text="MatrixExamAI Pro v5.1.2.1 (.NET 10 Desktop)" 
+                            <TextBlock Text="MatrixExamAI Pro v5.1.3.1 (.NET 10 Desktop)" 
                                        FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
                         </StackPanel>
                         <ui:Button x:Name="BtnCheckUpdateSettings" Grid.Column="1" Appearance="Primary" 
@@ -222,7 +222,7 @@
                     </Grid.ColumnDefinitions>
                     <Image Source="/MatrixExamAI.Desktop;component/Assets/logo.png" Width="64" Height="64" Margin="0,0,20,0" RenderOptions.BitmapScalingMode="HighQuality" VerticalAlignment="Center" />
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="MatrixExamAI Pro v5.1.2.1" FontWeight="Bold" FontSize="15" />
+                        <TextBlock Text="MatrixExamAI Pro v5.1.3.1" FontWeight="Bold" FontSize="15" />
                         <TextBlock Text="Phần mềm Trợ lý Soạn đề &amp; Chuyển đổi Tài liệu AI" FontSize="12" Margin="0,2,0,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         <TextBlock Text="Tác giả: Thầy Đỗ Minh (Đỗ Miinh Math) • Nền tảng .NET 10 Native C# + WPF" FontSize="11" Margin="0,4,0,0" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                     </StackPanel>

@@ -32,8 +32,8 @@ public class GitHubUpdateService
 {
     public static GitHubUpdateService Instance { get; } = new();
 
-    public string CurrentVersion { get; set; } = "5.1.3";
-    public string DisplayVersion => "5.1.2.1";
+    public string CurrentVersion { get; set; } = "5.1.3.1";
+    public string DisplayVersion => "5.1.3.1";
     public string GitHubRepo { get; set; } = "Do-Miinh-1210/MEA_v5";
 
     private readonly HttpClient _httpClient;
