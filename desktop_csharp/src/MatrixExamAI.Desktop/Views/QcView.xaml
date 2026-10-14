@@ -15,48 +15,49 @@
         </Grid.RowDefinitions>
 
         <!-- Tiêu đề -->
-        <Grid Grid.Row="0" Margin="0,0,0,16">
+        <Grid Grid.Row="0" Margin="0,0,0,4">
             <StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:SymbolIcon Symbol="CheckmarkSquare24" FontSize="24" Foreground="#10B981" Margin="0,0,10,0" />
+                    <ui:SymbolIcon Symbol="CheckmarkSquare24" FontSize="20" Foreground="#10B981" Margin="0,0,8,0" />
                     <TextBlock Text="Thẩm định Đề thi (Quality Control - QC)" 
-                               FontSize="20" FontWeight="Bold" 
+                               FontSize="16" FontWeight="Bold" 
                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                 </StackPanel>
                 <TextBlock Text="Tự động rà soát phát hiện lỗi: Trùng lặp phương án A-B-C-D, thiếu đáp án đúng, lỗi cú pháp LaTeX, vi phạm chuẩn format BGD" 
-                           FontSize="12" Margin="34,4,0,0"
+                           FontSize="11" Margin="28,2,0,0"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             </StackPanel>
         </Grid>
 
         <!-- Thanh hành động (WrapPanel chống tràn) -->
-        <ui:Card Grid.Row="1" Margin="0,0,0,14" Padding="10">
+        <ui:Card Grid.Row="1" Margin="0,0,0,4" Padding="8,5">
             <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <CheckBox x:Name="ChkCheckDupOptions" IsChecked="True" Content="Trùng lặp phương án" Margin="0,0,14,4" FontSize="11" />
-                <CheckBox x:Name="ChkCheckMissingAns" IsChecked="True" Content="Thiếu đáp án đúng" Margin="0,0,14,4" FontSize="11" />
-                <CheckBox x:Name="ChkCheckLatexSyntax" IsChecked="True" Content="Lỗi cú pháp LaTeX" Margin="0,0,14,4" FontSize="11" />
-                <CheckBox x:Name="ChkCheckFormat" IsChecked="True" Content="Sai quy chuẩn BGD" Margin="0,0,16,4" FontSize="11" />
+                <CheckBox x:Name="ChkCheckDupOptions" IsChecked="True" Content="Trùng lặp phương án" Margin="0,0,12,2" FontSize="11" />
+                <CheckBox x:Name="ChkCheckMissingAns" IsChecked="True" Content="Thiếu đáp án đúng" Margin="0,0,12,2" FontSize="11" />
+                <CheckBox x:Name="ChkCheckLatexSyntax" IsChecked="True" Content="Lỗi cú pháp LaTeX" Margin="0,0,12,2" FontSize="11" />
+                <CheckBox x:Name="ChkCheckFormat" IsChecked="True" Content="Sai quy chuẩn BGD" Margin="0,0,14,2" FontSize="11" />
 
-                <ui:Button x:Name="BtnRunQc" Appearance="Primary" Icon="{ui:SymbolIcon Play24}" Content="Chạy Thẩm định Đề thi" Padding="12,5" Margin="0,0,6,4" FontSize="11" Click="BtnRunQc_Click" ToolTip="Rà soát lỗi trùng phương án, thiếu đáp án, sai cú pháp LaTeX (F5)" />
-                <ui:Button x:Name="BtnAutoFix" Appearance="Success" Icon="{ui:SymbolIcon Sparkle24}" Content="AI Tự động sửa lỗi" Padding="12,5" Margin="0,0,0,4" FontSize="11" Click="BtnAutoFix_Click" ToolTip="AI tự động sửa các lỗi cú pháp và chuẩn hóa đề thi" />
+                <ui:Button x:Name="BtnRunQc" Appearance="Primary" Icon="{ui:SymbolIcon Play24}" Content="Chạy Thẩm định" Height="28" Padding="10,0" Margin="0,0,4,2" FontSize="11" Click="BtnRunQc_Click" ToolTip="Rà soát lỗi trùng phương án, thiếu đáp án, sai cú pháp LaTeX (F5)" />
+                <ui:Button x:Name="BtnAutoFix" Appearance="Success" Icon="{ui:SymbolIcon Sparkle24}" Content="AI Tự sửa lỗi" Height="28" Padding="10,0" Margin="0,0,0,2" FontSize="11" Click="BtnAutoFix_Click" ToolTip="AI tự động sửa các lỗi cú pháp và chuẩn hóa đề thi" />
             </WrapPanel>
         </ui:Card>
 
         <!-- Báo cáo kết quả thẩm định -->
-        <ui:Card Grid.Row="2" Padding="14">
-            <Grid>
+        <ui:Card Grid.Row="2" Padding="10" VerticalAlignment="Stretch">
+            <Grid VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,0,0,10">
+                <Grid Grid.Row="0" Margin="0,0,0,6">
                     <TextBlock Text="Báo cáo chi tiết các cảnh báo &amp; Lỗi phát hiện được" FontWeight="SemiBold" FontSize="13" />
                     <TextBlock x:Name="TxtQcSummary" Text="Đề thi hợp lệ: 0 lỗi nghiêm trọng, 1 cảnh báo nhỏ" FontSize="11" HorizontalAlignment="Right" 
                                Foreground="#10B981" FontWeight="SemiBold" />
                 </Grid>
 
                 <ui:TextBox x:Name="TxtQcReport" Grid.Row="1" IsReadOnly="False" AcceptsReturn="True" TextWrapping="Wrap"
+                            VerticalAlignment="Stretch"
                             VerticalContentAlignment="Top"
                             PlaceholderText="Nhập hoặc dán nội dung đề thi vào đây để thẩm định, hoặc bấm 'Chạy Thẩm định Đề thi' để quét đề hiện tại..."
                             FontFamily="Consolas, 'Segoe UI', Arial" FontSize="12.5"

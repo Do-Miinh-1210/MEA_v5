@@ -32,7 +32,8 @@ public class GitHubUpdateService
 {
     public static GitHubUpdateService Instance { get; } = new();
 
-    public string CurrentVersion { get; set; } = "5.1.2";
+    public string CurrentVersion { get; set; } = "5.1.3";
+    public string DisplayVersion => "5.1.2.1";
     public string GitHubRepo { get; set; } = "Do-Miinh-1210/MEA_v5";
 
     private readonly HttpClient _httpClient;
@@ -55,24 +56,26 @@ public class GitHubUpdateService
         if (r.Major != l.Major) return r.Major > l.Major;
         if (r.Minor != l.Minor) return r.Minor > l.Minor;
         if (r.Patch != l.Patch) return r.Patch > l.Patch;
+        if (r.Build != l.Build) return r.Build > l.Build;
         if (r.Rank != l.Rank) return r.Rank > l.Rank;
         return r.PrereleaseNumber > l.PrereleaseNumber;
     }
 
-    private static (int Major, int Minor, int Patch, int Rank, int PrereleaseNumber) ParseVersionTuple(string v)
+    private static (int Major, int Minor, int Patch, int Build, int Rank, int PrereleaseNumber) ParseVersionTuple(string v)
     {
         string text = (v ?? string.Empty).Trim().TrimStart('v', 'V', ' ').Trim();
-        var match = Regex.Match(text, @"^(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:[-+]([0-9A-Za-z._-]+))?$");
-        if (!match.Success) return (0, 0, 0, 0, 0);
+        var match = Regex.Match(text, @"^(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:\.(\d+))?(?:[-+]([0-9A-Za-z._-]+))?$");
+        if (!match.Success) return (0, 0, 0, 0, 0, 0);
 
         int major = int.TryParse(match.Groups[1].Value, out int maj) ? maj : 0;
         int minor = int.TryParse(match.Groups[2].Value, out int min) ? min : 0;
         int patch = int.TryParse(match.Groups[3].Value, out int pat) ? pat : 0;
-        string suffix = match.Groups[4].Success ? match.Groups[4].Value.ToLowerInvariant() : string.Empty;
+        int build = int.TryParse(match.Groups[4].Value, out int bld) ? bld : 0;
+        string suffix = match.Groups[5].Success ? match.Groups[5].Value.ToLowerInvariant() : string.Empty;
 
         if (string.IsNullOrEmpty(suffix))
         {
-            return (major, minor, patch, 9, 0); // stable release has highest rank
+            return (major, minor, patch, build, 9, 0); // stable release has highest rank
         }
 
         var subMatch = Regex.Match(suffix, @"^(alpha|beta|rc)[._-]?(\d*)");
@@ -87,10 +90,10 @@ public class GitHubUpdateService
                 "rc" => 3,
                 _ => 5
             };
-            return (major, minor, patch, rank, num);
+            return (major, minor, patch, build, rank, num);
         }
 
-        return (major, minor, patch, 5, 0);
+        return (major, minor, patch, build, 5, 0);
     }
 
     public async Task<UpdateInfo?> CheckForUpdateAsync(CancellationToken ct = default)

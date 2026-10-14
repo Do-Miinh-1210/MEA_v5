@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <!-- 1. Header & Bộ đếm thời gian (Sleek & Compact) -->
-        <Grid Grid.Row="0" Margin="0,0,0,6">
+        <Grid Grid.Row="0" Margin="0,0,0,3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -46,14 +46,14 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <ui:SymbolIcon Symbol="Timer24" FontSize="13" Foreground="#0EA5E9" Margin="0,0,6,0" VerticalAlignment="Center" />
                     <TextBlock x:Name="TxtTimer" Text="00:00:00.0" FontSize="13" FontWeight="Bold" 
-                               FontFamily="Consolas, 'Cascadia Code', Segoe UI" Foreground="#0EA5E9" VerticalAlignment="Center" />
+                                FontFamily="Consolas, 'Cascadia Code', Segoe UI" Foreground="#0EA5E9" VerticalAlignment="Center" />
                     <Ellipse x:Name="DotTimerStatus" Width="6" Height="6" Fill="#10B981" Margin="6,0,0,0" VerticalAlignment="Center" />
                 </StackPanel>
             </Border>
         </Grid>
 
         <!-- 2. Thanh điều khiển chính (2 Hàng cực kỳ tinh gọn, không tràn dòng) -->
-        <ui:Card Grid.Row="1" Margin="0,0,0,8" Padding="8,5">
+        <ui:Card Grid.Row="1" Margin="0,0,0,4" Padding="8,5">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -236,7 +236,7 @@
         </ui:Card>
 
         <!-- 3. Khung soạn thảo chia đôi (Split View: Đầu vào vs Khung Xem trước Kép - Co giãn thích ứng) -->
-        <Grid x:Name="GridSplitContainer" Grid.Row="2">
+        <Grid x:Name="GridSplitContainer" Grid.Row="2" VerticalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition x:Name="ColSource" Width="*" MinWidth="260" />
                 <ColumnDefinition x:Name="ColSplitter" Width="8" />
@@ -244,8 +244,8 @@
             </Grid.ColumnDefinitions>
 
             <!-- Cột trái: Văn bản nguồn / PDF trích xuất / Ảnh đính kèm -->
-            <ui:Card x:Name="CardSource" Grid.Column="0" Padding="10" AllowDrop="True" Drop="LeftCard_Drop" DragOver="LeftCard_DragOver">
-                <Grid>
+            <ui:Card x:Name="CardSource" Grid.Column="0" Padding="10" VerticalAlignment="Stretch" AllowDrop="True" Drop="LeftCard_Drop" DragOver="LeftCard_DragOver">
+                <Grid VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -310,6 +310,7 @@
 
                     <!-- Ô soạn thảo / Textbox nạp liệu -->
                     <ui:TextBox x:Name="TxtInput" Grid.Row="2"
+                                VerticalAlignment="Stretch"
                                 AcceptsReturn="True" TextWrapping="Wrap"
                                 VerticalContentAlignment="Top"
                                 FontFamily="Consolas, 'Cascadia Code', 'Segoe UI', Arial" FontSize="12"
@@ -333,8 +334,8 @@
             <GridSplitter x:Name="SplitterConvert" Grid.Column="1" HorizontalAlignment="Stretch" Background="Transparent" />
 
             <!-- Cột phải: Xem trước Kép (Dual View: Trang In Word A4 vs Mã nguồn ${...}$) -->
-            <ui:Card x:Name="CardPreview" Grid.Column="2" Padding="10">
-                <Grid>
+            <ui:Card x:Name="CardPreview" Grid.Column="2" Padding="10" VerticalAlignment="Stretch">
+                <Grid VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
@@ -383,8 +384,10 @@
                     <!-- Vùng hiển thị xem trước (3 chế độ) -->
                     <Grid Grid.Row="1">
                         <!-- Chế độ 1: Mô phỏng Trang in Word A4 (Rich Page View) -->
-                        <Border x:Name="BorderWordPageContainer" Background="{DynamicResource ApplicationBackgroundBrush}" CornerRadius="6" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1">
-                            <Grid>
+                        <Border x:Name="BorderWordPageContainer" Background="{DynamicResource ApplicationBackgroundBrush}" 
+                                CornerRadius="6" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                                VerticalAlignment="Stretch">
+                            <Grid VerticalAlignment="Stretch">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="*" />
@@ -448,7 +451,7 @@
                                     </WrapPanel>
                                 </Border>
 
-                                <ScrollViewer Grid.Row="1" x:Name="ScrollWordPage" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                <ScrollViewer Grid.Row="1" x:Name="ScrollWordPage" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" VerticalAlignment="Stretch">
                                     <Border x:Name="BorderWordA4Page" Margin="12" Background="#FFFFFF" TextElement.Foreground="#0F172A" CornerRadius="4" Padding="20" MaxWidth="680" HorizontalAlignment="Stretch">
                                         <Border.Effect>
                                             <DropShadowEffect BlurRadius="10" Direction="270" Opacity="0.10" ShadowDepth="2" />
@@ -487,8 +490,9 @@
                         <!-- Chế độ 2: Bảng danh sách câu hỏi DataGrid (Khắc phục hoàn toàn che chữ và lỗi nền tối) -->
                         <Border x:Name="BorderQuestionsContainer" Visibility="Collapsed" 
                                 Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
-                                CornerRadius="6" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1">
-                            <Grid>
+                                CornerRadius="6" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                                VerticalAlignment="Stretch">
+                            <Grid VerticalAlignment="Stretch">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition Height="*" MinHeight="140" />
@@ -713,6 +717,7 @@
 
                         <!-- Chế độ 3: Mã nguồn TextBox thô (ẩn/hiện theo Tab) -->
                         <ui:TextBox x:Name="TxtOutput" Visibility="Collapsed"
+                                    VerticalAlignment="Stretch"
                                     IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap"
                                     VerticalContentAlignment="Top"
                                     FontFamily="Consolas, 'Cascadia Code', 'Segoe UI', Arial" FontSize="12"

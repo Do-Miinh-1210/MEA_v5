@@ -15,22 +15,22 @@
         </Grid.RowDefinitions>
 
         <!-- Tiêu đề Phân hệ -->
-        <Grid Grid.Row="0" Margin="0,0,0,16">
+        <Grid Grid.Row="0" Margin="0,0,0,4">
             <StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:SymbolIcon Symbol="ArrowShuffle24" FontSize="24" Foreground="#EC4899" Margin="0,0,10,0" />
+                    <ui:SymbolIcon Symbol="ArrowShuffle24" FontSize="20" Foreground="#EC4899" Margin="0,0,8,0" />
                     <TextBlock Text="Trộn đề Hoán vị &amp; Phiếu Trả lời Trắc nghiệm OMR" 
-                               FontSize="20" FontWeight="Bold" 
+                               FontSize="16" FontWeight="Bold" 
                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                 </StackPanel>
                 <TextBlock Text="Hoán vị câu hỏi và phương án A-B-C-D thông minh, sinh ma trận bảng đáp án chéo, tương thích máy chấm thi OMR" 
-                           FontSize="12" Margin="34,4,0,0"
+                           FontSize="11" Margin="28,2,0,0"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             </StackPanel>
         </Grid>
 
         <!-- Thanh cấu hình Trộn đề (WrapPanel chống tràn) -->
-        <ui:Card Grid.Row="1" Margin="0,0,0,14" Padding="10">
+        <ui:Card Grid.Row="1" Margin="0,0,0,4" Padding="8,5">
             <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,4">
                     <TextBlock Text="Số mã đề:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
@@ -72,14 +72,14 @@
         </ui:Card>
 
         <!-- Khung xem trước bảng ma trận đáp án sau khi trộn -->
-        <ui:Card Grid.Row="2" Padding="14">
-            <Grid>
+        <ui:Card Grid.Row="2" Padding="10" VerticalAlignment="Stretch">
+            <Grid VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,0,0,10">
+                <Grid Grid.Row="0" Margin="0,0,0,6">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <ui:SymbolIcon Symbol="Table24" Foreground="#EC4899" Margin="0,0,6,0" />
                         <TextBlock Text="Ma trận Đáp án Đối chiếu sau khi Hoán vị" FontWeight="SemiBold" FontSize="13" />
@@ -89,6 +89,7 @@
                 </Grid>
 
                 <ui:TextBox x:Name="TxtShuffleMatrixResult" Grid.Row="1"
+                            VerticalAlignment="Stretch"
                             IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap"
                             VerticalContentAlignment="Top"
                             FontFamily="Consolas, 'Segoe UI', Arial" FontSize="12.5"
