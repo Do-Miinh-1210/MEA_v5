@@ -1,6 +1,6 @@
-; Inno Setup Script — MatrixExamAI Pro v5.1 (.NET 10 WPF + Word Add-in)
+; Inno Setup Script — MatrixExamAI Pro v5.1.1 (.NET 10 WPF + Word Add-in)
 #define MyAppName "MatrixExamAI Pro"
-#define MyAppVersion "5.1.0"
+#define MyAppVersion "5.1.1"
 #define MyAppPublisher "Do Minh Math"
 #define MyAppURL "https://github.com/Do-Miinh-1210/MEA_v5"
 #define MyAppExeName "MatrixExamAI.Desktop.exe"
@@ -15,7 +15,7 @@ DefaultDirName={autopf}\MatrixExamAI Pro
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
 OutputDir=dist\installer
-OutputBaseFilename=MatrixExamAI_Pro_v5.1_Setup
+OutputBaseFilename=MatrixExamAI_Pro_Setup
 SetupIconFile=assets\app.ico
 UninstallDisplayIcon={app}\assets\app.ico
 Compression=lzma2/max
@@ -23,6 +23,7 @@ SolidCompression=yes
 WizardStyle=modern
 CloseApplications=yes
 RestartApplications=no
+ArchitecturesInstallIn64BitMode=x64
 PrivilegesRequired=admin
 
 [Languages]
@@ -96,8 +97,11 @@ begin
 end;
 
 procedure CurStepChanged(CurStep: TSetupStep);
+var
+  iResultCode: Integer;
 begin
   if (CurStep = ssInstall) then begin
+    Exec('cmd.exe', '/c taskkill /f /im MatrixExamAI.Desktop.exe', '', SW_HIDE, ewWaitUntilTerminated, iResultCode);
     if WizardIsTaskSelected('cleanold') then begin
       UnInstallOldVersion('{E6B4A3C2-1F5D-4E8A-9C7B-3A2F1E4D6C85}');
       UnInstallOldVersion('{B8E5F3A2-7C4D-4E9F-A1B3-2D8F6E4C9A71}');
