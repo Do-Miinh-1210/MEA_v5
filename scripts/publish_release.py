@@ -27,9 +27,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.1.3.2"
-TITLE = "MatrixExamAI Pro v5.1.3.2 (Delta-Patch Update)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.1.3.2: Tích hợp cơ chế cập nhật vi mô siêu tốc (Delta / Hot-Patch In-Place Update) chỉ 500 KB thay vì tải lại toàn bộ installer 11 MB; tự động ghi đè file code mới và khởi động lại sau 1 giây."
+TAG = "v5.1.3.3"
+TITLE = "MatrixExamAI Pro v5.1.3.3 (Clean Startup & Delta-Patch)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.1.3.3: Xóa bỏ dữ liệu mẫu thử và bản nháp khi khởi động (Soạn ma trận, Trộn đề, QC); nâng cấp bản vá vi mô Delta-Patch siêu tốc ~500 KB."
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)

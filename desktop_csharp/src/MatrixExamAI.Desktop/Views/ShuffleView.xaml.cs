@@ -26,8 +26,9 @@ namespace MatrixExamAI.Desktop.Views
 
         private void LoadDefaultSample()
         {
-            _baseDraft = BuildBaseDraftQuestions();
-            GenerateAndDisplayShuffleVariants(4, 101, true, true);
+            _baseDraft = new ExamDraftResult();
+            TxtShuffleMatrixResult.Text = string.Empty;
+            TxtShuffleStats.Text = "Sẵn sàng: Nạp đề thi từ ConvertView hoặc Ngân hàng câu hỏi để trộn đề.";
         }
 
         private void BtnShuffle_Click(object sender, RoutedEventArgs e)

@@ -19,12 +19,14 @@ namespace MatrixExamAI.Desktop.Views
         {
             InitializeComponent();
             _currentMatrixData = MatrixWordExporter.CreateStandardHighSchoolMatrix("TOÁN HỌC", "12");
-            LoadDefaultSample();
+            TxtExamContent.Text = string.Empty;
+            TxtExamStats.Text = "Sẵn sàng: Nhập nội dung hoặc bấm 'AI Soạn đề tự động' hoặc 'Nạp đề mẫu chuẩn'";
+            InfoExamNotification.IsOpen = false;
         }
 
         private void LoadDefaultSample()
         {
-            BtnLoadSample_Click(this, new RoutedEventArgs());
+            TxtExamContent.Text = string.Empty;
         }
 
         private void BtnLoadSample_Click(object sender, RoutedEventArgs e)

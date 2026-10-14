@@ -14,13 +14,13 @@ namespace MatrixExamAI.Desktop.Views
         public QcView()
         {
             InitializeComponent();
-            LoadDefaultSampleAndRunQc();
+            TxtQcReport.Text = string.Empty;
+            TxtQcSummary.Text = "Sẵn sàng: Nhập nội dung đề thi hoặc nạp từ ConvertView để kiểm định chất lượng.";
         }
 
         private void LoadDefaultSampleAndRunQc()
         {
-            _lastRawExamText = GetSampleExamText();
-            ExecuteInspection(_lastRawExamText);
+            TxtQcReport.Text = string.Empty;
         }
 
         private void BtnRunQc_Click(object sender, RoutedEventArgs e)
