@@ -113,7 +113,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Cột trái: Thống kê & Phân bổ câu hỏi theo 3 phần -->
-            <ui:Card Grid.Column="0" Padding="10" VerticalAlignment="Stretch">
+            <ui:Card Grid.Column="0" Padding="10" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False" Padding="0,0,4,0">
                     <StackPanel>
                         <TextBlock Text="Phân bổ cấu trúc đề thi" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,12" />
@@ -202,7 +202,7 @@
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="Transparent" />
 
             <!-- Cột phải: Soạn thảo / Kết quả đề thi -->
-            <ui:Card Grid.Column="2" Padding="10" VerticalAlignment="Stretch">
+            <ui:Card Grid.Column="2" Padding="10" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <Grid VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -220,7 +220,7 @@
                     </Grid>
 
                     <ui:TextBox x:Name="TxtExamContent" Grid.Row="1"
-                                VerticalAlignment="Stretch"
+                                VerticalAlignment="Stretch" MinHeight="180"
                                 AcceptsReturn="True" TextWrapping="Wrap"
                                 VerticalContentAlignment="Top"
                                 FontFamily="Consolas, 'Segoe UI', Arial" FontSize="12.5"

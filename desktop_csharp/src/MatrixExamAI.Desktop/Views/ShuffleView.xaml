@@ -72,7 +72,7 @@
         </ui:Card>
 
         <!-- Khung xem trước bảng ma trận đáp án sau khi trộn -->
-        <ui:Card Grid.Row="2" Padding="10" VerticalAlignment="Stretch">
+        <ui:Card Grid.Row="2" Padding="10" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Grid VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -89,7 +89,7 @@
                 </Grid>
 
                 <ui:TextBox x:Name="TxtShuffleMatrixResult" Grid.Row="1"
-                            VerticalAlignment="Stretch"
+                            VerticalAlignment="Stretch" MinHeight="180"
                             IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap"
                             VerticalContentAlignment="Top"
                             FontFamily="Consolas, 'Segoe UI', Arial" FontSize="12.5"

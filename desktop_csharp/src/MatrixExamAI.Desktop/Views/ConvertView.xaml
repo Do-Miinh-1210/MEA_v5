@@ -244,7 +244,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Cột trái: Văn bản nguồn / PDF trích xuất / Ảnh đính kèm -->
-            <ui:Card x:Name="CardSource" Grid.Column="0" Padding="10" VerticalAlignment="Stretch" AllowDrop="True" Drop="LeftCard_Drop" DragOver="LeftCard_DragOver">
+            <ui:Card x:Name="CardSource" Grid.Column="0" Padding="10" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" AllowDrop="True" Drop="LeftCard_Drop" DragOver="LeftCard_DragOver">
                 <Grid VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -310,7 +310,7 @@
 
                     <!-- Ô soạn thảo / Textbox nạp liệu -->
                     <ui:TextBox x:Name="TxtInput" Grid.Row="2"
-                                VerticalAlignment="Stretch"
+                                VerticalAlignment="Stretch" MinHeight="180"
                                 AcceptsReturn="True" TextWrapping="Wrap"
                                 VerticalContentAlignment="Top"
                                 FontFamily="Consolas, 'Cascadia Code', 'Segoe UI', Arial" FontSize="12"
@@ -334,7 +334,7 @@
             <GridSplitter x:Name="SplitterConvert" Grid.Column="1" HorizontalAlignment="Stretch" Background="Transparent" />
 
             <!-- Cột phải: Xem trước Kép (Dual View: Trang In Word A4 vs Mã nguồn ${...}$) -->
-            <ui:Card x:Name="CardPreview" Grid.Column="2" Padding="10" VerticalAlignment="Stretch">
+            <ui:Card x:Name="CardPreview" Grid.Column="2" Padding="10" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <Grid VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -382,7 +382,7 @@
                     </Grid>
 
                     <!-- Vùng hiển thị xem trước (3 chế độ) -->
-                    <Grid Grid.Row="1">
+                    <Grid Grid.Row="1" VerticalAlignment="Stretch">
                         <!-- Chế độ 1: Mô phỏng Trang in Word A4 (Rich Page View) -->
                         <Border x:Name="BorderWordPageContainer" Background="{DynamicResource ApplicationBackgroundBrush}" 
                                 CornerRadius="6" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1"

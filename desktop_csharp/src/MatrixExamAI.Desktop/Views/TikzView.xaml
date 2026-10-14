@@ -202,7 +202,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- Cột trái: Mô tả & Mã nguồn TikZ -->
-            <ui:Card x:Name="CardCode" Grid.Column="0" Padding="10" VerticalAlignment="Stretch" AllowDrop="True" Drop="TikzLeftCard_Drop" DragOver="TikzLeftCard_DragOver">
+            <ui:Card x:Name="CardCode" Grid.Column="0" Padding="10" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch" AllowDrop="True" Drop="TikzLeftCard_Drop" DragOver="TikzLeftCard_DragOver">
                 <Grid VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -241,7 +241,7 @@
                     </DockPanel>
 
                     <ui:TextBox x:Name="TxtTikzCode" Grid.Row="1"
-                                VerticalAlignment="Stretch"
+                                VerticalAlignment="Stretch" MinHeight="180"
                                 AcceptsReturn="True" TextWrapping="Wrap"
                                 VerticalContentAlignment="Top"
                                 FontFamily="Consolas, 'Cascadia Code', monospace" FontSize="11"
@@ -281,7 +281,7 @@
             <GridSplitter x:Name="SplitterTikz" Grid.Column="1" HorizontalAlignment="Stretch" Background="Transparent" />
 
             <!-- Cột phải: Xem trước Hình ảnh Sắc nét & Nút xuất -->
-            <ui:Card x:Name="CardPreview" Grid.Column="2" Padding="10" VerticalAlignment="Stretch">
+            <ui:Card x:Name="CardPreview" Grid.Column="2" Padding="10" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
                 <Grid VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />

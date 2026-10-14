@@ -43,7 +43,7 @@
         </ui:Card>
 
         <!-- Báo cáo kết quả thẩm định -->
-        <ui:Card Grid.Row="2" Padding="10" VerticalAlignment="Stretch">
+        <ui:Card Grid.Row="2" Padding="10" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Grid VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -57,7 +57,7 @@
                 </Grid>
 
                 <ui:TextBox x:Name="TxtQcReport" Grid.Row="1" IsReadOnly="False" AcceptsReturn="True" TextWrapping="Wrap"
-                            VerticalAlignment="Stretch"
+                            VerticalAlignment="Stretch" MinHeight="180"
                             VerticalContentAlignment="Top"
                             PlaceholderText="Nhập hoặc dán nội dung đề thi vào đây để thẩm định, hoặc bấm 'Chạy Thẩm định Đề thi' để quét đề hiện tại..."
                             FontFamily="Consolas, 'Segoe UI', Arial" FontSize="12.5"

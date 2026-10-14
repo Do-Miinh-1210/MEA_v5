@@ -52,7 +52,7 @@
         </ui:Card>
 
         <!-- Danh sách câu hỏi -->
-        <ui:Card Grid.Row="2" Padding="10" VerticalAlignment="Stretch">
+        <ui:Card Grid.Row="2" Padding="10" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
             <Grid VerticalAlignment="Stretch">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -69,6 +69,7 @@
                           CanUserAddRows="False" HeadersVisibility="Column" 
                           GridLinesVisibility="Horizontal" RowHeight="36"
                           BorderThickness="0" Background="Transparent"
+                          VerticalAlignment="Stretch"
                           SelectionMode="Extended">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Mã ID" Binding="{Binding Id}" Width="100" />
