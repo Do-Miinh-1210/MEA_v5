@@ -1,0 +1,190 @@
+═══════════════════════════════════════════════════════════════════════════════
+  TỨ GIÁC — hình bình hành, hình thang, hình thoi, hình vuông…
+═══════════════════════════════════════════════════════════════════════════════
+
+=== TEMPLATE: Hình bình hành ABCD ===
+TAGS: 2D, tứ giác, hình bình hành, parallelogram
+KEYWORDS: hình bình hành, parallelogram, AB song song CD
+NOTES: AB ∥ CD và AD ∥ BC. Đánh dấu cặp cạnh song song bằng mũi tên.
+
+\begin{tikzpicture}[scale=1.2, thick,
+  par1/.style={postaction={decorate}, decoration={markings,
+    mark=at position 0.5 with {\arrow{>}}}},
+  par2/.style={postaction={decorate}, decoration={markings,
+    mark=at position 0.5 with {\arrow{>>}}}}]
+  \coordinate[label=below left:$A$]  (A) at (0,0);
+  \coordinate[label=below right:$B$] (B) at (4,0);
+  \coordinate[label=above right:$C$] (C) at (5,2);
+  \coordinate[label=above left:$D$]  (D) at (1,2);
+  \draw[par1] (A)--(B);   \draw[par1] (D)--(C);
+  \draw[par2] (A)--(D);   \draw[par2] (B)--(C);
+  % Đường chéo AC, BD cắt nhau tại O — trung điểm
+  \draw[dashed] (A)--(C) (B)--(D);
+  \coordinate (O) at (2.5,1);
+  \fill (O) circle (1.2pt) node[above right] {$O$};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình thoi ABCD ===
+TAGS: 2D, tứ giác, hình thoi, rhombus
+KEYWORDS: hình thoi, rhombus, 4 cạnh bằng
+NOTES: 4 cạnh bằng + 2 đường chéo vuông góc tại trung điểm.
+
+\begin{tikzpicture}[scale=1.2, thick,
+  tick/.style={postaction={decorate}, decoration={markings,
+    mark=at position 0.5 with {\draw (-2pt,-2pt)--(2pt,2pt);}}}]
+  \coordinate[label=below:$A$] (A) at (0,0);
+  \coordinate[label=right:$B$] (B) at (2,1.5);
+  \coordinate[label=above:$C$] (C) at (0,3);
+  \coordinate[label=left:$D$]  (D) at (-2,1.5);
+  \draw[tick] (A)--(B); \draw[tick] (B)--(C);
+  \draw[tick] (C)--(D); \draw[tick] (D)--(A);
+  % Đường chéo + giao điểm O
+  \coordinate (O) at (0,1.5);
+  \draw[dashed] (A)--(C) (B)--(D);
+  \fill (O) circle (1.2pt) node[below right] {$O$};
+  % Góc vuông tại O
+  \draw pic [draw, angle radius=3mm] {right angle = B--O--C};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình chữ nhật ABCD ===
+TAGS: 2D, tứ giác, hình chữ nhật, rectangle
+KEYWORDS: hình chữ nhật, rectangle
+NOTES: 4 góc vuông — đánh dấu 4 ô vuông nhỏ ở 4 đỉnh (bằng pic right angle).
+
+\begin{tikzpicture}[scale=1.2, thick]
+  \coordinate[label=below left:$A$]  (A) at (0,0);
+  \coordinate[label=below right:$B$] (B) at (4,0);
+  \coordinate[label=above right:$C$] (C) at (4,2.5);
+  \coordinate[label=above left:$D$]  (D) at (0,2.5);
+  \draw (A)--(B)--(C)--(D)--cycle;
+  \draw pic [draw, angle radius=3mm] {right angle = D--A--B};
+  \draw pic [draw, angle radius=3mm] {right angle = A--B--C};
+  \draw pic [draw, angle radius=3mm] {right angle = B--C--D};
+  \draw pic [draw, angle radius=3mm] {right angle = C--D--A};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình vuông ABCD ===
+TAGS: 2D, tứ giác, hình vuông, square
+KEYWORDS: hình vuông, square
+NOTES: 4 cạnh bằng + 4 góc vuông. Đánh dấu cả tick chéo (cạnh) lẫn ô vuông (góc).
+
+\begin{tikzpicture}[scale=1.2, thick,
+  tick/.style={postaction={decorate}, decoration={markings,
+    mark=at position 0.5 with {\draw (-2pt,-2pt)--(2pt,2pt);}}}]
+  \coordinate[label=below left:$A$]  (A) at (0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0);
+  \coordinate[label=above right:$C$] (C) at (3,3);
+  \coordinate[label=above left:$D$]  (D) at (0,3);
+  \draw[tick] (A)--(B); \draw[tick] (B)--(C);
+  \draw[tick] (C)--(D); \draw[tick] (D)--(A);
+  \draw pic [draw, angle radius=3mm] {right angle = D--A--B};
+  \draw pic [draw, angle radius=3mm] {right angle = A--B--C};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình thang ABCD ===
+TAGS: 2D, tứ giác, hình thang, trapezoid
+KEYWORDS: hình thang, trapezoid, AB song song CD, đáy lớn đáy nhỏ
+NOTES: AB ∥ CD (đáy lớn - đáy nhỏ). Có 2 đường cao DH, CK ⟂ AB.
+
+\begin{tikzpicture}[scale=1.2, thick,
+  par/.style={postaction={decorate}, decoration={markings,
+    mark=at position 0.5 with {\arrow{>}}}}]
+  \coordinate[label=below left:$A$]  (A) at (0,0);
+  \coordinate[label=below right:$B$] (B) at (4,0);
+  \coordinate[label=above right:$C$] (C) at (3,2);
+  \coordinate[label=above left:$D$]  (D) at (1,2);
+  \draw[par] (A)--(B);
+  \draw[par] (D)--(C);
+  \draw (B)--(C); \draw (D)--(A);
+  % Hai đường cao DH, CK ⟂ AB
+  \coordinate[label=below:$H$] (H) at (1,0);
+  \coordinate[label=below:$K$] (K) at (3,0);
+  \draw[dashed] (D)--(H);
+  \draw[dashed] (C)--(K);
+  \draw pic [draw, angle radius=2mm] {right angle = D--H--B};
+  \draw pic [draw, angle radius=2mm] {right angle = C--K--B};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình thang vuông ABCD ===
+TAGS: 2D, tứ giác, hình thang vuông, right trapezoid
+KEYWORDS: hình thang vuông, vuông tại A, vuông tại D
+NOTES: AD ⟂ AB và AD ⟂ CD (vuông tại A và D). AD là đường cao.
+
+\begin{tikzpicture}[scale=1.2, thick]
+  \coordinate[label=below left:$A$]  (A) at (0,0);
+  \coordinate[label=below right:$B$] (B) at (4,0);
+  \coordinate[label=above right:$C$] (C) at (2.5,2.5);
+  \coordinate[label=above left:$D$]  (D) at (0,2.5);
+  \draw (A)--(B)--(C)--(D)--cycle;
+  \draw pic [draw, angle radius=3mm] {right angle = D--A--B};
+  \draw pic [draw, angle radius=3mm] {right angle = A--D--C};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình thang cân ABCD ===
+TAGS: 2D, tứ giác, hình thang cân, isoceles trapezoid
+KEYWORDS: hình thang cân, isoceles trapezoid, AD = BC, hai góc đáy bằng
+NOTES: AB ∥ CD + AD = BC (2 cạnh bên bằng nhau). Đối xứng qua đường trung
+       trực của AB. 2 đường chéo BẰNG NHAU.
+
+\begin{tikzpicture}[scale=1.2, thick,
+  tick/.style={postaction={decorate}, decoration={markings,
+    mark=at position 0.5 with {\draw (-2pt,-2pt)--(2pt,2pt);}}},
+  par/.style={postaction={decorate}, decoration={markings,
+    mark=at position 0.5 with {\arrow{>}}}}]
+  \coordinate[label=below left:$A$]  (A) at (0,0);
+  \coordinate[label=below right:$B$] (B) at (5,0);
+  \coordinate[label=above right:$C$] (C) at (4,2.5);
+  \coordinate[label=above left:$D$]  (D) at (1,2.5);
+  \draw[par] (A)--(B);
+  \draw[par] (D)--(C);
+  \draw[tick] (A)--(D);
+  \draw[tick] (B)--(C);
+  % Đường chéo AC = BD (đứt)
+  \draw[dashed, blue] (A)--(C);
+  \draw[dashed, blue] (B)--(D);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Tứ giác nội tiếp đường tròn ABCD ===
+TAGS: 2D, tứ giác nội tiếp, cyclic quadrilateral
+KEYWORDS: tứ giác nội tiếp, cyclic quadrilateral, 4 đỉnh trên đường tròn
+NOTES: 4 đỉnh A, B, C, D nằm TRÊN đường tròn (O). Hai góc đối bù nhau:
+       A + C = B + D = 180°.
+
+\begin{tikzpicture}[scale=1.5, thick]
+  \coordinate (O) at (0,0);
+  \draw[densely dashed] (O) circle (2cm);
+  % 4 đỉnh trên đường tròn
+  \coordinate[label=left:$A$]        (A) at (160:2);
+  \coordinate[label=below left:$B$]  (B) at (220:2);
+  \coordinate[label=below right:$C$] (C) at (-30:2);
+  \coordinate[label=above:$D$]       (D) at ( 60:2);
+  \draw (A)--(B)--(C)--(D)--cycle;
+  \fill (A) circle (1.2pt); \fill (B) circle (1.2pt);
+  \fill (C) circle (1.2pt); \fill (D) circle (1.2pt);
+  \fill (O) circle (1.2pt) node[below right] {$O$};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình bình hành với đường cao AH ===
+TAGS: 2D, hình bình hành, đường cao
+KEYWORDS: hình bình hành, đường cao AH, diện tích = AH * BC
+NOTES: AH ⟂ BC tại H — đường cao của hình bình hành.
+
+\begin{tikzpicture}[scale=1.2, thick]
+  \coordinate[label=above left:$A$]  (A) at (1,2);
+  \coordinate[label=above right:$D$] (D) at (5,2);
+  \coordinate[label=below left:$B$]  (B) at (0,0);
+  \coordinate[label=below right:$C$] (C) at (4,0);
+  \draw (A)--(D)--(C)--(B)--cycle;
+  % Đường cao AH ⟂ BC, H trên BC
+  \coordinate[label=below:$H$] (H) at (1,0);
+  \draw[dashed] (A)--(H);
+  \draw pic [draw, angle radius=2.5mm] {right angle = A--H--C};
+\end{tikzpicture}

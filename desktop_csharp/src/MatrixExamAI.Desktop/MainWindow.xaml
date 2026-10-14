@@ -1,0 +1,111 @@
+<ui:FluentWindow x:Class="MatrixExamAI.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:views="clr-namespace:MatrixExamAI.Desktop.Views"
+        mc:Ignorable="d"
+        Title="MatrixExamAI Pro v5.1" 
+        Height="720" Width="1280"
+        MinHeight="680" MinWidth="1024"
+        WindowStartupLocation="CenterScreen"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica"
+        PreviewKeyDown="MainWindow_PreviewKeyDown">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 1. Fluent TitleBar -->
+        <ui:TitleBar Grid.Row="0" Title="MatrixExamAI Pro v5.1 • Trợ lý Soạn đề &amp; Chuyển đổi Tài liệu AI (.NET 10)">
+            <ui:TitleBar.Header>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
+                    <Border Width="22" Height="22" CornerRadius="5" Background="#0D9488" Margin="0,0,8,0">
+                        <TextBlock Text="π" FontWeight="Bold" FontSize="13" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <TextBlock Text="MatrixExamAI Pro" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" />
+                    <Border Background="#1A0D9488" CornerRadius="4" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text=".NET 10 Fluent" FontSize="10" Foreground="#0D9488" FontWeight="SemiBold" />
+                    </Border>
+                </StackPanel>
+            </ui:TitleBar.Header>
+            <ui:TitleBar.TrailingContent>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                    <ui:Button x:Name="BtnCheckUpdate" Appearance="Transparent" 
+                               Icon="{ui:SymbolIcon ArrowDownload24}" 
+                               ToolTip="Kiểm tra bản cập nhật mới (GitHub Releases)"
+                               Click="BtnCheckUpdate_Click" Margin="0,0,4,0" />
+                    <ui:Button x:Name="BtnToggleTheme" Appearance="Transparent" 
+                               Icon="{ui:SymbolIcon DarkTheme24}" 
+                               ToolTip="Chuyển đổi giao diện Sáng / Tối (Ctrl + Alt + T)"
+                               Click="BtnToggleTheme_Click" Margin="0,0,4,0" />
+                </StackPanel>
+            </ui:TitleBar.TrailingContent>
+        </ui:TitleBar>
+
+        <!-- 2. Main Two-Column Navigation Shell (Sidebar co giãn tự động Cột 0, Content Cột 1) -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Cột 0: NavigationView Sidebar -->
+            <ui:NavigationView x:Name="NavView" Grid.Column="0"
+                               PaneTitle="Phân hệ chính"
+                               IsBackButtonVisible="Collapsed"
+                               PaneDisplayMode="Left"
+                               OpenPaneLength="220"
+                               CompactPaneLength="50"
+                               IsPaneOpen="True"
+                               IsPaneToggleVisible="True"
+                               SelectionChanged="NavView_SelectionChanged">
+                <ui:NavigationView.MenuItems>
+                    <ui:NavigationViewItem x:Name="NavItemDashboard" Content="Tổng quan Dashboard" Tag="dashboard" Icon="{ui:SymbolIcon Home24}" Click="NavItem_Click" ToolTip="Tổng quan hệ thống (Ctrl + 1)" />
+                    <ui:NavigationViewItem x:Name="NavItemConvert" Content="Convert" Tag="convert" Icon="{ui:SymbolIcon ArrowSync24}" Click="NavItem_Click" ToolTip="Chuyển đổi &amp; Xuất Word (Ctrl + 2)" />
+                    <ui:NavigationViewItem x:Name="NavItemMatrix" Content="Soạn đề theo Ma trận" Tag="matrix" Icon="{ui:SymbolIcon Sparkle24}" Click="NavItem_Click" ToolTip="Soạn đề theo ma trận BGD (Ctrl + 3)" />
+                    <ui:NavigationViewItem x:Name="NavItemTikz" Content="AI Vẽ hình toán TikZ" Tag="tikz" Icon="{ui:SymbolIcon Shapes24}" Click="NavItem_Click" ToolTip="Vẽ hình TikZ &amp; Đồ thị (Ctrl + 4)" />
+                    <ui:NavigationViewItem x:Name="NavItemShuffle" Content="Trộn đề &amp; Phiếu OMR" Tag="shuffle" Icon="{ui:SymbolIcon ArrowShuffle24}" Click="NavItem_Click" ToolTip="Trộn mã đề thi (Ctrl + 5)" />
+                    <ui:NavigationViewItem x:Name="NavItemBank" Content="Ngân hàng câu hỏi" Tag="bank" Icon="{ui:SymbolIcon Archive24}" Click="NavItem_Click" ToolTip="Ngân hàng câu hỏi SQLite (Ctrl + 6)" />
+                    <ui:NavigationViewItem x:Name="NavItemQc" Content="Thẩm định đề thi (QC)" Tag="qc" Icon="{ui:SymbolIcon CheckmarkSquare24}" Click="NavItem_Click" ToolTip="Thẩm định chất lượng đề (Ctrl + 7)" />
+                </ui:NavigationView.MenuItems>
+
+                <ui:NavigationView.FooterMenuItems>
+                    <ui:NavigationViewItem x:Name="NavItemSettings" Content="Cài đặt &amp; Bản quyền" Tag="settings" Icon="{ui:SymbolIcon Settings24}" Click="NavItem_Click" ToolTip="Cấu hình hệ thống (Ctrl + 8)" />
+                </ui:NavigationView.FooterMenuItems>
+            </ui:NavigationView>
+
+            <!-- Cột 1: Vùng hiển thị nội dung trực tiếp (Content Control tự thích ứng) -->
+            <Border Grid.Column="1" Background="{DynamicResource ApplicationBackgroundBrush}">
+                <ContentControl x:Name="MainContentFrame" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+            </Border>
+        </Grid>
+
+        <!-- 3. Bottom Modern StatusBar -->
+        <Border Grid.Row="2" BorderThickness="0,1,0,0" 
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                Padding="16,4">
+            <Grid>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Ellipse Width="8" Height="8" Fill="#10B981" Margin="0,0,6,0" />
+                    <TextBlock Text="Engine: C# .NET 10 Desktop (DirectX GPU)" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text=" | " FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="6,0" />
+                    <TextBlock Text="Mô hình AI: gemini-3.8-flash / 9Router" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text=" | " FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="6,0" />
+                    <TextBlock Text="Công thức: ${...}$ kẹp chuẩn Word" FontSize="11" FontWeight="SemiBold" Foreground="#0D9488" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock Text="RAM: ~42MB" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text=" | " FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="6,0" />
+                    <TextBlock Text="Bản quyền: Thầy Đỗ Minh (PRO)" FontSize="11" FontWeight="SemiBold" Foreground="#0284C7" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</ui:FluentWindow>

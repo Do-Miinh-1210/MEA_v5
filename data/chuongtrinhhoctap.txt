@@ -1,0 +1,492 @@
+{
+  "Toán": {
+    "6": [
+      {
+        "chapter": "Chương I: Tập hợp các số tự nhiên",
+        "lessons": [
+          "Tập hợp, phần tử của tập hợp",
+          "Cách ghi số tự nhiên",
+          "Thứ tự trong tập hợp số tự nhiên",
+          "Phép cộng và phép nhân",
+          "Phép trừ và phép chia",
+          "Lũy thừa với số mũ tự nhiên",
+          "Thứ tự thực hiện phép tính"
+        ]
+      },
+      {
+        "chapter": "Chương II: Số nguyên",
+        "lessons": [
+          "Số nguyên âm và tập hợp số nguyên",
+          "Thứ tự trong tập hợp số nguyên",
+          "Phép cộng và phép trừ số nguyên",
+          "Phép nhân và phép chia số nguyên",
+          "Quy tắc dấu ngoặc",
+          "Bội và ước của số nguyên"
+        ]
+      },
+      {
+        "chapter": "Chương III: Phân số",
+        "lessons": [
+          "Mở rộng khái niệm phân số",
+          "Tính chất cơ bản của phân số",
+          "So sánh phân số",
+          "Phép cộng và phép trừ phân số",
+          "Phép nhân và phép chia phân số",
+          "Hỗn số, số thập phân, phần trăm"
+        ]
+      },
+      {
+        "chapter": "Chương IV: Số thập phân",
+        "lessons": [
+          "Số thập phân",
+          "Các phép tính với số thập phân",
+          "Làm tròn và ước lượng",
+          "Tỉ số và tỉ số phần trăm"
+        ]
+      },
+      {
+        "chapter": "Chương V: Hình học trực quan",
+        "lessons": [
+          "Điểm, đường thẳng, tia",
+          "Đoạn thẳng, độ dài đoạn thẳng",
+          "Góc, số đo góc",
+          "Hình tam giác, hình vuông, hình chữ nhật",
+          "Hình thoi, hình bình hành, hình thang cân",
+          "Hình tròn, hình lục giác đều",
+          "Chu vi và diện tích một số hình"
+        ]
+      },
+      {
+        "chapter": "Chương VI: Tính đối xứng của hình phẳng",
+        "lessons": [
+          "Hình có trục đối xứng",
+          "Hình có tâm đối xứng",
+          "Vai trò của đối xứng trong thực tế"
+        ]
+      },
+      {
+        "chapter": "Chương VII: Thu thập và tổ chức dữ liệu",
+        "lessons": [
+          "Thu thập dữ liệu, phân loại dữ liệu",
+          "Bảng dữ liệu ban đầu",
+          "Biểu đồ tranh, biểu đồ cột",
+          "Xác suất thực nghiệm"
+        ]
+      }
+    ],
+    "7": [
+      {
+        "chapter": "Chương I: Số hữu tỉ",
+        "lessons": [
+          "Tập hợp số hữu tỉ",
+          "Các phép tính với số hữu tỉ",
+          "Lũy thừa của một số hữu tỉ",
+          "Thứ tự thực hiện phép tính",
+          "Quy tắc chuyển vế"
+        ]
+      },
+      {
+        "chapter": "Chương II: Số thực",
+        "lessons": [
+          "Số vô tỉ, căn bậc hai",
+          "Số thực và trục số thực",
+          "Giá trị tuyệt đối của số thực",
+          "Làm tròn và ước lượng"
+        ]
+      },
+      {
+        "chapter": "Chương III: Tỉ lệ thức và đại lượng tỉ lệ",
+        "lessons": [
+          "Tỉ lệ thức, tính chất dãy tỉ số bằng nhau",
+          "Đại lượng tỉ lệ thuận",
+          "Đại lượng tỉ lệ nghịch"
+        ]
+      },
+      {
+        "chapter": "Chương IV: Biểu thức đại số",
+        "lessons": [
+          "Biểu thức số, biểu thức đại số",
+          "Đơn thức, đa thức một biến",
+          "Cộng, trừ đa thức một biến",
+          "Nhân, chia đa thức một biến"
+        ]
+      },
+      {
+        "chapter": "Chương V: Hình học trực quan",
+        "lessons": [
+          "Hình hộp chữ nhật, hình lập phương",
+          "Hình lăng trụ đứng tam giác, tứ giác",
+          "Diện tích xung quanh và thể tích"
+        ]
+      },
+      {
+        "chapter": "Chương VI: Góc và đường thẳng song song",
+        "lessons": [
+          "Góc ở vị trí đặc biệt",
+          "Tia phân giác của một góc",
+          "Hai đường thẳng song song",
+          "Tiên đề Euclid",
+          "Định lí"
+        ]
+      },
+      {
+        "chapter": "Chương VII: Tam giác",
+        "lessons": [
+          "Tổng các góc trong tam giác",
+          "Hai tam giác bằng nhau",
+          "Các trường hợp bằng nhau của tam giác",
+          "Tam giác cân, tam giác đều",
+          "Định lí Pythagore"
+        ]
+      },
+      {
+        "chapter": "Chương VIII: Thống kê và xác suất",
+        "lessons": [
+          "Biểu đồ hình quạt tròn",
+          "Biểu đồ đoạn thẳng",
+          "Xác suất của biến cố ngẫu nhiên"
+        ]
+      }
+    ],
+    "8": [
+      {
+        "chapter": "Chương I: Đa thức",
+        "lessons": [
+          "Đơn thức, đa thức nhiều biến",
+          "Cộng, trừ đa thức nhiều biến",
+          "Nhân, chia đa thức nhiều biến",
+          "Hằng đẳng thức đáng nhớ",
+          "Phân tích đa thức thành nhân tử"
+        ]
+      },
+      {
+        "chapter": "Chương II: Phân thức đại số",
+        "lessons": [
+          "Phân thức đại số",
+          "Tính chất cơ bản của phân thức",
+          "Các phép tính với phân thức",
+          "Biến đổi các biểu thức hữu tỉ"
+        ]
+      },
+      {
+        "chapter": "Chương III: Phương trình bậc nhất một ẩn",
+        "lessons": [
+          "Phương trình bậc nhất một ẩn",
+          "Phương trình đưa về dạng ax + b = 0",
+          "Giải bài toán bằng cách lập phương trình"
+        ]
+      },
+      {
+        "chapter": "Chương IV: Bất phương trình bậc nhất một ẩn",
+        "lessons": [
+          "Liên hệ giữa thứ tự và phép tính",
+          "Bất phương trình bậc nhất một ẩn",
+          "Bất phương trình đưa về dạng bậc nhất"
+        ]
+      },
+      {
+        "chapter": "Chương V: Hàm số và đồ thị",
+        "lessons": [
+          "Hàm số, mặt phẳng tọa độ",
+          "Đồ thị hàm số y = ax + b",
+          "Hệ số góc của đường thẳng"
+        ]
+      },
+      {
+        "chapter": "Chương VI: Hình học phẳng",
+        "lessons": [
+          "Định lí Thalès trong tam giác",
+          "Đường trung bình của tam giác, hình thang",
+          "Tính chất đường phân giác",
+          "Tam giác đồng dạng",
+          "Các trường hợp đồng dạng",
+          "Ứng dụng thực tế"
+        ]
+      },
+      {
+        "chapter": "Chương VII: Hình khối trong thực tiễn",
+        "lessons": [
+          "Hình chóp tam giác đều, tứ giác đều",
+          "Diện tích xung quanh và thể tích",
+          "Hình chóp cụt đều"
+        ]
+      },
+      {
+        "chapter": "Chương VIII: Thống kê và xác suất",
+        "lessons": [
+          "Phân tích dữ liệu thống kê",
+          "Biến cố và xác suất",
+          "Xác suất thực nghiệm"
+        ]
+      }
+    ],
+    "9": [
+      {
+        "chapter": "Chương I: Căn bậc hai, căn bậc ba",
+        "lessons": [
+          "Căn bậc hai, căn thức bậc hai",
+          "Các phép biến đổi căn thức",
+          "Căn bậc ba"
+        ]
+      },
+      {
+        "chapter": "Chương II: Hàm số bậc nhất và bậc hai",
+        "lessons": [
+          "Hàm số bậc nhất",
+          "Đồ thị hàm số bậc nhất",
+          "Hàm số bậc hai y = ax²",
+          "Đồ thị hàm số bậc hai"
+        ]
+      },
+      {
+        "chapter": "Chương III: Phương trình và hệ phương trình",
+        "lessons": [
+          "Phương trình bậc hai một ẩn",
+          "Công thức nghiệm",
+          "Hệ thức Viète",
+          "Phương trình quy về bậc hai",
+          "Hệ phương trình bậc nhất hai ẩn",
+          "Giải bài toán bằng cách lập hệ phương trình"
+        ]
+      },
+      {
+        "chapter": "Chương IV: Bất đẳng thức, bất phương trình",
+        "lessons": [
+          "Bất đẳng thức",
+          "Bất phương trình bậc nhất một ẩn",
+          "Bất phương trình bậc hai một ẩn"
+        ]
+      },
+      {
+        "chapter": "Chương V: Hệ thức lượng trong tam giác vuông",
+        "lessons": [
+          "Tỉ số lượng giác của góc nhọn",
+          "Hệ thức giữa cạnh và góc",
+          "Ứng dụng thực tế"
+        ]
+      },
+      {
+        "chapter": "Chương VI: Đường tròn",
+        "lessons": [
+          "Sự xác định đường tròn",
+          "Tính chất đối xứng",
+          "Vị trí tương đối của đường thẳng và đường tròn",
+          "Góc với đường tròn",
+          "Tứ giác nội tiếp",
+          "Độ dài đường tròn, cung tròn",
+          "Diện tích hình tròn, hình quạt"
+        ]
+      },
+      {
+        "chapter": "Chương VII: Hình học không gian",
+        "lessons": [
+          "Hình trụ, hình nón, hình cầu",
+          "Diện tích xung quanh và thể tích"
+        ]
+      },
+      {
+        "chapter": "Chương VIII: Thống kê và xác suất",
+        "lessons": [
+          "Mô tả và biểu diễn dữ liệu",
+          "Xác suất thực nghiệm và xác suất lý thuyết"
+        ]
+      }
+    ],
+    "10": [
+      {
+        "chapter": "Chương I: Mệnh đề và tập hợp",
+        "lessons": [
+          "Mệnh đề",
+          "Tập hợp",
+          "Các phép toán trên tập hợp"
+        ]
+      },
+      {
+        "chapter": "Chương II: Bất phương trình và hệ bất phương trình bậc nhất hai ẩn",
+        "lessons": [
+          "Bất phương trình bậc nhất hai ẩn",
+          "Hệ bất phương trình bậc nhất hai ẩn"
+        ]
+      },
+      {
+        "chapter": "Chương III: Hàm số bậc hai và đồ thị",
+        "lessons": [
+          "Hàm số bậc hai",
+          "Đồ thị hàm số bậc hai",
+          "Ứng dụng của hàm số bậc hai"
+        ]
+      },
+      {
+        "chapter": "Chương IV: Phương trình và hệ phương trình",
+        "lessons": [
+          "Phương trình quy về bậc nhất, bậc hai",
+          "Phương trình chứa ẩn trong dấu căn",
+          "Hệ phương trình bậc nhất ba ẩn"
+        ]
+      },
+      {
+        "chapter": "Chương V: Hệ thức lượng trong tam giác",
+        "lessons": [
+          "Giá trị lượng giác của góc từ 0° đến 180°",
+          "Định lí côsin, định lí sin",
+          "Giải tam giác và ứng dụng"
+        ]
+      },
+      {
+        "chapter": "Chương VI: Vectơ",
+        "lessons": [
+          "Khái niệm vectơ",
+          "Tổng và hiệu của hai vectơ",
+          "Tích của vectơ với một số",
+          "Vectơ trong mặt phẳng tọa độ"
+        ]
+      },
+      {
+        "chapter": "Chương VII: Tích vô hướng của hai vectơ và ứng dụng",
+        "lessons": [
+          "Tích vô hướng của hai vectơ",
+          "Biểu thức tọa độ của tích vô hướng",
+          "Ứng dụng: tính góc, khoảng cách"
+        ]
+      },
+      {
+        "chapter": "Chương VIII: Phương pháp tọa độ trong mặt phẳng",
+        "lessons": [
+          "Phương trình đường thẳng",
+          "Vị trí tương đối và góc",
+          "Khoảng cách",
+          "Đường tròn",
+          "Ba đường conic"
+        ]
+      }
+    ],
+    "11": [
+      {
+        "chapter": "Chương I: Hàm số lượng giác và phương trình lượng giác",
+        "lessons": [
+          "Góc lượng giác, cung lượng giác",
+          "Giá trị lượng giác của góc lượng giác",
+          "Hàm số lượng giác",
+          "Phương trình lượng giác cơ bản",
+          "Một số phương trình lượng giác thường gặp"
+        ]
+      },
+      {
+        "chapter": "Chương II: Dãy số, cấp số cộng và cấp số nhân",
+        "lessons": [
+          "Dãy số",
+          "Cấp số cộng",
+          "Cấp số nhân"
+        ]
+      },
+      {
+        "chapter": "Chương III: Giới hạn",
+        "lessons": [
+          "Giới hạn của dãy số",
+          "Giới hạn của hàm số",
+          "Hàm số liên tục"
+        ]
+      },
+      {
+        "chapter": "Chương IV: Đạo hàm",
+        "lessons": [
+          "Định nghĩa và ý nghĩa của đạo hàm",
+          "Quy tắc tính đạo hàm",
+          "Đạo hàm của hàm số lượng giác",
+          "Vi phân",
+          "Đạo hàm cấp hai"
+        ]
+      },
+      {
+        "chapter": "Chương V: Quan hệ song song trong không gian",
+        "lessons": [
+          "Đường thẳng và mặt phẳng song song",
+          "Hai mặt phẳng song song",
+          "Phép chiếu song song"
+        ]
+      },
+      {
+        "chapter": "Chương VI: Quan hệ vuông góc trong không gian",
+        "lessons": [
+          "Vectơ trong không gian",
+          "Hai đường thẳng vuông góc",
+          "Đường thẳng vuông góc với mặt phẳng",
+          "Hai mặt phẳng vuông góc",
+          "Khoảng cách",
+          "Góc"
+        ]
+      },
+      {
+        "chapter": "Chương VII: Thống kê và xác suất",
+        "lessons": [
+          "Số đặc trưng đo xu thế trung tâm",
+          "Số đặc trưng đo độ phân tán",
+          "Biến cố và xác suất",
+          "Quy tắc tính xác suất"
+        ]
+      }
+    ],
+    "12": [
+      {
+        "chapter": "Chương I: Ứng dụng đạo hàm để khảo sát hàm số",
+        "lessons": [
+          "Tính đơn điệu của hàm số",
+          "Cực trị của hàm số",
+          "Giá trị lớn nhất và giá trị nhỏ nhất",
+          "Đường tiệm cận",
+          "Khảo sát sự biến thiên và vẽ đồ thị hàm số"
+        ]
+      },
+      {
+        "chapter": "Chương II: Hàm số mũ và hàm số logarit",
+        "lessons": [
+          "Lũy thừa",
+          "Hàm số mũ",
+          "Hàm số logarit",
+          "Phương trình mũ và logarit",
+          "Bất phương trình mũ và logarit"
+        ]
+      },
+      {
+        "chapter": "Chương III: Nguyên hàm, tích phân và ứng dụng",
+        "lessons": [
+          "Nguyên hàm",
+          "Tích phân",
+          "Ứng dụng tích phân để tính diện tích, thể tích"
+        ]
+      },
+      {
+        "chapter": "Chương IV: Số phức",
+        "lessons": [
+          "Số phức",
+          "Cộng, trừ, nhân, chia số phức",
+          "Phương trình bậc hai với hệ số thực"
+        ]
+      },
+      {
+        "chapter": "Chương V: Khối đa diện",
+        "lessons": [
+          "Khái niệm khối đa diện",
+          "Thể tích khối chóp",
+          "Thể tích khối lăng trụ"
+        ]
+      },
+      {
+        "chapter": "Chương VI: Mặt nón, mặt trụ, mặt cầu",
+        "lessons": [
+          "Mặt nón",
+          "Mặt trụ",
+          "Mặt cầu"
+        ]
+      },
+      {
+        "chapter": "Chương VII: Phương pháp tọa độ trong không gian",
+        "lessons": [
+          "Hệ tọa độ trong không gian",
+          "Phương trình mặt phẳng",
+          "Phương trình đường thẳng"
+        ]
+      }
+    ]
+  }
+}

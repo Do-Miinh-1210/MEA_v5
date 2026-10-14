@@ -1,0 +1,23 @@
+import fs from 'fs';
+
+let content = fs.readFileSync('constants.tsx', 'utf8');
+
+const newTemplate = `,
+          {
+            "id": "shading-16",
+            "title": "16. Diện tích giữa 2 đồ thị",
+            "description": "Diện tích giữa 2 đồ thị và 2 đường thẳng x=a, x=b",
+            "code": "\\\\begin{tikzpicture}[\\n  >=stealth, line join=round, line cap=round,\\n  every node/.style={font=\\\\normalsize},\\n  declare function={\\n    f(\\\\x) = \\\\x*\\\\x*\\\\x - 3*\\\\x + 1;\\n    g(\\\\x) = -\\\\x*\\\\x + 1;\\n    xmin = -3; xmax = 2.5;\\n    ymin = -5.5; ymax = 4.5;\\n    x1 = (-1 - sqrt(13))/2;\\n    x2 = 0;\\n    x3 = (-1 + sqrt(13))/2;\\n  }\\n]\\n\\\\draw[-Stealth, line width=0.7pt] (xmin, 0) -- (xmax, 0) node[below] {$x$};\\n\\\\draw[-Stealth, line width=0.7pt] (0, ymin) -- (0, ymax) node[shift={(-6pt,-5pt)}] {$y$};\\n\\n\\\\begin{scope}\\n  \\\\clip (xmin, ymin) rectangle (xmax, ymax);\\n  \\n  \\\\fill[pattern={Lines[angle=45, distance=3pt, line width=0.3pt]}, pattern color=teal]\\n    plot[domain=x1:x2, smooth, samples=150] (\\\\x, {f(\\\\x)}) --\\n    plot[domain=x2:x1, smooth, samples=150] (\\\\x, {g(\\\\x)}) -- cycle;\\n    \\n  \\\\fill[pattern={Lines[angle=135, distance=3pt, line width=0.3pt]}, pattern color=orange]\\n    plot[domain=x2:x3, smooth, samples=150] (\\\\x, {g(\\\\x)}) --\\n    plot[domain=x3:x2, smooth, samples=150] (\\\\x, {f(\\\\x)}) -- cycle;\\n    \\n  \\\\draw[line width=0.6pt, smooth, samples=300, domain=xmin:xmax,\\n    postaction={decoration={markings, mark=at position 0.86 with {\\\\node[transform shape, sloped, above left] {$y=x^3-3x+1$};}}, decorate}]\\n    plot (\\\\x, {f(\\\\x)});\\n    \\n  \\\\draw[line width=0.6pt, smooth, samples=300, domain=xmin:xmax,\\n    postaction={decoration={markings, mark=at position 0.82 with {\\\\node[transform shape, sloped, below right] {$y=-x^2+1$};}}, decorate}]\\n    plot (\\\\x, {g(\\\\x)});\\n\\\\end{scope}\\n\\n\\\\draw[dashed, line width=0.4pt] (x1, {g(x1)}) -- (180:{-x1});\\n\\\\draw[dashed, line width=0.4pt] (x3, {g(x3)}) -- (0:x3);\\n\\n\\\\fill (0,0) circle (0.8pt) node[shift={(-135:10pt)}] {$O$};\\n\\\\fill (x1, {g(x1)}) circle (0.8pt);\\n\\\\fill (180:{-x1}) circle (0.8pt) node[above] {$x_1$};\\n\\\\fill (90:1) circle (0.8pt) node[shift={(45:10pt)}] {$1$};\\n\\\\fill (x3, {g(x3)}) circle (0.8pt);\\n\\\\fill (0:x3) circle (0.8pt) node[above] {$x_2$};\\n\\\\end{tikzpicture}"
+          }`;
+
+const searchString = `            "code": "\\\\begin{tikzpicture}[\\n  >=stealth, line join=round, line cap=round, scale=1.5,\\n  every node/.style={font=\\\\normalsize},\\n  declare function={\\n    f(\\\\x) = sqrt(abs(\\\\x));\\n    g(\\\\x) = \\\\x - 2;\\n    xmin = -0.5; xmax = 4.5;\\n    ymin = -1; ymax = 2.5;\\n    x1 = 0; x2 = 2; x3 = 4;\\n  }\\n]\\n\\\\draw[-Stealth, line width=0.7pt] (xmin,0) -- (xmax,0) node[below] {$x$};\\n\\\\draw[-Stealth, line width=0.7pt] (0,ymin) -- (0,ymax) node[shift={(-6pt,-5pt)}] {$y$};\\n\\\\fill (0,0) circle (0.8pt) node[shift={(-135:12pt)}] {$O$};\\n\\n\\\\begin{scope}\\n  \\\\clip (xmin,ymin) rectangle (xmax,ymax);\\n  % Tô miền 1: Dưới f(x) từ 0 đến 2\\n  \\\\fill[pattern={Lines[angle=45, distance=3pt, line width=0.3pt]}, pattern color=teal!70]\\n    plot[domain=x1:x2, smooth, samples=100] (\\\\x, {f(\\\\x)}) -- (x2,0) -- (x1,0) -- cycle;\\n    \\n  % Tô miền 2: Giữa f(x) và g(x) từ 2 đến 4\\n  \\\\fill[pattern={Lines[angle=45, distance=3pt, line width=0.3pt]}, pattern color=teal!70]\\n    plot[domain=x2:x3, smooth, samples=100] (\\\\x, {f(\\\\x)}) --\\n    plot[domain=x3:x2, smooth, samples=100] (\\\\x, {g(\\\\x)}) -- cycle;\\n    \\n  \\\\draw[line width=0.6pt, smooth, samples=200, domain=0:xmax,\\n    postaction={decoration={markings, mark=at position 0.5 with {\\\\node[transform shape, sloped, above] {$y=\\\\sqrt{x}$};}}, decorate}]\\n    plot (\\\\x, {f(\\\\x)});\\n    \\n  \\\\draw[line width=0.6pt, smooth, samples=100, domain=xmin:xmax,\\n    postaction={decoration={markings, mark=at position 0.6 with {\\\\node[transform shape, sloped, below right] {$y=x-2$};}}, decorate}]\\n    plot (\\\\x, {g(\\\\x)});\\n\\\\end{scope}\\n\\\\draw[dashed, line width=0.6pt] (x3,0) node[below] {$4$} -- (x3,{f(x3)});\\n\\\\fill (x2,0) circle (0.8pt) node[below right] {$2$};\\n\\\\fill (x3,{f(x3)}) circle (0.8pt);\\n\\\\end{tikzpicture}"
+          }`;
+
+let updatedContent = content.replace(searchString, searchString + newTemplate);
+
+if (content === updatedContent) {
+  console.log('Failed to add template.');
+} else {
+  fs.writeFileSync('constants.tsx', updatedContent);
+  console.log('Successfully added template.');
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.container {
+  position: relative;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  width: 500px;
+  border: 1px solid #ccc;
+}
+textarea, pre {
+  margin: 0;
+  border: 0;
+  background: none;
+  box-sizing: border-box;
+  font: inherit;
+  letter-spacing: inherit;
+  padding: 10px 10px 10px 40px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  width: 100%;
+}
+textarea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  color: transparent;
+  caret-color: black;
+  resize: none;
+  z-index: 1;
+}
+pre {
+  position: relative;
+  pointer-events: none;
+  color: black;
+}
+.editor-line {
+  position: relative;
+}
+.editor-line::before {
+  content: attr(data-line);
+  position: absolute;
+  left: -35px;
+  width: 25px;
+  text-align: right;
+  color: #888;
+  user-select: none;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <textarea id="ta">Line 1
+Line 2 which is very very very very very very very very very very very very very very very very very long and will wrap
+Line 3</textarea>
+  <pre id="pr"><span class="editor-line" data-line="1">Line 1</span>
+<span class="editor-line" data-line="2">Line 2 which is very very very very very very very very very very very very very very very very very long and will wrap</span>
+<span class="editor-line" data-line="3">Line 3</span></pre>
+</div>
+<script>
+  const ta = document.getElementById('ta');
+  const pr = document.getElementById('pr');
+  ta.addEventListener('input', () => {
+    const lines = ta.value.split('\n');
+    pr.innerHTML = lines.map((l, i) => `<span class="editor-line" data-line="${i+1}">${l}</span>`).join('\n');
+  });
+</script>
+</body>
+</html>

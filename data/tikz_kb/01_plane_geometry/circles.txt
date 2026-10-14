@@ -1,0 +1,194 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ĐƯỜNG TRÒN — circle, tiếp tuyến, dây cung, đường tròn nội/ngoại tiếp
+═══════════════════════════════════════════════════════════════════════════════
+
+=== TEMPLATE: Đường tròn (O, R) ===
+TAGS: 2D, đường tròn, circle
+KEYWORDS: đường tròn, circle, tâm O, bán kính R
+NOTES: Đường tròn cơ bản với tâm O và bán kính R.
+
+\begin{tikzpicture}[scale=1.2, thick]
+  \coordinate (O) at (0,0);
+  \draw (O) circle (2cm);
+  \fill (O) circle (1.5pt) node[below right] {$O$};
+  % Bán kính
+  \coordinate (A) at (60:2);
+  \fill (A) circle (1.5pt) node[above right] {$A$};
+  \draw[->] (O)--(A) node[midway, above left] {$R$};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Đường tròn với dây cung AB ===
+TAGS: 2D, đường tròn, dây cung, chord
+KEYWORDS: dây cung, chord, AB
+NOTES: AB là dây cung. Đoạn vuông góc từ tâm O xuống dây = OH (H là trung điểm AB).
+
+\begin{tikzpicture}[scale=1.2, thick,
+  tick/.style={postaction={decorate}, decoration={markings,
+    mark=at position 0.5 with {\draw (-2pt,-2pt)--(2pt,2pt);}}}]
+  \coordinate (O) at (0,0);
+  \draw (O) circle (2cm);
+  \fill (O) circle (1.5pt) node[above right] {$O$};
+  \coordinate[label=above left:$A$]  (A) at (-1.732,1);
+  \coordinate[label=above right:$B$] (B) at (1.732,1);
+  \draw (A)--(B);
+  \fill (A) circle (1.2pt);  \fill (B) circle (1.2pt);
+  \coordinate[label=below:$H$] (H) at (0,1);
+  \draw[dashed] (O)--(H);
+  \draw pic [draw, angle radius=2.5mm] {right angle = O--H--B};
+  \draw[tick] (A)--(H);
+  \draw[tick] (H)--(B);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Đường tròn với tiếp tuyến tại A ===
+TAGS: 2D, đường tròn, tiếp tuyến, tangent
+KEYWORDS: tiếp tuyến, tangent, OA vuông góc tiếp tuyến
+NOTES: Tại điểm tiếp xúc A: tiếp tuyến VUÔNG GÓC với bán kính OA.
+
+\begin{tikzpicture}[scale=1.2, thick]
+  \coordinate (O) at (0,0);
+  \draw (O) circle (2cm);
+  \fill (O) circle (1.5pt) node[below left] {$O$};
+  \coordinate[label=above right:$A$] (A) at (60:2);
+  \fill (A) circle (1.5pt);
+  \draw[dashed] (O)--(A);
+  % Đặt tên điểm 2 đầu tiếp tuyến (calc không hoạt động trong "right angle pic")
+  \coordinate (TL) at ($(A)+(-1.5,0.866)$);
+  \coordinate (TR) at ($(A)+(1.5,-0.866)$);
+  \draw[blue, thick] (TL) -- (TR) node[right] {$d$};
+  \draw pic [draw, angle radius=3mm] {right angle = O--A--TR};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Tiếp tuyến chung từ điểm M ngoài đường tròn ===
+TAGS: 2D, đường tròn, tiếp tuyến từ điểm ngoài
+KEYWORDS: tiếp tuyến từ M, MA = MB tiếp tuyến, ME tiếp tuyến từ điểm ngoài
+NOTES: Từ M ngoài (O), kẻ 2 tiếp tuyến MA, MB → MA = MB. OA ⟂ MA, OB ⟂ MB.
+       OM là phân giác AOB.
+
+\begin{tikzpicture}[scale=1, thick,
+  tick/.style={postaction={decorate}, decoration={markings,
+    mark=at position 0.5 with {\draw (-2pt,-2pt)--(2pt,2pt);}}}]
+  \coordinate (O) at (0,0);
+  \draw (O) circle (1.5cm);
+  \fill (O) circle (1.5pt) node[below left] {$O$};
+  \coordinate[label=right:$M$] (M) at (4,0);
+  \fill (M) circle (1.5pt);
+  % 2 tiếp tuyến: tiếp xúc tại A, B
+  \coordinate[label=above right:$A$] (A) at ({1.5*cos(67.98)}, {1.5*sin(67.98)});
+  \coordinate[label=below right:$B$] (B) at ({1.5*cos(-67.98)}, {1.5*sin(-67.98)});
+  \fill (A) circle (1.2pt);
+  \fill (B) circle (1.2pt);
+  \draw[tick] (M)--(A);
+  \draw[tick] (M)--(B);
+  \draw[dashed] (O)--(A);
+  \draw[dashed] (O)--(B);
+  \draw[dashed] (O)--(M);
+  \draw pic [draw, angle radius=2.5mm] {right angle = O--A--M};
+  \draw pic [draw, angle radius=2.5mm] {right angle = O--B--M};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Đường tròn nội tiếp tam giác ===
+TAGS: 2D, đường tròn nội tiếp, incircle
+KEYWORDS: đường tròn nội tiếp, incircle, tâm I
+NOTES: Tâm I cách đều 3 cạnh; r = khoảng cách từ I đến cạnh.
+       Alpha 24 fix — tam giác cũ (1.2, 3) có incenter ≈(1.564, 1.059),
+       không phải (1.4, 1.0). Đổi sang tam giác đều cạnh 4: I = trọng
+       tâm = (0, 2/√3), r = h/3 = 2√3/3 ≈ 1.155.
+
+\begin{tikzpicture}[scale=1, thick]
+  \coordinate[label=below left:$A$]  (A) at (-2, 0);
+  \coordinate[label=below right:$B$] (B) at ( 2, 0);
+  \coordinate[label=above:$C$]       (C) at ( 0, 3.464);   % 2√3
+  \draw (A)--(B)--(C)--cycle;
+  \coordinate (I) at (0, 1.155);                            % 2/√3
+  \fill (I) circle (1.2pt) node[above right=1pt] {$I$};
+  \draw[blue, thick] (I) circle (1.155cm);                  % r = 2/√3
+  % Chân vuông góc xuống AB tại H
+  \coordinate[label=below:$H$] (H) at (0, 0);
+  \draw[dashed] (I)--(H) node[midway, right] {$r$};
+  \draw pic [draw, angle radius=2mm] {right angle = I--H--B};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Đường tròn ngoại tiếp tam giác ===
+TAGS: 2D, đường tròn ngoại tiếp, circumcircle
+KEYWORDS: đường tròn ngoại tiếp, circumcircle, tâm O
+NOTES: Alpha 24 fix — tam giác cũ A=(0,0), B=(4,0), C=(1.5,3) có
+       circumcenter THẬT là (2, 0.875), KHÔNG phải (2,1). Đổi sang
+       tam giác đều cạnh 4: O = trọng tâm = (0, 2/√3), R = 4/√3.
+       Tam giác đều → toán đơn giản, hình đẹp, dễ nhớ.
+
+\begin{tikzpicture}[scale=1, thick]
+  % Tam giác đều cạnh 4 — O = centroid = circumcenter
+  \coordinate[label=below left:$A$]  (A) at (-2, 0);
+  \coordinate[label=below right:$B$] (B) at ( 2, 0);
+  \coordinate[label=above:$C$]       (C) at ( 0, 3.464);   % 2√3
+  \draw (A)--(B)--(C)--cycle;
+  \coordinate (O) at (0, 1.155);                            % 2/√3
+  \fill (O) circle (1.2pt) node[below right=1pt] {$O$};
+  \draw[blue, thick] (O) circle (2.31cm);                   % R = 4/√3
+  \draw[->, dashed] (O)--(A) node[midway, below left] {$R$};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hai đường tròn cắt nhau ===
+TAGS: 2D, 2 đường tròn cắt, intersecting circles
+KEYWORDS: hai đường tròn cắt nhau, two circles intersect, OO' < R + R'
+NOTES: 2 đường tròn cắt nhau tại 2 điểm A, B. AB ⟂ OO' và AB cắt OO' tại
+       trung điểm. d = OO' với |R - R'| < d < R + R'.
+
+\begin{tikzpicture}[scale=1, thick]
+  \coordinate (O)  at (0,0);
+  \coordinate (O1) at (3,0);
+  \draw (O)  circle (2cm);
+  \draw (O1) circle (1.8cm);
+  \fill (O)  circle (1.5pt) node[below left]  {$O$};
+  \fill (O1) circle (1.5pt) node[below right] {$O'$};
+  \draw[dashed] (O)--(O1);
+  % Giao điểm A, B (xấp xỉ — minh hoạ)
+  \coordinate[label=above:$A$] (A) at (1.7, 1.05);
+  \coordinate[label=below:$B$] (B) at (1.7,-1.05);
+  \fill (A) circle (1.2pt);
+  \fill (B) circle (1.2pt);
+  \draw (A)--(B);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hai đường tròn tiếp xúc ngoài ===
+TAGS: 2D, 2 đường tròn tiếp xúc, externally tangent
+KEYWORDS: hai đường tròn tiếp xúc ngoài, externally tangent, d = R + R'
+NOTES: OO' = R + R'. Tiếp xúc tại 1 điểm M nằm trên đoạn OO'.
+
+\begin{tikzpicture}[scale=1, thick]
+  \coordinate (O)  at (0,0);
+  \coordinate (O1) at (3,0);
+  \draw (O)  circle (1.2cm);
+  \draw (O1) circle (1.8cm);
+  \fill (O)  circle (1.5pt) node[below left]  {$O$};
+  \fill (O1) circle (1.5pt) node[below right] {$O'$};
+  \draw[dashed] (O)--(O1);
+  \coordinate[label=below:$M$] (M) at (1.2,0);
+  \fill (M) circle (1.5pt);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hai đường tròn tiếp xúc trong ===
+TAGS: 2D, 2 đường tròn tiếp xúc trong, internally tangent
+KEYWORDS: hai đường tròn tiếp xúc trong, internally tangent, d = |R - R'|
+NOTES: OO' = |R - R'|. Đường tròn nhỏ nằm BÊN TRONG đường tròn lớn, tiếp xúc
+       tại 1 điểm M.
+
+\begin{tikzpicture}[scale=1, thick]
+  \coordinate (O)  at (0,0);
+  \coordinate (O1) at (1,0);
+  \draw (O)  circle (2cm);
+  \draw (O1) circle (1cm);
+  \fill (O)  circle (1.5pt) node[below left]  {$O$};
+  \fill (O1) circle (1.5pt) node[below] {$O'$};
+  \draw[dashed] (O)--(O1);
+  \coordinate[label=right:$M$] (M) at (2,0);
+  \fill (M) circle (1.5pt);
+\end{tikzpicture}

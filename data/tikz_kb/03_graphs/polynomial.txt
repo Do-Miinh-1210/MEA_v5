@@ -1,0 +1,166 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ĐỒ THỊ HÀM ĐA THỨC (bậc 2 / bậc 3 / bậc 4 / phân thức)
+═══════════════════════════════════════════════════════════════════════════════
+
+QUY TẮC PGFPLOTS:
+  • LUÔN khai báo `samples=100` cho hàm cong (bậc 2, 3) hoặc `samples=200`
+    (lượng giác / sóng).
+  • Phép nhân tường minh: `2*x` không phải `2x`. Lũy thừa: `x^2`.
+  • Biểu thức bọc trong `{...}` không phải `(...)`.
+  • Domain rõ ràng: `domain=a:b`.
+
+
+=== TEMPLATE: Parabol y = x^2 ===
+TAGS: graph, parabol, bậc 2
+KEYWORDS: parabol, parabola, bậc 2, y = x^2
+NOTES: Đỉnh O(0,0), trục đối xứng Oy, mở lên.
+
+\begin{tikzpicture}
+\begin{axis}[
+  axis lines=middle, xlabel=$x$, ylabel=$y$,
+  xmin=-3, xmax=3, ymin=-1, ymax=5,
+  width=8cm, height=7cm, samples=100,
+  grid=major, grid style={dashed, gray!30},
+]
+  \addplot[blue, very thick, domain=-2.5:2.5] {x^2};
+  \addlegendentry{$y=x^2$}
+  \addplot[only marks, mark=*, red] coordinates {(0,0)};
+  \node[red, below right] at (axis cs:0,0) {$O$};
+\end{axis}
+\end{tikzpicture}
+
+
+=== TEMPLATE: Đồ thị hàm bậc 3 (1 cực đại + 1 cực tiểu) ===
+TAGS: graph, bậc 3, cubic
+KEYWORDS: hàm bậc 3, cubic, cực trị, y = x^3 - 3x
+NOTES: y = x³ - 3x có CĐ tại (-1, 2), CT tại (1, -2). Đối xứng qua điểm uốn (0,0).
+
+\begin{tikzpicture}
+\begin{axis}[
+  axis lines=middle, xlabel=$x$, ylabel=$y$,
+  xmin=-3, xmax=3, ymin=-4, ymax=4,
+  width=10cm, height=8cm, samples=150,
+  grid=major, grid style={dashed, gray!30},
+]
+  \addplot[blue, very thick, domain=-2.2:2.2] {x^3 - 3*x};
+  \addlegendentry{$y = x^3 - 3x$}
+  % Cực trị
+  \addplot[only marks, mark=*, red, mark size=2.5pt]
+    coordinates {(-1, 2) (1, -2)};
+  \node[red, above left]  at (axis cs:-1, 2)  {CĐ};
+  \node[red, below right] at (axis cs: 1,-2)  {CT};
+  % Điểm uốn
+  \addplot[only marks, mark=*, green!60!black] coordinates {(0,0)};
+  \node[green!60!black, above right] at (axis cs:0,0) {$U$};
+\end{axis}
+\end{tikzpicture}
+
+
+=== TEMPLATE: Đồ thị hàm trùng phương chữ W ===
+TAGS: graph, bậc 4, biquadratic, chữ W
+KEYWORDS: hàm trùng phương, x^4, chữ W
+NOTES: y = x^4 - 2x² có 3 cực trị: 1 CĐ tại (0,0), 2 CT tại (±1, -1).
+
+\begin{tikzpicture}
+\begin{axis}[
+  axis lines=middle, xlabel=$x$, ylabel=$y$,
+  xmin=-2.5, xmax=2.5, ymin=-2, ymax=4,
+  width=10cm, height=8cm, samples=200,
+  grid=major, grid style={dashed, gray!30},
+]
+  \addplot[blue, very thick, domain=-1.8:1.8] {x^4 - 2*x^2};
+  \addlegendentry{$y = x^4 - 2x^2$}
+  \addplot[only marks, mark=*, red, mark size=2.5pt]
+    coordinates {(0,0) (-1,-1) (1,-1)};
+  \node[red, above]      at (axis cs: 0, 0) {CĐ};
+  \node[red, below left] at (axis cs:-1,-1) {CT};
+  \node[red, below right]at (axis cs: 1,-1) {CT};
+\end{axis}
+\end{tikzpicture}
+
+
+=== TEMPLATE: Đồ thị hàm trùng phương chữ U (1 cực trị) ===
+TAGS: graph, bậc 4, U-shape
+KEYWORDS: hàm trùng phương 1 cực trị, x^4 + x^2
+NOTES: y = x^4 + x² chỉ có 1 cực trị tại (0,0) (CT vì a > 0).
+
+\begin{tikzpicture}
+\begin{axis}[
+  axis lines=middle, xlabel=$x$, ylabel=$y$,
+  xmin=-2, xmax=2, ymin=-1, ymax=6,
+  width=8cm, height=7cm, samples=150,
+  grid=major, grid style={dashed, gray!30},
+]
+  \addplot[blue, very thick, domain=-1.5:1.5] {x^4 + x^2};
+  \addlegendentry{$y = x^4 + x^2$}
+  \addplot[only marks, mark=*, red] coordinates {(0,0)};
+  \node[red, below right] at (axis cs:0,0) {CT};
+\end{axis}
+\end{tikzpicture}
+
+
+=== TEMPLATE: Đồ thị hàm phân thức bậc 1/bậc 1 (có TCĐ, TCN) ===
+TAGS: graph, phân thức, hyperbol, asymptote
+KEYWORDS: phân thức, tiệm cận đứng, tiệm cận ngang, y = (x+1)/(x-1)
+NOTES: y = (x+1)/(x-1). TCĐ: x = 1; TCN: y = 1. Hai nhánh ở 2 phía TCĐ.
+
+\begin{tikzpicture}
+\begin{axis}[
+  axis lines=middle, xlabel=$x$, ylabel=$y$,
+  xmin=-4, xmax=5, ymin=-4, ymax=5,
+  width=10cm, height=8cm, samples=200,
+  grid=major, grid style={dashed, gray!30},
+]
+  \addplot[blue, very thick, domain=-3.5:0.85] {(x+1)/(x-1)};
+  \addplot[blue, very thick, domain=1.15:4.5] {(x+1)/(x-1)};
+  % TCĐ: x = 1
+  \addplot[red, dashed, thick] coordinates {(1,-4) (1,5)};
+  \node[red, above] at (axis cs:1,4.5) {$x=1$};
+  % TCN: y = 1
+  \addplot[red, dashed, thick] coordinates {(-4,1) (5,1)};
+  \node[red, right] at (axis cs:4.5,1) {$y=1$};
+\end{axis}
+\end{tikzpicture}
+
+
+=== TEMPLATE: Parabol mở xuống y = -x^2 + 2x + 3 ===
+TAGS: graph, parabol mở xuống, bậc 2 a < 0
+KEYWORDS: parabol mở xuống, a < 0, đỉnh trên cùng, hàm bậc 2 a âm
+NOTES: a < 0 → mở xuống; đỉnh = giá trị LỚN NHẤT.
+
+\begin{tikzpicture}
+\begin{axis}[
+  axis lines=middle, xlabel=$x$, ylabel=$y$,
+  xmin=-2, xmax=4, ymin=-2, ymax=5,
+  width=9cm, height=7cm, samples=100,
+  grid=major, grid style={dashed, gray!30},
+]
+  \addplot[blue, very thick, domain=-1.5:3.5] {-x^2 + 2*x + 3};
+  \addlegendentry{$y = -x^2 + 2x + 3$}
+  % Đỉnh (1, 4)
+  \addplot[only marks, mark=*, red] coordinates {(1, 4)};
+  \node[red, above right] at (axis cs:1, 4) {Đỉnh};
+  % Giao trục Ox: x = -1, x = 3
+  \addplot[only marks, mark=*, green!60!black] coordinates {(-1, 0) (3, 0)};
+\end{axis}
+\end{tikzpicture}
+
+
+=== TEMPLATE: Đồ thị bậc 3 đơn điệu (không cực trị) ===
+TAGS: graph, bậc 3 đồng biến, cubic monotonic
+KEYWORDS: hàm bậc 3 đơn điệu, không cực trị, y = x^3 + x
+NOTES: y = x^3 + x: y' = 3x^2 + 1 > 0 ∀x → đồng biến trên R, KHÔNG cực trị.
+
+\begin{tikzpicture}
+\begin{axis}[
+  axis lines=middle, xlabel=$x$, ylabel=$y$,
+  xmin=-2.5, xmax=2.5, ymin=-6, ymax=6,
+  width=8cm, height=8cm, samples=100,
+  grid=major, grid style={dashed, gray!30},
+]
+  \addplot[blue, very thick, domain=-1.7:1.7] {x^3 + x};
+  \addlegendentry{$y = x^3 + x$}
+  % Điểm uốn (0,0)
+  \addplot[only marks, mark=*, green!60!black] coordinates {(0,0)};
+\end{axis}
+\end{tikzpicture}

@@ -1,0 +1,199 @@
+142: \\draw[line width=0.6pt] (\\t) circle (0.8pt) node[shift={(\\pos:9pt)}] {$\\t$};
+162: \\draw[line width=0.6pt] (\\t) circle (0.8pt) node[shift={(\\pos:9pt)}] {$\\t$};
+179: \\draw[line width=0.6pt] (\\t) circle (0.8pt) node[shift={(\\pos:9pt)}] {$\\t$};
+196: \\draw[line width=0.6pt] (\\t) circle (0.8pt) node[shift={(\\pos:9pt)}] {$\\t$};
+215: \\draw[line width=0.6pt] (\\t) circle (0.8pt) node[shift={(\\pos:9pt)}] {$\\t$};
+231: \\draw[line width=0.6pt] (\\t) circle (0.8pt) node[shift={(\\pos:9pt)}] {$\\t$};
+251: \\draw[line width=0.6pt] (\\t) circle (0.8pt) node[shift={(\\pos:9pt)}] {$\\t$};
+269: \\draw[line width=0.6pt] (\\t) circle (0.8pt) node[shift={(\\pos:9pt)}] {$\\t$};
+294: \\draw[line width=0.6pt] (\\t) circle (0.8pt) node[shift={(\\pos:9pt)}] {$\\t$};
+323: \\draw[line width=0.6pt] (\\t) circle (0.8pt) node[shift={(\\pos:9pt)}] {$\\t$};
+358: \\draw[line width=0.6pt] (\\t) circle (0.8pt) node[shift={(\\pos:9pt)}] {$\\t$};
+382: \\draw[line width=0.6pt] (\\t) circle (0.8pt) node[shift={(\\pos:9pt)}] {$\\t$};
+407: \\draw[line width=0.6pt] let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)});
+409: \\draw[line width=0.6pt] (\\t) circle (0.8pt) node[shift={(\\pos:9pt)}] {$\\t$};
+435: \\draw[line width=0.6pt] let \\p1=($(I)-(D)$) in (I) circle ({veclen(\\x1,\\y1)});
+438: \\draw[line width=0.6pt] (\\t) circle (0.8pt) node[shift={(\\pos:9pt)}] {$\\t$};
+471: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+488: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+508: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+528: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+545: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+562: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+580: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+597: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+615: \\draw (\\t) circle (0.8pt) node[shift={({90-goc+goc*\\i}:9pt)}, font=\\normalsize]{$\\t$};
+634: \\draw (\\t) circle (0.8pt) node[shift={({90-goc+goc*\\i}:9pt)}, font=\\normalsize]{$\\t$};
+652: \\draw (\\t) circle (0.8pt) node[shift={({90-goc+goc*\\i}:9pt)}, font=\\normalsize]{$\\t$};
+662: \draw (0,0.5) circle (0.5);
+680: \\draw let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)});
+682: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+697: \\draw let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)});
+699: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+718: let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)})
+721: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+748: let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)})
+751: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+767: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+796: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+814: (O) circle (r)
+817: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+847: (O) circle (r)
+850: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+874: let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)})
+877: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+911: (O) circle (R)
+912: (O') circle (r)
+916: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+946: (O) circle (R)
+947: (O') circle (r)
+951: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+966: (O) circle (R)
+967: (O') circle (r)
+970: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\t$};
+981: \fill [blue] (-1,-2.8) circle (0.2);
+986: \fill (0,0) circle (0.8pt);
+1060: \\draw (\\p) circle (0.8pt) node[shift={(\\pos:9pt)}, font=\\normalsize] {$\\lab$};
+1090: \\draw (\\p) circle (0.8pt) node[shift={(\\pos:9pt)}, font=\\normalsize] {$\\lab$};
+1139: \\draw (\\p) circle (0.8pt) node[shift={(\\pos:9pt)}, font=\\normalsize] {$\\lab$};
+1202: \\draw (\\p) circle (0.8pt) node[shift={(\\pos:9pt)}, font=\\normalsize] {$\\lab$};
+1243: \\draw (\\p) circle (0.8pt) node[shift={(\\pos:9pt)}, font=\\normalsize] {$\\lab$};
+1272: \\draw (M) circle (0.8pt) node[shift={(goc:8pt)}, font=\\normalsize] {$M$};
+1313: \\draw (\\p) circle (0.8pt) node[shift={(\\pos:9pt)}, font=\\normalsize] {$\\lab$};
+1344: \\draw (M) circle (0.8pt) node[shift={(120:8pt)}, font=\\normalsize] {$M$};
+1369: \\draw (\\x) circle (0.8pt) node[shift={(\\goc:9pt)}, font=\\normalsize]{$\\x$};
+1393: \\draw (\\x) circle (0.8pt) node[shift={(\\goc:9pt)}, font=\\normalsize]{$\\x$};
+1410: \\draw (\\t) circle (0.8pt) node[shift={(\\g:8pt)}, font=\\normalsize]{$\\t$};
+1431: \\draw (\\x) circle (0.8pt) node[shift={(\\goc:9pt)}, font=\\normalsize]{$\\x$};
+1453: \\draw (\\t) circle (0.8pt) node[shift={(\\g:8pt)}, font=\\normalsize]{$\\t$};
+1478: \\draw (\\t) circle (0.8pt) node[shift={(\\g:8pt)}, font=\\normalsize]{$\\t$};
+1506: \\draw (\\x) circle (0.8pt) node[shift={(\\goc:9pt)}, font=\\normalsize]{$\\t$};
+1530: \\draw (\\t) circle (0.8pt) node[shift={(\\g:8pt)}, font=\\normalsize]{$\\t$};
+1557: \\draw (\\x) circle (0.8pt) node[shift={(\\goc:9pt)}, font=\\normalsize]{$\\t$};
+1585: \\draw (\\x) circle (0.8pt) node[shift={(\\goc:9pt)}, font=\\normalsize]{$\\t$};
+1609: \\draw (\\t) circle (0.8pt) node[shift={(\\g:8pt)}, font=\\normalsize]{$\\t$};
+1636: \\draw (\\x) circle (0.8pt) node[shift={(\\goc:9pt)}, font=\\normalsize]{$\\t$};
+1666: \\draw (\\x) circle (0.8pt) node[shift={(\\goc:9pt)}, font=\\normalsize]{$\\t$};
+1691: \\draw (\\t) circle (0.8pt) node[shift={(\\g:8pt)}, font=\\normalsize]{$\\t$};
+1719: \\draw (\\x) circle (0.8pt) node[shift={(\\goc:9pt)}, font=\\normalsize]{$\\t$};
+1757: \\draw (\\x) circle (0.8pt);
+1778: \fill (\t) circle (0.8pt) node[shift={(\g:9pt)}]{$\t$};
+1816: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\text$};
+1847: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\text$};
+1871: \\draw[line width=0.6pt] (0,0) coordinate (O) circle (R);
+1881: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\text$};
+1904: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\text$};
+1914: \\draw[line width=0.6pt] (0,0) coordinate (O) circle (R);
+1928: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\text$};
+2021: \\draw[line width=0.6pt] (0,0) coordinate (O) circle (R);
+2044: \\draw[dashed, line width=0.4pt] (0,0) coordinate (O) circle (R);
+2066: \\draw[line width=0.6pt] (0,0) coordinate (O) circle (R);
+2097: \\draw[dashed, line width=0.4pt] (O) circle (rs);
+2129: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\text$};
+2132: \\draw (\\t) circle (0.8pt) node[shift={(\\g:9pt)}, font=\\normalsize]{$\\d$};
+2297: ([yshift=18pt]N13) node[circle, inner sep=1pt] (A1) {$0$}
+2298: ([yshift=-18pt]N22) node[circle, inner sep=1pt] (A2) {$405$}
+2299: ([yshift=38pt]N33) node[circle, inner sep=1pt] (A3) {$324$}
+2320: ([yshift=18pt]N13) node[circle, inner sep=0.5pt] (A1) {$0$}
+2321: ([yshift=-20pt]N22) node[draw=blue, circle, inner sep=1pt] (A2) {$405$}
+2322: ([yshift=-50pt]N32) node[circle, inner sep=0.5pt] (A3) {$324$}
+2344: ([yshift=70pt, xshift=0pt]N23) node[draw=blue, circle, inner sep=1pt] (A2) {$405$}
+2345: ([yshift=45pt, xshift=0pt]N33) node[draw=teal, circle, inner sep=1pt] (A3) {$324$}
+2368: ([xshift=-11pt, yshift=88pt]N23) node[draw=blue, circle, inner sep=1pt] (A2) {$405$}
+2395: ([xshift=0pt, yshift=-10pt]N42) node[circle, inner sep=1pt] (A4) {$f(x_3)$}
+2398: ([xshift=0pt, yshift=-10pt]N72) node[circle, inner sep=1pt] (A7) {$+\\infty$}
+2424: ([xshift=0cm, yshift=-0.3cm]N42) node[circle, inner sep=0.03cm] (A4) {$f(x_3)$}
+2427: ([xshift=0cm, yshift=-0.3cm]N72) node[circle, inner sep=0.03cm] (A7) {$+\\infty$}
+2707: ([yshift=-15pt]N22) node[draw=blue, circle, inner sep=1pt] (A2) {$405$}
+2708: ([yshift=15pt]N33) node[draw=teal, circle, inner sep=1pt] (A3) {$324$}
+2743: \\fill (0,0) circle (0.8pt) node[shift={(-135:10pt)}] {$O$};
+2753: \\fill (0, 1) circle (0.8pt) node[shift={(135:10pt)}] {$1$};
+2757: \\fill (2, -3) circle (0.8pt);
+2760: \\fill (2, 0) circle (0.8pt) node[shift={(90:10pt)}] {$2$};
+2761: \\fill (0, -3) circle (0.8pt) node[shift={(180:10pt)}] {$-3$};
+2787: \\fill (0,0) circle (0.8pt) node[shift={(-10pt,-10pt)}] {$O$};
+2810: \\fill (0, 2) circle (0.8pt) node[shift={(135:10pt)}] {$2$};
+2813: \\fill (2, 6) circle (0.8pt);
+2817: \\fill (1, 4) circle (0.8pt) node[shift={(135:10pt)}] {$I$};
+2841: \\fill (0,0) circle (0.8pt) node[shift={(-135:10pt)}] {$O$};
+2854: \\fill (-1,-4) circle (0.8pt);
+2855: \\fill (3,4) circle (0.8pt);
+2856: \\fill (0,-5) circle (0.8pt) node[right] {$-5$};
+2877: \\fill (0,0) circle (0.8pt) node[shift={(-10pt,10pt)}] {$O$};
+2885: \\fill (0, -2) circle (0.8pt) node[shift={(14pt,-8pt)}] {$-2$};
+2886: \\fill (2, 2) circle (0.8pt);
+2887: \\fill (0, 2) circle (0.8pt) node[left=3pt] {$2$};
+2888: \\fill (2, 0) circle (0.8pt) node[below=3pt] {$2$};
+2890: \\fill (1, 0) circle (0.8pt) node[shift={(10pt,-10pt)}] {$1$};
+2907: \\fill (0,0) circle (0.8pt) node[shift={(-135:10pt)}] {$O$};
+2918: \\fill (-2,1) circle (0.8pt) node[shift={(135:10pt)}] {$I$};
+2919: \\fill (-2,0) circle (0.8pt) node[shift={(-145:12pt)}] {$-2$};
+2920: \\fill (0,1) circle (0.8pt) node[shift={(45:10pt)}] {$1$};
+2921: \\fill (1,0) circle (0.8pt) node[below right] {$1$};
+2922: \\fill (0,-0.5) circle (0.8pt) node[shift={(-35:12pt)}] {$-\\dfrac{1}{2}$};
+2951: \\fill (0,0) circle (0.8pt) node[shift={(-135:10pt)}] {$O$};
+2962: \\fill (xmot, ymot) circle (0.8pt);
+2963: \\fill (xmot, 0) circle (0.8pt);
+2967: \\fill (xhai, yhai) circle (0.8pt);
+2968: \\fill (xhai, 0) circle (0.8pt);
+2971: \\fill (xba, yba) circle (0.8pt) node[shift={(45:10pt)}] {$3$};
+2974: \\fill (0, ymot) circle (0.8pt) node[shift={(-45:10pt)}] {$2$};
+2997: \fill (0,0) circle (0.8pt) node[shift={(-135:12pt)}] {$O$};
+3002: \fill (0, 1) circle (0.8pt) node[shift={(135:12pt)}] {$1$};
+3004: \fill (2, -3) circle (0.8pt);
+3005: \fill (2, 0) circle (0.8pt) node[shift={(90:12pt)}] {$2$};
+3006: \fill (0, -3) circle (0.8pt) node[shift={(180:12pt)}] {$-3$};
+3028: \fill (0,0) circle (0.8pt) node[shift={(-135:12pt)}] {$O$};
+3034: \fill (-1, 2) circle (0.8pt);
+3035: \fill (-1, 0) circle (0.8pt) node[shift={(-90:12pt)}] {$-1$};
+3037: \fill (1, 2) circle (0.8pt);
+3038: \fill (1, 0) circle (0.8pt) node[shift={(-90:12pt)}] {$1$};
+3039: \fill (0, 3) circle (0.8pt) node[shift={(45:12pt)}] {$3$};
+3040: \fill (0, 2) circle (0.8pt) node[shift={(-45:12pt)}] {$2$};
+3063: \fill (0,0) circle (0.8pt) node[shift={(-135:12pt)}] {$O$};
+3072: \fill (-1, -4) circle (0.8pt);
+3073: \fill (-1, 0) circle (0.8pt) node[shift={(90:12pt)}] {$-1$};
+3074: \fill (0, -4) circle (0.8pt) node[shift={(0:12pt)}] {$-4$};
+3076: \fill (3, 4) circle (0.8pt);
+3077: \fill (3, 0) circle (0.8pt) node[shift={(-90:12pt)}] {$3$};
+3078: \fill (0, 4) circle (0.8pt) node[shift={(180:12pt)}] {$4$};
+3079: \fill (0, -5) circle (0.8pt) node[shift={(0:12pt)}] {$-5$};
+3102: \fill (0,0) circle (0.8pt) node[shift={(-135:12pt)}] {$O$};
+3110: \fill (-2, 1) circle (0.8pt) node[shift={(135:12pt)}] {$I$};
+3111: \fill (-2, 0) circle (0.8pt) node[shift={(-135:12pt)}] {$-2$};
+3112: \fill (0, 1) circle (0.8pt) node[shift={(45:12pt)}] {$1$};
+3113: \fill (1, 0) circle (0.8pt) node[shift={(-45:12pt)}] {$1$};
+3114: \fill (0, -0.5) circle (0.8pt) node[shift={(-35:14pt)}] {$-\dfrac{1}{2}$};
+3241:  \\fill [blue] (-1,-2.8) circle (0.2);
+3246:  \\fill (0,0) circle (2pt);
+3290:  \\draw (0,0.5) circle (0.5);
+3362:\\shade[draw,left color=white, right color=white!80!gray] (0,0) circle (3.1);
+3381:\\fill[red] (0,0) circle (3pt);
+3404:\\fill (\\t) circle (1pt) node[shift={(\\g:9pt)},font=\\scriptsize]{$\\t$};
+3459:\\draw[line width=1.5] (\\n) circle (\\R);
+3460:\\draw[white!70!gray,line width=1] (\\n) circle (\\R-.05);
+3497:\\fill (I) circle (.05) (J) circle (.05);
+3498:\\draw[white] (K) circle (.3);
+3499:\\fill[white] (K) circle (0.15);
+3521: \shade[draw, left color=white, right color=white!80!gray] (0,0) circle (3.1);
+3535: \fill[red] (0,0) circle (3pt);
+3610:\\path[draw] (0, 0.99) circle (0.58 ) ;
+3611:\\draw (-3.19, 4.84) circle (0.4)
+3612:(-1.45, 4.84) circle (0.4)
+3613:(1.45, 4.84) circle (0.4)
+3614:(3.19, 4.84) circle (0.4);
+3863: \draw[line width=1.5] (\n) circle (\R);
+3864: \draw[white!70!gray,line width=1] (\n) circle (\R-.05);
+3876: \fill (I) circle (.05) (J) circle (.05);
+3877: \draw[white] (K) circle (.3);
+3878: \fill[white] (K) circle (0.15);
+3916: \path[draw] (0, 0.99) circle (0.58 );
+3917: \draw (-3.19, 4.84) circle (0.4) (-1.45, 4.84) circle (0.4) (1.45, 4.84) circle (0.4) (3.19, 4.84) circle (0.4);
+3948:\\fill[ball color=red!40!white] (1.27,1.78) circle (3pt);
+4075:(0,0) circle(4.9cm);
+4174:\\fill (0,0)node [below left]{$O$} circle(1pt);
+4177:(0,0) circle(4.9cm);
+4181:\\draw[line width=.5mm,red,dashed] (0,0) circle(6.8cm);
+4314:\\fill (0,2) circle(7mm);
+4315:\\fill[blue] (0,2) circle(5mm);
+4316:%\\fill (0,2.3) circle(1mm);

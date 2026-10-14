@@ -1,0 +1,27 @@
+{
+  "id": "01_lop10_kiemtra_15phut_tn",
+  "name": "Lớp 10 — Kiểm tra 15 phút (Trắc nghiệm)",
+  "description": "7 câu trắc nghiệm thuần — kiểm tra nhanh 1 chương / 1 chủ đề. 4 NB + 2 TH + 1 VD.",
+  "icon": "⚡",
+  "subject": "Toán",
+  "grade": "10",
+  "time_str": "15 phút",
+  "title": "KIỂM TRA 15 PHÚT — TOÁN 10",
+  "tags": ["15 phút", "trắc nghiệm", "lớp 10", "nhanh"],
+  "rows": [
+    {"qtype": "TN", "level": "NB", "topic": "Mệnh đề và tập hợp",
+     "requirement": "Nhận biết mệnh đề chứa biến, tập hợp", "points": 1.5},
+    {"qtype": "TN", "level": "NB", "topic": "Mệnh đề và tập hợp",
+     "requirement": "Đọc hiểu ký hiệu tập hợp con, hợp, giao",  "points": 1.5},
+    {"qtype": "TN", "level": "NB", "topic": "Bất phương trình bậc nhất hai ẩn",
+     "requirement": "Nhận biết miền nghiệm cơ bản", "points": 1.5},
+    {"qtype": "TN", "level": "NB", "topic": "Hàm số và đồ thị",
+     "requirement": "Tập xác định, tập giá trị", "points": 1.5},
+    {"qtype": "TN", "level": "TH", "topic": "Hàm số bậc hai",
+     "requirement": "Lập bảng biến thiên, tìm đỉnh parabol", "points": 1.5},
+    {"qtype": "TN", "level": "TH", "topic": "Phương trình và hệ phương trình",
+     "requirement": "Giải phương trình bậc hai, hệ 2 ẩn", "points": 1.5},
+    {"qtype": "TN", "level": "VD", "topic": "Hàm số bậc hai",
+     "requirement": "Vận dụng tìm giá trị tham số để hàm số có cực trị", "points": 1.0}
+  ]
+}

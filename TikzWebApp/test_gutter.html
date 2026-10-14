@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.smart-editor-container {
+  position: relative;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  width: 500px;
+  height: 300px;
+  border: 1px solid #ccc;
+  overflow: auto; /* Wait, simple-code-editor doesn't have overflow auto on container, it usually expands or has overflow on parent */
+}
+.smart-editor-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 44px;
+  height: 100%;
+  background-color: #f1f5f9;
+  border-right: 1px solid #e2e8f0;
+  z-index: 0;
+  pointer-events: none;
+}
+textarea, pre {
+  margin: 0;
+  border: 0;
+  background: none;
+  box-sizing: border-box;
+  font: inherit;
+  letter-spacing: inherit;
+  padding: 10px 10px 10px 52px !important;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  width: 100%;
+  min-height: 100%;
+}
+textarea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  color: transparent;
+  caret-color: black;
+  resize: none;
+  z-index: 1;
+}
+pre {
+  position: relative;
+  pointer-events: none;
+  color: black;
+  z-index: 2;
+}
+.editor-line {
+  position: relative;
+}
+.editor-line::before {
+  content: attr(data-line);
+  position: absolute;
+  left: -44px;
+  width: 32px;
+  text-align: right;
+  color: #64748b;
+  user-select: none;
+  font-weight: 500;
+}
+</style>
+</head>
+<body>
+<div class="smart-editor-container">
+  <textarea id="ta">Line 1
+Line 2 which is very very very very very very very very very very very very very very very very very long and will wrap
+Line 3</textarea>
+  <pre id="pr"><span class="editor-line" data-line="1">Line 1</span>
+<span class="editor-line" data-line="2">Line 2 which is very very very very very very very very very very very very very very very very very long and will wrap</span>
+<span class="editor-line" data-line="3">Line 3</span></pre>
+</div>
+</body>
+</html>

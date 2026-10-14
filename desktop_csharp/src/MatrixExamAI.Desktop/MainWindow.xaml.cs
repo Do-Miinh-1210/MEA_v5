@@ -1,0 +1,431 @@
+using System;
+using System.Windows;
+using System.Windows.Input;
+using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
+using MatrixExamAI.Desktop.Views;
+using MatrixExamAI.Desktop.Services;
+
+namespace MatrixExamAI.Desktop
+{
+    public partial class MainWindow : FluentWindow
+    {
+        private readonly DashboardView _dashboardView;
+        private readonly ConvertView _convertView;
+        private readonly TikzView _tikzView;
+        private readonly ExamMatrixView _examMatrixView;
+        private readonly ShuffleView _shuffleView;
+        private readonly QuestionBankView _questionBankView;
+        private readonly QcView _qcView;
+        private readonly SettingsView _settingsView;
+
+        public DashboardView DashboardView => _dashboardView;
+        public ConvertView ConvertView => _convertView;
+        public TikzView TikzView => _tikzView;
+        public ExamMatrixView ExamMatrixView => _examMatrixView;
+        public ShuffleView ShuffleView => _shuffleView;
+        public QuestionBankView QuestionBankView => _questionBankView;
+        public QcView QcView => _qcView;
+        public SettingsView SettingsView => _settingsView;
+        public string CurrentNavigationTag { get; private set; } = "dashboard";
+
+        public Action<System.Windows.Controls.Primitives.ButtonBase>? ButtonClickInterceptor { get; set; }
+
+        public MainWindow()
+        {
+            InitializeComponent();
+
+            _dashboardView = new DashboardView();
+            _convertView = new ConvertView();
+            _tikzView = new TikzView();
+            _examMatrixView = new ExamMatrixView();
+            _shuffleView = new ShuffleView();
+            _questionBankView = new QuestionBankView();
+            _qcView = new QcView();
+            _settingsView = new SettingsView();
+
+            // Lắng nghe sự kiện điều hướng từ các nút trên Dashboard
+            _dashboardView.RequestNavigateToConvert += (s, e) => NavigateTo("convert");
+            _dashboardView.RequestNavigateToTikz += (s, e) => NavigateTo("tikz");
+
+            // Tự động thu gọn thanh menu khi màn hình hẹp (Split Screen / Snap)
+            SizeChanged += MainWindow_SizeChanged;
+
+            // Mặc định khởi tạo: mở trang Tổng quan Dashboard
+            NavigateTo("dashboard");
+        }
+
+        public void UpdateResponsiveLayout(double windowWidth)
+        {
+            if (windowWidth < 1050)
+            {
+                if (NavView.IsPaneOpen)
+                {
+                    NavView.IsPaneOpen = false; // Thu gọn thành icon (50px) để dành chỗ cho nội dung
+                }
+            }
+            else if (windowWidth >= 1150)
+            {
+                if (!NavView.IsPaneOpen)
+                {
+                    NavView.IsPaneOpen = true; // Tự động mở rộng khi cửa sổ đủ rộng
+                }
+            }
+        }
+
+        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateResponsiveLayout(e.NewSize.Width);
+        }
+
+        private void BtnTogglePane_Click(object sender, RoutedEventArgs e)
+        {
+            NavView.IsPaneOpen = !NavView.IsPaneOpen;
+        }
+
+        private void SetActiveItem(NavigationViewItem activeItem)
+        {
+            NavItemDashboard.IsActive = (NavItemDashboard == activeItem);
+            NavItemConvert.IsActive = (NavItemConvert == activeItem);
+            NavItemMatrix.IsActive = (NavItemMatrix == activeItem);
+            NavItemTikz.IsActive = (NavItemTikz == activeItem);
+            NavItemShuffle.IsActive = (NavItemShuffle == activeItem);
+            NavItemBank.IsActive = (NavItemBank == activeItem);
+            NavItemQc.IsActive = (NavItemQc == activeItem);
+            NavItemSettings.IsActive = (NavItemSettings == activeItem);
+        }
+
+        public void NavigateTo(string tag)
+        {
+            CurrentNavigationTag = tag.ToLowerInvariant();
+            switch (CurrentNavigationTag)
+            {
+                case "dashboard":
+                    MainContentFrame.Content = _dashboardView;
+                    SetActiveItem(NavItemDashboard);
+                    break;
+                case "convert":
+                    MainContentFrame.Content = _convertView;
+                    SetActiveItem(NavItemConvert);
+                    break;
+                case "matrix":
+                    MainContentFrame.Content = _examMatrixView;
+                    SetActiveItem(NavItemMatrix);
+                    break;
+                case "tikz":
+                    MainContentFrame.Content = _tikzView;
+                    SetActiveItem(NavItemTikz);
+                    break;
+                case "shuffle":
+                    MainContentFrame.Content = _shuffleView;
+                    SetActiveItem(NavItemShuffle);
+                    break;
+                case "bank":
+                    MainContentFrame.Content = _questionBankView;
+                    SetActiveItem(NavItemBank);
+                    break;
+                case "qc":
+                    MainContentFrame.Content = _qcView;
+                    SetActiveItem(NavItemQc);
+                    break;
+                case "settings":
+                    MainContentFrame.Content = _settingsView;
+                    SetActiveItem(NavItemSettings);
+                    break;
+            }
+        }
+
+        private void NavItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is NavigationViewItem item && item.Tag is string tag)
+            {
+                NavigateTo(tag);
+            }
+        }
+
+        private void NavView_SelectionChanged(NavigationView sender, RoutedEventArgs args)
+        {
+            if (sender.SelectedItem is NavigationViewItem selectedItem && selectedItem.Tag is string tag)
+            {
+                NavigateTo(tag);
+            }
+        }
+
+        private void BtnToggleTheme_Click(object sender, RoutedEventArgs e)
+        {
+            var currentTheme = ApplicationThemeManager.GetAppTheme();
+            if (currentTheme == ApplicationTheme.Dark)
+            {
+                ApplicationThemeManager.Apply(ApplicationTheme.Light);
+            }
+            else
+            {
+                ApplicationThemeManager.Apply(ApplicationTheme.Dark);
+            }
+        }
+
+        private async void BtnCheckUpdate_Click(object sender, RoutedEventArgs e)
+        {
+            await CheckForUpdateAndPromptAsync(showPromptIfLatest: true);
+        }
+
+        public async System.Threading.Tasks.Task CheckForUpdateAndPromptAsync(bool showPromptIfLatest)
+        {
+            try
+            {
+                var info = await GitHubUpdateService.Instance.CheckForUpdateAsync();
+                if (info != null)
+                {
+                    var dialog = new UpdateDialog(info) { Owner = this };
+                    dialog.ShowDialog();
+                }
+                else if (showPromptIfLatest)
+                {
+                    System.Windows.MessageBox.Show(
+                        $"Bạn đang sử dụng phiên bản mới nhất: v{GitHubUpdateService.Instance.CurrentVersion}.\nKhông có bản cập nhật mới trên GitHub Releases.",
+                        "Kiểm tra cập nhật",
+                        System.Windows.MessageBoxButton.OK,
+                        MessageBoxImage.Information
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                if (showPromptIfLatest)
+                {
+                    System.Windows.MessageBox.Show(
+                        $"Không thể kiểm tra cập nhật:\n{ex.Message}",
+                        "Lỗi kết nối",
+                        System.Windows.MessageBoxButton.OK,
+                        MessageBoxImage.Warning
+                    );
+                }
+            }
+        }
+
+        private void TriggerButtonClick(System.Windows.Controls.Primitives.ButtonBase? button)
+        {
+            if (button == null || !button.IsEnabled) return;
+            if (ButtonClickInterceptor != null)
+            {
+                ButtonClickInterceptor(button);
+                return;
+            }
+            button.RaiseEvent(new RoutedEventArgs(System.Windows.Controls.Primitives.ButtonBase.ClickEvent));
+        }
+
+        public bool DispatchShortcut(Key key, ModifierKeys modifiers)
+        {
+            var isCtrl = (modifiers & ModifierKeys.Control) == ModifierKeys.Control;
+            var isAlt = (modifiers & ModifierKeys.Alt) == ModifierKeys.Alt;
+            var isShift = (modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
+
+            // 1. Ctrl + Alt + T: Đổi theme Sáng / Tối
+            if (isCtrl && isAlt && !isShift && key == Key.T)
+            {
+                BtnToggleTheme_Click(this, new RoutedEventArgs());
+                return true;
+            }
+
+            // 2. Ctrl + 1..8: Chuyển phân hệ nhanh
+            if (isCtrl && !isAlt && !isShift)
+            {
+                switch (key)
+                {
+                    case Key.D1:
+                    case Key.NumPad1:
+                        NavigateTo("dashboard");
+                        return true;
+                    case Key.D2:
+                    case Key.NumPad2:
+                        NavigateTo("convert");
+                        return true;
+                    case Key.D3:
+                    case Key.NumPad3:
+                        NavigateTo("matrix");
+                        return true;
+                    case Key.D4:
+                    case Key.NumPad4:
+                        NavigateTo("tikz");
+                        return true;
+                    case Key.D5:
+                    case Key.NumPad5:
+                        NavigateTo("shuffle");
+                        return true;
+                    case Key.D6:
+                    case Key.NumPad6:
+                        NavigateTo("bank");
+                        return true;
+                    case Key.D7:
+                    case Key.NumPad7:
+                        NavigateTo("qc");
+                        return true;
+                    case Key.D8:
+                    case Key.NumPad8:
+                    case Key.OemComma:
+                        NavigateTo("settings");
+                        return true;
+                }
+            }
+
+            // 3. Ctrl + O: Navigate to ConvertView and trigger open file dialog
+            if (isCtrl && !isAlt && !isShift && key == Key.O)
+            {
+                NavigateTo("convert");
+                TriggerButtonClick(_convertView.BtnOpenFile);
+                return true;
+            }
+
+            // 4. Ctrl + S: Trigger export Word or save settings for active view
+            if (isCtrl && !isAlt && !isShift && key == Key.S)
+            {
+                switch (CurrentNavigationTag)
+                {
+                    case "convert":
+                        TriggerButtonClick(_convertView.BtnExportWord);
+                        return true;
+                    case "matrix":
+                        TriggerButtonClick(_examMatrixView.BtnExportDocx);
+                        return true;
+                    case "shuffle":
+                        TriggerButtonClick(_shuffleView.BtnExportAllDocx);
+                        return true;
+                    case "bank":
+                        TriggerButtonClick(_questionBankView.BtnExportSelected);
+                        return true;
+                    case "settings":
+                        TriggerButtonClick(_settingsView.BtnSaveSettings);
+                        return true;
+                    case "tikz":
+                        TriggerButtonClick(_tikzView.BtnSavePng);
+                        return true;
+                    default:
+                        NavigateTo("convert");
+                        TriggerButtonClick(_convertView.BtnExportWord);
+                        return true;
+                }
+            }
+
+            // 5. F5 / Ctrl + Enter: Trigger primary action of active view
+            bool isF5 = !isCtrl && !isAlt && !isShift && key == Key.F5;
+            bool isCtrlEnter = isCtrl && !isAlt && !isShift && (key == Key.Enter || key == Key.Return);
+            if (isF5 || isCtrlEnter)
+            {
+                switch (CurrentNavigationTag)
+                {
+                    case "convert":
+                        TriggerButtonClick(_convertView.BtnConvert);
+                        return true;
+                    case "tikz":
+                        TriggerButtonClick(_tikzView.BtnCompile);
+                        return true;
+                    case "matrix":
+                        TriggerButtonClick(_examMatrixView.BtnAiGenerateExam);
+                        return true;
+                    case "shuffle":
+                        TriggerButtonClick(_shuffleView.BtnShuffle);
+                        return true;
+                    case "qc":
+                        TriggerButtonClick(_qcView.BtnRunQc);
+                        return true;
+                    case "bank":
+                        TriggerButtonClick(_questionBankView.BtnSearch);
+                        return true;
+                    case "dashboard":
+                        NavigateTo("convert");
+                        TriggerButtonClick(_convertView.BtnConvert);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            // 6. Ctrl + Shift + P: Navigate to ConvertView and trigger BtnCopyPrompt
+            if (isCtrl && isShift && !isAlt && key == Key.P)
+            {
+                NavigateTo("convert");
+                TriggerButtonClick(_convertView.BtnCopyPrompt);
+                return true;
+            }
+
+            // 7. Ctrl + Shift + B: Navigate to ConvertView and trigger BtnQuickBrace
+            if (isCtrl && isShift && !isAlt && key == Key.B)
+            {
+                NavigateTo("convert");
+                TriggerButtonClick(_convertView.BtnQuickBrace);
+                return true;
+            }
+
+            // 8. Ctrl + Shift + I: Navigate to ConvertView and trigger BtnFilterItem
+            if (isCtrl && isShift && !isAlt && key == Key.I)
+            {
+                NavigateTo("convert");
+                TriggerButtonClick(_convertView.BtnFilterItem);
+                return true;
+            }
+
+            // 9. Ctrl + Shift + F: Trigger BtnExpandPreview
+            if (isCtrl && isShift && !isAlt && key == Key.F)
+            {
+                if (CurrentNavigationTag != "convert")
+                {
+                    NavigateTo("convert");
+                }
+                TriggerButtonClick(_convertView.BtnExpandPreview);
+                return true;
+            }
+
+            // 10. Esc: Close active floating preview or cancel
+            if (!isCtrl && !isAlt && !isShift && key == Key.Escape)
+            {
+                bool closedFloating = false;
+                if (Application.Current != null)
+                {
+                    foreach (Window win in Application.Current.Windows)
+                    {
+                        if (win is ExpandedPreviewWindow expWin && expWin.IsVisible)
+                        {
+                            expWin.Close();
+                            closedFloating = true;
+                            break;
+                        }
+                    }
+                }
+                if (closedFloating) return true;
+
+                if (CurrentNavigationTag == "convert" && _convertView.BtnCancel.Visibility == Visibility.Visible)
+                {
+                    TriggerButtonClick(_convertView.BtnCancel);
+                    return true;
+                }
+                return true;
+            }
+
+            // 11. F10 or Ctrl + [: Toggle Source/Code panel in ConvertView and TikzView
+            if ((!isCtrl && !isAlt && !isShift && key == Key.F10) || (isCtrl && !isAlt && !isShift && key == Key.OemOpenBrackets))
+            {
+                if (CurrentNavigationTag == "convert")
+                {
+                    _convertView.ToggleSourcePanel();
+                    return true;
+                }
+                if (CurrentNavigationTag == "tikz")
+                {
+                    _tikzView.ToggleCodePanel();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void MainWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            var key = e.Key == Key.System ? e.SystemKey : e.Key;
+            if (DispatchShortcut(key, Keyboard.Modifiers))
+            {
+                e.Handled = true;
+            }
+        }
+    }
+}

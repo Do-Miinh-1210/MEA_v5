@@ -1,0 +1,225 @@
+REGEDIT4
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn]
+@="MatrixExamAI.WordAddIn.ThisAddIn"
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn\CLSID]
+@="{9B302F31-155D-4A2D-BE45-219C1D9D6C99}"
+
+[HKEY_CLASSES_ROOT\CLSID\{9B302F31-155D-4A2D-BE45-219C1D9D6C99}]
+@="MatrixExamAI.WordAddIn.ThisAddIn"
+
+[HKEY_CLASSES_ROOT\CLSID\{9B302F31-155D-4A2D-BE45-219C1D9D6C99}\InprocServer32]
+@="mscoree.dll"
+"ThreadingModel"="Both"
+"Class"="MatrixExamAI.WordAddIn.ThisAddIn"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{9B302F31-155D-4A2D-BE45-219C1D9D6C99}\InprocServer32\5.0.0.0]
+"Class"="MatrixExamAI.WordAddIn.ThisAddIn"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{9B302F31-155D-4A2D-BE45-219C1D9D6C99}\ProgId]
+@="MatrixExamAI.WordAddIn"
+
+[HKEY_CLASSES_ROOT\CLSID\{9B302F31-155D-4A2D-BE45-219C1D9D6C99}\Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}]
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn.WordInterop.TikzShapeSelectedEventArgs]
+@="MatrixExamAI.WordAddIn.WordInterop.TikzShapeSelectedEventArgs"
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn.WordInterop.TikzShapeSelectedEventArgs\CLSID]
+@="{CE4CD3F6-613A-3A78-93DB-81E48D9EA1CF}"
+
+[HKEY_CLASSES_ROOT\CLSID\{CE4CD3F6-613A-3A78-93DB-81E48D9EA1CF}]
+@="MatrixExamAI.WordAddIn.WordInterop.TikzShapeSelectedEventArgs"
+
+[HKEY_CLASSES_ROOT\CLSID\{CE4CD3F6-613A-3A78-93DB-81E48D9EA1CF}\InprocServer32]
+@="mscoree.dll"
+"ThreadingModel"="Both"
+"Class"="MatrixExamAI.WordAddIn.WordInterop.TikzShapeSelectedEventArgs"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{CE4CD3F6-613A-3A78-93DB-81E48D9EA1CF}\InprocServer32\5.0.0.0]
+"Class"="MatrixExamAI.WordAddIn.WordInterop.TikzShapeSelectedEventArgs"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{CE4CD3F6-613A-3A78-93DB-81E48D9EA1CF}\ProgId]
+@="MatrixExamAI.WordAddIn.WordInterop.TikzShapeSelectedEventArgs"
+
+[HKEY_CLASSES_ROOT\CLSID\{CE4CD3F6-613A-3A78-93DB-81E48D9EA1CF}\Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}]
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn.SidebarUserControl]
+@="MatrixExamAI.WordAddIn.TaskPane.SidebarUserControl"
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn.SidebarUserControl\CLSID]
+@="{7A4C62A1-04EA-4D88-8EF5-6A94CE015F33}"
+
+[HKEY_CLASSES_ROOT\CLSID\{7A4C62A1-04EA-4D88-8EF5-6A94CE015F33}]
+@="MatrixExamAI.WordAddIn.TaskPane.SidebarUserControl"
+
+[HKEY_CLASSES_ROOT\CLSID\{7A4C62A1-04EA-4D88-8EF5-6A94CE015F33}\InprocServer32]
+@="mscoree.dll"
+"ThreadingModel"="Both"
+"Class"="MatrixExamAI.WordAddIn.TaskPane.SidebarUserControl"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{7A4C62A1-04EA-4D88-8EF5-6A94CE015F33}\InprocServer32\5.0.0.0]
+"Class"="MatrixExamAI.WordAddIn.TaskPane.SidebarUserControl"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{7A4C62A1-04EA-4D88-8EF5-6A94CE015F33}\ProgId]
+@="MatrixExamAI.WordAddIn.SidebarUserControl"
+
+[HKEY_CLASSES_ROOT\CLSID\{7A4C62A1-04EA-4D88-8EF5-6A94CE015F33}\Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}]
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn.Ribbon.RibbonController]
+@="MatrixExamAI.WordAddIn.Ribbon.RibbonController"
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn.Ribbon.RibbonController\CLSID]
+@="{43A7C8E2-2C99-4A94-BFD1-85E951E91C61}"
+
+[HKEY_CLASSES_ROOT\CLSID\{43A7C8E2-2C99-4A94-BFD1-85E951E91C61}]
+@="MatrixExamAI.WordAddIn.Ribbon.RibbonController"
+
+[HKEY_CLASSES_ROOT\CLSID\{43A7C8E2-2C99-4A94-BFD1-85E951E91C61}\InprocServer32]
+@="mscoree.dll"
+"ThreadingModel"="Both"
+"Class"="MatrixExamAI.WordAddIn.Ribbon.RibbonController"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{43A7C8E2-2C99-4A94-BFD1-85E951E91C61}\InprocServer32\5.0.0.0]
+"Class"="MatrixExamAI.WordAddIn.Ribbon.RibbonController"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{43A7C8E2-2C99-4A94-BFD1-85E951E91C61}\ProgId]
+@="MatrixExamAI.WordAddIn.Ribbon.RibbonController"
+
+[HKEY_CLASSES_ROOT\CLSID\{43A7C8E2-2C99-4A94-BFD1-85E951E91C61}\Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}]
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn.Bridge.JsonRpcRequest]
+@="MatrixExamAI.WordAddIn.Bridge.JsonRpcRequest"
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn.Bridge.JsonRpcRequest\CLSID]
+@="{42B894C9-B2AF-3A51-9274-AF38335449EF}"
+
+[HKEY_CLASSES_ROOT\CLSID\{42B894C9-B2AF-3A51-9274-AF38335449EF}]
+@="MatrixExamAI.WordAddIn.Bridge.JsonRpcRequest"
+
+[HKEY_CLASSES_ROOT\CLSID\{42B894C9-B2AF-3A51-9274-AF38335449EF}\InprocServer32]
+@="mscoree.dll"
+"ThreadingModel"="Both"
+"Class"="MatrixExamAI.WordAddIn.Bridge.JsonRpcRequest"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{42B894C9-B2AF-3A51-9274-AF38335449EF}\InprocServer32\5.0.0.0]
+"Class"="MatrixExamAI.WordAddIn.Bridge.JsonRpcRequest"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{42B894C9-B2AF-3A51-9274-AF38335449EF}\ProgId]
+@="MatrixExamAI.WordAddIn.Bridge.JsonRpcRequest"
+
+[HKEY_CLASSES_ROOT\CLSID\{42B894C9-B2AF-3A51-9274-AF38335449EF}\Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}]
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn.Bridge.JsonRpcResponse]
+@="MatrixExamAI.WordAddIn.Bridge.JsonRpcResponse"
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn.Bridge.JsonRpcResponse\CLSID]
+@="{89E65175-5537-304D-B3F4-93899D2292B8}"
+
+[HKEY_CLASSES_ROOT\CLSID\{89E65175-5537-304D-B3F4-93899D2292B8}]
+@="MatrixExamAI.WordAddIn.Bridge.JsonRpcResponse"
+
+[HKEY_CLASSES_ROOT\CLSID\{89E65175-5537-304D-B3F4-93899D2292B8}\InprocServer32]
+@="mscoree.dll"
+"ThreadingModel"="Both"
+"Class"="MatrixExamAI.WordAddIn.Bridge.JsonRpcResponse"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{89E65175-5537-304D-B3F4-93899D2292B8}\InprocServer32\5.0.0.0]
+"Class"="MatrixExamAI.WordAddIn.Bridge.JsonRpcResponse"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{89E65175-5537-304D-B3F4-93899D2292B8}\ProgId]
+@="MatrixExamAI.WordAddIn.Bridge.JsonRpcResponse"
+
+[HKEY_CLASSES_ROOT\CLSID\{89E65175-5537-304D-B3F4-93899D2292B8}\Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}]
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn.Bridge.JsonRpcError]
+@="MatrixExamAI.WordAddIn.Bridge.JsonRpcError"
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn.Bridge.JsonRpcError\CLSID]
+@="{F95BC8A1-6567-3226-98B1-927260E54E77}"
+
+[HKEY_CLASSES_ROOT\CLSID\{F95BC8A1-6567-3226-98B1-927260E54E77}]
+@="MatrixExamAI.WordAddIn.Bridge.JsonRpcError"
+
+[HKEY_CLASSES_ROOT\CLSID\{F95BC8A1-6567-3226-98B1-927260E54E77}\InprocServer32]
+@="mscoree.dll"
+"ThreadingModel"="Both"
+"Class"="MatrixExamAI.WordAddIn.Bridge.JsonRpcError"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{F95BC8A1-6567-3226-98B1-927260E54E77}\InprocServer32\5.0.0.0]
+"Class"="MatrixExamAI.WordAddIn.Bridge.JsonRpcError"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{F95BC8A1-6567-3226-98B1-927260E54E77}\ProgId]
+@="MatrixExamAI.WordAddIn.Bridge.JsonRpcError"
+
+[HKEY_CLASSES_ROOT\CLSID\{F95BC8A1-6567-3226-98B1-927260E54E77}\Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}]
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn.Bridge.JsonRpcPushEvent]
+@="MatrixExamAI.WordAddIn.Bridge.JsonRpcPushEvent"
+
+[HKEY_CLASSES_ROOT\MatrixExamAI.WordAddIn.Bridge.JsonRpcPushEvent\CLSID]
+@="{4E18CAB2-3DCC-3682-A5E8-1FAB6ED120A3}"
+
+[HKEY_CLASSES_ROOT\CLSID\{4E18CAB2-3DCC-3682-A5E8-1FAB6ED120A3}]
+@="MatrixExamAI.WordAddIn.Bridge.JsonRpcPushEvent"
+
+[HKEY_CLASSES_ROOT\CLSID\{4E18CAB2-3DCC-3682-A5E8-1FAB6ED120A3}\InprocServer32]
+@="mscoree.dll"
+"ThreadingModel"="Both"
+"Class"="MatrixExamAI.WordAddIn.Bridge.JsonRpcPushEvent"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{4E18CAB2-3DCC-3682-A5E8-1FAB6ED120A3}\InprocServer32\5.0.0.0]
+"Class"="MatrixExamAI.WordAddIn.Bridge.JsonRpcPushEvent"
+"Assembly"="MatrixExamAI.WordAddIn, Version=5.0.0.0, Culture=neutral, PublicKeyToken=null"
+"RuntimeVersion"="v4.0.30319"
+"CodeBase"="file:///X:/word_addon/src/MatrixExamAI.WordAddIn/bin/Debug/net48/MatrixExamAI.WordAddIn.dll"
+
+[HKEY_CLASSES_ROOT\CLSID\{4E18CAB2-3DCC-3682-A5E8-1FAB6ED120A3}\ProgId]
+@="MatrixExamAI.WordAddIn.Bridge.JsonRpcPushEvent"
+
+[HKEY_CLASSES_ROOT\CLSID\{4E18CAB2-3DCC-3682-A5E8-1FAB6ED120A3}\Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}]

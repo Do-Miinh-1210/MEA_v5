@@ -1,0 +1,142 @@
+═══════════════════════════════════════════════════════════════════════════════
+  BẢNG BIẾN THIÊN (tkz-tab) — đồng bộ với đồ thị
+═══════════════════════════════════════════════════════════════════════════════
+
+CÚ PHÁP CHUẨN tkz-tab:
+  \tkzTabInit[opts]{tên_dòng/chiều_cao, ...}{mốc_x_1, mốc_x_2, ...}
+  \tkzTabLine{dấu_trước, giá_tại_mốc, dấu_sau, ...}
+  \tkzTabVar{kiểu/giá_trị, kiểu/giá_trị, ...}
+    với kiểu: + (đi lên), - (đi xuống); +D-/a/b (giá trị quanh TCĐ)
+
+
+=== TEMPLATE: BBT bậc 2 a > 0 (cực tiểu tại x_0) ===
+TAGS: bbt, bậc 2, cực tiểu
+KEYWORDS: bảng biến thiên parabol, bậc 2 a > 0, cực tiểu
+NOTES: Parabol mở lên — CT tại x_0, giá trị y_0.
+
+\begin{tikzpicture}
+  \tkzTabInit[lgt=2, espcl=3]
+    {$x$/1, $y'$/1, $y$/2}{$-\infty$, $x_0$, $+\infty$}
+  \tkzTabLine{, -, 0, +, }
+  \tkzTabVar{+/$+\infty$, -/$y_0$, +/$+\infty$}
+\end{tikzpicture}
+
+
+=== TEMPLATE: BBT bậc 2 a < 0 (cực đại tại x_0) ===
+TAGS: bbt, bậc 2, cực đại
+KEYWORDS: bậc 2 a < 0, cực đại
+
+\begin{tikzpicture}
+  \tkzTabInit[lgt=2, espcl=3]
+    {$x$/1, $y'$/1, $y$/2}{$-\infty$, $x_0$, $+\infty$}
+  \tkzTabLine{, +, 0, -, }
+  \tkzTabVar{-/$-\infty$, +/$y_0$, -/$-\infty$}
+\end{tikzpicture}
+
+
+=== TEMPLATE: BBT bậc 3, a > 0, có CĐ và CT ===
+TAGS: bbt, bậc 3, cực trị
+KEYWORDS: hàm bậc 3 a > 0, CĐ tại x1, CT tại x2
+
+\begin{tikzpicture}
+  \tkzTabInit[lgt=2, espcl=3]
+    {$x$/1, $y'$/1, $y$/2}{$-\infty$, $x_1$, $x_2$, $+\infty$}
+  \tkzTabLine{, +, 0, -, 0, +, }
+  \tkzTabVar{-/$-\infty$, +/$y_{C\!D}$, -/$y_{CT}$, +/$+\infty$}
+\end{tikzpicture}
+
+
+=== TEMPLATE: BBT bậc 3, a < 0, có CT rồi CĐ ===
+TAGS: bbt, bậc 3, a < 0
+KEYWORDS: hàm bậc 3 a < 0
+
+\begin{tikzpicture}
+  \tkzTabInit[lgt=2, espcl=3]
+    {$x$/1, $y'$/1, $y$/2}{$-\infty$, $x_1$, $x_2$, $+\infty$}
+  \tkzTabLine{, -, 0, +, 0, -, }
+  \tkzTabVar{+/$+\infty$, -/$y_{CT}$, +/$y_{C\!D}$, -/$-\infty$}
+\end{tikzpicture}
+
+
+=== TEMPLATE: BBT bậc 3 đơn điệu (không cực trị) ===
+TAGS: bbt, bậc 3 đồng biến
+KEYWORDS: bậc 3 đơn điệu, không có cực trị
+
+\begin{tikzpicture}
+  \tkzTabInit[lgt=2, espcl=3]
+    {$x$/1, $y'$/1, $y$/2}{$-\infty$, $+\infty$}
+  \tkzTabLine{, +, }
+  \tkzTabVar{-/$-\infty$, +/$+\infty$}
+\end{tikzpicture}
+
+
+=== TEMPLATE: BBT trùng phương chữ W (a > 0, b < 0) ===
+TAGS: bbt, trùng phương, chữ W
+KEYWORDS: hàm bậc 4 trùng phương, 3 cực trị, chữ W
+
+\begin{tikzpicture}
+  \tkzTabInit[lgt=2, espcl=2.5]
+    {$x$/1, $y'$/1, $y$/2.5}{$-\infty$, $-x_0$, $0$, $x_0$, $+\infty$}
+  \tkzTabLine{, -, 0, +, 0, -, 0, +, }
+  \tkzTabVar{+/$+\infty$, -/$y_{CT}$, +/$y_{C\!D}$, -/$y_{CT}$, +/$+\infty$}
+\end{tikzpicture}
+
+
+=== TEMPLATE: BBT trùng phương chữ U (1 cực trị, a > 0, b ≥ 0) ===
+TAGS: bbt, trùng phương, chữ U
+KEYWORDS: hàm bậc 4 trùng phương 1 cực trị
+
+\begin{tikzpicture}
+  \tkzTabInit[lgt=2, espcl=3]
+    {$x$/1, $y'$/1, $y$/2}{$-\infty$, $0$, $+\infty$}
+  \tkzTabLine{, -, 0, +, }
+  \tkzTabVar{+/$+\infty$, -/$c$, +/$+\infty$}
+\end{tikzpicture}
+
+
+=== TEMPLATE: BBT phân thức bậc 1/bậc 1, đồng biến từng khoảng ===
+TAGS: bbt, phân thức, đồng biến
+KEYWORDS: y = (ax+b)/(cx+d), TCĐ, TCN, đồng biến
+
+\begin{tikzpicture}
+  \tkzTabInit[lgt=2.5, espcl=3]
+    {$x$/1, $y'$/1, $y$/2.5}
+    {$-\infty$, $-\frac{d}{c}$, $+\infty$}
+  \tkzTabLine{, +, d, +, }
+  \tkzTabVar{-/$\frac{a}{c}$, +D+/$+\infty$/$-\infty$, -/$\frac{a}{c}$}
+\end{tikzpicture}
+
+
+=== TEMPLATE: BBT phân thức bậc 1/bậc 1, nghịch biến từng khoảng ===
+TAGS: bbt, phân thức, nghịch biến
+KEYWORDS: y = (ax+b)/(cx+d), nghịch biến
+
+\begin{tikzpicture}
+  \tkzTabInit[lgt=2.5, espcl=3]
+    {$x$/1, $y'$/1, $y$/2.5}
+    {$-\infty$, $-\frac{d}{c}$, $+\infty$}
+  \tkzTabLine{, -, d, -, }
+  \tkzTabVar{+/$\frac{a}{c}$, -D+/$-\infty$/$+\infty$, +/$\frac{a}{c}$}
+\end{tikzpicture}
+
+
+=== TEMPLATE: Bảng xét dấu nhị thức bậc 1 ===
+TAGS: bbt, xét dấu, bậc 1
+KEYWORDS: bảng xét dấu, ax + b
+
+\begin{tikzpicture}
+  \tkzTabInit[lgt=3, espcl=3]
+    {$x$/1, $f(x) = ax+b$/1}{$-\infty$, $-\frac{b}{a}$, $+\infty$}
+  \tkzTabLine{, -, 0, +, }
+\end{tikzpicture}
+
+
+=== TEMPLATE: Bảng xét dấu tam thức bậc 2 (Δ > 0, a > 0) ===
+TAGS: bbt, xét dấu, bậc 2
+KEYWORDS: bảng xét dấu, tam thức bậc 2, Δ > 0
+
+\begin{tikzpicture}
+  \tkzTabInit[lgt=3, espcl=2.5]
+    {$x$/1, $f(x) = ax^2+bx+c$/1}{$-\infty$, $x_1$, $x_2$, $+\infty$}
+  \tkzTabLine{, +, 0, -, 0, +, }
+\end{tikzpicture}

@@ -1,0 +1,214 @@
+═══════════════════════════════════════════════════════════════════════════════
+  HÌNH CHÓP — chóp tam giác, chóp tứ giác, chóp đều, chóp lục giác, chóp cụt
+═══════════════════════════════════════════════════════════════════════════════
+
+PHƯƠNG ÁN VẼ: Phép chiếu cabinet (gãy 30°, rút 0.5)
+  \begin{tikzpicture}[x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+QUY TẮC CẠNH:
+  • THẤY (mặt trước, không bị che): \draw[thick]
+  • KHUẤT (mặt sau, bị che bởi mặt trước): \draw[dashed, thick]
+  • Đường cao SH: \draw[dashed]
+
+
+=== TEMPLATE: Hình chóp tam giác S.ABC ===
+TAGS: 3D, hình chóp, pyramid, tam giác
+KEYWORDS: hình chóp tam giác, S.ABC, pyramid 3 cạnh
+NOTES: Chóp tam giác. AB cạnh thấy, BC thấy, CA khuất (tuỳ góc nhìn).
+
+\begin{tikzpicture}[scale=1.4, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (1.5,2.5,0);
+  \coordinate[label=above:$S$]       (S) at (1.2,1,3);
+  \draw (A)--(B)--(C);
+  \draw[dashed] (C)--(A);
+  \draw (S)--(A);  \draw (S)--(B);
+  \draw[dashed] (S)--(C);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình chóp tam giác đều S.ABC ===
+TAGS: 3D, hình chóp tam giác đều, regular triangular pyramid
+KEYWORDS: hình chóp tam giác đều, S.ABC đáy đều, chóp đều 3 cạnh
+NOTES: Đáy ABC là tam giác ĐỀU; SA=SB=SC. Chân đường cao H = TRỌNG TÂM
+       (= tâm đường tròn ngoại tiếp) của tam giác đều ABC.
+
+\begin{tikzpicture}[scale=1.4, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)},
+    tick/.style={postaction={decorate}, decoration={markings,
+      mark=at position 0.5 with {\draw (-2pt,-2pt)--(2pt,2pt);}}}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=above:$C$]       (C) at (1.5,2.6,0);   % tam giác đều
+  \coordinate (H) at (1.5,0.87,0);                          % trọng tâm
+  \coordinate[label=above:$S$]       (S) at (1.5,0.87,3);
+  % Đáy đều — tick chéo 3 cạnh
+  \draw[tick] (A)--(B);
+  \draw[tick] (B)--(C);
+  \draw[tick, dashed] (C)--(A);
+  % Cạnh bên đều — tick (nhóm khác — vẽ 2 vạch)
+  \draw (S)--(A);  \draw (S)--(B);
+  \draw[dashed] (S)--(C);
+  % Đường cao SH ⟂ đáy
+  \draw[dashed] (S)--(H);
+  \fill (H) circle (1pt) node[below right] {$H$};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình chóp tứ giác đều S.ABCD ===
+TAGS: 3D, hình chóp, pyramid, tứ giác đều, regular pyramid
+KEYWORDS: hình chóp tứ giác đều, S.ABCD đáy vuông, chóp đều
+NOTES: Đáy ABCD là HÌNH VUÔNG; SA = SB = SC = SD; SH ⟂ (ABCD), H = tâm
+       hình vuông = giao 2 đường chéo. Cạnh đáy AB, BC THẤY; CD, DA KHUẤT.
+       SA, SB THẤY; SD KHUẤT (tuỳ góc nhìn).
+
+\begin{tikzpicture}[scale=1.4, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (3,3,0);
+  \coordinate[label=above left:$D$]  (D) at (0,3,0);
+  \coordinate[label=above:$S$]       (S) at (1.5,1.5,4);
+  \coordinate (H) at (1.5,1.5,0);
+  % Đáy
+  \draw (A)--(B)--(C);
+  \draw[dashed] (C)--(D)--(A);
+  % Cạnh bên
+  \draw (S)--(A);  \draw (S)--(B);  \draw (S)--(C);
+  \draw[dashed] (S)--(D);
+  % Đường cao SH ⟂ (ABCD)
+  \draw[dashed] (S)--(H);
+  \fill (H) circle (1pt) node[below right] {$H$};
+  % Đường chéo đáy (chấm)
+  \draw[densely dotted] (A)--(C);
+  \draw[densely dotted] (B)--(D);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình chóp lục giác đều S.ABCDEF ===
+TAGS: 3D, hình chóp lục giác đều, regular hexagonal pyramid
+KEYWORDS: hình chóp lục giác đều, S.ABCDEF, chóp 6 cạnh
+NOTES: Đáy ABCDEF là LỤC GIÁC ĐỀU. Chân đường cao H = tâm lục giác.
+       Cạnh đáy AB, BC, CD THẤY (mặt trước); DE, EF, FA KHUẤT (mặt sau).
+
+\begin{tikzpicture}[scale=1, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  % Lục giác đều cạnh 2, tâm tại (0,0,0)
+  \coordinate[label=below left:$A$]  (A) at (-2,    0, 0);
+  \coordinate[label=below:$B$]       (B) at (-1, -1.732, 0);
+  \coordinate[label=below right:$C$] (C) at ( 1, -1.732, 0);
+  \coordinate[label=right:$D$]       (D) at ( 2,    0, 0);
+  \coordinate[label=above right:$E$] (E) at ( 1,  1.732, 0);
+  \coordinate[label=above left:$F$]  (F) at (-1,  1.732, 0);
+  \coordinate[label=above:$S$]       (S) at (0,0,4);
+  \coordinate (H) at (0,0,0);
+  % Đáy: AB, BC, CD thấy; DE, EF, FA khuất
+  \draw (A)--(B)--(C)--(D);
+  \draw[dashed] (D)--(E)--(F)--(A);
+  % Cạnh bên: SA, SB, SC, SD thấy; SE, SF khuất
+  \draw (S)--(A); \draw (S)--(B); \draw (S)--(C); \draw (S)--(D);
+  \draw[dashed] (S)--(E); \draw[dashed] (S)--(F);
+  % Đường cao
+  \draw[dashed] (S)--(H);
+  \fill (H) circle (1pt) node[below right] {$H$};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình chóp S.ABCD có SA vuông góc đáy ===
+TAGS: 3D, hình chóp, SA vuông góc đáy, perpendicular pyramid
+KEYWORDS: SA vuông góc mặt phẳng đáy, SA perpendicular, hình chóp SA vuông
+NOTES: SA ⟂ (ABCD) — A là chân đường cao. Đỉnh S nằm THẲNG ĐỨNG trên A.
+       Đánh dấu góc vuông tại A giữa SA và AB, AD.
+
+\begin{tikzpicture}[scale=1.4, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (3,3,0);
+  \coordinate[label=above left:$D$]  (D) at (0,3,0);
+  \coordinate[label=above:$S$]       (S) at (0,0,3.5);
+  % Đáy
+  \draw (A)--(B)--(C);
+  \draw[dashed] (C)--(D)--(A);
+  % SA thẳng đứng
+  \draw (S)--(A);
+  \draw (S)--(B);
+  \draw[dashed] (S)--(D);
+  \draw (S)--(C);
+  % Ô vuông nhỏ ở A — đánh dấu SA ⟂ AB và SA ⟂ AD (3 cạnh)
+  \draw[thin] ($(A)+(0,0,0.3)$) -- ($(A)+(0.3,0,0.3)$) -- ($(A)+(0.3,0,0)$);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình chóp cụt tứ giác đều ABCD.A'B'C'D' ===
+TAGS: 3D, hình chóp cụt, frustum pyramid
+KEYWORDS: hình chóp cụt, chóp cụt tứ giác đều, frustum
+NOTES: Cắt chóp đều bởi mặt phẳng song song đáy → 2 đáy là 2 hình vuông
+       (đáy lớn cạnh a, đáy nhỏ cạnh a').
+
+\begin{tikzpicture}[scale=1.2, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  % Đáy dưới (vuông cạnh 3)
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (3,3,0);
+  \coordinate[label=above left:$D$]  (D) at (0,3,0);
+  % Đáy trên (vuông cạnh 1.5, ở giữa)
+  \coordinate[label=left:$A'$]       (A1) at (0.75,0.75,2.5);
+  \coordinate[label=right:$B'$]      (B1) at (2.25,0.75,2.5);
+  \coordinate[label=right:$C'$]      (C1) at (2.25,2.25,2.5);
+  \coordinate[label=above:$D'$]      (D1) at (0.75,2.25,2.5);
+  % Đáy
+  \draw (A)--(B)--(C); \draw[dashed] (C)--(D)--(A);
+  \draw (A1)--(B1)--(C1)--(D1)--cycle;
+  % Cạnh bên
+  \draw (A)--(A1); \draw (B)--(B1); \draw (C)--(C1);
+  \draw[dashed] (D)--(D1);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Tứ diện đều ABCD ===
+TAGS: 3D, tứ diện đều, regular tetrahedron
+KEYWORDS: tứ diện đều, regular tetrahedron, 4 mặt đều, 6 cạnh bằng
+NOTES: 4 mặt là tam giác đều bằng nhau. 6 cạnh BẰNG NHAU.
+
+\begin{tikzpicture}[scale=1.5, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)},
+    tick/.style={postaction={decorate}, decoration={markings,
+      mark=at position 0.5 with {\draw (-2pt,-2pt)--(2pt,2pt);}}}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (1.5,2.6,0);
+  \coordinate[label=above:$D$]       (D) at (1.5,0.87,2.45);
+  \draw[tick] (A)--(B);
+  \draw[tick] (B)--(C);
+  \draw[tick, dashed] (C)--(A);
+  \draw[tick] (D)--(A);
+  \draw[tick] (D)--(B);
+  \draw[tick, dashed] (D)--(C);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình chóp S.ABC có 3 cạnh bên bằng nhau ===
+TAGS: 3D, hình chóp, cạnh bên bằng nhau, equilateral lateral
+KEYWORDS: SA = SB = SC, chân đường cao là tâm đường tròn ngoại tiếp đáy
+NOTES: Khi 3 cạnh bên bằng nhau → chân đường cao H là TÂM ĐƯỜNG TRÒN NGOẠI
+       TIẾP tam giác đáy ABC.
+
+\begin{tikzpicture}[scale=1.4, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)},
+    tick/.style={postaction={decorate}, decoration={markings,
+      mark=at position 0.5 with {\draw (-2pt,-2pt)--(2pt,2pt);}}}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (1.7,2.5,0);
+  \coordinate[label=above:$S$]       (S) at (1.5,1,3);
+  \coordinate (H) at (1.5,1,0);
+  \draw (A)--(B)--(C); \draw[dashed] (C)--(A);
+  \draw[tick] (S)--(A);
+  \draw[tick] (S)--(B);
+  \draw[tick, dashed] (S)--(C);
+  \draw[dashed] (S)--(H);
+  \fill (H) circle (1pt) node[below right] {$H$};
+\end{tikzpicture}

@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="src/MatrixExamAI.Desktop/MatrixExamAI.Desktop.csproj" />
+  <Folder Name="/src/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/MatrixExamAI.Desktop.Tests/MatrixExamAI.Desktop.Tests.csproj" />
+  </Folder>
+  <Project Path="../word_addon/src/MatrixExamAI.Shared/MatrixExamAI.Shared.csproj" />
+</Solution>

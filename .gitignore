@@ -1,0 +1,47 @@
+# Environment variables (secrets)
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+release/
+*.spec
+
+# Node
+node_modules/
+examai_web/frontend/dist/
+
+# IDE & AI Assistant
+.vscode/
+.idea/
+.agents/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# .NET / Visual Studio / C#
+bin/
+obj/
+*.user
+*.suo
+.vs/
+TestResults/
+*.tmp
+
+# Local Databases / Logs
+*.db
+*.sqlite
+crash.log
+
+# Word Temporary Files
+~$*
+*.lnk
+test_*.docx
+test_export.docx
+
+

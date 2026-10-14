@@ -1,0 +1,418 @@
+<UserControl x:Class="MatrixExamAI.Desktop.Views.TikzView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d" 
+             d:DesignHeight="750" d:DesignWidth="1100"
+             Focusable="True"
+             PreviewKeyDown="TikzView_PreviewKeyDown">
+    <Grid Margin="16,12,16,14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Tiêu đề Phân hệ (Sleek & Compact) -->
+        <Grid Grid.Row="0" Margin="0,0,0,6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <Border Width="24" Height="24" CornerRadius="6" Background="#8B5CF6" Margin="0,0,8,0" VerticalAlignment="Center">
+                    <ui:SymbolIcon Symbol="Shapes24" FontSize="14" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+                <TextBlock Text="AI Vẽ hình Toán học TikZ" FontSize="15" FontWeight="Bold" VerticalAlignment="Center"
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                <Border Background="#1A8B5CF6" CornerRadius="4" Padding="5,1" Margin="8,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="600 DPI Vector" FontSize="9.5" Foreground="#8B5CF6" FontWeight="SemiBold" />
+                </Border>
+            </StackPanel>
+
+            <!-- Trạng thái TeX Toolchain -->
+            <Border Grid.Column="1" Background="{DynamicResource ControlFillColorSecondaryBrush}" 
+                    BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1"
+                    CornerRadius="6" Padding="8,3" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:SymbolIcon Symbol="CheckmarkCircle24" FontSize="13" Foreground="#10B981" Margin="0,0,6,0" VerticalAlignment="Center" />
+                    <TextBlock x:Name="TxtTexStatus" Text="pdflatex: Sẵn sàng" FontSize="11" FontWeight="SemiBold" 
+                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Thanh công cụ phân loại, thư viện mẫu & thao tác nhanh (2 Hàng công thái học) -->
+        <ui:Card Grid.Row="1" Margin="0,0,0,8" Padding="8,6">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Hàng 1: Thể loại, Chuyên đề, Mẫu & Ô Nhập Trực tiếp Đề bài / Mô tả Hình học -->
+                <Grid Grid.Row="0" Margin="0,0,0,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Chọn Thể loại & Mẫu -->
+                    <WrapPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="Thể loại:" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,4,0"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <ComboBox x:Name="CmbDiagramType" Width="112" Height="26" SelectedIndex="2" FontSize="10.5"
+                                  Padding="6,0,18,0" VerticalContentAlignment="Center" Margin="0,0,6,0"
+                                  ToolTip="Định hướng thể loại hình vẽ cho AI">
+                            <ComboBoxItem Content="Bảng biến thiên" Tag="BBT" Padding="6,2" />
+                            <ComboBoxItem Content="Bảng xét dấu" Tag="BXD" Padding="6,2" />
+                            <ComboBoxItem Content="Đồ thị hàm số" Tag="DoThi" Padding="6,2" />
+                            <ComboBoxItem Content="Hình không gian" Tag="HinhKhongGian" Padding="6,2" />
+                            <ComboBoxItem Content="Hình học phẳng" Tag="Custom" Padding="6,2" />
+                        </ComboBox>
+
+                        <TextBlock Text="Mẫu:" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,4,0"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <ComboBox x:Name="CmbTemplateCategory" Width="100" Height="26" FontSize="10.5"
+                                  Padding="6,0,18,0" VerticalContentAlignment="Center" Margin="0,0,4,0"
+                                  ToolTip="Chọn nhóm chuyên đề mẫu TikZ"
+                                  SelectionChanged="CmbTemplateCategory_SelectionChanged" />
+                        <ComboBox x:Name="CmbTemplateItem" Width="120" Height="26" FontSize="10.5"
+                                  Padding="6,0,18,0" VerticalContentAlignment="Center" Margin="0,0,8,0"
+                                  ToolTip="Chọn mẫu hình học để nạp mã TikZ"
+                                  SelectionChanged="CmbTemplateItem_SelectionChanged" />
+                    </WrapPanel>
+
+                    <!-- Ô NHẬP ĐỀ BÀI HOẶC MÔ TẢ HÌNH VẼ TRỰC TIẾP -->
+                    <Grid Grid.Column="1" VerticalAlignment="Center">
+                        <ui:TextBox x:Name="TxtFigurePrompt" Height="26" FontSize="10.5" Padding="8,2"
+                                    VerticalContentAlignment="Center"
+                                    PlaceholderText="Nhập đề bài hoặc mô tả hình vẽ (VD: Cho hình chóp S.ABCD đáy hình vuông, SA vuông góc đáy...)"
+                                    ToolTip="Nhập đề bài hoặc mô tả hình học để AI tự động dựng hình (Nhấn Enter hoặc bấm 'AI vẽ')"
+                                    KeyDown="TxtFigurePrompt_KeyDown" />
+                    </Grid>
+                </Grid>
+
+                <!-- Hàng 2: Bộ nút hành động màu sắc trực quan (Kế thừa bản cũ, chuẩn WCAG 2.1 AA) -->
+                <DockPanel Grid.Row="1" LastChildFill="False">
+                    <!-- Nhóm Trái: AI Vẽ, Dựng hình, Vẽ lại, AI Sửa, AI Tối ưu, Dán ảnh -->
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- AI Vẽ: Màu Tím Violet #7C3AED -->
+                        <ui:Button x:Name="BtnGenerateTikz" Background="#7C3AED" Foreground="White" FontWeight="Bold"
+                                   Icon="{ui:SymbolIcon Sparkle24}" Content="AI vẽ"
+                                   Height="26" Padding="10,0" Margin="0,0,4,0" FontSize="10.5"
+                                   ToolTip="AI phân tích đề bài / ảnh để vẽ hình TikZ chuẩn WebTikZ (Ctrl+Shift+G)"
+                                   Click="BtnGenerateTikz_Click" />
+
+                        <!-- Dựng hình: Màu Amber #D97706 -->
+                        <ui:Button x:Name="BtnShapeBuilder" Background="#D97706" Foreground="White" FontWeight="SemiBold"
+                                   Icon="{ui:SymbolIcon Shapes24}" Content="Dựng hình..."
+                                   Height="26" Padding="8,0" Margin="0,0,4,0" FontSize="10.5"
+                                   ToolTip="Mở công cụ dựng hình tham số trực quan (Tam giác, Chóp, Lăng trụ, Bảng biến thiên...)"
+                                   Click="BtnShapeBuilder_Click" />
+
+                        <!-- Vẽ lại: Màu Vàng cam #F59E0B -->
+                        <ui:Button x:Name="BtnAiRedraw" Background="#F59E0B" Foreground="White" FontWeight="SemiBold"
+                                   Icon="{ui:SymbolIcon ArrowCounterclockwise24}" Content="Vẽ lại"
+                                   Height="26" Padding="8,0" Margin="0,0,4,0" FontSize="10.5"
+                                   ToolTip="Vẽ lại hình bằng mô tả gần nhất khi chưa ưng ý (không cần nhập lại)"
+                                   Click="BtnAiRedraw_Click" />
+
+                        <!-- AI Sửa: Màu Xanh Cobalt #2563EB -->
+                        <ui:Button x:Name="BtnAiEdit" Background="#2563EB" Foreground="White" FontWeight="SemiBold"
+                                   Icon="{ui:SymbolIcon Edit24}" Content="AI sửa"
+                                   Height="26" Padding="8,0" Margin="0,0,4,0" FontSize="10.5"
+                                   ToolTip="Yêu cầu AI chỉnh sửa hoặc bổ sung chi tiết vào hình vẽ này"
+                                   Click="BtnAiEdit_Click" />
+
+                        <!-- AI Tối ưu: Màu Tím đậm #9333EA -->
+                        <ui:Button x:Name="BtnAiOptimize" Background="#9333EA" Foreground="White" FontWeight="SemiBold"
+                                   Icon="{ui:SymbolIcon Sparkle24}" Content="AI tối ưu"
+                                   Height="26" Padding="8,0" Margin="0,0,4,0" FontSize="10.5"
+                                   ToolTip="Tối ưu hóa tọa độ, chuẩn hóa bounding box và làm sạch mã TikZ"
+                                   Click="BtnAiOptimize_Click" />
+
+                        <!-- Dán ảnh: Màu Slate #475569 -->
+                        <ui:Button x:Name="BtnPasteImage" Background="#475569" Foreground="White" FontWeight="SemiBold"
+                                   Icon="{ui:SymbolIcon Image24}" Content="Dán ảnh"
+                                   Height="26" Padding="8,0" Margin="0,0,4,0" FontSize="10.5"
+                                   ToolTip="Dán ảnh mẫu từ Clipboard để AI Vision phân tích (Ctrl+V)"
+                                   Click="BtnPasteImage_Click" />
+                    </StackPanel>
+
+                    <!-- Nhóm Phải: Lưu kho, Kho hình, Lọc mã sạch, Xóa trắng, Dừng, Biên dịch F5 -->
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Lưu kho: Ngọc lục bảo #10B981 -->
+                        <ui:Button x:Name="BtnSaveFigureBank" Background="#10B981" Foreground="White" FontWeight="SemiBold"
+                                   Icon="{ui:SymbolIcon Save24}" Content="Lưu kho"
+                                   Height="26" Padding="8,0" Margin="0,0,4,0" FontSize="10"
+                                   ToolTip="Lưu mã TikZ và ảnh vào kho hình vẽ để tái sử dụng (Ctrl+Shift+S)"
+                                   Click="BtnSaveFigureBank_Click" />
+
+                        <!-- Kho hình: Cyan đậm #0891B2 -->
+                        <ui:Button x:Name="BtnOpenFigureBank" Background="#0891B2" Foreground="White" FontWeight="SemiBold"
+                                   Icon="{ui:SymbolIcon Book24}" Content="Kho hình"
+                                   Height="26" Padding="8,0" Margin="0,0,4,0" FontSize="10"
+                                   ToolTip="Mở kho duyệt và nạp hơn 200+ mẫu hình vẽ TikZ (Ctrl+B)"
+                                   Click="BtnOpenFigureBank_Click" />
+
+                        <!-- Lọc mã sạch: Slate #64748B -->
+                        <ui:Button x:Name="BtnCleanTikzCode" Background="#64748B" Foreground="White" FontWeight="SemiBold"
+                                   Icon="{ui:SymbolIcon Broom24}" Content="Lọc mã"
+                                   Height="26" Padding="8,0" Margin="0,0,4,0" FontSize="10"
+                                   ToolTip="Lọc bỏ mã thừa, chuẩn hóa về khối tikzpicture duy nhất"
+                                   Click="BtnCleanTikzCode_Click" />
+
+                        <!-- Xóa trắng: Đỏ Rose #DC2626 -->
+                        <ui:Button x:Name="BtnClearTikz" Background="#DC2626" Foreground="White" FontWeight="SemiBold"
+                                   Icon="{ui:SymbolIcon Delete24}" Content="Xóa trắng"
+                                   Height="26" Padding="8,0" Margin="0,0,8,0" FontSize="10"
+                                   ToolTip="Xóa trắng mã soạn thảo để bắt đầu vẽ hình mới"
+                                   Click="BtnClearTikz_Click" />
+
+                        <!-- Tạm dừng / Dừng lại tác vụ: Đỏ #EF4444 (Hiện khi đang biên dịch hoặc xử lý) -->
+                        <ui:Button x:Name="BtnStopTikzAction" Background="#EF4444" Foreground="White" FontWeight="Bold"
+                                   Icon="{ui:SymbolIcon Stop24}" Content="Dừng"
+                                   Height="26" Padding="10,0" Margin="0,0,6,0" FontSize="10.5"
+                                   Visibility="Collapsed"
+                                   ToolTip="Dừng ngay lập tức tác vụ biên dịch hoặc AI đang thực thi (Esc)"
+                                   Click="BtnStopTikzAction_Click" />
+
+                        <!-- Biên dịch: Xanh ngọc Emerald #059669 -->
+                        <ui:Button x:Name="BtnCompile" Background="#059669" Foreground="White" FontWeight="Bold"
+                                   Icon="{ui:SymbolIcon Play24}" Content="Biên dịch (F5)"
+                                   Height="26" Padding="12,0" FontSize="10.5"
+                                   ToolTip="Biên dịch hình vẽ ra ảnh 600 DPI sắc nét (F5 hoặc Ctrl+Enter)"
+                                   Click="BtnCompile_Click" />
+                    </StackPanel>
+                </DockPanel>
+            </Grid>
+        </ui:Card>
+
+        <!-- Khung Split View: Soạn thảo Prompt / Mã nguồn vs Xem trước Hình ảnh -->
+        <Grid x:Name="GridSplitContainer" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="300" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="*" MinWidth="300" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Cột trái: Mô tả & Mã nguồn TikZ -->
+            <ui:Card x:Name="CardCode" Grid.Column="0" Padding="10" AllowDrop="True" Drop="TikzLeftCard_Drop" DragOver="TikzLeftCard_DragOver">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <DockPanel Grid.Row="0" Margin="0,0,0,6" LastChildFill="False">
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Code24" FontSize="14" Foreground="#8B5CF6" Margin="0,0,6,0" VerticalAlignment="Center" />
+                            <TextBlock Text="Mã nguồn LaTeX TikZ" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <!-- Tiện ích Auto-Heal, Mở hình & Nút Đóng mã (←) -->
+                        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:Button x:Name="BtnAiAutoHeal" Appearance="Danger"
+                                       Icon="{ui:SymbolIcon Wrench24}"
+                                       Content="Sửa lỗi bằng AI" Height="22" Padding="6,0" FontSize="10" Margin="0,0,4,0"
+                                       Visibility="Collapsed" Click="BtnAiAutoHeal_Click"
+                                       ToolTip="Yêu cầu AI tự động sửa lỗi cú pháp LaTeX TikZ khi biên dịch thất bại" />
+
+                            <ui:Button x:Name="BtnExpandPreviewFromCode" Appearance="Secondary"
+                                       Icon="{ui:SymbolIcon ArrowRight24}"
+                                       Content="Mở hình" Height="22" Padding="6,0" FontSize="10" Margin="0,0,4,0"
+                                       Visibility="Collapsed" Click="BtnExpandPreviewFromCode_Click"
+                                       ToolTip="Mở lại khung xem trước hình ảnh" />
+
+                            <!-- Nút Đóng mã để ưu tiên hình ảnh to hết cỡ -->
+                            <ui:Button x:Name="BtnCollapseCode" Appearance="Secondary"
+                                       Icon="{ui:SymbolIcon ArrowLeft24}"
+                                       Content="Đóng mã" Height="22" Padding="6,0" FontSize="10"
+                                       ToolTip="Đóng khung mã nguồn để mở rộng hình ảnh xem trước to hết cỡ (Ctrl+[ hoặc F10)"
+                                       Click="BtnCollapseCode_Click" />
+                        </StackPanel>
+                    </DockPanel>
+
+                    <ui:TextBox x:Name="TxtTikzCode" Grid.Row="1"
+                                AcceptsReturn="True" TextWrapping="Wrap"
+                                VerticalContentAlignment="Top"
+                                FontFamily="Consolas, 'Cascadia Code', monospace" FontSize="11"
+                                Opacity="0.92"
+                                ToolTip="Trình soạn thảo mã nguồn LaTeX TikZ"
+                                PlaceholderText="Nhập mô tả hình ảnh bằng tiếng Việt hoặc dán mã TikZ..." />
+
+                    <!-- Ảnh đính kèm (nếu dán ảnh) -->
+                    <Border x:Name="BorderAttachedImage" Grid.Row="2" Visibility="Collapsed" 
+                            Background="{DynamicResource ControlFillColorSecondaryBrush}" 
+                            CornerRadius="6" Padding="6" Margin="0,6,0,0">
+                        <Grid>
+                            <!-- Click vào để xem phóng to ảnh mẫu -->
+                            <StackPanel Orientation="Horizontal" Cursor="Hand" Background="Transparent"
+                                        MouseLeftButtonDown="AttachedImage_Click"
+                                        ToolTip="Nhấp chuột để xem phóng to ảnh mẫu đính kèm">
+                                <Border CornerRadius="4" ClipToBounds="True" Margin="0,0,8,0">
+                                    <Image x:Name="ImgAttachedPreview" Width="36" Height="36" Stretch="UniformToFill" />
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Ảnh mẫu bài toán đính kèm" FontWeight="SemiBold" FontSize="11" />
+                                        <TextBlock Text=" (Bấm để xem)" FontSize="10" Foreground="#8B5CF6" FontWeight="SemiBold" Margin="4,0,0,0" />
+                                    </StackPanel>
+                                    <TextBlock Text="Sẽ được AI Vision phân tích để sinh hình tương tự" FontSize="10" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
+                            </StackPanel>
+                            <ui:Button x:Name="BtnRemoveImage" Appearance="Transparent" 
+                                       Icon="{ui:SymbolIcon Dismiss24}" 
+                                       ToolTip="Gỡ bỏ ảnh mẫu đính kèm (Delete)"
+                                       HorizontalAlignment="Right" Click="BtnRemoveImage_Click" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </ui:Card>
+
+            <GridSplitter x:Name="SplitterTikz" Grid.Column="1" HorizontalAlignment="Stretch" Background="Transparent" />
+
+            <!-- Cột phải: Xem trước Hình ảnh Sắc nét & Nút xuất -->
+            <ui:Card x:Name="CardPreview" Grid.Column="2" Padding="10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Header Cột phải: View mode tabs, Zoom controls, DPI selector & Export actions -->
+                    <Grid Grid.Row="0" Margin="0,0,0,6">
+                        <DockPanel LastChildFill="False">
+                            <!-- Cụm trái: Mở mã (→), Xem trước, 3 chế độ xem, Zoom & DPI -->
+                            <WrapPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                                <!-- Nút Mở mã hiện khi mã đang bị ẩn/thu gọn -->
+                                <ui:Button x:Name="BtnExpandCode" Background="#8B5CF6" Foreground="White" FontWeight="Bold"
+                                           Icon="{ui:SymbolIcon ArrowRight24}"
+                                           Content="Mở mã" Height="24" Padding="8,0" FontSize="10" Margin="0,0,6,2"
+                                           Visibility="Collapsed"
+                                           ToolTip="Mở lại khung soạn thảo mã nguồn TikZ (Ctrl+[ hoặc F10)"
+                                           Click="BtnExpandCode_Click" />
+
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,6,2">
+                                    <ui:SymbolIcon Symbol="Image24" Foreground="#8B5CF6" Margin="0,0,5,0" VerticalAlignment="Center" />
+                                    <TextBlock Text="Xem trước" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center" />
+                                </StackPanel>
+
+                                <!-- Cụm nút chuyển đổi 3 chế độ xem: 3:7 / Chỉ hình / Chỉ mã -->
+                                <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" CornerRadius="4" Height="24" Padding="2,0" Margin="0,0,6,2" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <ui:Button x:Name="BtnModeSplit" Appearance="Transparent" Content="3:7" Height="20" Padding="5,0" FontSize="9.5" FontWeight="SemiBold"
+                                                   ToolTip="Chế độ chia đôi (Mã 30% : Hình 70%)" Click="BtnModeSplit_Click" />
+                                        <ui:Button x:Name="BtnModeImageOnly" Appearance="Transparent" Content="Chỉ hình" Height="20" Padding="5,0" FontSize="9.5" FontWeight="SemiBold"
+                                                   ToolTip="Chế độ chỉ xem hình ảnh to hết cỡ (Thu gọn mã)" Click="BtnModeImageOnly_Click" />
+                                        <ui:Button x:Name="BtnModeCodeOnly" Appearance="Transparent" Content="Chỉ mã" Height="20" Padding="5,0" FontSize="9.5" FontWeight="SemiBold"
+                                                   ToolTip="Chế độ chỉ xem mã nguồn TikZ" Click="BtnModeCodeOnly_Click" />
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Zoom Bar -->
+                                <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" CornerRadius="4" Height="24" Padding="2,0" Margin="0,0,6,2" VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <ui:Button x:Name="BtnZoomOut" Appearance="Transparent" Content="-" Width="20" Height="20" Padding="0" FontSize="12" Click="BtnZoomOut_Click" ToolTip="Thu nhỏ (Ctrl + Cuộn chuột xuống)" />
+                                        <ui:Button x:Name="BtnZoomReset" Appearance="Transparent" Content="100%" Height="20" Padding="3,0" FontSize="9.5" Click="BtnZoomReset_Click" ToolTip="Kích thước gốc 100%" />
+                                        <ui:Button x:Name="BtnZoomIn" Appearance="Transparent" Content="+" Width="20" Height="20" Padding="0" FontSize="12" Click="BtnZoomIn_Click" ToolTip="Phóng to (Ctrl + Cuộn chuột lên)" />
+                                        <ui:Button x:Name="BtnZoomFit" Appearance="Transparent" Content="Fit" Height="20" Padding="3,0" FontSize="9.5" Click="BtnZoomFit_Click" ToolTip="Vừa vặn khung nhìn" />
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- DPI Selector (độ rộng 82px để không bị cắt thành 600 D) -->
+                                <ComboBox x:Name="CmbDpi" Width="82" Height="24" SelectedIndex="2" FontSize="9.5"
+                                          Padding="4,0,14,0" VerticalContentAlignment="Center" Margin="0,0,6,2" ToolTip="Độ phân giải xuất hình">
+                                    <ComboBoxItem Content="150 DPI" Tag="150" Padding="4,2" />
+                                    <ComboBoxItem Content="300 DPI" Tag="300" Padding="4,2" />
+                                    <ComboBoxItem Content="600 DPI" Tag="600" Padding="4,2" />
+                                </ComboBox>
+                            </WrapPanel>
+
+                            <!-- Cụm phải: Action Export Buttons & Popout Viewer (WrapPanel để không bao giờ bị dồn mất nút) -->
+                            <WrapPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                <ui:Button x:Name="BtnOpenViewerWindow" Appearance="Secondary" 
+                                           Icon="{ui:SymbolIcon FullScreenMaximize24}" 
+                                           Content="Xem riêng" Height="24" Padding="6,0" Margin="0,0,3,2" FontSize="10" 
+                                           ToolTip="Mở cửa sổ xem hình chi tiết toàn màn hình (F11 hoặc nhấp đúp vào ảnh)"
+                                           Click="BtnOpenViewerWindow_Click" />
+                                <ui:Button x:Name="BtnCopyEmf" Appearance="Secondary" 
+                                           Content="Copy EMF" Height="24" Padding="6,0" Margin="0,0,3,2" FontSize="10" 
+                                           ToolTip="Sao chép vector EMF dán sắc nét vào Word"
+                                           Click="BtnCopyEmf_Click" />
+                                <ui:Button x:Name="BtnSaveSvg" Appearance="Secondary" 
+                                           Content="Lưu SVG" Height="24" Padding="6,0" Margin="0,0,3,2" FontSize="10" 
+                                           ToolTip="Xuất tệp vector SVG"
+                                           Click="BtnSaveSvg_Click" />
+                                <ui:Button x:Name="BtnSavePng" Appearance="Secondary" 
+                                           Icon="{ui:SymbolIcon ArrowDownload24}" 
+                                           Content="Lưu PNG" Height="24" Padding="6,0" Margin="0,0,3,2" FontSize="10" 
+                                           ToolTip="Lưu file ảnh PNG (Ctrl+S)"
+                                           Click="BtnSavePng_Click" />
+                                <ui:Button x:Name="BtnInsertWord" Background="#0284C7" Foreground="White" FontWeight="Bold"
+                                           Icon="{ui:SymbolIcon DocumentArrowRight24}" Content="Chèn Word"
+                                           Height="24" Padding="8,0" Margin="0,0,0,2" FontSize="10.5" 
+                                           ToolTip="Sao chép hình ảnh chèn ngay vào Word (Ctrl+Shift+W)"
+                                           Click="BtnInsertWord_Click" />
+                            </WrapPanel>
+                        </DockPanel>
+                    </Grid>
+
+                    <!-- Khung hiển thị hình vẽ (Interactive Pan & Zoom Canvas) -->
+                    <Border x:Name="BorderDiagramWrapper" Grid.Row="1" Background="#FFFFFF" 
+                            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1.5" 
+                            CornerRadius="6" ClipToBounds="True"
+                            MouseEnter="BorderDiagramWrapper_MouseEnter" MouseLeave="BorderDiagramWrapper_MouseLeave"
+                            ToolTip="Nhấp đúp chuột để mở cửa sổ xem hình chi tiết | Kéo chuột để di chuyển | Ctrl + Cuộn chuột để thu phóng">
+                        <ScrollViewer x:Name="ScrollDiagramContainer" 
+                                      HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                                      PreviewMouseWheel="ScrollDiagramContainer_PreviewMouseWheel">
+                            <Grid x:Name="CanvasDiagramContainer" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="14"
+                                  MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" Cursor="Hand">
+                                <Grid.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform x:Name="ImgScaleTransform" ScaleX="1" ScaleY="1" />
+                                        <TranslateTransform x:Name="ImgTranslateTransform" X="0" Y="0" />
+                                    </TransformGroup>
+                                </Grid.RenderTransform>
+
+                                <Image x:Name="ImgDiagramPreview" Stretch="None" RenderOptions.BitmapScalingMode="HighQuality" />
+                                
+                                <!-- Placeholder khi chưa có hình -->
+                                <StackPanel x:Name="PanelPreviewPlaceholder" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <ui:SymbolIcon Symbol="Shapes24" FontSize="36" Foreground="#CBD5E1" HorizontalAlignment="Center" Margin="0,0,0,6" />
+                                    <TextBlock Text="Hình vẽ sau khi AI sinh mã hoặc bấm 'Biên dịch hình' sẽ hiển thị tại đây" 
+                                               FontSize="11" Foreground="#94A3B8" HorizontalAlignment="Center" />
+                                    <TextBlock Text="Hỗ trợ Pan/Zoom chuột (Ctrl + Cuộn), xuất 600 DPI, vector EMF &amp; SVG" 
+                                               FontSize="10" Foreground="#CBD5E1" HorizontalAlignment="Center" Margin="0,2,0,0" />
+                                </StackPanel>
+                            </Grid>
+                        </ScrollViewer>
+                    </Border>
+
+                    <!-- Thanh trạng thái kết quả vẽ -->
+                    <DockPanel Grid.Row="2" Margin="0,6,0,0" LastChildFill="False">
+                        <TextBlock x:Name="TxtDiagramStats" DockPanel.Dock="Left" Text="Chưa biên dịch hình" 
+                                   FontSize="10.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                        <TextBlock x:Name="TxtZoomLevel" DockPanel.Dock="Right" Text="Thu phóng: 100%" 
+                                   FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" VerticalAlignment="Center" />
+                    </DockPanel>
+                </Grid>
+            </ui:Card>
+        </Grid>
+
+        <!-- Băng thông báo InfoBar -->
+        <ui:InfoBar x:Name="InfoTikzNotification" Grid.Row="3" Margin="0,8,0,0"
+                    IsOpen="False" Severity="Success"
+                    Title="Hoàn tất" 
+                    Message="Mã TikZ đã được AI tối ưu và sẵn sàng chèn vào tài liệu Word." />
+    </Grid>
+</UserControl>

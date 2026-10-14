@@ -1,0 +1,8 @@
+{
+  "name": "TikZ (2026) - Thầy Đỗ Minh (DoMinhMath)",
+  "description": "An application to optimize TikZ code using AI. It provides a library of templates and an editor to refine your LaTeX graphics code with the help of Gemini.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": []
+}

@@ -1,0 +1,62 @@
+<ui:FluentWindow x:Class="MatrixExamAI.Desktop.Views.UpdateDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Cập nhật MatrixExamAI" 
+        Height="420" Width="520"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ExtendsContentIntoTitleBar="True"
+        WindowBackdropType="Mica">
+    <Grid Margin="20,10,20,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- TitleBar Header -->
+        <ui:TitleBar Grid.Row="0" Title="Cập nhật phiên bản mới" ShowMaximize="False" ShowMinimize="False" />
+
+        <!-- Info Header -->
+        <StackPanel Grid.Row="1" Margin="0,8,0,12">
+            <TextBlock x:Name="TxtVersionTitle" Text="Đã có phiên bản mới: v5.2.0" FontSize="16" FontWeight="Bold" Foreground="#0D9488" />
+            <TextBlock x:Name="TxtVersionSubtitle" Text="Phiên bản hiện tại: v5.1.0 • Dung lượng: ~90 MB" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,4,0,0" />
+        </StackPanel>
+
+        <!-- Release Notes Box -->
+        <Border Grid.Row="2" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="6" Padding="12">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <TextBlock x:Name="TxtReleaseNotes" TextWrapping="Wrap" FontSize="12" FontFamily="Segoe UI, sans-serif" 
+                           Foreground="{DynamicResource TextFillColorPrimaryBrush}" LineHeight="18" />
+            </ScrollViewer>
+        </Border>
+
+        <!-- Progress Area -->
+        <StackPanel Grid.Row="3" x:Name="PanelProgress" Visibility="Collapsed" Margin="0,14,0,4">
+            <ProgressBar x:Name="ProgressBarDownload" Height="6" Minimum="0" Maximum="100" Value="0" Foreground="#0D9488" />
+            <TextBlock x:Name="TxtProgressStatus" Text="Đang tải gói cài đặt..." FontSize="11" 
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,6,0,0" />
+        </StackPanel>
+
+        <!-- Action Buttons -->
+        <Grid Grid.Row="4" Margin="0,16,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="TxtStatus" Grid.Column="0" VerticalAlignment="Center" FontSize="11" 
+                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+
+            <ui:Button x:Name="BtnCancel" Grid.Column="1" Appearance="Secondary" Content="Để sau" 
+                       Padding="16,6" Margin="0,0,8,0" Click="BtnCancel_Click" />
+            <ui:Button x:Name="BtnUpdateNow" Grid.Column="2" Appearance="Primary" Icon="{ui:SymbolIcon ArrowDownload24}" 
+                       Content="Cập nhật ngay" Padding="18,6" Click="BtnUpdateNow_Click" />
+        </Grid>
+    </Grid>
+</ui:FluentWindow>

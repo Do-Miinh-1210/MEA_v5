@@ -1,0 +1,182 @@
+<Window x:Class="MatrixExamAI.Desktop.Views.AiDrawPromptDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="AI Vẽ Hình TikZ — Chuẩn WebTikZ &amp; Thầy Đỗ Minh (DoMinhMath)"
+        Height="620" Width="850" MinWidth="750" MinHeight="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResizeWithGrip"
+        Background="{DynamicResource ApplicationBackgroundBrush}"
+        Focusable="True"
+        KeyDown="AiDrawPromptDialog_KeyDown">
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 1. Header Đậm chất Nhận diện TikZ AI -->
+        <Border Grid.Row="0" Background="#6D28D9" CornerRadius="6" Padding="14,10" Margin="0,0,0,6">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,3">
+                    <TextBlock Text="🎨 " FontSize="14" Foreground="White" VerticalAlignment="Center" />
+                    <TextBlock Text="AI Vẽ Hình TikZ — Phân tích &amp; Tự động vẽ" FontSize="13" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" />
+                </StackPanel>
+                <TextBlock Text="Chỉ cần dán ảnh (Ctrl+V) hoặc chọn file, AI sẽ tự động phân tích và vẽ mã TikZ chuẩn Thầy Đỗ Minh (DoMinhMath)."
+                           FontSize="10.5" Foreground="#EDE9FE" />
+            </StackPanel>
+        </Border>
+
+        <!-- 2. Dải thông tin Provider hiện tại khớp bản cũ (Hình 2) -->
+        <Border Grid.Row="1" Background="{DynamicResource ControlFillColorSecondaryBrush}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,6">
+            <TextBlock x:Name="TxtActiveProvider" Text="⚡ Provider hiện tại: 9Router (gemini-3.8-flash)" 
+                       FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+        </Border>
+
+        <!-- 2. Scrollable Content Area -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="0,0,0,6">
+            <StackPanel>
+                <!-- Bước 1: Hình ảnh mẫu -->
+                <ui:Card Margin="0,0,0,8" Padding="12,10">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,6" LastChildFill="False">
+                            <TextBlock DockPanel.Dock="Left" Text="1. Hình ảnh mẫu (Đề bài, đồ thị, hình học, BBT)" 
+                                       FontWeight="Bold" FontSize="11.5" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                                <ui:Button x:Name="BtnChooseImage" Icon="{ui:SymbolIcon FolderOpen24}" Content="Chọn ảnh từ máy" Background="#2563EB" Foreground="White" 
+                                           FontWeight="SemiBold" Height="28" Padding="12,0" FontSize="11" Margin="0,0,6,0"
+                                           Click="BtnChooseImage_Click" />
+                                <ui:Button x:Name="BtnPasteImage" Icon="{ui:SymbolIcon ClipboardPaste24}" Content="Dán ảnh (Ctrl+V)" Background="#475569" Foreground="White" 
+                                           FontWeight="SemiBold" Height="28" Padding="12,0" FontSize="11" Margin="0,0,6,0"
+                                           Click="BtnPasteImage_Click" />
+                                <ui:Button x:Name="BtnClearImage" Icon="{ui:SymbolIcon Delete24}" Content="Xóa ảnh" Background="#EF4444" Foreground="White" 
+                                           FontWeight="SemiBold" Height="28" Padding="10,0" FontSize="10.5" Visibility="Collapsed"
+                                           Click="BtnClearImage_Click" />
+                            </StackPanel>
+                        </DockPanel>
+
+                        <TextBlock x:Name="TxtImageStatus" Text="Chưa có ảnh (Nhấn Ctrl+V bất cứ đâu để dán ảnh chụp màn hình từ Clipboard)"
+                                   FontSize="10.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,6" />
+
+                        <!-- Preview container (Bấm vào để xem phóng to) -->
+                        <Border x:Name="BorderImagePreview" Visibility="Collapsed" Background="#0A000000" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1" CornerRadius="6" Padding="6" Margin="0,2,0,0"
+                                Cursor="Hand" MouseLeftButtonDown="BorderImagePreview_MouseLeftButtonDown"
+                                ToolTip="Nhấp chuột để xem phóng to ảnh bài toán">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Border Background="White" CornerRadius="4" Padding="2" Margin="0,0,10,0">
+                                    <Image x:Name="ImgPreview" MaxWidth="120" MaxHeight="80" Stretch="Uniform" />
+                                </Border>
+                                <StackPanel VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock x:Name="TxtImageDimensions" Text="Kích thước ảnh: 0 x 0 px" FontWeight="SemiBold" FontSize="11" />
+                                        <TextBlock Text=" (Bấm để xem)" FontSize="10" Foreground="#6D28D9" FontWeight="SemiBold" Margin="6,0,0,0" />
+                                    </StackPanel>
+                                    <TextBlock Text="Đã sẵn sàng cho AI Vision phân tích tái tạo hình học" FontSize="10" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ui:Card>
+
+                <!-- Bước 2: Tùy chọn tác vụ nhanh -->
+                <ui:Card Margin="0,0,0,8" Padding="12,10">
+                    <StackPanel>
+                        <TextBlock Text="2. Tùy chọn tác vụ &amp; dạng hình vẽ (Chuẩn WebTikZ &amp; Thầy Đỗ Minh)" 
+                                   FontWeight="Bold" FontSize="11.5" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,8" />
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Cột 1: Đại số & Bảng -->
+                            <CheckBox x:Name="ChkTaskBbt" Grid.Row="0" Grid.Column="0" Content="📊 BBT có khung" Margin="4,3" FontSize="11" />
+                            <CheckBox x:Name="ChkTaskBbtNoFrame" Grid.Row="1" Grid.Column="0" Content="📊 BBT không khung" Margin="4,3" FontSize="11" />
+                            <CheckBox x:Name="ChkTaskBxd" Grid.Row="2" Grid.Column="0" Content="📋 Bảng xét dấu" Margin="4,3" FontSize="11" />
+
+                            <!-- Cột 2: Đồ thị & Hình học -->
+                            <CheckBox x:Name="ChkTaskGraph" Grid.Row="0" Grid.Column="1" Content="📈 Đồ thị (Ox, Oy, tiệm cận)" Margin="4,3" FontSize="11" />
+                            <CheckBox x:Name="ChkTaskGeo" Grid.Row="1" Grid.Column="1" Content="📐 Hình học (2D &amp; 3D)" Margin="4,3" FontSize="11" IsChecked="True" />
+                            <CheckBox x:Name="ChkTaskCircuit" Grid.Row="2" Grid.Column="1" Content="🔌 Sơ đồ mạch điện" Margin="4,3" FontSize="11" />
+
+                            <!-- Cột 3: Tổng thể & Chú thích -->
+                            <CheckBox x:Name="ChkTaskAll" Grid.Row="0" Grid.Column="2" Content="🎯 Vẽ tất cả trong ảnh" Margin="4,3" FontSize="11" />
+                            <CheckBox x:Name="ChkTaskNotes" Grid.Row="1" Grid.Column="2" Content="📝 Chú thích bố cục (%)" Margin="4,3" FontSize="11" FontWeight="SemiBold" Foreground="#4F46E5" IsChecked="True" />
+                        </Grid>
+                    </StackPanel>
+                </ui:Card>
+
+                <!-- Bước 3: Đề bài / Mô tả bổ sung -->
+                <ui:Card Margin="0,0,0,8" Padding="12,10">
+                    <StackPanel>
+                        <TextBlock Text="3. Yêu cầu bổ sung hoặc nhập đề bài (Văn bản)" 
+                                   FontWeight="Bold" FontSize="11.5" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,6" />
+                        <ui:TextBox x:Name="TxtInputPrompt" MinHeight="110" Height="130" AcceptsReturn="True" TextWrapping="Wrap"
+                                    VerticalContentAlignment="Top" FontSize="11"
+                                    PlaceholderText="Nhập đề bài hoặc mô tả hình học (VD: Cho hình chóp S.ABCD có đáy là hình vuông cạnh a, SA vuông góc với đáy...)" />
+                    </StackPanel>
+                </ui:Card>
+
+                <!-- Bước 4: Khung mô tả 2 bước (Có thể mở rộng) -->
+                <Border x:Name="BorderDescArea" Visibility="Collapsed" Background="#0A000000" CornerRadius="6" Padding="10" Margin="0,0,0,4">
+                    <StackPanel>
+                        <DockPanel Margin="0,0,0,4" LastChildFill="False">
+                            <TextBlock DockPanel.Dock="Left" Text="Mô tả AI tạo ra (Bạn có thể tinh chỉnh trước khi vẽ):" FontWeight="Bold" FontSize="11" Foreground="#0F766E" />
+                            <ui:Button x:Name="BtnConfirmDrawFromDesc" DockPanel.Dock="Right" Icon="{ui:SymbolIcon Checkmark24}" Content="Xác nhận vẽ từ mô tả này" 
+                                       Background="#0D9488" Foreground="White" FontWeight="Bold" Height="26" Padding="12,0" FontSize="11"
+                                       Click="BtnConfirmDrawFromDesc_Click" />
+                        </DockPanel>
+                        <ui:TextBox x:Name="TxtDescResult" Height="80" AcceptsReturn="True" TextWrapping="Wrap" 
+                                    FontFamily="Consolas, monospace" FontSize="10.5" />
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- 3. Thanh trạng thái -->
+        <Border Grid.Row="3" Background="{DynamicResource ControlFillColorSecondaryBrush}" CornerRadius="6" Padding="10,4" Margin="0,0,0,8">
+            <DockPanel LastChildFill="False">
+                <TextBlock x:Name="TxtStatus" DockPanel.Dock="Left" Text="Sẵn sàng — Dán ảnh (Ctrl+V) hoặc chọn file để bắt đầu." 
+                           FontSize="10.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                <ProgressBar x:Name="PrgProgress" DockPanel.Dock="Right" IsIndeterminate="True" Width="100" Height="10" Visibility="Collapsed" VerticalAlignment="Center" />
+            </DockPanel>
+        </Border>
+
+        <!-- 4. Thanh nút hành động cố định ở đáy (Có nút Tạm dừng / Dừng lại) -->
+        <DockPanel Grid.Row="4" LastChildFill="False">
+            <ui:Button x:Name="BtnClose" DockPanel.Dock="Left" Icon="{ui:SymbolIcon Dismiss24}" Content="Đóng" 
+                       Background="#64748B" Foreground="White" FontWeight="SemiBold"
+                       Height="32" Padding="16,0" FontSize="11" Click="BtnClose_Click" />
+
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <!-- Nút Tạm dừng / Dừng lại (Hiển thị nổi bật màu đỏ khi đang chạy AI) -->
+                <ui:Button x:Name="BtnStopAi" Icon="{ui:SymbolIcon Stop24}" Content="Tạm dừng / Dừng lại" 
+                           Background="#DC2626" Foreground="White" FontWeight="Bold"
+                           Height="32" Padding="14,0" FontSize="11" Margin="0,0,8,0"
+                           Visibility="Collapsed" Click="BtnStopAi_Click"
+                           ToolTip="Dừng ngay lập tức tác vụ AI đang thực thi (hoặc nhấn phím Esc)" />
+
+                <ui:Button x:Name="BtnDescribeOnly" Icon="{ui:SymbolIcon DocumentBulletList24}" Content="Chỉ tạo mô tả (2 bước)" 
+                           Background="#475569" Foreground="White" FontWeight="SemiBold"
+                           Height="32" Padding="14,0" FontSize="11" Margin="0,0,8,0"
+                           Click="BtnDescribeOnly_Click" />
+
+                <ui:Button x:Name="BtnAutoDraw" Icon="{ui:SymbolIcon Sparkle24}" Content="Phân tích &amp; Tự động vẽ TikZ" 
+                           Background="#059669" Foreground="White" FontWeight="Bold"
+                           Height="32" Padding="18,0" FontSize="11.5"
+                           Click="BtnAutoDraw_Click" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</Window>

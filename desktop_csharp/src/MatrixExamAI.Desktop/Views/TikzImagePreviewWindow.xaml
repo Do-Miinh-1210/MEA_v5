@@ -1,0 +1,88 @@
+<Window x:Class="MatrixExamAI.Desktop.Views.TikzImagePreviewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Xem Hình Vẽ TikZ Độ Phân Giải Cao"
+        Height="720" Width="1000" MinWidth="700" MinHeight="500"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResizeWithGrip"
+        Background="{DynamicResource ApplicationBackgroundBrush}"
+        Focusable="True"
+        KeyDown="TikzImagePreviewWindow_KeyDown">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header / Toolbar -->
+        <Border Grid.Row="0" Background="{DynamicResource ControlFillColorSecondaryBrush}" 
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1" 
+                CornerRadius="6" Padding="10,6" Margin="0,0,0,8">
+            <DockPanel LastChildFill="False">
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:SymbolIcon Symbol="Image24" FontSize="16" Foreground="#8B5CF6" Margin="0,0,8,0" VerticalAlignment="Center" />
+                    <TextBlock x:Name="TxtTitleInfo" Text="Xem hình vẽ TikZ chi tiết" FontWeight="SemiBold" FontSize="12.5" VerticalAlignment="Center" Margin="0,0,12,0" />
+
+                    <!-- Zoom Controls -->
+                    <Border Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="4" Height="26" Padding="3,0" Margin="0,0,8,0" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:Button x:Name="BtnZoomOut" Appearance="Transparent" Content="-" Width="24" Height="22" Padding="0" FontSize="13" Click="BtnZoomOut_Click" ToolTip="Thu nhỏ (Ctrl + Cuộn chuột xuống)" />
+                            <ui:Button x:Name="BtnZoomReset" Appearance="Transparent" Content="100%" Height="22" Padding="6,0" FontSize="10" Click="BtnZoomReset_Click" ToolTip="Kích thước gốc 100%" />
+                            <ui:Button x:Name="BtnZoomIn" Appearance="Transparent" Content="+" Width="24" Height="22" Padding="0" FontSize="13" Click="BtnZoomIn_Click" ToolTip="Phóng to (Ctrl + Cuộn chuột lên)" />
+                            <ui:Button x:Name="BtnZoomFit" Appearance="Transparent" Content="Vừa khung" Height="22" Padding="6,0" FontSize="10" Click="BtnZoomFit_Click" ToolTip="Vừa vặn khung nhìn" />
+                            <ui:Button x:Name="BtnZoom200" Appearance="Transparent" Content="200%" Height="22" Padding="6,0" FontSize="10" Click="BtnZoom200_Click" ToolTip="Phóng đại 200%" />
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock x:Name="TxtZoomLevel" Text="Thu phóng: 100%" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                </StackPanel>
+
+                <!-- Action buttons right -->
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:Button x:Name="BtnCopyImage" Icon="{ui:SymbolIcon Copy24}" Content="Sao chép ảnh" 
+                               Appearance="Secondary" Height="26" Padding="8,0" Margin="0,0,4,0" FontSize="10.5" 
+                               Click="BtnCopyImage_Click" ToolTip="Sao chép ảnh vào Clipboard (Ctrl+C)" />
+                    <ui:Button x:Name="BtnSaveImage" Icon="{ui:SymbolIcon ArrowDownload24}" Content="Lưu tệp..." 
+                               Appearance="Secondary" Height="26" Padding="8,0" Margin="0,0,4,0" FontSize="10.5" 
+                               Click="BtnSaveImage_Click" ToolTip="Lưu tệp ảnh độ nét cao (Ctrl+S)" />
+                    <ui:Button x:Name="BtnOpenExternal" Icon="{ui:SymbolIcon Open24}" Content="Mở ngoài" 
+                               Appearance="Secondary" Height="26" Padding="8,0" Margin="0,0,6,0" FontSize="10.5" 
+                               Click="BtnOpenExternal_Click" ToolTip="Mở file ảnh bằng ứng dụng mặc định của hệ thống" />
+                    <ui:Button x:Name="BtnClose" Icon="{ui:SymbolIcon Dismiss24}" Content="Đóng" 
+                               Appearance="Primary" Height="26" Padding="12,0" FontSize="10.5" 
+                               Click="BtnClose_Click" ToolTip="Đóng cửa sổ xem hình (Esc)" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Main Image Canvas Viewer with ScrollViewer -->
+        <Border Grid.Row="1" Background="#FFFFFF" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
+                BorderThickness="1" CornerRadius="6" ClipToBounds="True">
+            <ScrollViewer x:Name="ScrollViewerContainer" 
+                          HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
+                          PreviewMouseWheel="ScrollViewerContainer_PreviewMouseWheel">
+                <Grid x:Name="CanvasContainer" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20"
+                      MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" Cursor="Hand">
+                    <Grid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="ImgScaleTransform" ScaleX="1" ScaleY="1" />
+                            <TranslateTransform x:Name="ImgTranslateTransform" X="0" Y="0" />
+                        </TransformGroup>
+                    </Grid.RenderTransform>
+
+                    <Image x:Name="ImgFullPreview" Stretch="None" RenderOptions.BitmapScalingMode="HighQuality" />
+                </Grid>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Footer / Status Bar -->
+        <DockPanel Grid.Row="2" Margin="0,6,0,0" LastChildFill="False">
+            <TextBlock x:Name="TxtFooterInfo" DockPanel.Dock="Left" Text="Dùng chuột trái kéo để di chuyển ảnh | Ctrl + Cuộn chuột để phóng to/thu nhỏ | Nhấn Esc để đóng" 
+                       FontSize="10.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+            <TextBlock x:Name="TxtResolutionInfo" DockPanel.Dock="Right" Text="0 × 0 px" 
+                       FontSize="10.5" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+        </DockPanel>
+    </Grid>
+</Window>

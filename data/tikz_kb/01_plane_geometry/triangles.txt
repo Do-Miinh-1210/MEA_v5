@@ -1,0 +1,187 @@
+═══════════════════════════════════════════════════════════════════════════════
+  TAM GIÁC — các loại tam giác chuẩn
+═══════════════════════════════════════════════════════════════════════════════
+
+=== TEMPLATE: Tam giác ABC ===
+TAGS: 2D, tam giác, plane
+KEYWORDS: tam giác, ABC, triangle
+NOTES: Tam giác thường, đánh dấu góc α tại đỉnh A.
+
+\begin{tikzpicture}[scale=1.5, thick]
+  \coordinate[label=below left:$A$]  (A) at (0,0);
+  \coordinate[label=below right:$B$] (B) at (4,0);
+  \coordinate[label=above:$C$]       (C) at (1.5,3);
+  \draw (A)--(B)--(C)--cycle;
+  % Góc α tại A — angle eccentricity > 1 đẩy nhãn ra xa cung
+  \pic[draw, angle radius=6mm, angle eccentricity=1.4, "$\alpha$"]
+    {angle=B--A--C};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Tam giác vuông ABC tại A ===
+TAGS: 2D, tam giác vuông, right triangle
+KEYWORDS: tam giác vuông, vuông tại A, right triangle, perpendicular
+NOTES: Đỉnh vuông góc A đặt ở góc dưới-trái. Dùng pic right angle (xoay theo
+       cạnh) thay vì rectangle (không xoay được).
+
+\begin{tikzpicture}[scale=1.5, thick]
+  \coordinate[label=below left:$A$]  (A) at (0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0);
+  \coordinate[label=above left:$C$]  (C) at (0,2);
+  \draw (A)--(B)--(C)--cycle;
+  % KÝ HIỆU GÓC VUÔNG CHUẨN — pic right angle (tự xoay theo hai cạnh)
+  \draw pic [draw, angle radius=4mm, "$\cdot$" anchor=north east, "" pos=0.5]
+    {right angle = B--A--C};
+  % Nhãn cạnh
+  \node at (1.5,0)   [below]  {$c$};
+  \node at (0,1)     [left]   {$b$};
+  \node at (1.55,1)  [above right] {$a$};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Tam giác cân ABC tại A ===
+TAGS: 2D, tam giác cân, isoceles
+KEYWORDS: tam giác cân, cân tại A, isoceles, AB=AC
+NOTES: AB = AC. Đánh dấu hai cạnh bằng nhau bằng tick chéo.
+
+\begin{tikzpicture}[scale=1.5, thick,
+  tick/.style={postaction={decorate}, decoration={markings,
+    mark=at position 0.5 with {\draw (-2pt,-2pt)--(2pt,2pt);}}}]
+  \coordinate[label=above:$A$]      (A) at (2,3);
+  \coordinate[label=below left:$B$] (B) at (0,0);
+  \coordinate[label=below right:$C$](C) at (4,0);
+  \draw[tick] (A)--(B);
+  \draw[tick] (A)--(C);
+  \draw       (B)--(C);
+  % Đường cao AH = trung tuyến (vì cân tại A)
+  \coordinate[label=below:$H$] (H) at (2,0);
+  \draw[dashed] (A)--(H);
+  \draw pic [draw, angle radius=3mm] {right angle = A--H--C};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Tam giác đều ABC ===
+TAGS: 2D, tam giác đều, equilateral
+KEYWORDS: tam giác đều, equilateral, đều
+NOTES: 3 cạnh bằng nhau (tick chéo đơn). 3 góc 60°.
+
+\begin{tikzpicture}[scale=1.5, thick,
+  tick/.style={postaction={decorate}, decoration={markings,
+    mark=at position 0.5 with {\draw (-2pt,-2pt)--(2pt,2pt);}}}]
+  \coordinate[label=below left:$B$]  (B) at (0,0);
+  \coordinate[label=below right:$C$] (C) at (3,0);
+  \coordinate[label=above:$A$]       (A) at (1.5,2.598);  % 1.5*sqrt(3)
+  \draw[tick] (A)--(B);
+  \draw[tick] (B)--(C);
+  \draw[tick] (C)--(A);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Tam giác có đường cao AH ===
+TAGS: 2D, tam giác, đường cao, altitude
+KEYWORDS: đường cao, altitude, AH vuông góc, chân đường cao
+NOTES: AH ⟂ BC tại H. Ký hiệu góc vuông tại H phải dùng pic right angle.
+
+\begin{tikzpicture}[scale=1.5, thick]
+  \coordinate[label=above:$A$]       (A) at (1.5,3);
+  \coordinate[label=below left:$B$]  (B) at (0,0);
+  \coordinate[label=below right:$C$] (C) at (4,0);
+  \draw (A)--(B)--(C)--cycle;
+  \coordinate[label=below:$H$] (H) at (1.5,0);
+  \draw[dashed] (A)--(H);
+  \draw pic [draw, angle radius=3mm] {right angle = A--H--C};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Tam giác có trung tuyến AM ===
+TAGS: 2D, tam giác, trung tuyến, median
+KEYWORDS: trung tuyến, median, M là trung điểm BC
+NOTES: M là trung điểm BC → đánh dấu BM = MC bằng tick chéo.
+
+\begin{tikzpicture}[scale=1.5, thick,
+  tick/.style={postaction={decorate}, decoration={markings,
+    mark=at position 0.5 with {\draw (-2pt,-2pt)--(2pt,2pt);}}}]
+  \coordinate[label=above:$A$]       (A) at (1.5,3);
+  \coordinate[label=below left:$B$]  (B) at (0,0);
+  \coordinate[label=below right:$C$] (C) at (4,0);
+  \draw (A)--(B)--(C)--cycle;
+  \coordinate[label=below:$M$] (M) at (2,0);
+  \draw[dashed] (A)--(M);
+  \draw[tick] (B)--(M);
+  \draw[tick] (M)--(C);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Tam giác có đường phân giác AD ===
+TAGS: 2D, tam giác, phân giác, bisector
+KEYWORDS: phân giác, bisector, AD chia góc A
+NOTES: AD chia góc BAC thành hai góc bằng nhau — đánh cung đôi.
+
+\begin{tikzpicture}[scale=1.5, thick]
+  \coordinate[label=above:$A$]       (A) at (1.5,3);
+  \coordinate[label=below left:$B$]  (B) at (0,0);
+  \coordinate[label=below right:$C$] (C) at (4,0);
+  \draw (A)--(B)--(C)--cycle;
+  % D = giao của phân giác A với BC; ở đây minh hoạ ở vị trí khoảng giữa
+  \coordinate[label=below:$D$] (D) at (1.7,0);
+  \draw[dashed] (A)--(D);
+  % Hai cung góc bằng nhau (đánh dấu phân giác)
+  \pic[draw, angle radius=5mm] {angle=B--A--D};
+  \pic[draw, angle radius=7mm] {angle=B--A--D};
+  \pic[draw, angle radius=5mm] {angle=D--A--C};
+  \pic[draw, angle radius=7mm] {angle=D--A--C};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Tam giác có trọng tâm G ===
+TAGS: 2D, tam giác, trọng tâm, centroid
+KEYWORDS: trọng tâm, centroid, G, AG = 2/3 AM, 3 trung tuyến đồng quy
+NOTES: G = giao 3 đường trung tuyến; G chia mỗi trung tuyến theo tỉ số
+       2:1 (AG = 2·GM). Alpha 24 fix: dùng tam giác đều cạnh 4,
+       G = (0, 2/√3), 3 trung điểm chính xác.
+
+\begin{tikzpicture}[scale=1, thick,
+  tick/.style={postaction={decorate}, decoration={markings,
+    mark=at position 0.5 with {\draw (-2pt,-2pt)--(2pt,2pt);}}}]
+  \coordinate[label=above:$A$]       (A) at ( 0, 3.464);
+  \coordinate[label=below left:$B$]  (B) at (-2, 0);
+  \coordinate[label=below right:$C$] (C) at ( 2, 0);
+  % Trung điểm 3 cạnh (toán đúng):
+  \coordinate[label=below:$M$]       (M) at ( 0, 0);        % trung BC
+  \coordinate[label=above right:$N$] (N) at ( 1, 1.732);    % trung CA
+  \coordinate[label=above left:$P$]  (P) at (-1, 1.732);    % trung AB
+  % Trọng tâm G = (0, 2/√3)
+  \coordinate (G) at (0, 1.155);
+  \draw (A)--(B)--(C)--cycle;
+  \draw[dashed] (A)--(M);
+  \draw[dashed] (B)--(N);
+  \draw[dashed] (C)--(P);
+  \fill (G) circle (1.5pt) node[above right=1pt] {$G$};
+  \draw[tick] (B)--(M); \draw[tick] (M)--(C);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Tam giác có trực tâm H ===
+TAGS: 2D, tam giác, trực tâm, orthocenter
+KEYWORDS: trực tâm, orthocenter, H, 3 đường cao đồng quy
+NOTES: Alpha 24 fix — dùng tam giác đều cạnh 4: cả 3 đường cao = phân
+       giác = trung tuyến. Tất cả đồng quy tại TRỌNG TÂM = (0, 2/√3).
+       Tam giác không đều cần tính tọa độ phức tạp, dễ sai.
+
+\begin{tikzpicture}[scale=1, thick]
+  \coordinate[label=above:$A$]       (A) at ( 0, 3.464);   % 2√3
+  \coordinate[label=below left:$B$]  (B) at (-2, 0);
+  \coordinate[label=below right:$C$] (C) at ( 2, 0);
+  \draw (A)--(B)--(C)--cycle;
+  % Chân 3 đường cao = trung điểm 3 cạnh (vì tam giác đều)
+  \coordinate[label=below:$H_A$]       (HA) at ( 0, 0);
+  \coordinate[label=above right:$H_B$] (HB) at ( 1, 1.732);
+  \coordinate[label=above left:$H_C$]  (HC) at (-1, 1.732);
+  \draw[dashed] (A)--(HA);
+  \draw[dashed] (B)--(HB);
+  \draw[dashed] (C)--(HC);
+  % Trực tâm H = trọng tâm (vì tam giác đều)
+  \coordinate (H) at (0, 1.155);                            % 2/√3
+  \fill (H) circle (1.5pt) node[above right=1pt] {$H$};
+  \draw pic [draw, angle radius=2mm] {right angle = A--HA--C};
+\end{tikzpicture}

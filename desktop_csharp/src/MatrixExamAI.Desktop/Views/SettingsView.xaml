@@ -1,0 +1,215 @@
+<UserControl x:Class="MatrixExamAI.Desktop.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="20,16,20,20">
+            <!-- Header -->
+            <TextBlock Text="Cài đặt Hệ thống &amp; Bản quyền" FontSize="20" FontWeight="Bold" Margin="0,0,0,4" />
+            <TextBlock Text="Cấu hình nhà cung cấp trí tuệ nhân tạo, khóa API xoay vòng và kiểm tra trạng thái tiện ích Word" 
+                       FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,24" />
+
+            <!-- Section 1: AI Provider & Multi-Key Pool (Đồng bộ toàn diện MEA v5.0) -->
+            <ui:CardExpander Header="Trí tuệ Nhân tạo &amp; API Key" 
+                             Icon="{ui:SymbolIcon Brain24}"
+                             IsExpanded="True" Margin="0,0,0,16">
+                <StackPanel Margin="0,8,0,0">
+                    <!-- Hàng 1: Nhà cung cấp AI -->
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" MinWidth="200" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Nhà cung cấp AI:" VerticalAlignment="Center" FontWeight="Medium" />
+                        <ComboBox x:Name="CmbProvider" Grid.Column="1" SelectionChanged="CmbProvider_SelectionChanged">
+                            <ComboBoxItem Content="Google Gemini (Trực tiếp từ Google AI Studio)" Tag="Google Gemini" />
+                            <ComboBoxItem Content="9Router (Local Aggregator - Cổng 20128)" Tag="9Router" />
+                            <ComboBoxItem Content="Anthropic Claude (Claude Sonnet / Opus)" Tag="Anthropic Claude" />
+                            <ComboBoxItem Content="DeepSeek (V3.2 / R1 Reasoning)" Tag="DeepSeek" />
+                            <ComboBoxItem Content="OpenAI GPT (GPT-4o / GPT-4.5)" Tag="OpenAI GPT" />
+                        </ComboBox>
+                    </Grid>
+
+                    <!-- Hàng 2: Mô hình AI -->
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" MinWidth="200" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Mô hình AI mặc định:" VerticalAlignment="Center" FontWeight="Medium" />
+                        <ComboBox x:Name="CmbDefaultModel" Grid.Column="1" SelectionChanged="CmbDefaultModel_SelectionChanged" />
+                        <ui:Button x:Name="BtnRefreshModels" Grid.Column="2" Appearance="Secondary" Icon="{ui:SymbolIcon ArrowClockwise24}" 
+                                   Margin="6,0,0,0" Padding="8,4" ToolTip="Tải lại danh sách mô hình đang trực tuyến từ 9Router" Click="BtnRefreshModels_Click" />
+                    </Grid>
+
+                    <!-- Hàng 3: API Key (mỗi dòng 1 key) + Nút chức năng phụ trợ -->
+                    <Grid Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" MinWidth="200" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="API Key (mỗi dòng 1 key):" FontWeight="Medium" />
+                            <TextBlock x:Name="TxtKeyStatus" Text="Chưa có key" FontSize="11" 
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,4,0,0" />
+                        </StackPanel>
+
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <!-- Thanh công cụ nhỏ hỗ trợ lấy key, chọn file, ẩn/hiện, xóa -->
+                            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,6">
+                                <ui:Button x:Name="BtnGetKeyUrl" Appearance="Secondary" Icon="{ui:SymbolIcon Open24}"
+                                           Content="Lấy API key" Padding="8,3" FontSize="11" Margin="0,0,4,0"
+                                           Click="BtnGetKeyUrl_Click" ToolTip="Mở trang lấy API Key chính thức của nhà cung cấp" />
+                                <ui:Button x:Name="BtnPickKeyFile" Appearance="Secondary" Icon="{ui:SymbolIcon DocumentFolder24}"
+                                           Content="Chọn file api.txt" Padding="8,3" FontSize="11" Margin="0,0,4,0"
+                                           Click="BtnPickKeyFile_Click" ToolTip="Nạp danh sách API Key từ tệp văn bản .txt" />
+                                <ui:Button x:Name="BtnToggleKey" Appearance="Secondary" Icon="{ui:SymbolIcon Eye24}"
+                                           Content="Hiện/Ẩn" Padding="8,3" FontSize="11" Margin="0,0,4,0"
+                                           Click="BtnToggleKey_Click" ToolTip="Ẩn/Hiện nội dung API Key" />
+                                <ui:Button x:Name="BtnClearKey" Appearance="Secondary" Icon="{ui:SymbolIcon Delete24}"
+                                           Content="Xóa key" Padding="8,3" FontSize="11"
+                                           Click="BtnClearKey_Click" ToolTip="Xóa API Key đang nhập" />
+                            </StackPanel>
+
+                            <!-- Ô nhập nhiều dòng cho phép dán nhiều API Key -->
+                            <ui:TextBox x:Name="TxtApiKey" Grid.Row="1" Height="80"
+                                        AcceptsReturn="True" TextWrapping="NoWrap"
+                                        VerticalContentAlignment="Top"
+                                        FontFamily="Consolas, 'Cascadia Code', 'Segoe UI', monospace" FontSize="11.5"
+                                        PlaceholderText="Dán một hoặc nhiều API Key tại đây (mỗi dòng 1 key để tự động xoay vòng khi chạm hạn mức)..."
+                                        TextChanged="TxtApiKey_TextChanged" />
+                        </Grid>
+                    </Grid>
+
+                    <!-- Hàng 4: Tự động xoay vòng Key -->
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" MinWidth="200" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Tự động xoay vòng Key:" VerticalAlignment="Center" FontWeight="Medium" />
+                        <ui:ToggleSwitch x:Name="ChkKeyRotation" Grid.Column="1" IsChecked="True" Content="Bật chế độ Multi-Key Rotation khi chạm Rate Limit (HTTP 429)" />
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,4,0,0">
+                        <ui:Button x:Name="BtnTestConnection" Appearance="Secondary" Icon="{ui:SymbolIcon Flash24}" Content="Kiểm tra kết nối AI" Padding="14,6" Margin="0,0,8,0" Click="BtnTestConnection_Click" ToolTip="Kiểm tra kết nối tới Google Gemini hoặc 9Router Local" />
+                        <ui:Button x:Name="BtnSaveSettings" Appearance="Primary" Icon="{ui:SymbolIcon Save24}" Content="Lưu Cấu Hình" Padding="16,6" Click="BtnSaveSettings_Click" ToolTip="Lưu cấu hình hệ thống và API Keys (Ctrl + S)" />
+                    </StackPanel>
+
+                    <ui:InfoBar x:Name="InfoSettingsNotification" Margin="0,10,0,0" IsOpen="False" />
+                </StackPanel>
+            </ui:CardExpander>
+
+            <!-- Section 2: Word Add-in & Toolchain -->
+            <ui:CardExpander Header="Tiện ích Mở rộng Microsoft Word" 
+                             Icon="{ui:SymbolIcon DocumentOnePage24}"
+                             IsExpanded="True" Margin="0,0,0,16">
+                <StackPanel Margin="0,8,0,0">
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Trạng thái Word Add-in:" FontWeight="Medium" />
+                            <TextBlock Text="Đã đăng ký HKCU Ribbon MatrixExamAI (Word 2016/2019/2021/365)" 
+                                        FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <ui:Button x:Name="BtnSyncAddin" Grid.Column="1" Appearance="Primary" Content="Kích hoạt lại Add-in" Click="BtnSyncAddin_Click" ToolTip="Kích hoạt lại Add-in trong Windows Registry" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Bộ biên dịch TeXLive / pdflatex:" FontWeight="Medium" />
+                            <TextBlock Text="Dùng để xuất vector EMF / SVG sắc nét 600 DPI khi vẽ hình TikZ" 
+                                       FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <Border Grid.Column="1" Background="#1A10B981" CornerRadius="4" Padding="8,4">
+                            <TextBlock Text="Đã sẵn sàng" Foreground="#10B981" FontSize="11" FontWeight="Bold" />
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </ui:CardExpander>
+
+            <!-- Section 3: Performance & Graphics -->
+            <ui:CardExpander Header="Hiệu năng &amp; Đồ họa DirectX" 
+                             Icon="{ui:SymbolIcon DesktopPulse24}"
+                             IsExpanded="False" Margin="0,0,0,16">
+                <StackPanel Margin="0,8,0,0">
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" MinWidth="200" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Tăng tốc phần cứng GPU:" VerticalAlignment="Center" FontWeight="Medium" />
+                        <ui:ToggleSwitch Grid.Column="1" IsChecked="True" Content="Kích hoạt DirectX 11/12 GPU Acceleration (120 FPS)" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" MinWidth="200" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Hiệu ứng nền cửa sổ:" VerticalAlignment="Center" FontWeight="Medium" />
+                        <ComboBox Grid.Column="1" SelectedIndex="0">
+                            <ComboBoxItem Content="Windows 11 Mica (Kính mờ thông minh)" />
+                            <ComboBoxItem Content="Windows 11 Acrylic (Trong suốt)" />
+                            <ComboBoxItem Content="Solid (Đơn sắc cổ điển)" />
+                        </ComboBox>
+                    </Grid>
+                </StackPanel>
+            </ui:CardExpander>
+
+            <!-- Section 4: Auto-Update (GitHub Releases) -->
+            <ui:CardExpander Header="Cập nhật Ứng dụng (GitHub Releases Auto-Update)" 
+                             Icon="{ui:SymbolIcon ArrowDownload24}"
+                             IsExpanded="True" Margin="0,0,0,16">
+                <StackPanel Margin="0,8,0,0">
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Phiên bản hiện tại:" FontWeight="Medium" />
+                            <TextBlock Text="MatrixExamAI Pro v5.1.0 (.NET 10 Desktop)" 
+                                       FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <ui:Button x:Name="BtnCheckUpdateSettings" Grid.Column="1" Appearance="Primary" 
+                                   Icon="{ui:SymbolIcon ArrowSync24}" Content="Kiểm tra bản cập nhật" 
+                                   Click="BtnCheckUpdateSettings_Click" ToolTip="Kiểm tra bản phát hành mới nhất từ GitHub Releases" />
+                    </Grid>
+
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Kho lưu trữ phát hành (GitHub Repository):" FontWeight="Medium" />
+                            <TextBlock Text="github.com/Do-Miinh-1210/MEA_v5" 
+                                       FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <Border Grid.Column="1" Background="#1A0D9488" CornerRadius="4" Padding="8,4">
+                            <TextBlock Text="CDN Trực tiếp" Foreground="#0D9488" FontSize="11" FontWeight="Bold" />
+                        </Border>
+                    </Grid>
+                </StackPanel>
+            </ui:CardExpander>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

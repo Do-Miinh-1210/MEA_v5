@@ -1,0 +1,209 @@
+═══════════════════════════════════════════════════════════════════════════════
+  HÌNH LĂNG TRỤ, HÌNH HỘP, HÌNH LẬP PHƯƠNG
+═══════════════════════════════════════════════════════════════════════════════
+
+=== TEMPLATE: Hình lập phương ABCD.A'B'C'D' ===
+TAGS: 3D, hình lập phương, cube
+KEYWORDS: hình lập phương, cube, ABCD.A'B'C'D'
+NOTES: 12 cạnh bằng nhau. Mặt trước (ABB'A') THẤY; mặt sau (DCC'D') KHUẤT.
+       Cạnh khuất: AD, A'D', DD'.
+
+\begin{tikzpicture}[scale=1.4, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (3,3,0);
+  \coordinate[label=above left:$D$]  (D) at (0,3,0);
+  \coordinate[label=left:$A'$]       (A1) at (0,0,3);
+  \coordinate[label=right:$B'$]      (B1) at (3,0,3);
+  \coordinate[label=right:$C'$]      (C1) at (3,3,3);
+  \coordinate[label=above:$D'$]      (D1) at (0,3,3);
+  \draw (A)--(B)--(C);
+  \draw (A)--(A1);  \draw (B)--(B1);  \draw (C)--(C1);
+  \draw (A1)--(B1)--(C1)--(D1)--(A1);
+  \draw[dashed] (C)--(D)--(A);
+  \draw[dashed] (D)--(D1);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình lập phương với đường chéo AC' ===
+TAGS: 3D, hình lập phương, đường chéo, space diagonal
+KEYWORDS: đường chéo lập phương, AC', a√3, đường chéo không gian
+NOTES: AC' là đường chéo dài a√3 (a là cạnh). Vẽ bằng đoạn chấm đỏ.
+
+\begin{tikzpicture}[scale=1.4, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (3,3,0);
+  \coordinate[label=above left:$D$]  (D) at (0,3,0);
+  \coordinate[label=left:$A'$]       (A1) at (0,0,3);
+  \coordinate[label=right:$B'$]      (B1) at (3,0,3);
+  \coordinate[label=right:$C'$]      (C1) at (3,3,3);
+  \coordinate[label=above:$D'$]      (D1) at (0,3,3);
+  \draw (A)--(B)--(C);
+  \draw (A)--(A1);  \draw (B)--(B1);  \draw (C)--(C1);
+  \draw (A1)--(B1)--(C1)--(D1)--(A1);
+  \draw[dashed] (C)--(D)--(A);
+  \draw[dashed] (D)--(D1);
+  % Đường chéo AC' (đỏ)
+  \draw[red, very thick] (A)--(C1) node[midway, below right, red] {$a\sqrt{3}$};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình hộp chữ nhật ABCD.A'B'C'D' ===
+TAGS: 3D, hình hộp chữ nhật, cuboid, rectangular prism
+KEYWORDS: hình hộp chữ nhật, cuboid, rectangular box
+NOTES: Hình hộp chữ nhật — kích thước a × b × c.
+
+\begin{tikzpicture}[scale=1, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (4,0,0);
+  \coordinate[label=right:$C$]       (C) at (4,2.5,0);
+  \coordinate[label=above left:$D$]  (D) at (0,2.5,0);
+  \coordinate[label=left:$A'$]       (A1) at (0,0,3);
+  \coordinate[label=right:$B'$]      (B1) at (4,0,3);
+  \coordinate[label=right:$C'$]      (C1) at (4,2.5,3);
+  \coordinate[label=above:$D'$]      (D1) at (0,2.5,3);
+  \draw (A)--(B)--(C);
+  \draw (A)--(A1);  \draw (B)--(B1);  \draw (C)--(C1);
+  \draw (A1)--(B1)--(C1)--(D1)--(A1);
+  \draw[dashed] (C)--(D)--(A);
+  \draw[dashed] (D)--(D1);
+  % Nhãn kích thước
+  \draw[<->] (0,-0.5,0)--(4,-0.5,0) node[midway, below] {$a$};
+  \draw[<->] (4.5,0,0)--(4.5,2.5,0) node[midway, below right] {$b$};
+  \draw[<->] (4.5,0,0)--(4.5,0,3) node[midway, right] {$c$};
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình lăng trụ đứng tam giác ABC.A'B'C' ===
+TAGS: 3D, lăng trụ đứng, prism, tam giác
+KEYWORDS: lăng trụ đứng, prism, ABC.A'B'C', cạnh bên vuông góc đáy
+NOTES: Lăng trụ ĐỨNG — cạnh bên (AA', BB', CC') vuông góc 2 đáy, có độ dài h.
+
+\begin{tikzpicture}[scale=1.3, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (1.7,2.5,0);
+  \coordinate[label=above left:$A'$]  (A1) at (0,0,3);
+  \coordinate[label=above right:$B'$] (B1) at (3,0,3);
+  \coordinate[label=above:$C'$]       (C1) at (1.7,2.5,3);
+  \draw (A)--(B); \draw (B)--(C);
+  \draw (A)--(A1); \draw (B)--(B1); \draw (C)--(C1);
+  \draw (A1)--(B1)--(C1)--cycle;
+  \draw[dashed] (C)--(A);
+  % Ô vuông tại A — đánh dấu AA' ⟂ AB
+  \draw[thin] ($(A)+(0,0,0.3)$) -- ($(A)+(0.3,0,0.3)$) -- ($(A)+(0.3,0,0)$);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình lăng trụ tam giác đều ABC.A'B'C' ===
+TAGS: 3D, lăng trụ tam giác đều, regular triangular prism
+KEYWORDS: lăng trụ tam giác đều, đáy là tam giác đều
+NOTES: Lăng trụ đứng + đáy là tam giác ĐỀU. Đánh dấu các cạnh đáy bằng tick chéo.
+
+\begin{tikzpicture}[scale=1.4, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)},
+    tick/.style={postaction={decorate}, decoration={markings,
+      mark=at position 0.5 with {\draw (-2pt,-2pt)--(2pt,2pt);}}}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (1.5,2.6,0);
+  \coordinate[label=above left:$A'$]  (A1) at (0,0,3);
+  \coordinate[label=above right:$B'$] (B1) at (3,0,3);
+  \coordinate[label=above:$C'$]       (C1) at (1.5,2.6,3);
+  \draw[tick] (A)--(B);
+  \draw[tick] (B)--(C);
+  \draw[tick, dashed] (C)--(A);
+  \draw (A)--(A1); \draw (B)--(B1); \draw (C)--(C1);
+  \draw[tick] (A1)--(B1);
+  \draw[tick] (B1)--(C1);
+  \draw[tick] (C1)--(A1);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình lăng trụ lục giác đều ABCDEF.A'B'C'D'E'F' ===
+TAGS: 3D, lăng trụ lục giác đều, regular hexagonal prism
+KEYWORDS: lăng trụ lục giác đều, hexagonal prism, ABCDEF
+NOTES: Đáy là LỤC GIÁC ĐỀU. Cạnh đáy AB, BC, CD thấy; DE, EF, FA khuất.
+
+\begin{tikzpicture}[scale=1, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  % Lục giác đều cạnh 2 ở z=0
+  \coordinate[label=below left:$A$]  (A) at (-2,    0, 0);
+  \coordinate[label=below:$B$]       (B) at (-1, -1.732, 0);
+  \coordinate[label=below right:$C$] (C) at ( 1, -1.732, 0);
+  \coordinate[label=right:$D$]       (D) at ( 2,    0, 0);
+  \coordinate[label=above right:$E$] (E) at ( 1,  1.732, 0);
+  \coordinate[label=above left:$F$]  (F) at (-1,  1.732, 0);
+  % Đáy trên ở z=3
+  \coordinate[label=left:$A'$]       (A1) at (-2,    0, 3);
+  \coordinate[label=below right:$B'$](B1) at (-1, -1.732, 3);
+  \coordinate[label=right:$C'$]      (C1) at ( 1, -1.732, 3);
+  \coordinate[label=right:$D'$]      (D1) at ( 2,    0, 3);
+  \coordinate[label=above right:$E'$](E1) at ( 1,  1.732, 3);
+  \coordinate[label=above left:$F'$] (F1) at (-1,  1.732, 3);
+  % Đáy dưới: AB, BC, CD thấy; DE, EF, FA khuất
+  \draw (A)--(B)--(C)--(D);
+  \draw[dashed] (D)--(E)--(F)--(A);
+  % Cạnh bên: AA', BB', CC', DD' thấy; EE', FF' khuất
+  \draw (A)--(A1); \draw (B)--(B1); \draw (C)--(C1); \draw (D)--(D1);
+  \draw[dashed] (E)--(E1); \draw[dashed] (F)--(F1);
+  % Đáy trên: thấy hết (cao, không bị che)
+  \draw (A1)--(B1)--(C1)--(D1)--(E1)--(F1)--cycle;
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình lăng trụ tứ giác đều ABCD.A'B'C'D' ===
+TAGS: 3D, lăng trụ tứ giác đều, square prism
+KEYWORDS: lăng trụ tứ giác đều, đáy là hình vuông, hộp đứng
+NOTES: Lăng trụ đứng + đáy là HÌNH VUÔNG. Phân biệt với lập phương: chiều
+       cao có thể KHÁC cạnh đáy.
+
+\begin{tikzpicture}[scale=1.4, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)},
+    tick/.style={postaction={decorate}, decoration={markings,
+      mark=at position 0.5 with {\draw (-2pt,-2pt)--(2pt,2pt);}}}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (2.5,0,0);
+  \coordinate[label=right:$C$]       (C) at (2.5,2.5,0);
+  \coordinate[label=above left:$D$]  (D) at (0,2.5,0);
+  \coordinate[label=left:$A'$]       (A1) at (0,0,4);
+  \coordinate[label=right:$B'$]      (B1) at (2.5,0,4);
+  \coordinate[label=right:$C'$]      (C1) at (2.5,2.5,4);
+  \coordinate[label=above:$D'$]      (D1) at (0,2.5,4);
+  % Đáy với tick chéo (hình vuông)
+  \draw[tick] (A)--(B); \draw[tick] (B)--(C);
+  \draw[tick, dashed] (C)--(D); \draw[tick, dashed] (D)--(A);
+  % Cạnh bên
+  \draw (A)--(A1); \draw (B)--(B1); \draw (C)--(C1);
+  \draw[dashed] (D)--(D1);
+  % Đáy trên
+  \draw[tick] (A1)--(B1); \draw[tick] (B1)--(C1);
+  \draw[tick] (C1)--(D1); \draw[tick] (D1)--(A1);
+\end{tikzpicture}
+
+
+=== TEMPLATE: Hình lăng trụ xiên ABC.A'B'C' ===
+TAGS: 3D, lăng trụ xiên, oblique prism
+KEYWORDS: lăng trụ xiên, oblique prism, cạnh bên không vuông góc đáy
+NOTES: Lăng trụ XIÊN — cạnh bên KHÔNG vuông góc 2 đáy. Đáy trên dịch chuyển
+       theo phương xiên. KHÔNG đánh dấu góc vuông giữa cạnh bên và đáy.
+
+\begin{tikzpicture}[scale=1.3, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (1.7,2.5,0);
+  % Đáy trên DỊCH theo (1, 0.5, 3) — không thẳng đứng
+  \coordinate[label=above left:$A'$]  (A1) at (1, 0.5, 3);
+  \coordinate[label=above right:$B'$] (B1) at (4, 0.5, 3);
+  \coordinate[label=above:$C'$]       (C1) at (2.7, 3, 3);
+  \draw (A)--(B); \draw (B)--(C);
+  \draw (A)--(A1); \draw (B)--(B1); \draw (C)--(C1);
+  \draw (A1)--(B1)--(C1)--cycle;
+  \draw[dashed] (C)--(A);
+\end{tikzpicture}

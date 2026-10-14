@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="OnRibbonLoad">
+  <ribbon>
+    <tabs>
+      <tab id="tabMatrixExamAI" label="MatrixExamAI" keytip="M">
+        
+        <!-- NHÓM 1: VẼ HÌNH TOÁN HỌC & TIKZ -->
+        <group id="grpTikz" label="Vẽ hình TikZ">
+          <button id="btnOpenTikzSidebar"
+                  label="Vẽ hình TikZ"
+                  size="large"
+                  imageMso="EquationInsertGallery"
+                  screentip="Vẽ hình TikZ bằng AI"
+                  supertip="Mở thanh tác vụ Sidebar để mô tả hình học, dán ảnh chụp bài toán, xem trước thời gian thực và tự động chèn vào Word."
+                  onAction="OnOpenTikzSidebarClicked"
+                  keytip="T" />
+          <separator id="sepTikz1" />
+          <button id="btnEditSelectedTikZ"
+                  label="Sửa hình TikZ"
+                  size="normal"
+                  imageMso="PictureRecolorGallery"
+                  screentip="Chỉnh sửa mã TikZ của hình ảnh"
+                  supertip="Đọc mã nguồn TikZ được nhúng trong ảnh đang chọn trên trang Word và nạp vào Sidebar để chỉnh sửa tức thì."
+                  onAction="OnEditSelectedTikZClicked"
+                  getEnabled="GetIsTikzSelected"
+                  keytip="E" />
+          <button id="btnToggleSidebar"
+                  label="Bật/Tắt Sidebar"
+                  size="normal"
+                  imageMso="ViewTaskPane"
+                  screentip="Ẩn/Hiện thanh tác vụ"
+                  supertip="Đóng hoặc mở nhanh thanh Sidebar MatrixExamAI gắn cạnh cửa sổ Word."
+                  onAction="OnToggleSidebarClicked"
+                  keytip="S" />
+        </group>
+
+        <!-- NHÓM 2: SOẠN THẢO AI -->
+        <group id="grpAI" label="Soạn thảo AI">
+          <button id="btnAiAuthoring"
+                  label="Soạn thảo AI"
+                  size="large"
+                  imageMso="SmartArtInsert"
+                  screentip="Trợ lý Soạn thảo AI (Gemini 3.8 Flash)"
+                  supertip="Phân tích văn bản câu hỏi đang chọn, gợi ý viết tiếp, tối ưu hóa diễn đạt và kiểm tra tính chính xác của đề thi."
+                  onAction="OnAiAuthoringClicked"
+                  keytip="A" />
+          <button id="btnAiExplain"
+                  label="Giải chi tiết"
+                  size="normal"
+                  imageMso="ReviewAcceptChange"
+                  screentip="Sinh lời giải chi tiết"
+                  supertip="Tự động giải và trình bày các bước giải toán học chuẩn mực cho câu hỏi đang bôi đen trong tài liệu."
+                  onAction="OnAiExplainClicked"
+                  keytip="G" />
+        </group>
+
+        <!-- NHÓM 3: CONVERT ĐỀ THI -->
+        <group id="grpConvert" label="Convert Đề thi">
+          <button id="btnOpenConvert"
+                  label="Convert Đề thi"
+                  size="large"
+                  imageMso="FileSaveAsWordDocx"
+                  screentip="Convert Đề thi bằng AI Vision"
+                  supertip="Dán ảnh chụp đề thi (Ctrl+V) hoặc chọn file để AI Vision nhận diện thành câu hỏi chuẩn, giữ nguyên công thức LaTeX và chèn trực tiếp vào Word."
+                  onAction="OnConvertClicked"
+                  keytip="V" />
+        </group>
+
+        <!-- NHÓM 4: KHO CÂU HỎI -->
+        <group id="grpQuestions" label="Kho câu hỏi">
+          <button id="btnQuestionBank"
+                  label="Kho câu hỏi"
+                  size="large"
+                  imageMso="QueryShowTable"
+                  screentip="Quản lý Kho câu hỏi"
+                  supertip="Mở ngân hàng dữ liệu câu hỏi trắc nghiệm và tự luận SQLite, tìm kiếm và kéo thả câu hỏi vào đề."
+                  onAction="OnQuestionBankClicked"
+                  keytip="K" />
+        </group>
+
+        <!-- NHÓM 4: MA TRẬN ĐỀ -->
+        <group id="grpMatrix" label="Ma trận đề">
+          <button id="btnExamMatrix"
+                  label="Ma trận đề"
+                  size="large"
+                  imageMso="TableDesign"
+                  screentip="Xây dựng Ma trận đề thi"
+                  supertip="Thiết lập khung ma trận 4 mức độ nhận thức (Nhận biết, Thông hiểu, Vận dụng, Vận dụng cao) theo chuẩn Bộ GD&amp;ĐT."
+                  onAction="OnExamMatrixClicked"
+                  keytip="M" />
+        </group>
+
+        <!-- NHÓM 5: CHUẨN HÓA WORD -->
+        <group id="grpNormalize" label="Chuẩn hóa Word">
+          <button id="btnStandardizeWord"
+                  label="Chuẩn hóa Word"
+                  size="large"
+                  imageMso="FileDocumentInspect"
+                  screentip="Chuẩn hóa định dạng đề thi"
+                  supertip="Tự động căn chỉnh font chữ (Times New Roman), cỡ chữ, dãn dòng, bảng biểu và cấu trúc câu hỏi theo quy chuẩn thi."
+                  onAction="OnStandardizeWordClicked"
+                  keytip="C" />
+        </group>
+
+        <!-- NHÓM 6: CÀI ĐẶT API -->
+        <group id="grpSettings" label="Cài đặt API">
+          <button id="btnApiSettings"
+                  label="Cài đặt API"
+                  size="large"
+                  imageMso="ServerProperties"
+                  screentip="Cấu hình hệ thống &amp; API"
+                  supertip="Cấu hình khóa Google Gemini API, 9Router, đường dẫn bộ biên dịch TeXLive/pdflatex và các tùy chọn cá nhân hóa."
+                  onAction="OnApiSettingsClicked"
+                  keytip="P" />
+        </group>
+
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>

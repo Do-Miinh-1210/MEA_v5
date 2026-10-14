@@ -1,0 +1,41 @@
+# ── AI Providers (cài ít nhất 1) ─────────────────────────────────────────────
+google-genai>=1.0.0
+anthropic>=0.30.0
+openai>=1.0.0              # DeepSeek dùng OpenAI-compatible SDK
+
+# ── Document processing ───────────────────────────────────────────────────────
+python-docx>=1.1.0
+mammoth>=1.6.0
+openpyxl>=3.1.0        # Export bao cao QC / Excel trong V5
+
+# ── Security (mã hóa API key) ─────────────────────────────────────────────────
+cryptography>=41.0.0
+
+# ── Math engine ───────────────────────────────────────────────────────────────
+sympy>=1.12
+latex2mathml>=3.77.0   # LaTeX → MathML → OMML (tương thích MathType)
+
+# ── Image / PDF reading (input only; không dùng cho xuất PDF) ─────────────────
+Pillow>=10.0.0          # Ảnh TikZ / upload ảnh
+# PDF reading (tab_convert, doc_question_parser): pdfplumber + PyMuPDF
+pdfplumber>=0.10.0
+PyMuPDF>=1.23.0
+
+# ── License + Admin Tool (Supabase backend) ───────────────────────────────────
+supabase>=2.15.0        # 2.9.x reject sb_publishable_* keys (Supabase 2024 format).
+                        # 2.15+ accept cả JWT cũ (eyJ...) và prefix mới (sb_publishable_/sb_secret_).
+                        # ⚠️ Rebuild EXE bắt buộc sau khi bump pin.
+requests>=2.31.0        # activation_dialog, services/updater
+certifi>=2024.2.2       # SSL cert bundle cho EXE (main.py, admin_tool.py)
+
+# ── GUI V5 Desktop (CustomTkinter) ──────────────────────────────────────────
+customtkinter>=5.2.0
+tkinterdnd2>=0.3.0
+matplotlib>=3.7.0
+darkdetect>=0.8.0
+
+# ── Build (chỉ cần khi đóng gói EXE — không cần khi chạy Python) ──────────────
+# pip install pyinstaller>=6.0
+
+# ── Stdlib (không cần cài): sqlite3, tkinter, threading, logging, json, hashlib, ...
+

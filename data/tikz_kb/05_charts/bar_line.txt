@@ -1,0 +1,86 @@
+═══════════════════════════════════════════════════════════════════════════════
+  BIỂU ĐỒ — biểu đồ cột, biểu đồ đường, biểu đồ tròn
+═══════════════════════════════════════════════════════════════════════════════
+
+=== TEMPLATE: Biểu đồ cột đơn ===
+TAGS: chart, biểu đồ cột, bar
+KEYWORDS: biểu đồ cột, bar chart
+NOTES: ybar = cột đứng. nodes near coords = hiện số trên cột.
+
+\begin{tikzpicture}
+\begin{axis}[
+  ybar, ymin=0, ymax=10,
+  symbolic x coords={Toán, Lý, Hóa, Sinh, Văn},
+  xtick=data, ylabel={Điểm},
+  width=11cm, height=7cm, nodes near coords,
+  bar width=18pt,
+  enlarge x limits=0.18,
+]
+  \addplot[fill=blue!50, draw=blue!70!black]
+    coordinates {(Toán,8) (Lý,7) (Hóa,9) (Sinh,6) (Văn,7.5)};
+\end{axis}
+\end{tikzpicture}
+
+
+=== TEMPLATE: Biểu đồ cột so sánh 2 nhóm ===
+TAGS: chart, biểu đồ cột so sánh, grouped bar
+KEYWORDS: cột ghép, so sánh 2 nhóm
+
+\begin{tikzpicture}
+\begin{axis}[
+  ybar, ymin=0, ymax=12,
+  symbolic x coords={2021, 2022, 2023, 2024},
+  xtick=data, ylabel={Số học sinh giỏi},
+  width=11cm, height=7cm, bar width=10pt,
+  enlarge x limits=0.2, legend pos=north west,
+]
+  \addplot[fill=blue!60]   coordinates {(2021,6) (2022,7) (2023,8) (2024,10)};
+  \addplot[fill=orange!70] coordinates {(2021,5) (2022,6) (2023,9) (2024,11)};
+  \legend{Lớp 12A, Lớp 12B}
+\end{axis}
+\end{tikzpicture}
+
+
+=== TEMPLATE: Biểu đồ đường ===
+TAGS: chart, biểu đồ đường, line chart
+KEYWORDS: biểu đồ đường, line chart, xu hướng
+
+\begin{tikzpicture}
+\begin{axis}[
+  axis lines=left, xlabel={Tháng}, ylabel={Doanh số (triệu)},
+  width=11cm, height=6cm, ymin=0, ymax=35,
+  grid=major, grid style={dashed, gray!30},
+  legend pos=north west,
+]
+  \addplot[blue, mark=*, very thick]
+    coordinates {(1,10) (2,15) (3,12) (4,20) (5,25) (6,30)};
+  \addlegendentry{Năm 2024}
+  \addplot[red, mark=square*, thick, dashed]
+    coordinates {(1,8) (2,12) (3,11) (4,17) (5,21) (6,24)};
+  \addlegendentry{Năm 2023}
+\end{axis}
+\end{tikzpicture}
+
+
+=== TEMPLATE: Biểu đồ tròn (3 phần) ===
+TAGS: chart, biểu đồ tròn, pie chart
+KEYWORDS: biểu đồ tròn, pie chart
+NOTES: TikZ thuần — không cần pgf-pie. Vẽ bằng \fill arc.
+
+\begin{tikzpicture}[scale=2]
+  % Phần A (40%) — 0° → 144°
+  \fill[blue!50]   (0,0) -- (1,0) arc (0:144:1) -- cycle;
+  \node[white] at (0.4,0.4) {40\%};
+  % Phần B (35%) — 144° → 270°
+  \fill[orange!70] (0,0) -- (144:1) arc (144:270:1) -- cycle;
+  \node[white] at (-0.45,0.1) {35\%};
+  % Phần C (25%) — 270° → 360°
+  \fill[green!60]  (0,0) -- (270:1) arc (270:360:1) -- cycle;
+  \node[white] at (0.3,-0.4) {25\%};
+  % Viền
+  \draw (0,0) circle (1);
+  % Chú thích
+  \node at ( 1.7, 0.5) {\small A: Toán 40\%};
+  \node at ( 1.7, 0.0) {\small B: Lý  35\%};
+  \node at ( 1.7,-0.5) {\small C: Hoá 25\%};
+\end{tikzpicture}
