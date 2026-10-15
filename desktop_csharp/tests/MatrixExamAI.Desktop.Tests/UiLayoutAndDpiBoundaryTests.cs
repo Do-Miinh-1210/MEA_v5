@@ -126,11 +126,9 @@ namespace MatrixExamAI.Desktop.Tests
             content.Should().Contain("Content=\"{}{Kẹp ${...}$}\"",
                 "Button content must be escaped with {}{} so it renders 'Kẹp ${...}$' cleanly without corruption");
 
-            // Top toolbar must host RbOverwrite and RbAppend next to BtnPaste
-            content.Should().Contain("x:Name=\"RbOverwrite\"",
-                "RbOverwrite must be housed in top toolbar next to paste button");
-            content.Should().Contain("x:Name=\"RbAppend\"",
-                "RbAppend must be housed in top toolbar next to paste button");
+            // Top toolbar must host BtnToggleInsertMode next to BtnPaste
+            content.Should().Contain("x:Name=\"BtnToggleInsertMode\"",
+                "BtnToggleInsertMode must be housed in top toolbar next to paste button");
 
             // Top toolbar must host BtnCopyOutput and BtnExpandPreview
             content.Should().Contain("x:Name=\"BtnCopyOutput\"",

@@ -39,6 +39,17 @@ namespace MatrixExamAI.Desktop.Views
         private ConvertLayoutMode _currentLayoutMode = ConvertLayoutMode.Split;
         private GridLength _lastSourceWidth = new GridLength(1, GridUnitType.Star);
         private GridLength _lastPreviewWidth = new GridLength(1, GridUnitType.Star);
+        private bool _isOverwriteMode = true;
+
+        public bool IsOverwriteMode
+        {
+            get => _isOverwriteMode;
+            set
+            {
+                _isOverwriteMode = value;
+                UpdateInsertModeButton();
+            }
+        }
 
         public ConvertView()
         {
@@ -52,7 +63,35 @@ namespace MatrixExamAI.Desktop.Views
 
             LoadDefaultSample();
             PreviewKeyDown += ConvertView_PreviewKeyDown;
-            Loaded += (s, e) => UpdateModeButtonStyles();
+            Loaded += (s, e) =>
+            {
+                UpdateModeButtonStyles();
+                UpdateInsertModeButton();
+            };
+        }
+
+        private void BtnToggleInsertMode_Click(object sender, RoutedEventArgs e)
+        {
+            IsOverwriteMode = !IsOverwriteMode;
+        }
+
+        private void UpdateInsertModeButton()
+        {
+            if (BtnToggleInsertMode == null) return;
+            if (_isOverwriteMode)
+            {
+                BtnToggleInsertMode.Content = "Ghi đè";
+                BtnToggleInsertMode.Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.ArrowRepeatAll24 };
+                BtnToggleInsertMode.ToolTip = "Chế độ: Ghi đè (Nhấp để chuyển sang Nối tiếp)";
+                BtnToggleInsertMode.Appearance = Wpf.Ui.Controls.ControlAppearance.Secondary;
+            }
+            else
+            {
+                BtnToggleInsertMode.Content = "Nối tiếp";
+                BtnToggleInsertMode.Icon = new Wpf.Ui.Controls.SymbolIcon { Symbol = Wpf.Ui.Controls.SymbolRegular.AddCircle24 };
+                BtnToggleInsertMode.ToolTip = "Chế độ: Nối tiếp (Nhấp để chuyển sang Ghi đè)";
+                BtnToggleInsertMode.Appearance = Wpf.Ui.Controls.ControlAppearance.Info;
+            }
         }
 
         public void TriggerConvertWithAi() => BtnConvert_Click(this, new RoutedEventArgs());
@@ -426,7 +465,7 @@ namespace MatrixExamAI.Desktop.Views
             else if (SafeClipboard.ContainsText())
             {
                 string text = SafeClipboard.GetText();
-                if (RbOverwrite.IsChecked == true)
+                if (_isOverwriteMode)
                 {
                     TxtInput.Text = text;
                 }
@@ -528,7 +567,7 @@ namespace MatrixExamAI.Desktop.Views
                     }
 
                     string text = sb.ToString();
-                    if (RbOverwrite.IsChecked == true) TxtInput.Text = text;
+                    if (_isOverwriteMode) TxtInput.Text = text;
                     else TxtInput.AppendText(string.IsNullOrEmpty(TxtInput.Text) ? text : "\n\n" + text);
 
                     TxtCurrentFile.Text = Path.GetFileName(filePath);
@@ -545,7 +584,7 @@ namespace MatrixExamAI.Desktop.Views
             try
             {
                 string text = await File.ReadAllTextAsync(filePath, Encoding.UTF8);
-                if (RbOverwrite.IsChecked == true) TxtInput.Text = text;
+                if (_isOverwriteMode) TxtInput.Text = text;
                 else TxtInput.AppendText(string.IsNullOrEmpty(TxtInput.Text) ? text : "\n\n" + text);
 
                 TxtCurrentFile.Text = Path.GetFileName(filePath);
@@ -678,7 +717,7 @@ namespace MatrixExamAI.Desktop.Views
 
                 string extracted = await _pdfService.ExtractTextAsync(filePath, pStart, pEnd, progress, _cts.Token);
 
-                if (RbOverwrite.IsChecked == true)
+                if (_isOverwriteMode)
                 {
                     TxtInput.Text = extracted;
                 }

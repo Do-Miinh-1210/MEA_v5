@@ -74,12 +74,12 @@
                                    Content="Dán" Height="28" Padding="7,0" Margin="0,0,3,0" FontSize="11"
                                    Click="BtnPaste_Click" ToolTip="Dán văn bản hoặc hình ảnh từ Clipboard (Ctrl + V)" />
 
-                        <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" CornerRadius="4" Height="28" Padding="5,0" Margin="0,0,3,0" VerticalAlignment="Center">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <RadioButton x:Name="RbOverwrite" Content="Ghi đè" IsChecked="True" GroupName="InsertMode" Margin="0,0,5,0" FontSize="10.5" VerticalAlignment="Center" ToolTip="Nạp tệp/dán sẽ ghi đè toàn bộ nội dung" />
-                                <RadioButton x:Name="RbAppend" Content="Nối tiếp" GroupName="InsertMode" FontSize="10.5" VerticalAlignment="Center" ToolTip="Nạp tệp/dán sẽ nối thêm vào cuối nội dung hiện tại" />
-                            </StackPanel>
-                        </Border>
+                        <!-- Chuyển đổi chế độ Ghi đè / Nối tiếp: 1 nút tinh gọn -->
+                        <ui:Button x:Name="BtnToggleInsertMode" Appearance="Secondary"
+                                   Icon="{ui:SymbolIcon ArrowRepeatAll24}"
+                                   Content="Ghi đè" Height="28" Padding="7,0" Margin="0,0,3,0" FontSize="11"
+                                   Click="BtnToggleInsertMode_Click"
+                                   ToolTip="Chế độ: Ghi đè (Nhấp để chuyển sang Nối tiếp)" />
 
                         <ui:Button x:Name="BtnClear" Appearance="Danger" 
                                    Icon="{ui:SymbolIcon Delete24}"
