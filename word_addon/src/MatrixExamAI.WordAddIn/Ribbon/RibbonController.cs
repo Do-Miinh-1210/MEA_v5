@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using Office = Microsoft.Office.Core;
 
 namespace MatrixExamAI.WordAddIn.Ribbon
@@ -151,6 +152,32 @@ namespace MatrixExamAI.WordAddIn.Ribbon
             ThisAddIn.Current?.TaskPaneManager?.ShowTab("standardize");
         }
 
+        public async void OnEquationToMathTypeClicked(Office.IRibbonControl control)
+        {
+            AddInLog.Log("Ribbon: OnEquationToMathTypeClicked");
+            try
+            {
+                if (ThisAddIn.Current?.DocumentService != null)
+                {
+                    var res = await ThisAddIn.Current.DocumentService.ConvertAllEquationsToMathTypeAsync();
+                    MessageBox.Show(
+                        res.message,
+                        "MatrixExamAI — Chuyển đổi Equation sang MathType",
+                        MessageBoxButtons.OK,
+                        res.success ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                AddInLog.LogError("Ribbon: OnEquationToMathTypeClicked error", ex);
+                MessageBox.Show(
+                    "Lỗi chuyển đổi: " + ex.Message,
+                    "MatrixExamAI — Lỗi",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
         public void OnConvertLatexToOmmlClicked(Office.IRibbonControl control)
         {
             AddInLog.Log("Ribbon: OnConvertLatexToOmmlClicked (redirected to normalize)");
@@ -262,6 +289,8 @@ namespace MatrixExamAI.WordAddIn.Ribbon
         </group>
         <group id=""grpNormalize"" label=""Chuẩn hóa Word"">
           <button id=""btnStandardizeWord"" label=""Chuẩn hóa Word"" size=""large"" imageMso=""FileDocumentInspect"" onAction=""OnStandardizeWordClicked"" />
+          <separator id=""sepNorm1"" />
+          <button id=""btnEquationToMathType"" label=""Equation sang MathType"" size=""large"" imageMso=""EquationInsertGallery"" onAction=""OnEquationToMathTypeClicked"" />
         </group>
         <group id=""grpShuffle"" label=""Trộn đề thi"">
           <button id=""btnShuffleExam"" label=""Trộn đề thi"" size=""large"" imageMso=""AdpPrimaryKey"" onAction=""OnShuffleExamClicked"" />

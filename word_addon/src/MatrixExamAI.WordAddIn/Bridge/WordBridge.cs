@@ -178,6 +178,7 @@ namespace MatrixExamAI.WordAddIn.Bridge
             RegisterHandler("word/standardizeDocument", HandleStandardizeDocumentAsync);
             RegisterHandler("mathtype/scan", HandleMathTypeScanAsync);
             RegisterHandler("mathtype/convert", HandleMathTypeConvertAsync);
+            RegisterHandler("mathtype/convertEquationToMathType", HandleConvertEquationToMathTypeAsync);
 
             // Extensibility: Convert AI Vision & Text/LaTeX (Ảnh / Text / Clipboard -> Đề thi Word)
             RegisterHandler("convert/extract", HandleConvertExtractAsync);
@@ -1209,6 +1210,22 @@ namespace MatrixExamAI.WordAddIn.Bridge
                 convertedCount = count,
                 outputPath = outPath,
                 report = report
+            };
+        }
+
+        private async Task<object?> HandleConvertEquationToMathTypeAsync(JsonElement? payload)
+        {
+            if (_documentService == null)
+            {
+                return new { success = false, message = "Word document service chưa sẵn sàng." };
+            }
+
+            var (success, count, msg) = await _documentService.ConvertAllEquationsToMathTypeAsync().ConfigureAwait(false);
+            return new
+            {
+                success = success,
+                convertedCount = count,
+                message = msg
             };
         }
 

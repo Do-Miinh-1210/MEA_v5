@@ -9,6 +9,10 @@ if (-not (Test-Path "$dllPath")) {
 $regFile = Join-Path $baseDir "addon_x64.reg"
 $hkcuRegFile = Join-Path $baseDir "addon_hkcu.reg"
 
+# Đóng Word nếu đang chạy để tránh khóa file/registry
+Get-Process winword -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+Start-Sleep -Milliseconds 500
+
 Write-Host "1. Generating COM registration script with RegAsm..." -ForegroundColor Cyan
 & "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\RegAsm.exe" "$dllPath" /codebase /regfile:"$regFile"
 
@@ -16,9 +20,12 @@ if (-not (Test-Path "$regFile")) {
     throw "Failed to generate $regFile"
 }
 
-Write-Host "2. Converting to Per-User (HKCU\Software\Classes) format..." -ForegroundColor Cyan
+Write-Host "2. Converting to Per-User (HKCU\Software\Classes) and fixing Unicode CodeBase..." -ForegroundColor Cyan
+$actualUri = [System.Uri]::new((Resolve-Path "$dllPath")).AbsoluteUri
 $raw = Get-Content -Path "$regFile" -Raw
 $hkcu = $raw.Replace("HKEY_CLASSES_ROOT", "HKEY_CURRENT_USER\Software\Classes")
+# Sửa lỗi mojibake đường dẫn tiếng Việt do RegAsm sinh ra
+$hkcu = [System.Text.RegularExpressions.Regex]::Replace($hkcu, '"CodeBase"="[^"]+"', "`"CodeBase`"=`"$actualUri`"")
 
 $extra = @"
 
@@ -43,6 +50,9 @@ if ($proc.ExitCode -eq 0) {
 } else {
     throw "reg import failed with exit code $($proc.ExitCode)"
 }
+
+# Đảm bảo chắc chắn LoadBehavior = 3
+Set-ItemProperty "HKCU:\Software\Microsoft\Office\Word\Addins\MatrixExamAI.WordAddIn" -Name "LoadBehavior" -Value 3 -Type DWord
 
 # Verify Word Addin key
 Write-Host "4. Verifying registry keys..." -ForegroundColor Cyan

@@ -34,8 +34,8 @@ public class GitHubUpdateService
 {
     public static GitHubUpdateService Instance { get; } = new();
 
-    public string CurrentVersion { get; set; } = "5.2.0.2";
-    public string DisplayVersion => "5.2.0.2";
+    public string CurrentVersion { get; set; } = "5.2.0.3";
+    public string DisplayVersion => "5.2.0.3";
     public string GitHubRepo { get; set; } = "Do-Miinh-1210/MEA_v5";
     public DateTime? LastCheckedTime { get; private set; }
 
@@ -394,8 +394,11 @@ public class GitHubUpdateService
         tasklist /fi "PID eq %PID%" 2>nul | find "%PID%" >nul
         if not errorlevel 1 goto WAIT_PROC
 
+        icacls "%TARGET%" /grant *S-1-5-32-545:(OI)(CI)F /t /q >nul 2>&1
+        icacls "%TARGET%" /grant Users:(OI)(CI)F /t /q >nul 2>&1
         xcopy /s /e /y "%PATCH%\*" "%TARGET%\" >nul 2>&1
-        icacls "%TARGET%" /grant *S-1-5-32-545:(OI)(CI)M /t /q >nul 2>&1
+        icacls "%TARGET%" /grant *S-1-5-32-545:(OI)(CI)F /t /q >nul 2>&1
+        icacls "%TARGET%" /grant Users:(OI)(CI)F /t /q >nul 2>&1
         rmdir /s /q "%PATCH%" 2>nul
         if exist "{zipPath}" del /f /q "{zipPath}" 2>nul
 

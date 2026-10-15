@@ -755,6 +755,122 @@ namespace MatrixExamAI.WordAddIn.WordInterop
             });
         }
 
+        public Task<(bool success, int convertedCount, string message)> ConvertAllEquationsToMathTypeAsync()
+        {
+            Word.Document? doc = null;
+            try
+            {
+                doc = _wordApp.ActiveDocument;
+                if (doc == null) return Task.FromResult((false, 0, "Không có tài liệu Word nào đang mở."));
+
+                int omathCount = doc.OMaths.Count;
+                if (omathCount == 0) return Task.FromResult((true, 0, "Không tìm thấy công thức Word Equation (OMML) nào trong tài liệu."));
+
+                var ommlService = new MatrixExamAI.Shared.Extensibility.OmmlToLatexService();
+                int count = 0;
+
+                AddInLog.Log($"[WordDocumentService] Bắt đầu chuyển đổi {omathCount} công thức Equation sang MathType...");
+
+                bool prevUpdating = _wordApp.ScreenUpdating;
+                _wordApp.ScreenUpdating = false;
+
+                try
+                {
+                    // 1. Duyệt ngược từ cuối lên đầu để không làm sai lệch Range
+                    for (int i = omathCount; i >= 1; i--)
+                    {
+                        try
+                        {
+                            var omath = doc.OMaths[i];
+                            var range = omath.Range;
+                            string xml = range.WordOpenXML;
+
+                            string latex = ommlService.ConvertOmmlXmlToLatex(xml);
+                            if (string.IsNullOrWhiteSpace(latex))
+                            {
+                                latex = range.Text?.Trim() ?? string.Empty;
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(latex))
+                            {
+                                range.Text = $"${latex}$";
+                                count++;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            AddInLog.LogError($"[WordDocumentService] Lỗi chuyển đổi OMath[{i}]", ex);
+                        }
+                    }
+                }
+                finally
+                {
+                    _wordApp.ScreenUpdating = prevUpdating;
+                }
+
+                // 2. Kích hoạt lệnh ToggleTeX của MathType trên toàn bộ tài liệu
+                try
+                {
+                    doc.Content.Select();
+                    ExecuteMathTypeToggleTeX();
+                }
+                catch (Exception ex)
+                {
+                    AddInLog.LogError("[WordDocumentService] Lỗi kích hoạt MathType ToggleTeX", ex);
+                }
+
+                string msg = $"Đã chuyển đổi thành công {count}/{omathCount} công thức Equation sang MathType qua ToggleTeX.";
+                AddInLog.Log($"[WordDocumentService] {msg}");
+                return Task.FromResult((true, count, msg));
+            }
+            catch (Exception ex)
+            {
+                AddInLog.LogError("[WordDocumentService] ConvertAllEquationsToMathTypeAsync error", ex);
+                return Task.FromResult((false, 0, ex.Message));
+            }
+        }
+
+        private void ExecuteMathTypeToggleTeX()
+        {
+            string[] macroCandidates = new[]
+            {
+                "MTCommand_TeXToggle",
+                "'MathType Commands 2016.dotm'!MTCommand_TeXToggle",
+                "MTCommand_OnTexToggle",
+                "'MathType Commands 2016.dotm'!MTCommand_OnTexToggle",
+                "MathTypeCommands.MTCommand_TeXToggle",
+                "ToggleTeX",
+                "TeXToggle"
+            };
+
+            foreach (var macro in macroCandidates)
+            {
+                try
+                {
+                    _wordApp.Run(macro);
+                    AddInLog.Log($"[WordDocumentService] MathType macro '{macro}' executed successfully.");
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    AddInLog.Log($"[WordDocumentService] Thử macro '{macro}' không thành công: {ex.Message}");
+                }
+            }
+
+            // Fallback gửi phím tắt Alt + \ của MathType
+            try
+            {
+                _wordApp.Activate();
+                System.Windows.Forms.SendKeys.SendWait("%\\");
+                AddInLog.Log("[WordDocumentService] MathType shortcut Alt+\\ sent.");
+            }
+            catch (Exception ex)
+            {
+                AddInLog.LogError("[WordDocumentService] Không thể kích hoạt ToggleTeX", ex);
+            }
+        }
+
+
         public Task<bool> StandardizeDocumentFormattingAsync(string fontName = "Times New Roman", float fontSize = 12f, float lineSpacing = 1.15f, bool entireDocument = false)
         {
             return Task.Run(() =>

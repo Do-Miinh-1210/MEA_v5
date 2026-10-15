@@ -181,13 +181,19 @@ namespace MatrixExamAI.WordAddIn
 
         public void OnAiExplainClicked(Office.IRibbonControl control) => Ribbon?.OnAiExplainClicked(control);
 
+        public void OnConvertClicked(Office.IRibbonControl control) => Ribbon?.OnConvertClicked(control);
+
         public void OnQuestionBankClicked(Office.IRibbonControl control) => Ribbon?.OnQuestionBankClicked(control);
 
         public void OnExamMatrixClicked(Office.IRibbonControl control) => Ribbon?.OnExamMatrixClicked(control);
 
         public void OnStandardizeWordClicked(Office.IRibbonControl control) => Ribbon?.OnStandardizeWordClicked(control);
 
+        public void OnEquationToMathTypeClicked(Office.IRibbonControl control) => Ribbon?.OnEquationToMathTypeClicked(control);
+
         public void OnConvertLatexToOmmlClicked(Office.IRibbonControl control) => Ribbon?.OnConvertLatexToOmmlClicked(control);
+
+        public void OnShuffleExamClicked(Office.IRibbonControl control) => Ribbon?.OnShuffleExamClicked(control);
 
         public void OnApiSettingsClicked(Office.IRibbonControl control) => Ribbon?.OnApiSettingsClicked(control);
 

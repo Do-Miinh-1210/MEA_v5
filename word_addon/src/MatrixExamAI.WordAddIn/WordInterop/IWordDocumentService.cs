@@ -23,6 +23,7 @@ namespace MatrixExamAI.WordAddIn.WordInterop
         Task<int> ConvertAllLatexInDocumentAsync();
         Task<(bool success, int oleCount, string reportJson)> ScanMathTypeFormulasAsync(string? docxPath = null);
         Task<(bool success, int convertedCount, string outputPath, string reportJson)> ConvertMathTypeToOmmlAsync(string? docxPath = null);
+        Task<(bool success, int convertedCount, string message)> ConvertAllEquationsToMathTypeAsync();
         Task<bool> StandardizeDocumentFormattingAsync(string fontName = "Times New Roman", float fontSize = 12f, float lineSpacing = 1.15f, bool entireDocument = false);
         Task<bool> InsertStandardizedExamAsync(System.Collections.Generic.List<MatrixExamAI.Shared.Extensibility.QuestionItem> questions, string fontName = "Times New Roman", float fontSize = 12f, float lineSpacing = 1.15f);
 

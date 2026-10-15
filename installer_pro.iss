@@ -1,6 +1,6 @@
-; Inno Setup Script — MatrixExamAI Pro v5.2.0.2 (.NET 10 WPF + Word Add-in)
+; Inno Setup Script — MatrixExamAI Pro v5.2.0.3 (.NET 10 WPF + Word Add-in)
 #define MyAppName "MatrixExamAI Pro"
-#define MyAppVersion "5.2.0.2"
+#define MyAppVersion "5.2.0.3"
 #define MyAppPublisher "Do Minh Math"
 #define MyAppURL "https://github.com/Do-Miinh-1210/MEA_v5"
 #define MyAppExeName "MatrixExamAI.Desktop.exe"
@@ -65,6 +65,7 @@ Name: "{autoprograms}\{#MyAppName}\Gỡ cài đặt {#MyAppName}"; Filename: "{u
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; IconFilename: "{app}\assets\app.ico"; Tasks: desktopicon
 
 [Run]
+Filename: "{cmd}"; Parameters: "/c icacls ""{app}"" /grant *S-1-5-32-545:(OI)(CI)F /t /q & icacls ""{app}"" /grant Users:(OI)(CI)F /t /q"; StatusMsg: "Đang cấp quyền ghi cập nhật tự động..."; Flags: runhidden
 Filename: "powershell.exe"; Parameters: "-ExecutionPolicy Bypass -NoProfile -File ""{app}\word_addon\register_addin.ps1"""; StatusMsg: "Đang kích hoạt MatrixExamAI Word Add-in..."; Flags: runhidden; Tasks: wordaddin
 Filename: "{app}\{#MyAppExeName}"; Description: "Chạy MatrixExamAI Pro ngay sau khi cài đặt"; Flags: nowait postinstall skipifsilent
 Filename: "{app}\{#MyAppExeName}"; Flags: nowait; Check: ShouldLaunchSilent

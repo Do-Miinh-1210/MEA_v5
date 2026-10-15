@@ -100,6 +100,15 @@
                   supertip="Tự động căn chỉnh font chữ (Times New Roman), cỡ chữ, dãn dòng, bảng biểu và cấu trúc câu hỏi theo quy chuẩn thi."
                   onAction="OnStandardizeWordClicked"
                   keytip="C" />
+          <separator id="sepNorm1" />
+          <button id="btnEquationToMathType"
+                  label="Equation sang MathType"
+                  size="large"
+                  imageMso="EquationInsertGallery"
+                  screentip="Chuyển toàn bộ Equation sang MathType (ToggleTeX)"
+                  supertip="Tự động bóc tách toàn bộ công thức Word Equation (OMML) sang LaTeX, rồi gửi lệnh ToggleTeX để MathType biên dịch tự động toàn bộ tài liệu."
+                  onAction="OnEquationToMathTypeClicked"
+                  keytip="Q" />
         </group>
 
         <!-- NHÓM 6: TRỘN ĐỀ THI -->
