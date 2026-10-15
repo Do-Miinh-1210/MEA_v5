@@ -27,9 +27,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.1.3.5"
-TITLE = "MatrixExamAI Pro v5.1.3.5 (TikZ Mouse Wheel Zoom & Card Viewer Redesign)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.1.3.5: Cho phép lăn bánh xe chuột thu phóng trực tiếp hình vẽ TikZ; thiết kế lại cửa sổ xem riêng trang nhã với khung Card trắng đổ bóng trên nền studio sẫm màu; sửa triệt để lỗi ảnh bị co bé do tính sai kích thước DIP."
+TAG = "v5.1.3.6"
+TITLE = "MatrixExamAI Pro v5.1.3.6 (Matrix Exam Loading Scaffolding & TikZ Code Cleanup)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.1.3.6: Xóa triệt để code nháp mẫu khi khởi tạo LaTeX TikZ (bắt đầu ô trống); bổ sung nút 'Nạp tệp ma trận', 'Nạp khung ma trận' và 'Đưa sang Soạn đề' trong phân hệ Ma trận đề thi; ẩn phân hệ Thẩm định đề thi (QC) theo yêu cầu."
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)

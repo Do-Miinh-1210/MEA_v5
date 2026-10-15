@@ -41,12 +41,22 @@ namespace MatrixExamAI.Desktop.Views
         private ColumnDefinition ColSplitter => GridSplitContainer.ColumnDefinitions[1];
         private ColumnDefinition ColPreview => GridSplitContainer.ColumnDefinitions[2];
 
+        private bool _suppressTemplateAutoFill = false;
+
         public TikzView()
         {
             InitializeComponent();
             CheckToolchainStatus();
             InitializeTemplateLibrary();
-            Loaded += (s, e) => InitializeLayout();
+            TxtTikzCode.Text = string.Empty;
+            Loaded += (s, e) =>
+            {
+                InitializeLayout();
+                if (string.IsNullOrWhiteSpace(TxtFigurePrompt.Text))
+                {
+                    TxtTikzCode.Text = string.Empty;
+                }
+            };
         }
 
         private void InitializeLayout()
@@ -180,16 +190,21 @@ namespace MatrixExamAI.Desktop.Views
         {
             try
             {
+                _suppressTemplateAutoFill = true;
                 CmbTemplateCategory.ItemsSource = TikzTemplateLibrary.Categories;
                 CmbTemplateCategory.DisplayMemberPath = "Name";
-                if (TikzTemplateLibrary.Categories.Count > 0)
-                {
-                    CmbTemplateCategory.SelectedIndex = 0;
-                }
+                CmbTemplateCategory.SelectedIndex = -1;
+                CmbTemplateItem.ItemsSource = null;
+                CmbTemplateItem.SelectedIndex = -1;
+                TxtTikzCode.Text = string.Empty;
             }
             catch (Exception ex)
             {
                 TxtDiagramStats.Text = $"Lỗi nạp thư viện mẫu: {ex.Message}";
+            }
+            finally
+            {
+                _suppressTemplateAutoFill = false;
             }
         }
 
@@ -197,6 +212,7 @@ namespace MatrixExamAI.Desktop.Views
         {
             if (CmbTemplateCategory.SelectedItem is TikzTemplateCategory cat)
             {
+                SyncDiagramTypeForCategory(cat.Id);
                 CmbTemplateItem.ItemsSource = cat.Templates;
                 CmbTemplateItem.DisplayMemberPath = "Title";
                 if (cat.Templates.Count > 0)
@@ -206,8 +222,29 @@ namespace MatrixExamAI.Desktop.Views
             }
         }
 
+        private void SyncDiagramTypeForCategory(string categoryId)
+        {
+            switch (categoryId)
+            {
+                case "tables":
+                    CmbDiagramType.SelectedIndex = (int)DiagramType.BBT;
+                    break;
+                case "graphs":
+                    CmbDiagramType.SelectedIndex = (int)DiagramType.DoThi;
+                    break;
+                case "solid_3d":
+                    CmbDiagramType.SelectedIndex = (int)DiagramType.HinhKhongGian;
+                    break;
+                case "plane_2d":
+                default:
+                    CmbDiagramType.SelectedIndex = (int)DiagramType.Custom;
+                    break;
+            }
+        }
+
         private void CmbTemplateItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (_suppressTemplateAutoFill) return;
             if (CmbTemplateItem.SelectedItem is TikzTemplate tpl)
             {
                 TxtTikzCode.Text = tpl.Code;

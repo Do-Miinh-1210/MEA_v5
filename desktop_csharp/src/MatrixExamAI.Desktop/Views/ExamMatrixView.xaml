@@ -86,6 +86,17 @@
                     </ComboBox>
                 </StackPanel>
 
+                <!-- Các nút nạp ma trận & soạn đề -->
+                <ui:Button x:Name="BtnImportMatrixFile" Appearance="Secondary" 
+                           Icon="{ui:SymbolIcon FolderOpen24}"
+                           Content="Nạp tệp ma trận" Padding="10,5" Margin="0,0,6,4" FontSize="11"
+                           Click="BtnImportMatrixFile_Click"
+                           ToolTip="Mở tệp ma trận đặc tả từ máy tính (.docx, .xlsx, .pdf, .txt, .json)" />
+                <ui:Button x:Name="BtnLoadMatrixOutline" Appearance="Secondary" 
+                           Icon="{ui:SymbolIcon Table24}"
+                           Content="Nạp khung ma trận" Padding="10,5" Margin="0,0,6,4" FontSize="11"
+                           Click="BtnLoadMatrixOutline_Click"
+                           ToolTip="Nạp khung dàn ý 22 câu theo ma trận chuẩn BGD vào trình soạn thảo để tự soạn" />
                 <ui:Button x:Name="BtnLoadSample" Appearance="Secondary" 
                            Icon="{ui:SymbolIcon DocumentBulletList24}"
                            Content="Nạp đề mẫu chuẩn" Padding="10,5" Margin="0,0,6,4" FontSize="11"
@@ -96,6 +107,11 @@
                            Content="AI Soạn đề tự động" Padding="12,5" Margin="0,0,6,4" FontSize="11"
                            Click="BtnAiGenerateExam_Click"
                            ToolTip="AI Gemini tự động sinh đề thi theo ma trận (F5 hoặc Ctrl + Enter)" />
+                <ui:Button x:Name="BtnSendToConvert" Appearance="Secondary" 
+                           Icon="{ui:SymbolIcon ArrowForward24}"
+                           Content="Đưa sang Soạn đề" Padding="10,5" Margin="0,0,6,4" FontSize="11"
+                           Click="BtnSendToConvert_Click"
+                           ToolTip="Chuyển toàn bộ nội dung đề theo ma trận sang phân hệ Soạn đề &amp; Chuyển đổi" />
                 <ui:Button x:Name="BtnExportDocx" Appearance="Success" 
                            Icon="{ui:SymbolIcon DocumentArrowRight24}"
                            Content="Xuất file Word (.docx)" Padding="12,5" Margin="0,0,0,4" FontSize="11"

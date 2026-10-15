@@ -2171,6 +2171,29 @@ Bắt đầu ngay câu đầu tiên. Không thêm lời mở đầu hay markdown
             InfoNotification.IsOpen = true;
         }
 
+        private void BtnFromMatrix_Click(object sender, RoutedEventArgs e)
+        {
+            if (Window.GetWindow(this) is MainWindow mw)
+            {
+                string matrixExamText = mw.ExamMatrixView.TxtExamContent.Text?.Trim() ?? "";
+                if (!string.IsNullOrWhiteSpace(matrixExamText))
+                {
+                    TxtInput.Text = matrixExamText;
+                    BtnConvert_Click(this, new RoutedEventArgs());
+
+                    InfoNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
+                    InfoNotification.Title = "Đã nạp đề từ Ma trận";
+                    InfoNotification.Message = "Đã nạp nội dung đề thi từ phân hệ Ma trận đề thi và tự động nhận diện câu hỏi.";
+                    InfoNotification.IsOpen = true;
+                }
+                else
+                {
+                    // Nếu bên phân hệ ma trận chưa có nội dung, chuyển sang phân hệ ma trận
+                    mw.NavigateTo("matrix");
+                }
+            }
+        }
+
         private void BtnCopyOutput_Click(object sender, RoutedEventArgs e)
         {
             string outText = string.IsNullOrEmpty(TxtOutput.Text) ? TxtInput.Text : TxtOutput.Text;

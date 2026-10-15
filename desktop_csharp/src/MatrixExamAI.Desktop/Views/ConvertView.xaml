@@ -153,6 +153,10 @@
                                    Click="BtnCopyPrompt_Click" ToolTip="Sao chép mẫu prompt chuẩn LaTeX ex_test cho ChatGPT, Gemini, Claude (Ctrl + Shift + P)" />
                         <ui:Button x:Name="BtnQuickBrace" Appearance="Transparent" Content="{}{Kẹp ${...}$}" Height="26" Padding="5,0" Margin="0,0,2,0" FontSize="10" Click="BtnQuickBrace_Click" ToolTip="Kẹp công thức toán học vào dạng ${...}$ (Ctrl + Shift + B)" />
                         <ui:Button x:Name="BtnFilterItem" Appearance="Transparent" Content="Lọc \item" Height="26" Padding="5,0" Margin="0,0,3,0" FontSize="10" Click="BtnFilterItem_Click" ToolTip="Lọc và tách các thẻ \item thành các ý a), b), c), d) (Ctrl + Shift + I)" />
+                        <ui:Button x:Name="BtnFromMatrix" Appearance="Secondary"
+                                   Icon="{ui:SymbolIcon Table24}"
+                                   Content="Nạp ma trận" Height="26" Padding="6,0" Margin="0,0,3,0" FontSize="10.5"
+                                   Click="BtnFromMatrix_Click" ToolTip="Nạp nội dung đề thi từ phân hệ Ma trận đề thi chuẩn BGD" />
 
                         <!-- List bấm để sổ ra tùy chọn gọn gàng (Bảo vệ |x|, Dựng bảng, Tháo $, Bảng '|', Dọn dòng, Lưu .tex) -->
                         <ui:Button x:Name="BtnOptions" Appearance="Secondary"

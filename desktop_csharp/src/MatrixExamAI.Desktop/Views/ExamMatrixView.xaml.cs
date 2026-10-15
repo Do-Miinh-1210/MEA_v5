@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 using MatrixExamAI.Desktop.Services;
 using MatrixExamAI.Shared.Extensibility;
 
@@ -20,13 +21,195 @@ namespace MatrixExamAI.Desktop.Views
             InitializeComponent();
             _currentMatrixData = MatrixWordExporter.CreateStandardHighSchoolMatrix("TOÁN HỌC", "12");
             TxtExamContent.Text = string.Empty;
-            TxtExamStats.Text = "Sẵn sàng: Nhập nội dung hoặc bấm 'AI Soạn đề tự động' hoặc 'Nạp đề mẫu chuẩn'";
+            TxtExamStats.Text = "Sẵn sàng: Bấm 'Nạp khung ma trận' hoặc 'Nạp tệp ma trận' để bắt đầu soạn đề";
             InfoExamNotification.IsOpen = false;
         }
 
         private void LoadDefaultSample()
         {
             TxtExamContent.Text = string.Empty;
+        }
+
+        private void BtnImportMatrixFile_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new OpenFileDialog
+            {
+                Title = "Nạp tệp ma trận đề thi",
+                Filter = "Tệp văn bản & tài liệu (*.docx;*.txt;*.json;*.pdf)|*.docx;*.txt;*.json;*.pdf|Tệp Word (*.docx)|*.docx|Tệp văn bản (*.txt)|*.txt|Tệp JSON (*.json)|*.json|Tất cả tệp (*.*)|*.*"
+            };
+
+            if (dlg.ShowDialog() == true)
+            {
+                try
+                {
+                    string ext = Path.GetExtension(dlg.FileName).ToLowerInvariant();
+                    string content = "";
+                    if (ext == ".docx")
+                    {
+                        using var doc = DocumentFormat.OpenXml.Packaging.WordprocessingDocument.Open(dlg.FileName, false);
+                        var body = doc.MainDocumentPart?.Document.Body;
+                        if (body != null)
+                        {
+                            var sb = new StringBuilder();
+                            foreach (var p in body.Elements<DocumentFormat.OpenXml.Wordprocessing.Paragraph>())
+                            {
+                                string line = p.InnerText;
+                                if (!string.IsNullOrWhiteSpace(line)) sb.AppendLine(line);
+                            }
+                            content = sb.ToString();
+                        }
+                    }
+                    else if (ext == ".pdf")
+                    {
+                        using var pdf = UglyToad.PdfPig.PdfDocument.Open(dlg.FileName);
+                        var sb = new StringBuilder();
+                        foreach (var page in pdf.GetPages())
+                        {
+                            sb.AppendLine(page.Text);
+                        }
+                        content = sb.ToString();
+                    }
+                    else
+                    {
+                        content = File.ReadAllText(dlg.FileName, Encoding.UTF8);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(content))
+                    {
+                        TxtExamContent.Text = content;
+                        TxtExamStats.Text = $"Đã nạp tệp ma trận: {Path.GetFileName(dlg.FileName)} ({content.Length:N0} ký tự)";
+                        InfoExamNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
+                        InfoExamNotification.Title = "Nạp tệp ma trận thành công";
+                        InfoExamNotification.Message = $"Đã nạp nội dung ma trận từ '{Path.GetFileName(dlg.FileName)}' vào khung soạn thảo.";
+                        InfoExamNotification.IsOpen = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Tệp ma trận đã chọn không chứa nội dung văn bản khả dụng.", "Tệp rỗng", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi đọc tệp ma trận: {ex.Message}", "Lỗi nạp tệp", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void BtnLoadMatrixOutline_Click(object sender, RoutedEventArgs e)
+        {
+            string subject = (CmbSubject.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Toán học";
+            string gradeStr = (CmbGrade.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Lớp 12";
+            string durationStr = (CmbDuration.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "90 phút";
+            int.TryParse(System.Text.RegularExpressions.Regex.Replace(durationStr, @"\D", ""), out int duration);
+            if (duration <= 0) duration = 90;
+
+            _currentMatrixData = MatrixWordExporter.CreateStandardHighSchoolMatrix(subject, gradeStr);
+            _currentMatrixData.DurationMinutes = duration;
+
+            TxtExamContent.Text = BuildMatrixOutlineTemplate(subject, gradeStr, duration);
+            TxtExamStats.Text = $"Khung ma trận 22 câu: {subject.ToUpper()} - {gradeStr} (Sẵn sàng soạn đề)";
+            InfoExamNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
+            InfoExamNotification.Title = "Đã nạp khung ma trận thành công";
+            InfoExamNotification.Message = "Đã nạp cấu trúc 22 câu (Phần I: 12 câu, Phần II: 4 câu, Phần III: 6 câu) vào trình soạn thảo.";
+            InfoExamNotification.IsOpen = true;
+        }
+
+        private void BtnSendToConvert_Click(object sender, RoutedEventArgs e)
+        {
+            string content = TxtExamContent.Text?.Trim() ?? "";
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                MessageBox.Show("Chưa có nội dung đề thi trong khung soạn thảo để chuyển sang phân hệ Soạn đề.", "Chưa có nội dung", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            if (Window.GetWindow(this) is MainWindow mw)
+            {
+                mw.ConvertView.TxtInput.Text = content;
+                mw.NavigateTo("convert");
+                InfoExamNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
+                InfoExamNotification.Title = "Đã chuyển sang Soạn đề";
+                InfoExamNotification.Message = "Đã chuyển toàn bộ nội dung đề theo ma trận sang phân hệ Soạn đề & Chuyển đổi.";
+                InfoExamNotification.IsOpen = true;
+            }
+        }
+
+        private string BuildMatrixOutlineTemplate(string subject, string gradeStr, int duration)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"[THÔNG TIN MA TRẬN ĐỀ THI]");
+            sb.AppendLine($"Môn học: {subject.ToUpper()} | Khối lớp: {gradeStr} | Thời gian: {duration} phút");
+            sb.AppendLine($"Cấu trúc đề: 3 Phần • 22 Câu hỏi • Thang điểm: 10.0 điểm");
+            sb.AppendLine($"Phân bổ nhận thức: Nhận biết 40% (6 câu) | Thông hiểu 30% (6 câu) | Vận dụng 20% (8 câu) | Vận dụng cao 10% (2 câu)");
+            sb.AppendLine($"==================================================================");
+            sb.AppendLine();
+            sb.AppendLine("PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (12 câu - 3.0 điểm)");
+            sb.AppendLine("Thí sinh trả lời từ câu 1 đến câu 12. Mỗi câu hỏi chỉ chọn một phương án.");
+            sb.AppendLine();
+            for (int i = 1; i <= 6; i++)
+            {
+                sb.AppendLine($"Câu {i}. [Nhận biết - {subject}] [Nhập nội dung câu hỏi nhận biết tại đây]");
+                sb.AppendLine("A. [Phương án A]");
+                sb.AppendLine("B. [Phương án B]");
+                sb.AppendLine("C. [Phương án C]");
+                sb.AppendLine("D. [Phương án D]");
+                sb.AppendLine();
+            }
+            for (int i = 7; i <= 10; i++)
+            {
+                sb.AppendLine($"Câu {i}. [Thông hiểu - {subject}] [Nhập nội dung câu hỏi thông hiểu tại đây]");
+                sb.AppendLine("A. [Phương án A]");
+                sb.AppendLine("B. [Phương án B]");
+                sb.AppendLine("C. [Phương án C]");
+                sb.AppendLine("D. [Phương án D]");
+                sb.AppendLine();
+            }
+            for (int i = 11; i <= 12; i++)
+            {
+                sb.AppendLine($"Câu {i}. [Vận dụng - {subject}] [Nhập nội dung câu hỏi vận dụng tại đây]");
+                sb.AppendLine("A. [Phương án A]");
+                sb.AppendLine("B. [Phương án B]");
+                sb.AppendLine("C. [Phương án C]");
+                sb.AppendLine("D. [Phương án D]");
+                sb.AppendLine();
+            }
+            sb.AppendLine("PHẦN II. Câu trắc nghiệm đúng sai (4 câu - 4.0 điểm)");
+            sb.AppendLine("Thí sinh trả lời từ câu 1 đến câu 4. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.");
+            sb.AppendLine();
+            for (int i = 1; i <= 2; i++)
+            {
+                sb.AppendLine($"Câu {i}. [Thông hiểu - {subject}] Cho giả thiết bài toán...");
+                sb.AppendLine("a) [Mệnh đề a]");
+                sb.AppendLine("b) [Mệnh đề b]");
+                sb.AppendLine("c) [Mệnh đề c]");
+                sb.AppendLine("d) [Mệnh đề d]");
+                sb.AppendLine();
+            }
+            for (int i = 3; i <= 4; i++)
+            {
+                sb.AppendLine($"Câu {i}. [Vận dụng - {subject}] Cho bài toán thực tế hoặc đồ thị...");
+                sb.AppendLine("a) [Mệnh đề a]");
+                sb.AppendLine("b) [Mệnh đề b]");
+                sb.AppendLine("c) [Mệnh đề c]");
+                sb.AppendLine("d) [Mệnh đề d]");
+                sb.AppendLine();
+            }
+            sb.AppendLine("PHẦN III. Câu trắc nghiệm trả lời ngắn (6 câu - 3.0 điểm)");
+            sb.AppendLine("Thí sinh trả lời từ câu 1 đến câu 6.");
+            sb.AppendLine();
+            for (int i = 1; i <= 4; i++)
+            {
+                sb.AppendLine($"Câu {i}. [Vận dụng - {subject}] [Nhập câu hỏi tính toán kết quả số]");
+                sb.AppendLine("Trả lời: .......");
+                sb.AppendLine();
+            }
+            for (int i = 5; i <= 6; i++)
+            {
+                sb.AppendLine($"Câu {i}. [Vận dụng cao - {subject}] [Nhập câu hỏi phân hóa điểm 9-10]");
+                sb.AppendLine("Trả lời: .......");
+                sb.AppendLine();
+            }
+            return sb.ToString();
         }
 
         private void BtnLoadSample_Click(object sender, RoutedEventArgs e)
