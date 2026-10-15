@@ -173,5 +173,13 @@ namespace MatrixExamAI.WordAddIn.Extensibility
         {
             ThisAddIn.Current?.TaskPaneManager?.ShowTab("convert");
         }
+
+        /// <summary>
+        /// Xử lý nút Ribbon 'Trộn đề thi' (btnShuffleExam).
+        /// </summary>
+        public void HandleShuffle()
+        {
+            ThisAddIn.Current?.TaskPaneManager?.ShowTab("shuffle");
+        }
     }
 }

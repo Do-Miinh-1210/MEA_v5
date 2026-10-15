@@ -1,6 +1,8 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -1390,6 +1392,115 @@ namespace MatrixExamAI.Desktop.Views
             {
                 MessageBox.Show("Không thể truy cập bộ nhớ đệm (Clipboard) do ứng dụng khác đang khóa. Vui lòng thử lại sau giây lát.", "Lỗi Clipboard", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
+        }
+
+        private void BtnCopyImage_Click(object sender, RoutedEventArgs e)
+        {
+            if (ImgDiagramPreview.Source is BitmapSource bs)
+            {
+                SafeClipboard.SetImage(bs);
+                InfoTikzNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
+                InfoTikzNotification.Title = "Đã sao chép ảnh";
+                InfoTikzNotification.Message = "Đã sao chép hình ảnh vào Clipboard! Bạn có thể nhấn Ctrl+V để dán trực tiếp vào Word.";
+                InfoTikzNotification.IsOpen = true;
+                MessageBox.Show("Đã sao chép hình ảnh vào Clipboard! Bạn có thể dán (Ctrl+V) vào Word.", "Đã sao chép", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("Chưa có hình ảnh được biên dịch để sao chép.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void BtnCopyCode_Click(object sender, RoutedEventArgs e)
+        {
+            string code = TxtTikzCode.Text.Trim();
+            if (!string.IsNullOrEmpty(code))
+            {
+                SafeClipboard.SetText(code);
+                InfoTikzNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
+                InfoTikzNotification.Title = "Đã sao chép mã";
+                InfoTikzNotification.Message = "Đã sao chép toàn bộ mã nguồn TikZ vào Clipboard.";
+                InfoTikzNotification.IsOpen = true;
+                MessageBox.Show("Đã sao chép mã nguồn TikZ vào Clipboard!", "Đã sao chép", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("Mã nguồn TikZ đang trống.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void BtnOverleaf_Click(object sender, RoutedEventArgs e)
+        {
+            string tikzCode = TxtTikzCode.Text.Trim();
+            if (string.IsNullOrWhiteSpace(tikzCode))
+            {
+                MessageBox.Show("Hãy nhập hoặc sinh mã TikZ trước khi mở trên Overleaf.", "Mã TikZ trống", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            try
+            {
+                string fullLatex = BuildOverleafLatexDocument(tikzCode);
+                SafeClipboard.SetText(fullLatex);
+
+                string tempHtml = Path.Combine(Path.GetTempPath(), $"overleaf_launcher_{Guid.NewGuid():N}.html");
+                string encodedLatex = System.Net.WebUtility.HtmlEncode(fullLatex);
+                string html = $@"<!doctype html>
+<html lang=""vi"">
+<head>
+  <meta charset=""utf-8"">
+  <title>Mở TikZ trong Overleaf</title>
+  <style>
+    body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 30px; background: #F8FAFC; color: #0F172A; text-align: center; }}
+    .box {{ max-width: 500px; margin: 50px auto; padding: 24px; background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }}
+    button {{ background: #16A34A; color: white; border: none; padding: 10px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; }}
+  </style>
+</head>
+<body onload=""document.getElementById('ol_form').submit()"">
+  <div class=""box"">
+    <h3>Đang chuyển tiếp mã TikZ sang Overleaf...</h3>
+    <p>Nếu trình duyệt không tự chuyển tiếp, vui lòng nhấn nút bên dưới.</p>
+    <form id=""ol_form"" action=""https://www.overleaf.com/docs"" method=""post"">
+      <input type=""hidden"" name=""snip"" value=""{encodedLatex}"" />
+      <input type=""hidden"" name=""engine"" value=""pdflatex"" />
+      <button type=""submit"">Mở trình biên dịch Overleaf</button>
+    </form>
+  </div>
+</body>
+</html>";
+                File.WriteAllText(tempHtml, html, Encoding.UTF8);
+                Process.Start(new ProcessStartInfo(tempHtml) { UseShellExecute = true });
+
+                InfoTikzNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
+                InfoTikzNotification.Title = "Đã mở Overleaf";
+                InfoTikzNotification.Message = "Đã gửi mã TikZ sang Overleaf. Mã nguồn .tex cũng đã được sao chép vào Clipboard.";
+                InfoTikzNotification.IsOpen = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở Overleaf: {ex.Message}", "Lỗi Overleaf", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private static string BuildOverleafLatexDocument(string tikzCode)
+        {
+            if (tikzCode.Contains(@"\documentclass") && tikzCode.Contains(@"\begin{document}"))
+            {
+                return tikzCode;
+            }
+
+            var sb = new StringBuilder();
+            sb.AppendLine(@"\documentclass[border=10pt,tikz,preview]{standalone}");
+            sb.AppendLine(@"\usepackage{amsmath,amssymb}");
+            sb.AppendLine(@"\usepackage{tikz}");
+            sb.AppendLine(@"\usepackage{pgfplots}");
+            sb.AppendLine(@"\usepackage{tkz-tab}");
+            sb.AppendLine(@"\pgfplotsset{compat=1.18}");
+            sb.AppendLine(@"\usetikzlibrary{calc,angles,quotes,patterns,arrows.meta,decorations.markings,intersections}");
+            sb.AppendLine(@"\begin{document}");
+            sb.AppendLine(tikzCode);
+            sb.AppendLine(@"\end{document}");
+            return sb.ToString();
         }
     }
 }

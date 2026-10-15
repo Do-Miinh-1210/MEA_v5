@@ -5,102 +5,225 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              mc:Ignorable="d" 
-             d:DesignHeight="750" d:DesignWidth="1100">
-    <Grid Margin="16,12,16,14">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+             d:DesignHeight="850" d:DesignWidth="1100">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Grid Margin="16,12,16,14">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" MinHeight="260" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-        <!-- Tiêu đề Phân hệ -->
-        <Grid Grid.Row="0" Margin="0,0,0,4">
-            <StackPanel>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:SymbolIcon Symbol="ArrowShuffle24" FontSize="20" Foreground="#EC4899" Margin="0,0,8,0" />
-                    <TextBlock Text="Trộn đề Hoán vị &amp; Phiếu Trả lời Trắc nghiệm OMR" 
-                               FontSize="16" FontWeight="Bold" 
-                               Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                </StackPanel>
-                <TextBlock Text="Hoán vị câu hỏi và phương án A-B-C-D thông minh, sinh ma trận bảng đáp án chéo, tương thích máy chấm thi OMR" 
-                           FontSize="11" Margin="28,2,0,0"
-                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-            </StackPanel>
-        </Grid>
-
-        <!-- Thanh cấu hình Trộn đề (WrapPanel chống tràn) -->
-        <ui:Card Grid.Row="1" Margin="0,0,0,4" Padding="8,5">
-            <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,4">
-                    <TextBlock Text="Số mã đề:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="CmbExamCodesCount" Width="120" Height="32" SelectedIndex="0" FontSize="11.5" 
-                              Padding="8,0,24,0" VerticalContentAlignment="Center">
-                        <ComboBoxItem Content="4 mã đề" Padding="8,4" />
-                        <ComboBoxItem Content="8 mã đề" Padding="8,4" />
-                        <ComboBoxItem Content="12 mã đề" Padding="8,4" />
-                        <ComboBoxItem Content="24 mã đề" Padding="8,4" />
-                    </ComboBox>
-                </StackPanel>
-
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,14,4">
-                    <TextBlock Text="Mã đề bắt đầu:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <TextBox x:Name="TxtStartCode" Text="101" Width="60" Height="32" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="11.5" />
-                </StackPanel>
-
-                <CheckBox x:Name="ChkShuffleOptions" IsChecked="True" Content="Hoán vị A-B-C-D" Margin="0,0,12,4" FontSize="11" VerticalAlignment="Center" />
-                <CheckBox x:Name="ChkPreserveAllAbove" IsChecked="True" Content="Cố định 'Cả A và B'" Margin="0,0,14,4" FontSize="11" VerticalAlignment="Center" />
-
-                <ui:Button x:Name="BtnShuffle" Appearance="Primary" 
-                           Icon="{ui:SymbolIcon ArrowShuffle24}"
-                           Content="Tiến hành Trộn đề" Padding="12,5" Margin="0,0,6,4" FontSize="11"
-                           Click="BtnShuffle_Click"
-                           ToolTip="Hoán vị câu hỏi, phương án và sinh ma trận mã đề chéo (F5)" />
-                <ui:Button x:Name="BtnGenerateOmr" Appearance="Secondary" 
-                           Icon="{ui:SymbolIcon Print24}"
-                           Content="Sinh Phiếu OMR" Padding="12,5" Margin="0,0,6,4" FontSize="11"
-                           Click="BtnGenerateOmr_Click"
-                           ToolTip="Sinh phiếu trả lời trắc nghiệm tô tròn OMR chuẩn A4" />
-                <ui:Button x:Name="BtnExportAllDocx" Appearance="Success" 
-                           Icon="{ui:SymbolIcon DocumentArrowRight24}"
-                           Content="Xuất các file Word" Padding="12,5" Margin="0,0,0,4" FontSize="11"
-                           Click="BtnExportAllDocx_Click"
-                           ToolTip="Xuất toàn bộ các mã đề thi đã trộn ra các tệp Word riêng biệt (Ctrl + S)" />
-            </WrapPanel>
-        </ui:Card>
-
-        <!-- Khung xem trước bảng ma trận đáp án sau khi trộn -->
-        <ui:Card Grid.Row="2" Padding="10" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
-            <Grid VerticalAlignment="Stretch">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <Grid Grid.Row="0" Margin="0,0,0,6">
+            <!-- Tiêu đề Phân hệ -->
+            <Grid Grid.Row="0" Margin="0,0,0,8">
+                <StackPanel>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <ui:SymbolIcon Symbol="Table24" Foreground="#EC4899" Margin="0,0,6,0" />
-                        <TextBlock Text="Ma trận Đáp án Đối chiếu sau khi Hoán vị" FontWeight="SemiBold" FontSize="13" />
+                        <Border Width="30" Height="30" CornerRadius="6" Background="#0F2D52" Margin="0,0,10,0" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="ArrowShuffle24" FontSize="16" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock Text="TRỘN ĐỀ THI TRẮC NGHIỆM &amp; TỰ LUẬN HOÁN VỊ MÃ ĐỀ" 
+                                   FontSize="16" FontWeight="Bold" 
+                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                     </StackPanel>
-                    <TextBlock x:Name="TxtShuffleStats" Text="Sẵn sàng trộn 4 mã đề: 101, 102, 103, 104" FontSize="11" HorizontalAlignment="Right" 
-                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
-                </Grid>
-
-                <ui:TextBox x:Name="TxtShuffleMatrixResult" Grid.Row="1"
-                            VerticalAlignment="Stretch" MinHeight="180"
-                            IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap"
-                            VerticalContentAlignment="Top"
-                            FontFamily="Consolas, 'Segoe UI', Arial" FontSize="12.5"
-                            Background="{DynamicResource ControlFillColorSecondaryBrush}" />
+                    <TextBlock Text="Hỗ trợ nạp từ file Word (.docx) bên ngoài HOẶC nạp trực tiếp đề thi đang soạn trong ứng dụng. Bảo toàn 100% MathType, hình ảnh, bảng biểu." 
+                               FontSize="11" Margin="40,2,0,0"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
             </Grid>
-        </ui:Card>
 
-        <!-- InfoBar -->
-        <ui:InfoBar x:Name="InfoShuffleNotification" Grid.Row="3" Margin="0,12,0,0"
-                    IsOpen="False" Severity="Success"
-                    Title="Hoàn tất" 
-                    Message="Đã tạo 4 mã đề và ma trận đáp án thành công." />
-    </Grid>
+            <!-- 1. NGUỒN ĐỀ THI (Hỗ trợ nhiều bộ đề) -->
+            <ui:Card Grid.Row="1" Margin="0,0,0,10" Padding="12,10">
+                <StackPanel>
+                    <TextBlock Text="📁 1. Nguồn Đề Thi (Chọn File Word HOẶC Nạp Từ Đề Đang Soạn — Hỗ Trợ Nhiều Bộ Đề)" 
+                               FontWeight="Bold" FontSize="12.5" Margin="0,0,0,8" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+                    <!-- Hàng nút Nguồn đề -->
+                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
+                        <ui:Button x:Name="BtnPickWordFile" Background="#2563EB" Foreground="White" FontWeight="SemiBold"
+                                   Icon="{ui:SymbolIcon DocumentFolder24}" Content="Chọn File Word (.docx)..." 
+                                   Height="30" Padding="12,0" Margin="0,0,6,4" FontSize="11"
+                                   Click="BtnPickWordFile_Click" ToolTip="Nạp đề thi từ tệp Word .docx bên ngoài" />
+                        <ui:Button x:Name="BtnLoadFromConvert" Background="#0D9488" Foreground="White" FontWeight="SemiBold"
+                                   Icon="{ui:SymbolIcon ArrowDownload24}" Content="Nạp Đề Đang Soạn Trong App" 
+                                   Height="30" Padding="12,0" Margin="0,0,6,4" FontSize="11"
+                                   Click="BtnLoadFromConvert_Click" ToolTip="Nạp ngay nội dung câu hỏi từ phân hệ Soạn đề ConvertView" />
+                        <ui:Button x:Name="BtnDeleteExam" Background="#EF4444" Foreground="White" FontWeight="SemiBold"
+                                   Icon="{ui:SymbolIcon Dismiss24}" Content="Xóa Đề Đang Chọn" 
+                                   Height="30" Padding="10,0" Margin="0,0,6,4" FontSize="11"
+                                   Click="BtnDeleteExam_Click" ToolTip="Xóa bộ đề thi đang chọn khỏi danh sách trộn" />
+                        <ui:Button x:Name="BtnClearAllExams" Appearance="Secondary"
+                                   Icon="{ui:SymbolIcon Delete24}" Content="Xóa Tất Cả / Làm Mới" 
+                                   Height="30" Padding="10,0" Margin="0,0,10,4" FontSize="11"
+                                   Click="BtnClearAllExams_Click" ToolTip="Xóa tất cả các bộ đề đã nạp để làm mới hoàn toàn" />
+                        <TextBlock x:Name="TxtExamSourceSummary" Text="(Chưa có đề nào)" FontSize="11" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontStyle="Italic" Margin="0,0,0,4" />
+                    </WrapPanel>
+
+                    <!-- Dropdown Đang làm việc với đề -->
+                    <Grid Margin="0,0,0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Target24" FontSize="14" Foreground="#0284C7" Margin="0,0,4,0" />
+                            <TextBlock Text="Đang làm việc với đề:" FontWeight="SemiBold" FontSize="11" />
+                        </StackPanel>
+                        <ComboBox x:Name="CmbLoadedExams" Grid.Column="1" Height="28" FontSize="11"
+                                  SelectionChanged="CmbLoadedExams_SelectionChanged" />
+                    </Grid>
+
+                    <!-- Ô xem trước cấu trúc câu hỏi đã nhận diện -->
+                    <StackPanel>
+                        <TextBlock Text="Xem trước cấu trúc câu hỏi đã nhận diện:" FontSize="10.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,3" />
+                        <ui:TextBox x:Name="TxtExamPreview" Height="90" AcceptsReturn="True" TextWrapping="Wrap"
+                                    IsReadOnly="True" VerticalContentAlignment="Top"
+                                    FontFamily="Consolas, 'Segoe UI', monospace" FontSize="11"
+                                    Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                    Text="Hãy chọn file Word đề thi hoặc bấm 'Nạp Đề Đang Soạn Trong App' để bắt đầu." />
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
+
+            <!-- 2. THIẾT LẬP & TÙY CHỌN TRỘN ĐỀ THÔNG MINH -->
+            <ui:Card Grid.Row="2" Margin="0,0,0,10" Padding="12,10">
+                <StackPanel>
+                    <TextBlock Text="⚙️ 2. Thiết Lập &amp; Tùy Chọn Trộn Đề Thông Minh" 
+                               FontWeight="Bold" FontSize="12.5" Margin="0,0,0,8" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+
+                    <!-- Hàng 1: Phạm vi trộn -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,14,0">
+                            <ui:SymbolIcon Symbol="Globe24" FontSize="14" Foreground="#7C3AED" Margin="0,0,4,0" />
+                            <TextBlock Text="Phạm vi trộn đề:" FontWeight="SemiBold" FontSize="11" />
+                        </StackPanel>
+                        <RadioButton x:Name="RadShuffleAll" Content="Trộn TẤT CẢ các bộ đề đã nạp (Tự động chia thành từng bộ mã riêng biệt)" 
+                                     IsChecked="True" FontSize="11" Margin="0,0,14,0" VerticalAlignment="Center" />
+                        <RadioButton x:Name="RadShuffleCurrent" Content="Chỉ trộn bộ đề đang chọn" 
+                                     FontSize="11" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- Hàng 2: Số lượng mã đề, mã bắt đầu, danh sách mã -->
+                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,14,4">
+                            <TextBlock Text="Số lượng mã đề:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <ComboBox x:Name="CmbExamCodesCount" Width="90" Height="28" SelectedIndex="0" FontSize="11"
+                                      SelectionChanged="CmbExamCodesCount_SelectionChanged">
+                                <ComboBoxItem Content="4 mã" />
+                                <ComboBoxItem Content="8 mã" />
+                                <ComboBoxItem Content="12 mã" />
+                                <ComboBoxItem Content="24 mã" />
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,14,4">
+                            <TextBlock Text="Mã bắt đầu:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <ui:TextBox x:Name="TxtStartCode" Text="101" Width="55" Height="28" FontSize="11" HorizontalContentAlignment="Center"
+                                        TextChanged="TxtStartCode_TextChanged" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,4">
+                            <TextBlock Text="Hoặc danh sách mã đề tùy ý:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" />
+                            <ui:TextBox x:Name="TxtCustomCodes" Width="150" Height="28" FontSize="11" PlaceholderText="101, 102, 103, 104" />
+                            <TextBlock Text="(VD: 101, 102, 103, 104)" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="6,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </WrapPanel>
+
+                    <!-- Hàng 3: Chế độ xáo trộn -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
+                        <TextBlock Text="Chế độ xáo trộn:" FontWeight="SemiBold" FontSize="11" Margin="0,0,10,0" />
+                        <RadioButton x:Name="RadShuffleBoth" Content="Trộn cả câu hỏi &amp; đáp án A/B/C/D (Mặc định)" IsChecked="True" FontSize="11" Margin="0,0,12,0" />
+                        <RadioButton x:Name="RadShuffleQuestionsOnly" Content="Chỉ trộn câu hỏi (giữ nguyên A/B/C/D)" FontSize="11" Margin="0,0,12,0" />
+                        <RadioButton x:Name="RadShuffleOptionsOnly" Content="Chỉ trộn đáp án (giữ nguyên thứ tự câu)" FontSize="11" />
+                    </StackPanel>
+
+                    <!-- Hàng 4: Các Checkbox thông minh -->
+                    <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,6">
+                        <CheckBox x:Name="ChkPreserveDependentOptions" Content="Tự động ghim phương án phụ thuộc ('Tất cả đáp án trên', 'Cả A và B...', 'Không có...') cố định ở cuối (D)" 
+                                  IsChecked="True" FontSize="11" Margin="0,0,16,4" />
+                        <CheckBox x:Name="ChkExportMergedDocx" Content="Tự động xuất thêm 1 file Word GỘP chứa tất cả các mã đề (thuận tiện in photocopy)" 
+                                  IsChecked="True" FontSize="11" Margin="0,0,0,4" />
+                    </WrapPanel>
+
+                    <!-- Hàng 5: Cố định câu hỏi không đảo -->
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
+                        <TextBlock Text="📌 Cố định câu hỏi không đảo (nhập số câu):" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ui:TextBox x:Name="TxtPinnedQuestions" Width="180" Height="28" FontSize="11" PlaceholderText="1, 2, 5" />
+                        <TextBlock Text="(Ví dụ: 1, 2, 5 hoặc để trống nếu muốn đảo toàn bộ)" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="8,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <!-- Hàng 6: AI đổi số liệu (Khung nổi bật màu xanh lá nhạt) -->
+                    <Border Background="#1010B981" BorderBrush="#3310B981" BorderThickness="1" CornerRadius="6" Padding="10,6" Margin="0,2,0,0">
+                        <StackPanel>
+                            <CheckBox x:Name="ChkAiVariantNumbers" Content="✨ Trộn đề đổi số liệu bằng AI (Tạo đề tương tự — AI chỉ thay số, giữ nguyên dạng toán &amp; độ khó)" 
+                                      FontSize="11" FontWeight="SemiBold" Foreground="#059669" />
+                            <TextBlock Text="Công nghệ AI: Đọc công thức MathType/OMML → AI đổi số &amp; tính lại đáp án → Xuất Word chuẩn (không tự đổi sang Equation)." 
+                                       FontSize="10" Foreground="#047857" Margin="24,2,0,0" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ui:Card>
+
+            <!-- 3. HÀNG NÚT HÀNH ĐỘNG CHÍNH -->
+            <ui:Card Grid.Row="3" Margin="0,0,0,10" Padding="10,6">
+                <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:Button x:Name="BtnShuffle" Appearance="Primary" Background="#7C3AED" Foreground="White" FontWeight="Bold"
+                               Icon="{ui:SymbolIcon ArrowShuffle24}"
+                               Content="Tiến hành Trộn đề" Height="32" Padding="16,0" Margin="0,0,8,4" FontSize="11.5"
+                               Click="BtnShuffle_Click" ToolTip="Hoán vị câu hỏi, phương án và sinh ma trận mã đề chéo (F5)" />
+                    <ui:Button x:Name="BtnExportAllDocx" Appearance="Success" Background="#059669" Foreground="White" FontWeight="SemiBold"
+                               Icon="{ui:SymbolIcon DocumentArrowRight24}"
+                               Content="Xuất các file Word" Height="32" Padding="14,0" Margin="0,0,8,4" FontSize="11"
+                               Click="BtnExportAllDocx_Click" ToolTip="Xuất toàn bộ các mã đề thi đã trộn ra các tệp Word riêng biệt (Ctrl + S)" />
+                    <ui:Button x:Name="BtnExportMergedDocx" Background="#0284C7" Foreground="White" FontWeight="SemiBold"
+                               Icon="{ui:SymbolIcon DocumentCopy24}"
+                               Content="Xuất file Word GỘP" Height="32" Padding="14,0" Margin="0,0,8,4" FontSize="11"
+                               Click="BtnExportMergedDocx_Click" ToolTip="Xuất 1 file Word duy nhất chứa tất cả các mã đề phân cách bằng Page Break" />
+                    <ui:Button x:Name="BtnExportExcel" Background="#16A34A" Foreground="White" FontWeight="SemiBold"
+                               Icon="{ui:SymbolIcon Table24}"
+                               Content="Bảng đáp án Excel" Height="32" Padding="12,0" Margin="0,0,8,4" FontSize="11"
+                               Click="BtnExportExcel_Click" ToolTip="Xuất file Excel (.xlsx) bảng đáp án và ma trận đối chiếu" />
+                    <ui:Button x:Name="BtnGenerateOmr" Appearance="Secondary"
+                               Icon="{ui:SymbolIcon Print24}"
+                               Content="Sinh Phiếu OMR" Height="32" Padding="12,0" Margin="0,0,0,4" FontSize="11"
+                               Click="BtnGenerateOmr_Click" ToolTip="Sinh phiếu trả lời trắc nghiệm tô tròn OMR chuẩn A4" />
+                </WrapPanel>
+            </ui:Card>
+
+            <!-- 4. KHUNG XEM TRƯỚC MA TRẬN ĐÁP ÁN -->
+            <ui:Card Grid.Row="4" Padding="10" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
+                <Grid VerticalAlignment="Stretch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,6">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="Table24" Foreground="#EC4899" Margin="0,0,6,0" />
+                            <TextBlock Text="Ma trận Đáp án Đối chiếu sau khi Hoán vị" FontWeight="SemiBold" FontSize="13" />
+                        </StackPanel>
+                        <TextBlock x:Name="TxtShuffleStats" Text="Sẵn sàng trộn các mã đề..." FontSize="11" HorizontalAlignment="Right" 
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                    </Grid>
+
+                    <ui:TextBox x:Name="TxtShuffleMatrixResult" Grid.Row="1"
+                                VerticalAlignment="Stretch" MinHeight="200"
+                                IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap"
+                                VerticalContentAlignment="Top"
+                                FontFamily="Consolas, 'Segoe UI', Arial" FontSize="12"
+                                Background="{DynamicResource ControlFillColorSecondaryBrush}" />
+                </Grid>
+            </ui:Card>
+
+            <!-- 5. InfoBar Thông báo -->
+            <ui:InfoBar x:Name="InfoShuffleNotification" Grid.Row="5" Margin="0,10,0,0"
+                        IsOpen="False" Severity="Success"
+                        Title="Hoàn tất" 
+                        Message="Đã tạo các mã đề và ma trận đáp án thành công." />
+        </Grid>
+    </ScrollViewer>
 </UserControl>

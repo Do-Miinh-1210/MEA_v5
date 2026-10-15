@@ -356,6 +356,140 @@ namespace MatrixExamAI.Desktop.Services
             mainPart.Document.Save();
         }
 
+        /// <summary>
+        /// Xuất file Word GỘP chứa tất cả các mã đề thi hoán vị, mỗi mã đề bắt đầu trên 1 trang mới (Page Break).
+        /// </summary>
+        public void ExportMergedVariantsToDocx(string filePath, IEnumerable<ExamVariant> variants, ExamExportOptions? baseOptions = null)
+        {
+            baseOptions ??= new ExamExportOptions();
+            var variantList = variants.ToList();
+            if (variantList.Count == 0) return;
+
+            using var wordDocument = WordprocessingDocument.Create(filePath, WordprocessingDocumentType.Document);
+            var mainPart = wordDocument.AddMainDocumentPart();
+            mainPart.Document = new Document();
+            AddDocumentDefaultStyles(mainPart, baseOptions.FontFamily, baseOptions.FontSizePt);
+            var body = mainPart.Document.AppendChild(new Body());
+
+            ApplyA4PageSettings(body, top: 567, bottom: 567, left: 850, right: 850);
+
+            for (int vIdx = 0; vIdx < variantList.Count; vIdx++)
+            {
+                var variant = variantList[vIdx];
+                var opt = new ExamExportOptions
+                {
+                    ExamCode = variant.ExamCode,
+                    ExamTitle = baseOptions.ExamTitle,
+                    Subject = baseOptions.Subject,
+                    Grade = baseOptions.Grade,
+                    SchoolName = baseOptions.SchoolName,
+                    ExamYear = baseOptions.ExamYear,
+                    TimeMinutes = baseOptions.TimeMinutes,
+                    FontFamily = baseOptions.FontFamily,
+                    FontSizePt = baseOptions.FontSizePt,
+                    TabSpacing = baseOptions.TabSpacing,
+                    IncludeSolution = baseOptions.IncludeSolution
+                };
+
+                var allQuestions = variant.Part1Questions
+                    .Concat(variant.Part2Questions)
+                    .Concat(variant.Part3Questions)
+                    .ToList();
+
+                // 1. Tiêu đề đề thi
+                var headerTable = CreateExamHeaderTable(allQuestions.Count, opt);
+                body.AppendChild(headerTable);
+
+                // 2. Thông tin thí sinh
+                var candidatePara = CreateCandidateParagraph(opt);
+                body.AppendChild(candidatePara);
+                body.AppendChild(CreateHorizontalRuleParagraph());
+
+                // 3. Phân nhóm câu hỏi
+                var tnQuestions = variant.Part1Questions;
+                var dsQuestions = variant.Part2Questions;
+                var tlnQuestions = variant.Part3Questions;
+
+                int globalIndex = 1;
+
+                if (tnQuestions.Count > 0)
+                {
+                    var secPara = CreateSectionHeadingParagraph($"PHẦN I. Thí sinh trả lời từ câu 1 đến câu {tnQuestions.Count}. Mỗi câu hỏi thí sinh chỉ chọn một phương án.", opt);
+                    body.AppendChild(secPara);
+
+                    foreach (var q in tnQuestions)
+                    {
+                        var qPara = CreateFormattedParagraph($"Câu {globalIndex}. {CleanImageTagsFromContent(q.Content)}", opt);
+                        body.AppendChild(qPara);
+                        if (q.Options.Count > 0)
+                        {
+                            AppendOptionsParagraphs(body, q.Options, opt);
+                        }
+                        globalIndex++;
+                    }
+                }
+
+                if (dsQuestions.Count > 0)
+                {
+                    int startIdx = globalIndex;
+                    int endIdx = globalIndex + dsQuestions.Count - 1;
+                    var secPara = CreateSectionHeadingParagraph($"PHẦN II. Thí sinh trả lời từ câu {startIdx} đến câu {endIdx}. Trong mỗi ý a), b), c), d) ở mỗi câu hỏi, thí sinh chọn đúng hoặc sai.", opt);
+                    body.AppendChild(secPara);
+
+                    foreach (var q in dsQuestions)
+                    {
+                        var qPara = CreateFormattedParagraph($"Câu {globalIndex}. {CleanImageTagsFromContent(q.Content)}", opt);
+                        body.AppendChild(qPara);
+                        string[] keys = { "a", "b", "c", "d" };
+                        foreach (var k in keys)
+                        {
+                            if (q.Options.ContainsKey(k))
+                            {
+                                var itemPara = CreateFormattedParagraph($"{k}) {q.Options[k]}", opt);
+                                body.AppendChild(itemPara);
+                            }
+                        }
+                        globalIndex++;
+                    }
+                }
+
+                if (tlnQuestions.Count > 0)
+                {
+                    int startIdx = globalIndex;
+                    int endIdx = globalIndex + tlnQuestions.Count - 1;
+                    var secPara = CreateSectionHeadingParagraph($"PHẦN III. Thí sinh trả lời từ câu {startIdx} đến câu {endIdx}.", opt);
+                    body.AppendChild(secPara);
+
+                    foreach (var q in tlnQuestions)
+                    {
+                        var qPara = CreateFormattedParagraph($"Câu {globalIndex}. {CleanImageTagsFromContent(q.Content)}", opt);
+                        body.AppendChild(qPara);
+                        var ansPara = CreateFormattedParagraph("Đáp án: | | | | |", opt);
+                        body.AppendChild(ansPara);
+                        globalIndex++;
+                    }
+                }
+
+                // Dòng kết thúc đề
+                var endPara = new Paragraph(
+                    new ParagraphProperties(
+                        new SpacingBetweenLines { Line = "240", LineRule = LineSpacingRuleValues.Auto, Before = "120", After = "40" },
+                        new Justification { Val = JustificationValues.Center }),
+                    new Run(new RunProperties(new RunFonts { Ascii = opt.FontFamily, HighAnsi = opt.FontFamily }, new FontSize { Val = "22" }, new Bold()),
+                        new Text($"---------- HẾT MÃ ĐỀ {variant.ExamCode} ----------")));
+                body.AppendChild(endPara);
+
+                // Ngắt trang giữa các mã đề (Page Break), trừ mã đề cuối
+                if (vIdx < variantList.Count - 1)
+                {
+                    var pageBreakPara = new Paragraph(new Run(new Break { Type = BreakValues.Page }));
+                    body.AppendChild(pageBreakPara);
+                }
+            }
+
+            mainPart.Document.Save();
+        }
+
         private static Table CreateExamHeaderTable(int totalCount, ExamExportOptions options)
         {
             var table = new Table();

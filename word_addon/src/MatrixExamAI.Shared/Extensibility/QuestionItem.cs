@@ -59,6 +59,11 @@ namespace MatrixExamAI.Shared.Extensibility
         public Dictionary<string, string> Options { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
+        /// Điểm số của câu hỏi trong đề thi.
+        /// </summary>
+        public double Points { get; set; } = 0.25;
+
+        /// <summary>
         /// Đáp án đúng (ví dụ: "A", "Đ,S,Đ,S" hoặc kết quả số "12.5").
         /// </summary>
         public string CorrectAnswer { get; set; } = string.Empty;

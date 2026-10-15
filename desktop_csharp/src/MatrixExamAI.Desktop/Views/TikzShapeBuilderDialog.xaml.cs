@@ -1,83 +1,100 @@
 using System;
+using System.Globalization;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using MatrixExamAI.Desktop.Services;
-using MatrixExamAI.Shared.Tikz;
 
 namespace MatrixExamAI.Desktop.Views
 {
     public partial class TikzShapeBuilderDialog : Window
     {
         public string GeneratedTikzCode { get; private set; } = string.Empty;
+        private string _currentShapeTag = "tri_right";
+        private bool _isInitializing = true;
 
         public TikzShapeBuilderDialog()
         {
             InitializeComponent();
-            PopulateShapesForCategory("2D");
+            if (CmbCategory != null) CmbCategory.SelectedIndex = 0;
+            Loaded += (s, e) =>
+            {
+                _isInitializing = false;
+                SelectInitialShape("tri_right");
+            };
         }
 
         private void CmbCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (CmbCategory?.SelectedItem is ComboBoxItem item && item.Tag is string tag)
-            {
-                PopulateShapesForCategory(tag);
-            }
-        }
-
-        private void PopulateShapesForCategory(string category)
-        {
-            if (CmbShapeType == null) return;
-
+            if (CmbCategory == null || CmbShapeType == null || TxtResultCode == null) return;
             CmbShapeType.Items.Clear();
 
-            switch (category)
+            switch (CmbCategory.SelectedIndex)
             {
-                case "2D":
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Tam giác vuông", Tag = "tri_right" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Tam giác đều", Tag = "tri_equi" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Tam giác cân", Tag = "tri_iso" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Hình chữ nhật", Tag = "rect" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Hình vuông", Tag = "square" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Hình bình hành", Tag = "parallelogram" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Hình thang cân", Tag = "trapezoid" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Đường tròn (O, R)", Tag = "circle" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Hệ trục tọa độ Oxy", Tag = "oxy" });
+                case 0: // 2D
+                    CmbShapeType.Items.Add("Tam giác vuông");
+                    CmbShapeType.Items.Add("Tam giác đều");
+                    CmbShapeType.Items.Add("Hình vuông");
+                    CmbShapeType.Items.Add("Đường tròn");
+                    CmbShapeType.SelectedIndex = 0;
+                    TxtResultCode.Text = GenerateTikzCodeForShape("tri_right", "4", "3", "", "A,B,C", true);
                     break;
-
-                case "3D":
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Hình chóp tứ giác S.ABCD", Tag = "pyramid" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Hình chóp tam giác S.ABC", Tag = "tetrahedron" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Hình hộp chữ nhật", Tag = "cuboid" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Hình lập phương", Tag = "cube" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Hình trụ tròn xoay", Tag = "cylinder" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Hình nón tròn xoay", Tag = "cone" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Hình cầu khối", Tag = "sphere" });
+                case 1: // 3D
+                    CmbShapeType.Items.Add("Hình chóp S.ABCD");
+                    CmbShapeType.Items.Add("Hình chóp tam giác");
+                    CmbShapeType.Items.Add("Hình hộp chữ nhật");
+                    CmbShapeType.SelectedIndex = 0;
+                    TxtResultCode.Text = GenerateTikzCodeForShape("pyramid", "5", "4", "4", "S,A,B,C,D", true);
                     break;
-
-                case "TAB":
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Bảng biến thiên bậc 3 (2 cực trị)", Tag = "tab_cubic" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Bảng biến thiên bậc 4 trùng phương", Tag = "tab_quartic" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Bảng biến thiên phân thức (ax+b)/(cx+d)", Tag = "tab_rational" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Bảng xét dấu nhị thức bậc nhất", Tag = "tab_sign_lin" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Bảng xét dấu tam thức bậc hai", Tag = "tab_sign_quad" });
+                case 2: // TAB
+                    CmbShapeType.Items.Add("Bảng biến thiên bậc 3");
+                    CmbShapeType.Items.Add("Bảng xét dấu");
+                    CmbShapeType.SelectedIndex = 0;
+                    TxtResultCode.Text = @"\begin{tikzpicture}
+\tkzTabInit[lgt=1.5,espcl=2.5]{$x$/1,$y'$/1,$y$/2}{$-\infty$,$1$,$3$,$+\infty$}
+\tkzTabLine{,+,$0$,-,$0$,+,}
+\tkzTabVar{-/$-\infty$,+/$4$,-/$-2$,+/$+\infty$}
+\end{tikzpicture}";
                     break;
-
-                case "GRAPH":
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Đồ thị Parabol y = ax² + bx + c", Tag = "graph_quad" });
-                    CmbShapeType.Items.Add(new ComboBoxItem { Content = "Đồ thị bậc 3 y = ax³ + bx² + cx + d", Tag = "graph_cubic" });
+                case 3: // GRAPH
+                    CmbShapeType.Items.Add("Đồ thị hàm bậc 2");
+                    CmbShapeType.Items.Add("Đồ thị hàm bậc 3");
+                    CmbShapeType.SelectedIndex = 0;
+                    TxtResultCode.Text = @"\begin{tikzpicture}
+\begin{axis}[
+    axis lines = center,
+    xlabel = $x$,
+    ylabel = {$f(x)$},
+    xmin=-3, xmax=3, ymin=-2, ymax=6
+]
+\addplot [domain=-2.5:2.5, samples=100, color=blue, thick] {x^2 - 1};
+\end{axis}
+\end{tikzpicture}";
                     break;
-            }
-
-            if (CmbShapeType.Items.Count > 0)
-            {
-                CmbShapeType.SelectedIndex = 0;
+                default:
+                    CmbShapeType.Items.Add("Biểu đồ cột");
+                    CmbShapeType.SelectedIndex = 0;
+                    TxtResultCode.Text = GenerateTikzCodeForShape("chart_bar", "3", "", "", "", false);
+                    break;
             }
         }
 
         private void CmbShapeType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (CmbShapeType?.SelectedItem is ComboBoxItem item && item.Tag is string tag)
+        }
+
+        private void SelectInitialShape(string tag)
+        {
+            _currentShapeTag = tag;
+            UpdateParameterLabels(tag);
+            RegenerateCode();
+        }
+
+        private void TreeShapeCategories_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (_isInitializing) return;
+            if (e.NewValue is TreeViewItem item && item.Tag is string tag)
             {
+                _currentShapeTag = tag;
                 UpdateParameterLabels(tag);
                 RegenerateCode();
             }
@@ -95,6 +112,14 @@ namespace MatrixExamAI.Desktop.Views
 
             switch (shapeTag)
             {
+                case "tri_general":
+                    LblParam1.Text = "Cạnh đáy a:"; TxtParam1.Text = "5";
+                    LblParam2.Text = "Cạnh bên b:"; TxtParam2.Text = "4";
+                    LblParam3.Text = "Chiều cao h:"; TxtParam3.Text = "3.5";
+                    LblParam4.Text = "Đỉnh (A,B,C):"; TxtParam4.Text = "A,B,C";
+                    ChkOption.Content = "Hiển thị đường cao AH";
+                    break;
+
                 case "tri_right":
                     LblParam1.Text = "Cạnh góc vuông a:"; TxtParam1.Text = "4";
                     LblParam2.Text = "Cạnh góc vuông b:"; TxtParam2.Text = "3";
@@ -105,24 +130,24 @@ namespace MatrixExamAI.Desktop.Views
 
                 case "tri_equi":
                 case "tri_iso":
-                    LblParam1.Text = "Cạnh đáy / Cạnh a:"; TxtParam1.Text = "4";
+                    LblParam1.Text = "Cạnh đáy a:"; TxtParam1.Text = "4";
                     LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "3.5";
                     GridParam3.Visibility = Visibility.Collapsed;
                     LblParam4.Text = "Đỉnh (A,B,C):"; TxtParam4.Text = "A,B,C";
-                    ChkOption.Visibility = Visibility.Collapsed;
+                    ChkOption.Content = "Hiển thị đường cao";
                     break;
 
-                case "rect":
                 case "square":
+                case "rect":
                     LblParam1.Text = "Chiều dài a:"; TxtParam1.Text = "5";
                     LblParam2.Text = "Chiều rộng b:"; TxtParam2.Text = "3";
                     GridParam3.Visibility = Visibility.Collapsed;
                     LblParam4.Text = "Đỉnh (A,B,C,D):"; TxtParam4.Text = "A,B,C,D";
-                    ChkOption.Visibility = Visibility.Collapsed;
+                    ChkOption.Content = "Hiển thị đường chéo";
                     break;
 
                 case "parallelogram":
-                    LblParam1.Text = "Cạnh đáy a:"; TxtParam1.Text = "5";
+                    LblParam1.Text = "Chiều dài đáy a:"; TxtParam1.Text = "5";
                     LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "3";
                     LblParam3.Text = "Độ nghiêng (skew):"; TxtParam3.Text = "1.5";
                     LblParam4.Text = "Đỉnh (A,B,C,D):"; TxtParam4.Text = "A,B,C,D";
@@ -134,218 +159,539 @@ namespace MatrixExamAI.Desktop.Views
                     LblParam2.Text = "Đáy nhỏ b:"; TxtParam2.Text = "3";
                     LblParam3.Text = "Chiều cao h:"; TxtParam3.Text = "3";
                     LblParam4.Text = "Đỉnh (A,B,C,D):"; TxtParam4.Text = "A,B,C,D";
-                    ChkOption.Visibility = Visibility.Collapsed;
+                    ChkOption.Content = "Hình thang cân";
                     break;
 
                 case "circle":
-                    LblParam1.Text = "Bán kính R:"; TxtParam1.Text = "3";
-                    LblParam2.Text = "Tọa độ tâm (x,y):"; TxtParam2.Text = "0";
+                    LblParam1.Text = "Bán kính R (cm):"; TxtParam1.Text = "2.5";
+                    GridParam2.Visibility = Visibility.Collapsed;
                     GridParam3.Visibility = Visibility.Collapsed;
                     LblParam4.Text = "Tên tâm:"; TxtParam4.Text = "O";
-                    ChkOption.Content = "Hiển thị nét đứt bán kính R";
+                    ChkOption.Content = "Vẽ bán kính OA và tiếp tuyến";
                     break;
 
-                case "oxy":
-                    LblParam1.Text = "Khoảng x (min,max):"; TxtParam1.Text = "-4, 4";
-                    LblParam2.Text = "Khoảng y (min,max):"; TxtParam2.Text = "-3, 4";
+                case "ellipse":
+                    LblParam1.Text = "Bán trục lớn a:"; TxtParam1.Text = "3";
+                    LblParam2.Text = "Bán trục nhỏ b:"; TxtParam2.Text = "1.8";
                     GridParam3.Visibility = Visibility.Collapsed;
-                    GridParam4.Visibility = Visibility.Collapsed;
-                    ChkOption.Content = "Hiển thị lưới tọa độ (grid)";
+                    LblParam4.Text = "Tên tâm:"; TxtParam4.Text = "O";
+                    ChkOption.Content = "Hiển thị hệ trục tọa độ";
                     break;
 
+                case "segment":
+                    LblParam1.Text = "Độ dài đoạn (cm):"; TxtParam1.Text = "5";
+                    GridParam2.Visibility = Visibility.Collapsed;
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Hai đầu mút:"; TxtParam4.Text = "A,B";
+                    ChkOption.Content = "Có mũi tên hướng dẫn";
+                    break;
+
+                // 3D
                 case "pyramid":
+                    LblParam1.Text = "Cạnh đáy a:"; TxtParam1.Text = "4";
+                    LblParam2.Text = "Chiều cao SO:"; TxtParam2.Text = "4.5";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Đỉnh chóp & Đáy:"; TxtParam4.Text = "S, A, B, C, D";
+                    ChkOption.Content = "Đáy hình vuông đều";
+                    break;
+
                 case "tetrahedron":
                     LblParam1.Text = "Cạnh đáy a:"; TxtParam1.Text = "4";
-                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "4.5";
+                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "4";
                     GridParam3.Visibility = Visibility.Collapsed;
-                    LblParam4.Text = "Đỉnh (S,A,B,C,D):"; TxtParam4.Text = "S,A,B,C,D";
-                    ChkOption.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Đỉnh & Đáy:"; TxtParam4.Text = "S, A, B, C";
+                    ChkOption.Content = "Tứ diện đều";
                     break;
 
                 case "cuboid":
-                case "cube":
-                    LblParam1.Text = "Chiều dài a:"; TxtParam1.Text = "4";
-                    LblParam2.Text = "Chiều rộng b:"; TxtParam2.Text = "3";
-                    LblParam3.Text = "Chiều cao h:"; TxtParam3.Text = "3.5";
-                    LblParam4.Text = "Tên đáy:"; TxtParam4.Text = "A,B,C,D";
+                    LblParam1.Text = "Dài a:"; TxtParam1.Text = "4";
+                    LblParam2.Text = "Rộng b:"; TxtParam2.Text = "3";
+                    LblParam3.Text = "Cao h:"; TxtParam3.Text = "3.5";
+                    LblParam4.Text = "Đỉnh đáy:"; TxtParam4.Text = "A, B, C, D";
                     ChkOption.Visibility = Visibility.Collapsed;
                     break;
 
                 case "cylinder":
-                case "cone":
-                    LblParam1.Text = "Bán kính r:"; TxtParam1.Text = "2.5";
-                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "4.5";
+                    LblParam1.Text = "Bán kính đáy R:"; TxtParam1.Text = "2";
+                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "4";
                     GridParam3.Visibility = Visibility.Collapsed;
-                    GridParam4.Visibility = Visibility.Collapsed;
-                    ChkOption.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Hai tâm:"; TxtParam4.Text = "O, O'";
+                    ChkOption.Content = "Hiển thị trục đối xứng OO'";
+                    break;
+
+                case "cone":
+                    LblParam1.Text = "Bán kính đáy R:"; TxtParam1.Text = "2.5";
+                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "4";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Đỉnh & Tâm:"; TxtParam4.Text = "S, O";
+                    ChkOption.Content = "Hiển thị đường sinh SA";
                     break;
 
                 case "sphere":
-                    LblParam1.Text = "Bán kính R:"; TxtParam1.Text = "3";
+                    LblParam1.Text = "Bán kính R:"; TxtParam1.Text = "2.5";
                     GridParam2.Visibility = Visibility.Collapsed;
                     GridParam3.Visibility = Visibility.Collapsed;
-                    GridParam4.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Tên tâm:"; TxtParam4.Text = "O";
+                    ChkOption.Content = "Đổ bóng cầu 3D";
+                    break;
+
+                // Graph
+                case "graph_quad":
+                    LblParam1.Text = "Hệ số a (x²):"; TxtParam1.Text = "1";
+                    LblParam2.Text = "Hệ số b (x):"; TxtParam2.Text = "-2";
+                    LblParam3.Text = "Hệ số tự do c:"; TxtParam3.Text = "-1";
+                    LblParam4.Text = "Miền x [min, max]:"; TxtParam4.Text = "-2, 4";
+                    ChkOption.Content = "Hiển thị tọa độ đỉnh I";
+                    break;
+
+                case "graph_cubic":
+                    LblParam1.Text = "Hệ số a (x³):"; TxtParam1.Text = "1";
+                    LblParam2.Text = "Hệ số b (x²):"; TxtParam2.Text = "-3";
+                    LblParam3.Text = "Hệ số c (x):"; TxtParam3.Text = "0";
+                    LblParam4.Text = "Hệ số tự do d:"; TxtParam4.Text = "2";
+                    ChkOption.Content = "Hiển thị 2 điểm cực trị";
+                    break;
+
+                case "graph_quartic":
+                    LblParam1.Text = "Hệ số a (x⁴):"; TxtParam1.Text = "1";
+                    LblParam2.Text = "Hệ số b (x²):"; TxtParam2.Text = "-2";
+                    LblParam3.Text = "Hệ số c:"; TxtParam3.Text = "-1";
+                    LblParam4.Text = "Miền x [min, max]:"; TxtParam4.Text = "-3, 3";
                     ChkOption.Visibility = Visibility.Collapsed;
                     break;
 
+                case "graph_trig":
+                    LblParam1.Text = "Biên độ A:"; TxtParam1.Text = "2";
+                    LblParam2.Text = "Tần số omega:"; TxtParam2.Text = "1";
+                    LblParam3.Text = "Hàm số (sin/cos):"; TxtParam3.Text = "sin";
+                    LblParam4.Text = "Miền x:"; TxtParam4.Text = "-2*pi, 2*pi";
+                    ChkOption.Content = "Hiển thị các mốc pi trên trục";
+                    break;
+
+                case "graph_rational":
+                    LblParam1.Text = "Tử số (ax + b):"; TxtParam1.Text = "2, 1";
+                    LblParam2.Text = "Mẫu số (cx + d):"; TxtParam2.Text = "1, -1";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Miền x [min, max]:"; TxtParam4.Text = "-4, 6";
+                    ChkOption.Content = "Vẽ 2 đường tiệm cận nét đứt";
+                    break;
+
+                // Charts
+                case "chart_bar":
+                    LblParam1.Text = "Dữ liệu (Giá trị):"; TxtParam1.Text = "25, 40, 18, 32";
+                    LblParam2.Text = "Nhãn các cột:"; TxtParam2.Text = "Lớp A, Lớp B, Lớp C, Lớp D";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Tiêu đề biểu đồ:"; TxtParam4.Text = "Số học sinh đạt điểm giỏi";
+                    ChkOption.Content = "Hiển thị số liệu trên đỉnh cột";
+                    break;
+
+                case "chart_pie":
+                    LblParam1.Text = "Phần trăm (%):"; TxtParam1.Text = "40, 30, 20, 10";
+                    LblParam2.Text = "Nhãn thành phần:"; TxtParam2.Text = "Toán, Lý, Hóa, Sinh";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Tiêu đề:"; TxtParam4.Text = "Cơ cấu môn thi KHTN";
+                    ChkOption.Content = "Vẽ chú thích Legend bên cạnh";
+                    break;
+
+                case "chart_line":
+                case "chart_area":
+                    LblParam1.Text = "Dữ liệu Y:"; TxtParam1.Text = "12, 19, 28, 35, 42";
+                    LblParam2.Text = "Mốc thời gian X:"; TxtParam2.Text = "2021, 2022, 2023, 2024, 2025";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Tên chỉ tiêu:"; TxtParam4.Text = "Tỷ lệ đỗ tốt nghiệp (%)";
+                    ChkOption.Content = "Đổ màu vùng dưới đường (Area)";
+                    break;
+
+                // tkz-tab
                 case "tab_cubic":
-                    LblParam1.Text = "Hệ số a (>0 hay <0):"; TxtParam1.Text = "1";
-                    LblParam2.Text = "2 điểm cực trị x1, x2:"; TxtParam2.Text = "0, 2";
-                    LblParam3.Text = "2 giá trị y1, y2:"; TxtParam3.Text = "4, 0";
-                    GridParam4.Visibility = Visibility.Collapsed;
-                    ChkOption.Visibility = Visibility.Collapsed;
+                    LblParam1.Text = "Điểm cực trị x1, x2:"; TxtParam1.Text = "0, 2";
+                    LblParam2.Text = "Giá trị y cực trị:"; TxtParam2.Text = "2, -2";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Dấu f'(x) (+/-):"; TxtParam4.Text = "+, -, +";
+                    ChkOption.Content = "Có dòng xét dấu đạo hàm f'(x)";
                     break;
 
                 case "tab_quartic":
-                    LblParam1.Text = "Hệ số a (>0 hay <0):"; TxtParam1.Text = "1";
-                    LblParam2.Text = "3 cực trị x1,x2,x3:"; TxtParam2.Text = "-1, 0, 1";
-                    LblParam3.Text = "3 giá trị y1,y2,y3:"; TxtParam3.Text = "-1, 3, -1";
-                    GridParam4.Visibility = Visibility.Collapsed;
+                    LblParam1.Text = "3 điểm cực trị:"; TxtParam1.Text = "-1, 0, 1";
+                    LblParam2.Text = "Giá trị y cực trị:"; TxtParam2.Text = "0, 1, 0";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Dấu đạo hàm:"; TxtParam4.Text = "-, +, -, +";
                     ChkOption.Visibility = Visibility.Collapsed;
                     break;
 
                 case "tab_rational":
-                    LblParam1.Text = "Tiệm cận đứng x0:"; TxtParam1.Text = "1";
+                    LblParam1.Text = "Điểm gián đoạn x0:"; TxtParam1.Text = "1";
                     LblParam2.Text = "Tiệm cận ngang y0:"; TxtParam2.Text = "2";
                     GridParam3.Visibility = Visibility.Collapsed;
-                    GridParam4.Visibility = Visibility.Collapsed;
-                    ChkOption.Content = "Đồng biến (y' > 0)";
-                    ChkOption.IsChecked = true;
-                    break;
-
-                case "tab_sign_lin":
-                    LblParam1.Text = "Nghiệm x0:"; TxtParam1.Text = "2";
-                    GridParam2.Visibility = Visibility.Collapsed;
-                    GridParam3.Visibility = Visibility.Collapsed;
-                    GridParam4.Visibility = Visibility.Collapsed;
-                    ChkOption.Content = "Hệ số a > 0";
-                    ChkOption.IsChecked = true;
+                    LblParam4.Text = "Dấu đạo hàm (+/-):"; TxtParam4.Text = "-, -";
+                    ChkOption.Content = "Dùng ký hiệu 2 vạch đứng (d)";
                     break;
 
                 case "tab_sign_quad":
-                    LblParam1.Text = "2 Nghiệm x1, x2:"; TxtParam1.Text = "-1, 3";
+                    LblParam1.Text = "2 nghiệm x1, x2:"; TxtParam1.Text = "1, 3";
                     GridParam2.Visibility = Visibility.Collapsed;
                     GridParam3.Visibility = Visibility.Collapsed;
-                    GridParam4.Visibility = Visibility.Collapsed;
-                    ChkOption.Content = "Hệ số a > 0 (Trong trái ngoài cùng)";
-                    ChkOption.IsChecked = true;
-                    break;
-
-                case "graph_quad":
-                    LblParam1.Text = "Hệ số a, b, c:"; TxtParam1.Text = "1, -2, -1";
-                    LblParam2.Text = "Khoảng vẽ [xmin, xmax]:"; TxtParam2.Text = "-2, 4";
-                    GridParam3.Visibility = Visibility.Collapsed;
-                    GridParam4.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Dấu tam thức:"; TxtParam4.Text = "+, -, +";
                     ChkOption.Visibility = Visibility.Collapsed;
                     break;
 
-                case "graph_cubic":
-                    LblParam1.Text = "Hệ số a, b, c, d:"; TxtParam1.Text = "1, -3, 0, 1";
-                    LblParam2.Text = "Khoảng vẽ [xmin, xmax]:"; TxtParam2.Text = "-2, 3";
-                    GridParam3.Visibility = Visibility.Collapsed;
-                    GridParam4.Visibility = Visibility.Collapsed;
-                    ChkOption.Visibility = Visibility.Collapsed;
+                default:
+                    LblParam1.Text = "Thông số 1:";
+                    LblParam2.Text = "Thông số 2:";
+                    LblParam3.Text = "Thông số 3:";
+                    LblParam4.Text = "Tên đỉnh / Nhãn:";
                     break;
             }
-        }
-
-        private void RegenerateCode()
-        {
-            if (TxtResultCode == null || CmbShapeType?.SelectedItem is not ComboBoxItem item || item.Tag is not string tag)
-                return;
-
-            try
-            {
-                string code = tag switch
-                {
-                    "tri_right" => TikzShapeGenerators.GenerateRightTriangle(
-                        ParseDouble(TxtParam1.Text, 4), ParseDouble(TxtParam2.Text, 3)),
-                    "tri_equi" => TikzShapeGenerators.GenerateEquilateralTriangle(
-                        ParseDouble(TxtParam1.Text, 4)),
-                    "tri_iso" => TikzShapeGenerators.GenerateIsoscelesTriangle(
-                        ParseDouble(TxtParam1.Text, 4), ParseDouble(TxtParam2.Text, 3.5)),
-                    "rect" => TikzShapeGenerators.GenerateRectangle(
-                        ParseDouble(TxtParam1.Text, 5), ParseDouble(TxtParam2.Text, 3)),
-                    "square" => TikzShapeGenerators.GenerateSquare(
-                        ParseDouble(TxtParam1.Text, 4)),
-                    "parallelogram" => TikzShapeGenerators.GenerateParallelogram(
-                        ParseDouble(TxtParam1.Text, 5), ParseDouble(TxtParam2.Text, 3), ParseDouble(TxtParam3.Text, 1.5)),
-                    "trapezoid" => TikzShapeGenerators.GenerateTrapezoid(
-                        ParseDouble(TxtParam1.Text, 6), ParseDouble(TxtParam2.Text, 3), ParseDouble(TxtParam3.Text, 3)),
-                    "circle" => TikzShapeGenerators.GenerateCircle(
-                        0, 0, ParseDouble(TxtParam1.Text, 3), TxtParam4.Text.Trim()),
-                    "oxy" => TikzShapeGenerators.GenerateOxyAxis(-4, 4, -3, 4),
-                    "pyramid" => TikzShapeGenerators.GeneratePyramid(
-                        ParseDouble(TxtParam1.Text, 4), ParseDouble(TxtParam2.Text, 4.5)),
-                    "tetrahedron" => TikzShapeGenerators.GenerateTetrahedron(
-                        ParseDouble(TxtParam1.Text, 4), ParseDouble(TxtParam2.Text, 4.5)),
-                    "cuboid" => TikzShapeGenerators.GenerateCuboid(
-                        ParseDouble(TxtParam1.Text, 4), ParseDouble(TxtParam2.Text, 3), ParseDouble(TxtParam3.Text, 3.5)),
-                    "cube" => TikzShapeGenerators.GenerateCube(
-                        ParseDouble(TxtParam1.Text, 3.5)),
-                    "cylinder" => TikzShapeGenerators.GenerateCylinder(
-                        ParseDouble(TxtParam1.Text, 2.5), ParseDouble(TxtParam2.Text, 4.5)),
-                    "cone" => TikzShapeGenerators.GenerateCone(
-                        ParseDouble(TxtParam1.Text, 2.5), ParseDouble(TxtParam2.Text, 4.5)),
-                    "sphere" => TikzShapeGenerators.GenerateSphere(
-                        ParseDouble(TxtParam1.Text, 3)),
-                    "tab_cubic" => TikzShapeGenerators.GenerateCubicTable(
-                        ParseDouble(TxtParam1.Text, 1), 0, 2, 4, 0),
-                    "tab_quartic" => TikzShapeGenerators.GenerateQuarticTable(
-                        ParseDouble(TxtParam1.Text, 1), -1, 0, 1, -1, 3, -1),
-                    "tab_rational" => TikzShapeGenerators.GenerateRationalTable(
-                        ParseDouble(TxtParam1.Text, 1), ParseDouble(TxtParam2.Text, 2), ChkOption.IsChecked == true),
-                    "tab_sign_lin" => TikzShapeGenerators.GenerateSignTableLinear(
-                        ParseDouble(TxtParam1.Text, 2), ChkOption.IsChecked == true),
-                    "tab_sign_quad" => TikzShapeGenerators.GenerateSignTableQuadratic(
-                        -1, 3, ChkOption.IsChecked == true),
-                    "graph_quad" => TikzShapeGenerators.GenerateParabolaGraph(1, -2, -1),
-                    "graph_cubic" => TikzShapeGenerators.GenerateCubicGraph(1, -3, 0, 1),
-                    _ => "% Chưa có mã cho loại hình này"
-                };
-
-                TxtResultCode.Text = code;
-            }
-            catch (Exception ex)
-            {
-                TxtResultCode.Text = $"% Lỗi sinh mã: {ex.Message}";
-            }
-        }
-
-        private static double ParseDouble(string input, double defaultValue)
-        {
-            if (double.TryParse(input?.Trim(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double val))
-            {
-                return val;
-            }
-            if (double.TryParse(input?.Trim(), out double valLocal))
-            {
-                return valLocal;
-            }
-            return defaultValue;
         }
 
         private void Param_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (_isInitializing) return;
             RegenerateCode();
         }
 
         private void ChkOption_Changed(object sender, RoutedEventArgs e)
+        {
+            if (_isInitializing) return;
+            RegenerateCode();
+        }
+
+        private void RegenerateCode()
+        {
+            if (TxtResultCode == null) return;
+
+            string p1 = TxtParam1?.Text?.Trim() ?? "4";
+            string p2 = TxtParam2?.Text?.Trim() ?? "3";
+            string p3 = TxtParam3?.Text?.Trim() ?? "2";
+            string p4 = TxtParam4?.Text?.Trim() ?? "A,B,C,D";
+            bool opt = ChkOption?.IsChecked ?? true;
+
+            TxtResultCode.Text = GenerateTikzCodeForShape(_currentShapeTag, p1, p2, p3, p4, opt);
+        }
+
+        private static string GenerateTikzCodeForShape(string tag, string p1, string p2, string p3, string p4, bool opt)
+        {
+            var sb = new StringBuilder();
+            double.TryParse(p1, NumberStyles.Any, CultureInfo.InvariantCulture, out double v1);
+            double.TryParse(p2, NumberStyles.Any, CultureInfo.InvariantCulture, out double v2);
+            double.TryParse(p3, NumberStyles.Any, CultureInfo.InvariantCulture, out double v3);
+            if (v1 <= 0) v1 = 4;
+            if (v2 <= 0) v2 = 3;
+
+            switch (tag)
+            {
+                case "tri_general":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine($@"  \coordinate[label=below left:$A$] (A) at (0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above:$C$] (C) at ({Math.Round(v1 * 0.4, 2)},{v2});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C)--cycle;");
+                    if (opt)
+                    {
+                        sb.AppendLine($@"  \coordinate[label=below:$H$] (H) at ({Math.Round(v1 * 0.4, 2)},0);");
+                        sb.AppendLine(@"  \draw[dashed] (C)--(H);");
+                        sb.AppendLine(@"  \draw (H) +(0.2,0) -- +(0.2,0.2) -- +(0,0.2);");
+                    }
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "tri_right":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above left:$C$] (C) at (0,{v2});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C)--cycle;");
+                    if (opt)
+                    {
+                        sb.AppendLine(@"  % Góc vuông tại A");
+                        sb.AppendLine(@"  \draw (A) +(0.3,0) -- +(0.3,0.3) -- +(0,0.3);");
+                    }
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "tri_equi":
+                    double hEqui = Math.Round(v1 * Math.Sqrt(3) / 2.0, 2);
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above:$C$] (C) at ({Math.Round(v1 / 2.0, 2)},{hEqui});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C)--cycle;");
+                    if (opt)
+                    {
+                        sb.AppendLine($@"  \coordinate[label=below:$H$] (H) at ({Math.Round(v1 / 2.0, 2)},0);");
+                        sb.AppendLine(@"  \draw[dashed] (C)--(H);");
+                    }
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "tri_iso":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above:$C$] (C) at ({Math.Round(v1 / 2.0, 2)},{v2});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C)--cycle;");
+                    if (opt)
+                    {
+                        sb.AppendLine($@"  \coordinate[label=below:$H$] (H) at ({Math.Round(v1 / 2.0, 2)},0);");
+                        sb.AppendLine(@"  \draw[dashed] (C)--(H);");
+                    }
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "square":
+                case "rect":
+                    double heightRect = (tag == "square") ? v1 : v2;
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above right:$C$] (C) at ({v1},{heightRect});");
+                    sb.AppendLine($@"  \coordinate[label=above left:$D$] (D) at (0,{heightRect});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C)--(D)--cycle;");
+                    if (opt)
+                    {
+                        sb.AppendLine(@"  \draw[dashed] (A)--(C) (B)--(D);");
+                    }
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "parallelogram":
+                    double skew = v3 > 0 ? v3 : 1.5;
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above right:$C$] (C) at ({Math.Round(v1 + skew, 2)},{v2});");
+                    sb.AppendLine($@"  \coordinate[label=above left:$D$] (D) at ({skew},{v2});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C)--(D)--cycle;");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "trapezoid":
+                    double offset = Math.Round((v1 - v2) / 2.0, 2);
+                    double hTrap = v3 > 0 ? v3 : 3;
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above right:$C$] (C) at ({Math.Round(v1 - offset, 2)},{hTrap});");
+                    sb.AppendLine($@"  \coordinate[label=above left:$D$] (D) at ({offset},{hTrap});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C)--(D)--cycle;");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "circle":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine(@"  \coordinate (O) at (0,0);");
+                    sb.AppendLine($@"  \draw (O) circle ({v1}cm);");
+                    sb.AppendLine(@"  \fill (O) circle (1.5pt) node[below]{$O$};");
+                    if (opt)
+                    {
+                        sb.AppendLine($@"  \coordinate[label=right:$A$] (A) at ({v1},0);");
+                        sb.AppendLine(@"  \draw[dashed] (O)--(A) node[midway,above]{$R$};");
+                        sb.AppendLine(@"  \draw (A) +(0,-1.5) -- +(0,1.5);");
+                    }
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "ellipse":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine($@"  \draw (0,0) ellipse ({v1}cm and {v2}cm);");
+                    sb.AppendLine(@"  \fill (0,0) circle (1.5pt) node[below left]{$O$};");
+                    if (opt)
+                    {
+                        sb.AppendLine($@"  \draw[->] (-{v1 + 0.8},0) -- ({v1 + 0.8},0) node[right]{{$x$}};");
+                        sb.AppendLine($@"  \draw[->] (0,-{v2 + 0.6}) -- (0,{v2 + 0.6}) node[above]{{$y$}};");
+                    }
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "segment":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0);");
+                    string arrowStyle = opt ? "->, thick" : "thick";
+                    sb.AppendLine($@"  \draw[{arrowStyle}] (A)--(B);");
+                    sb.AppendLine(@"  \fill (A) circle (1.5pt) (B) circle (1.5pt);");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                // 3D
+                case "pyramid":
+                    double halfPyr = Math.Round(v1 / 2.0, 2);
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick,");
+                    sb.AppendLine(@"    x={(1cm,0cm)}, y={(0.4cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
+                    sb.AppendLine($@"  \coordinate[label=right:$C$] (C) at ({v1},{v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=left:$D$] (D) at (0,{v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above:$S$] (S) at ({halfPyr},{halfPyr},{v2});");
+                    sb.AppendLine(@"  % Đáy");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C);");
+                    sb.AppendLine(@"  \draw[dashed] (C)--(D)--(A);");
+                    sb.AppendLine(@"  % Cạnh bên");
+                    sb.AppendLine(@"  \draw (S)--(A) (S)--(B) (S)--(C);");
+                    sb.AppendLine(@"  \draw[dashed] (S)--(D);");
+                    sb.AppendLine(@"  \draw[dashed] (A)--(C) (B)--(D);");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "tetrahedron":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick,");
+                    sb.AppendLine(@"    x={(1cm,0cm)}, y={(0.4cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
+                    sb.AppendLine($@"  \coordinate[label=right:$C$] (C) at ({Math.Round(v1 * 0.5, 2)},{Math.Round(v1 * 0.86, 2)},0);");
+                    sb.AppendLine($@"  \coordinate[label=above:$S$] (S) at ({Math.Round(v1 * 0.5, 2)},{Math.Round(v1 * 0.3, 2)},{v2});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(S)--cycle;");
+                    sb.AppendLine(@"  \draw (B)--(C)--(S);");
+                    sb.AppendLine(@"  \draw[dashed] (A)--(C);");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "cuboid":
+                    double hCub = v3 > 0 ? v3 : 3.5;
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.1, thick,");
+                    sb.AppendLine(@"    x={(1cm,0cm)}, y={(0.4cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
+                    sb.AppendLine($@"  \coordinate[label=right:$C$] (C) at ({v1},{v2},0);");
+                    sb.AppendLine($@"  \coordinate[label=left:$D$] (D) at (0,{v2},0);");
+                    sb.AppendLine($@"  \coordinate[label=above left:$A'$] (A1) at (0,0,{hCub});");
+                    sb.AppendLine($@"  \coordinate[label=above right:$B'$] (B1) at ({v1},0,{hCub});");
+                    sb.AppendLine($@"  \coordinate[label=above right:$C'$] (C1) at ({v1},{v2},{hCub});");
+                    sb.AppendLine($@"  \coordinate[label=above left:$D'$] (D1) at (0,{v2},{hCub});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C);");
+                    sb.AppendLine(@"  \draw[dashed] (C)--(D)--(A);");
+                    sb.AppendLine(@"  \draw (A1)--(B1)--(C1)--(D1)--cycle;");
+                    sb.AppendLine(@"  \draw (A)--(A1) (B)--(B1) (C)--(C1);");
+                    sb.AppendLine(@"  \draw[dashed] (D)--(D1);");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "cylinder":
+                    double eCyl = Math.Round(v1 * 0.35, 2);
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine($@"  \draw (0,0) ellipse ({v1}cm and {eCyl}cm);");
+                    sb.AppendLine($@"  \draw (0,{v2}) ellipse ({v1}cm and {eCyl}cm);");
+                    sb.AppendLine($@"  \draw (-{v1},0)--(-{v1},{v2});");
+                    sb.AppendLine($@"  \draw ({v1},0)--({v1},{v2});");
+                    sb.AppendLine($@"  \draw[dashed] (0,0)--(0,{v2});");
+                    sb.AppendLine(@"  \fill (0,0) circle (1.5pt) node[below]{$O$};");
+                    sb.AppendLine($@"  \fill (0,{v2}) circle (1.5pt) node[above]{{$O'$}};");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "cone":
+                    double eCone = Math.Round(v1 * 0.35, 2);
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine($@"  \draw (0,0) ellipse ({v1}cm and {eCone}cm);");
+                    sb.AppendLine($@"  \coordinate[label=above:$S$] (S) at (0,{v2});");
+                    sb.AppendLine($@"  \draw (-{v1},0)--(S)--({v1},0);");
+                    sb.AppendLine(@"  \draw[dashed] (0,0)--(S);");
+                    sb.AppendLine(@"  \fill (0,0) circle (1.5pt) node[below right]{$O$};");
+                    sb.AppendLine(@"  \fill (S) circle (1.5pt);");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "sphere":
+                    double eSph = Math.Round(v1 * 0.35, 2);
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    if (opt) sb.AppendLine($@"  \shade[ball color=blue!15!white, opacity=0.6] (0,0) circle ({v1}cm);");
+                    sb.AppendLine($@"  \draw (0,0) circle ({v1}cm);");
+                    sb.AppendLine($@"  \draw[dashed] (0,0) ellipse ({v1}cm and {eSph}cm);");
+                    sb.AppendLine(@"  \fill (0,0) circle (1.5pt) node[below right]{$O$};");
+                    sb.AppendLine($@"  \draw[<->] (0,0)--({v1},0) node[midway,above]{{$R={v1}$}};");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                // Graphs
+                case "graph_quad":
+                    sb.AppendLine(@"\begin{tikzpicture}");
+                    sb.AppendLine(@"\begin{axis}[");
+                    sb.AppendLine(@"  axis lines=center, xlabel={$x$}, ylabel={$y$},");
+                    sb.AppendLine(@"  xmin=-4, xmax=5, ymin=-5, ymax=6,");
+                    sb.AppendLine(@"  grid=major, grid style={gray!30},");
+                    sb.AppendLine(@"  width=9cm, height=7cm, samples=100,");
+                    sb.AppendLine(@"]");
+                    sb.AppendLine($@"  \addplot[blue, very thick, domain=-3:4] {{{p1}*x^2 + {p2}*x + ({p3})}};");
+                    sb.AppendLine($@"  \addlegendentry{{$y = {p1}x^2 + ({p2})x + ({p3})$}}");
+                    sb.AppendLine(@"\end{axis}");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "graph_cubic":
+                    sb.AppendLine(@"\begin{tikzpicture}");
+                    sb.AppendLine(@"\begin{axis}[");
+                    sb.AppendLine(@"  axis lines=center, xlabel={$x$}, ylabel={$y$},");
+                    sb.AppendLine(@"  xmin=-3, xmax=4, ymin=-5, ymax=7,");
+                    sb.AppendLine(@"  grid=major, grid style={gray!30},");
+                    sb.AppendLine(@"  width=9.5cm, height=7cm, samples=120,");
+                    sb.AppendLine(@"]");
+                    sb.AppendLine($@"  \addplot[blue, very thick, domain=-2.5:3.5] {{{p1}*x^3 + ({p2})*x^2 + ({p3})*x + ({p4})}};");
+                    sb.AppendLine(@"\end{axis}");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "graph_trig":
+                    sb.AppendLine(@"\begin{tikzpicture}");
+                    sb.AppendLine(@"\begin{axis}[");
+                    sb.AppendLine(@"  axis lines=center, xlabel={$x$}, ylabel={$y$},");
+                    sb.AppendLine(@"  xtick={-6.28, -3.14, 0, 3.14, 6.28},");
+                    sb.AppendLine(@"  xticklabels={$-2\pi$, $-\pi$, $0$, $\pi$, $2\pi$},");
+                    sb.AppendLine(@"  xmin=-7, xmax=7, ymin=-3.5, ymax=3.5,");
+                    sb.AppendLine(@"  grid=major, grid style={gray!30},");
+                    sb.AppendLine(@"  width=10.5cm, height=6cm, samples=200,");
+                    sb.AppendLine(@"]");
+                    sb.AppendLine($@"  \addplot[blue, very thick, domain=-6.5:6.5] {{{v1}*sin(deg({v2}*x))}};");
+                    sb.AppendLine($@"  \addlegendentry{{$y = {v1}\sin({v2}x)$}}");
+                    sb.AppendLine(@"\end{axis}");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                // Charts
+                case "chart_bar":
+                    sb.AppendLine(@"\begin{tikzpicture}");
+                    sb.AppendLine(@"\begin{axis}[");
+                    sb.AppendLine(@"  ybar, ymin=0,");
+                    sb.AppendLine(@"  ylabel={Số lượng},");
+                    sb.AppendLine(@"  symbolic x coords={Lớp A, Lớp B, Lớp C, Lớp D},");
+                    sb.AppendLine(@"  xtick=data,");
+                    sb.AppendLine(@"  nodes near coords,");
+                    sb.AppendLine(@"  bar width=18pt, width=9cm, height=6.5cm,");
+                    sb.AppendLine(@"]");
+                    sb.AppendLine(@"  \addplot[fill=cyan!60!blue] coordinates {(Lớp A,25) (Lớp B,40) (Lớp C,18) (Lớp D,32)};");
+                    sb.AppendLine(@"\end{axis}");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "tab_cubic":
+                    sb.AppendLine(@"\begin{tikzpicture}");
+                    sb.AppendLine(@"\tkzTabInit[lgt=1.5,espcl=2.5]");
+                    sb.AppendLine(@" {$x$ / 1, $f'(x)$ / 1, $f(x)$ / 2}");
+                    sb.AppendLine(@" {$-\infty$, $0$, $2$, $+\infty$}");
+                    sb.AppendLine(@"\tkzTabLine{,+,0,-,0,+,}");
+                    sb.AppendLine(@"\tkzTabVar{- / $-\infty$, + / $2$, - / $-2$, + / $+\infty$}");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                default:
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine(@"  \draw (0,0) rectangle (4,3);");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+            }
+
+            return sb.ToString();
+        }
+
+        private void BtnPreviewCode_Click(object sender, RoutedEventArgs e)
         {
             RegenerateCode();
         }
 
         private void BtnInsert_Click(object sender, RoutedEventArgs e)
         {
-            GeneratedTikzCode = TxtResultCode.Text;
+            GeneratedTikzCode = TxtResultCode.Text.Trim();
             DialogResult = true;
             Close();
-        }
-
-        private void BtnCopyCode_Click(object sender, RoutedEventArgs e)
-        {
-            SafeClipboard.SetText(TxtResultCode.Text);
-            MessageBox.Show("Đã sao chép mã TikZ vào Clipboard!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)

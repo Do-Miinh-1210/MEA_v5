@@ -70,6 +70,7 @@
                     <ui:NavigationViewItem x:Name="NavItemTikz" Content="AI Vẽ hình toán TikZ" Tag="tikz" Icon="{ui:SymbolIcon Shapes24}" Click="NavItem_Click" ToolTip="Vẽ hình TikZ &amp; Đồ thị (Ctrl + 4)" />
                     <ui:NavigationViewItem x:Name="NavItemShuffle" Content="Trộn đề &amp; Phiếu OMR" Tag="shuffle" Icon="{ui:SymbolIcon ArrowShuffle24}" Click="NavItem_Click" ToolTip="Trộn mã đề thi (Ctrl + 5)" />
                     <ui:NavigationViewItem x:Name="NavItemBank" Content="Ngân hàng câu hỏi" Tag="bank" Icon="{ui:SymbolIcon Archive24}" Click="NavItem_Click" ToolTip="Ngân hàng câu hỏi (Ctrl + 6)" />
+                    <ui:NavigationViewItem x:Name="NavItemAiUsage" Content="Thống kê AI" Tag="ai_usage" Icon="{ui:SymbolIcon DataUsage24}" Click="NavItem_Click" ToolTip="Thống kê lưu lượng &amp; quota AI (Ctrl + 7)" />
                     <!-- Thẩm định đề thi (QC) đã ẩn theo yêu cầu người dùng -->
                     <ui:NavigationViewItem x:Name="NavItemQc" Content="Thẩm định đề thi (QC)" Tag="qc" Icon="{ui:SymbolIcon CheckmarkSquare24}" Click="NavItem_Click" ToolTip="Thẩm định chất lượng đề" Visibility="Collapsed" />
                 </ui:NavigationView.MenuItems>
@@ -84,11 +85,43 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
+                    <!-- Thanh Quick Action Bar Tạo đề AI (ảnh 2) -->
+                    <Border Grid.Row="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
+                            BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" Padding="12,6">
+                        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:Button x:Name="BtnQuickGen" Margin="0,0,6,0" Height="28" Padding="10,0"
+                                       Background="#D97706" Foreground="White" BorderThickness="0" CornerRadius="4"
+                                       Icon="{ui:SymbolIcon Flash24}" Content="Tạo đề nhanh" FontSize="11" FontWeight="SemiBold"
+                                       Click="BtnQuickGen_Click" ToolTip="Khởi tạo nhanh cấu trúc đề thi chuẩn BGD 2025" />
+                            <ui:Button x:Name="BtnAiMatrix" Margin="0,0,6,0" Height="28" Padding="10,0"
+                                       Background="#7C3AED" Foreground="White" BorderThickness="0" CornerRadius="4"
+                                       Icon="{ui:SymbolIcon Bot24}" Content="Tạo ma trận AI" FontSize="11" FontWeight="SemiBold"
+                                       Click="BtnAiMatrix_Click" ToolTip="Mở phân hệ ma trận và sinh khung đề bằng AI" />
+                            <ui:Button x:Name="BtnSmartPrompt" Margin="0,0,6,0" Height="28" Padding="10,0"
+                                       Background="#8B5CF6" Foreground="White" BorderThickness="0" CornerRadius="4"
+                                       Icon="{ui:SymbolIcon Chat24}" Content="Smart Prompt" FontSize="11" FontWeight="SemiBold"
+                                       Click="BtnSmartPrompt_Click" ToolTip="Nạp các prompt AI chuẩn hóa đề thi" />
+                            <ui:Button x:Name="BtnChooseSource" Margin="0,0,6,0" Height="28" Padding="10,0"
+                                       Background="#0284C7" Foreground="White" BorderThickness="0" CornerRadius="4"
+                                       Icon="{ui:SymbolIcon Target24}" Content="Nguồn tạo đề" FontSize="11" FontWeight="SemiBold"
+                                       Click="BtnChooseSource_Click" ToolTip="Chọn tệp nguồn từ máy tính để phân tích và tạo đề" />
+                            <ui:Button x:Name="BtnAiGen" Margin="0,0,6,0" Height="28" Padding="12,0"
+                                       Background="#059669" Foreground="White" BorderThickness="0" CornerRadius="4"
+                                       Icon="{ui:SymbolIcon Sparkle24}" Content="Tạo đề bằng AI" FontSize="11" FontWeight="Bold"
+                                       Click="BtnAiGen_Click" ToolTip="Kích hoạt trợ lý AI xử lý hoặc sinh đề tức thì" />
+                            <ui:Button x:Name="BtnQuickShuffle" Margin="0,0,6,0" Height="28" Padding="10,0"
+                                       Background="#0284C7" Foreground="White" BorderThickness="0" CornerRadius="4"
+                                       Icon="{ui:SymbolIcon ArrowShuffle24}" Content="Trộn đề thi" FontSize="11" FontWeight="SemiBold"
+                                       Click="BtnQuickShuffle_Click" ToolTip="Chuyển ngay sang phân hệ trộn đề hoán vị" />
+                        </WrapPanel>
+                    </Border>
+
                     <!-- Banner Thông báo Bản cập nhật mới -->
-                    <Border x:Name="BorderUpdateNotice" Grid.Row="0" Margin="16,8,16,4" Visibility="Collapsed"
+                    <Border x:Name="BorderUpdateNotice" Grid.Row="1" Margin="16,8,16,4" Visibility="Collapsed"
                             Background="#0F0284C7" BorderBrush="#330284C7" BorderThickness="1" CornerRadius="6" Padding="12,8">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -112,7 +145,7 @@
                         </Grid>
                     </Border>
 
-                    <ContentControl Grid.Row="1" x:Name="MainContentFrame" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                    <ContentControl Grid.Row="2" x:Name="MainContentFrame" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
                 </Grid>
             </Border>
         </Grid>

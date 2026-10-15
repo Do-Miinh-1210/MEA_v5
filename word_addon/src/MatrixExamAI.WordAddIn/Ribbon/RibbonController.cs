@@ -169,6 +169,19 @@ namespace MatrixExamAI.WordAddIn.Ribbon
             ThisAddIn.Current?.TaskPaneManager?.ShowTab("settings");
         }
 
+        public void OnShuffleExamClicked(Office.IRibbonControl control)
+        {
+            AddInLog.Log("Ribbon: OnShuffleExamClicked");
+            if (ThisAddIn.Current?.ExtensibilityManager != null)
+            {
+                ThisAddIn.Current.ExtensibilityManager.HandleShuffle();
+            }
+            else
+            {
+                ThisAddIn.Current?.TaskPaneManager?.ShowTab("shuffle");
+            }
+        }
+
         public bool GetIsTikzSelected(Office.IRibbonControl control)
         {
             return _isTikzSelected;
@@ -249,6 +262,9 @@ namespace MatrixExamAI.WordAddIn.Ribbon
         </group>
         <group id=""grpNormalize"" label=""Chuẩn hóa Word"">
           <button id=""btnStandardizeWord"" label=""Chuẩn hóa Word"" size=""large"" imageMso=""FileDocumentInspect"" onAction=""OnStandardizeWordClicked"" />
+        </group>
+        <group id=""grpShuffle"" label=""Trộn đề thi"">
+          <button id=""btnShuffleExam"" label=""Trộn đề thi"" size=""large"" imageMso=""AdpPrimaryKey"" onAction=""OnShuffleExamClicked"" />
         </group>
         <group id=""grpSettings"" label=""Cài đặt API"">
           <button id=""btnApiSettings"" label=""Cài đặt API"" size=""large"" imageMso=""ServerProperties"" onAction=""OnApiSettingsClicked"" />

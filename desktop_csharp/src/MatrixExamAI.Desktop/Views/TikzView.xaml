@@ -108,11 +108,11 @@
                                    ToolTip="AI phân tích đề bài / ảnh để vẽ hình TikZ chuẩn WebTikZ (Ctrl+Shift+G)"
                                    Click="BtnGenerateTikz_Click" />
 
-                        <!-- Dựng hình: Màu Amber #D97706 -->
+                        <!-- Tạo hình trực quan: Màu Cam Hổ Phách #D97706 -->
                         <ui:Button x:Name="BtnShapeBuilder" Background="#D97706" Foreground="White" FontWeight="SemiBold"
-                                   Icon="{ui:SymbolIcon Shapes24}" Content="Dựng hình..."
+                                   Icon="{ui:SymbolIcon Shapes24}" Content="Tạo hình"
                                    Height="26" Padding="8,0" Margin="0,0,4,0" FontSize="10.5"
-                                   ToolTip="Mở công cụ dựng hình tham số trực quan (Tam giác, Chóp, Lăng trụ, Bảng biến thiên...)"
+                                   ToolTip="Mở công cụ vẽ hình trực quan (Hình phẳng, Hình không gian, Đồ thị, Biểu đồ)"
                                    Click="BtnShapeBuilder_Click" />
 
                         <!-- Vẽ lại: Màu Vàng cam #F59E0B -->
@@ -340,6 +340,14 @@
 
                             <!-- Cụm phải: Action Export Buttons & Popout Viewer (WrapPanel để không bao giờ bị dồn mất nút) -->
                             <WrapPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                <ui:Button x:Name="BtnCopyImage" Background="#2563EB" Foreground="White" FontWeight="SemiBold"
+                                           Content="Copy ảnh" Height="24" Padding="6,0" Margin="0,0,3,2" FontSize="10" 
+                                           ToolTip="Sao chép ảnh đã render vào Clipboard để dán nhanh (Ctrl+C)"
+                                           Click="BtnCopyImage_Click" />
+                                <ui:Button x:Name="BtnCopyCode" Background="#7C3AED" Foreground="White" FontWeight="SemiBold"
+                                           Content="Copy mã" Height="24" Padding="6,0" Margin="0,0,3,2" FontSize="10" 
+                                           ToolTip="Sao chép toàn bộ mã nguồn TikZ vào Clipboard"
+                                           Click="BtnCopyCode_Click" />
                                 <ui:Button x:Name="BtnOpenViewerWindow" Appearance="Secondary" 
                                            Icon="{ui:SymbolIcon FullScreenMaximize24}" 
                                            Content="Xem riêng" Height="24" Padding="6,0" Margin="0,0,3,2" FontSize="10" 
@@ -358,6 +366,11 @@
                                            Content="Lưu PNG" Height="24" Padding="6,0" Margin="0,0,3,2" FontSize="10" 
                                            ToolTip="Lưu file ảnh PNG (Ctrl+S)"
                                            Click="BtnSavePng_Click" />
+                                <ui:Button x:Name="BtnOverleaf" Background="#16A34A" Foreground="White" FontWeight="Bold"
+                                           Icon="{ui:SymbolIcon Globe24}" Content="Overleaf"
+                                           Height="24" Padding="8,0" Margin="0,0,3,2" FontSize="10" 
+                                           ToolTip="Mở mã TikZ trên trình biên dịch Overleaf trực tuyến"
+                                           Click="BtnOverleaf_Click" />
                                 <ui:Button x:Name="BtnInsertWord" Background="#0284C7" Foreground="White" FontWeight="Bold"
                                            Icon="{ui:SymbolIcon DocumentArrowRight24}" Content="Chèn Word"
                                            Height="24" Padding="8,0" Margin="0,0,0,2" FontSize="10.5" 

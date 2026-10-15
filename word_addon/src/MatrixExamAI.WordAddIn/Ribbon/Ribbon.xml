@@ -102,7 +102,19 @@
                   keytip="C" />
         </group>
 
-        <!-- NHÓM 6: CÀI ĐẶT API -->
+        <!-- NHÓM 6: TRỘN ĐỀ THI -->
+        <group id="grpShuffle" label="Trộn đề thi">
+          <button id="btnShuffleExam"
+                  label="Trộn đề thi"
+                  size="large"
+                  imageMso="AdpPrimaryKey"
+                  screentip="Trộn đề thi &amp; Hoán vị"
+                  supertip="Trộn đề trắc nghiệm và tự luận từ tài liệu Word hiện tại, hoán vị câu hỏi và phương án, tạo các mã đề (101, 102, 103...)."
+                  onAction="OnShuffleExamClicked"
+                  keytip="R" />
+        </group>
+
+        <!-- NHÓM 7: CÀI ĐẶT API -->
         <group id="grpSettings" label="Cài đặt API">
           <button id="btnApiSettings"
                   label="Cài đặt API"

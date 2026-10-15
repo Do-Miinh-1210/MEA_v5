@@ -55,6 +55,10 @@ namespace MatrixExamAI.Desktop.Views
             Loaded += (s, e) => UpdateModeButtonStyles();
         }
 
+        public void TriggerConvertWithAi() => BtnConvert_Click(this, new RoutedEventArgs());
+        public void TriggerOpenFile() => BtnOpenFile_Click(this, new RoutedEventArgs());
+        public void TriggerAiPrompt() => BtnCopyPrompt_Click(this, new RoutedEventArgs());
+
         public void SetLayoutMode(ConvertLayoutMode mode)
         {
             _currentLayoutMode = mode;

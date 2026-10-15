@@ -17,6 +17,7 @@ namespace MatrixExamAI.Desktop
         private readonly ShuffleView _shuffleView;
         private readonly QuestionBankView _questionBankView;
         private readonly QcView _qcView;
+        private readonly AiUsageView _aiUsageView;
         private readonly SettingsView _settingsView;
 
         public DashboardView DashboardView => _dashboardView;
@@ -26,6 +27,7 @@ namespace MatrixExamAI.Desktop
         public ShuffleView ShuffleView => _shuffleView;
         public QuestionBankView QuestionBankView => _questionBankView;
         public QcView QcView => _qcView;
+        public AiUsageView AiUsageView => _aiUsageView;
         public SettingsView SettingsView => _settingsView;
         public string CurrentNavigationTag { get; private set; } = "dashboard";
 
@@ -43,7 +45,11 @@ namespace MatrixExamAI.Desktop
             _shuffleView = new ShuffleView();
             _questionBankView = new QuestionBankView();
             _qcView = new QcView();
+            _aiUsageView = new AiUsageView();
             _settingsView = new SettingsView();
+
+            // Kết nối nạp đề đang soạn từ ConvertView sang phân hệ Trộn đề
+            _shuffleView.RequestLoadDraftFromConvert = () => _convertView.TxtInput.Text;
 
             // Lắng nghe sự kiện điều hướng từ các nút trên Dashboard
             _dashboardView.RequestNavigateToConvert += (s, e) => NavigateTo("convert");
@@ -100,6 +106,7 @@ namespace MatrixExamAI.Desktop
             NavItemTikz.IsActive = (NavItemTikz == activeItem);
             NavItemShuffle.IsActive = (NavItemShuffle == activeItem);
             NavItemBank.IsActive = (NavItemBank == activeItem);
+            NavItemAiUsage.IsActive = (NavItemAiUsage == activeItem);
             NavItemQc.IsActive = (NavItemQc == activeItem);
             NavItemSettings.IsActive = (NavItemSettings == activeItem);
         }
@@ -133,6 +140,11 @@ namespace MatrixExamAI.Desktop
                     MainContentFrame.Content = _questionBankView;
                     SetActiveItem(NavItemBank);
                     break;
+                case "ai_usage":
+                    MainContentFrame.Content = _aiUsageView;
+                    SetActiveItem(NavItemAiUsage);
+                    _aiUsageView.RefreshData();
+                    break;
                 case "qc":
                     MainContentFrame.Content = _qcView;
                     SetActiveItem(NavItemQc);
@@ -142,6 +154,71 @@ namespace MatrixExamAI.Desktop
                     SetActiveItem(NavItemSettings);
                     break;
             }
+        }
+
+        private void BtnQuickGen_Click(object sender, RoutedEventArgs e)
+        {
+            NavigateTo("convert");
+            if (string.IsNullOrWhiteSpace(_convertView.TxtInput.Text))
+            {
+                _convertView.TxtInput.Text = @"% ĐỀ THI TẠO NHANH CHUẨN BGD 2025
+PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn. Thí sinh trả lời từ câu 1 đến câu 12. Mỗi câu hỏi thí sinh chỉ chọn một phương án.
+Câu 1. Cho hàm số y = f(x) có đạo hàm f'(x) = x(x - 1)^2. Số điểm cực trị của hàm số là:
+A. 1.
+B. 2.
+C. 0.
+D. 3.
+Lời giải:
+Ta có f'(x) đổi dấu khi qua nghiệm đơn x = 0. Vậy hàm số có 1 cực trị. Chọn A.
+
+PHẦN II. Câu trắc nghiệm đúng sai. Thí sinh trả lời từ câu 1 đến câu 4. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.
+Câu 1. Cho hàm số y = x^3 - 3x + 2.
+a) Tập xác định của hàm số là R.
+b) Đạo hàm y' = 3x^2 - 3.
+c) Hàm số đồng biến trên khoảng (-1; 1).
+d) Giá trị cực đại của hàm số bằng 4.
+
+PHẦN III. Câu trắc nghiệm trả lời ngắn. Thí sinh trả lời từ câu 1 đến câu 6.
+Câu 1. Tìm giá trị lớn nhất của hàm số y = -x^2 + 4x + 1.
+Đáp án: 5
+";
+            }
+        }
+
+        private void BtnAiMatrix_Click(object sender, RoutedEventArgs e)
+        {
+            NavigateTo("matrix");
+            _examMatrixView.GenerateExamWithAi();
+        }
+
+        private void BtnSmartPrompt_Click(object sender, RoutedEventArgs e)
+        {
+            NavigateTo("convert");
+            _convertView.TriggerAiPrompt();
+        }
+
+        private void BtnChooseSource_Click(object sender, RoutedEventArgs e)
+        {
+            NavigateTo("convert");
+            _convertView.TriggerOpenFile();
+        }
+
+        private void BtnAiGen_Click(object sender, RoutedEventArgs e)
+        {
+            if (CurrentNavigationTag == "matrix")
+            {
+                _examMatrixView.GenerateExamWithAi();
+            }
+            else
+            {
+                NavigateTo("convert");
+                _convertView.TriggerConvertWithAi();
+            }
+        }
+
+        private void BtnQuickShuffle_Click(object sender, RoutedEventArgs e)
+        {
+            NavigateTo("shuffle");
         }
 
         private void NavItem_Click(object sender, RoutedEventArgs e)
@@ -318,6 +395,10 @@ namespace MatrixExamAI.Desktop
                     case Key.NumPad8:
                     case Key.OemComma:
                         NavigateTo("settings");
+                        return true;
+                    case Key.D9:
+                    case Key.NumPad9:
+                        NavigateTo("ai_usage");
                         return true;
                 }
             }

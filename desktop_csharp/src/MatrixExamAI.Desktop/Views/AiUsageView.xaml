@@ -1,0 +1,183 @@
+<UserControl x:Class="MatrixExamAI.Desktop.Views.AiUsageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             mc:Ignorable="d" 
+             d:DesignHeight="750" d:DesignWidth="1100">
+    <Grid Margin="16,12,16,14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Tiêu đề Phân hệ -->
+        <Grid Grid.Row="0" Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Border Width="32" Height="32" CornerRadius="6" Background="#0F2D52" Margin="0,0,10,0" VerticalAlignment="Center">
+                    <ui:SymbolIcon Symbol="DataPie24" FontSize="18" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="THỐNG KÊ SỬ DỤNG AI" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock Text="Theo dõi số lượng request, lưu lượng ký tự, thời gian phản hồi và hạn mức quota AI" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <!-- Toolbar Thao tác & Bộ lọc thời gian -->
+        <ui:Card Grid.Row="1" Margin="0,0,0,10" Padding="10,6">
+            <DockPanel LastChildFill="False">
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:Button x:Name="BtnRefresh" Appearance="Primary" Icon="{ui:SymbolIcon ArrowSync24}"
+                               Content="Làm mới" Height="28" Padding="12,0" FontSize="11" Margin="0,0,6,0"
+                               Click="BtnRefresh_Click" ToolTip="Tải lại số liệu thống kê mới nhất (F5)" />
+                    <ui:Button x:Name="BtnOpenLogDir" Appearance="Secondary" Icon="{ui:SymbolIcon FolderOpen24}"
+                               Content="Mở thư mục log" Height="28" Padding="10,0" FontSize="11" Margin="0,0,6,0"
+                               Click="BtnOpenLogDir_Click" ToolTip="Mở thư mục chứa file log jsonl trong Windows Explorer" />
+                    <ui:Button x:Name="BtnClearLog" Appearance="Danger" Icon="{ui:SymbolIcon Delete24}"
+                               Content="Xóa log" Height="28" Padding="10,0" FontSize="11" Margin="0,0,14,0"
+                               Click="BtnClearLog_Click" ToolTip="Xóa trắng toàn bộ lịch sử log AI" />
+
+                    <TextBlock Text="Phạm vi:" FontWeight="SemiBold" FontSize="11" VerticalAlignment="Center" Margin="0,0,8,0"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <RadioButton x:Name="RadToday" Content="Hôm nay" IsChecked="True" FontSize="11" Margin="0,0,10,0" VerticalAlignment="Center" Checked="Filter_Checked" />
+                    <RadioButton x:Name="Rad7Days" Content="7 ngày" FontSize="11" Margin="0,0,10,0" VerticalAlignment="Center" Checked="Filter_Checked" />
+                    <RadioButton x:Name="Rad30Days" Content="30 ngày" FontSize="11" Margin="0,0,10,0" VerticalAlignment="Center" Checked="Filter_Checked" />
+                    <RadioButton x:Name="RadAll" Content="Tất cả" FontSize="11" VerticalAlignment="Center" Checked="Filter_Checked" />
+                </StackPanel>
+            </DockPanel>
+        </ui:Card>
+
+        <!-- Hàng 4 Thẻ KPI: Tổng request, Tỉ lệ thành công, Tổng ký tự, Avg duration -->
+        <Grid Grid.Row="2" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Card 1: Tổng request -->
+            <ui:Card Grid.Column="0" Margin="0,0,6,0" Padding="12,10" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
+                <StackPanel HorizontalAlignment="Center">
+                    <ui:SymbolIcon Symbol="Mail24" FontSize="20" Foreground="#3B82F6" HorizontalAlignment="Center" Margin="0,0,0,4" />
+                    <TextBlock x:Name="TxtKpiTotalRequests" Text="0" FontSize="20" FontWeight="Bold" Foreground="#3B82F6" HorizontalAlignment="Center" />
+                    <TextBlock Text="Tổng request" FontSize="10.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
+                </StackPanel>
+            </ui:Card>
+
+            <!-- Card 2: Tỉ lệ thành công -->
+            <ui:Card Grid.Column="1" Margin="3,0,3,0" Padding="12,10" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
+                <StackPanel HorizontalAlignment="Center">
+                    <ui:SymbolIcon Symbol="CheckmarkCircle24" FontSize="20" Foreground="#10B981" HorizontalAlignment="Center" Margin="0,0,0,4" />
+                    <TextBlock x:Name="TxtKpiSuccessRate" Text="0.0%" FontSize="20" FontWeight="Bold" Foreground="#10B981" HorizontalAlignment="Center" />
+                    <TextBlock Text="Tỉ lệ thành công" FontSize="10.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
+                </StackPanel>
+            </ui:Card>
+
+            <!-- Card 3: Tổng ký tự -->
+            <ui:Card Grid.Column="2" Margin="3,0,3,0" Padding="12,10" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
+                <StackPanel HorizontalAlignment="Center">
+                    <ui:SymbolIcon Symbol="DocumentEdit24" FontSize="20" Foreground="#8B5CF6" HorizontalAlignment="Center" Margin="0,0,0,4" />
+                    <TextBlock x:Name="TxtKpiTotalChars" Text="0" FontSize="20" FontWeight="Bold" Foreground="#8B5CF6" HorizontalAlignment="Center" />
+                    <TextBlock Text="Tổng ký tự" FontSize="10.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
+                </StackPanel>
+            </ui:Card>
+
+            <!-- Card 4: Avg duration -->
+            <ui:Card Grid.Column="3" Margin="6,0,0,0" Padding="12,10" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
+                <StackPanel HorizontalAlignment="Center">
+                    <ui:SymbolIcon Symbol="Timer24" FontSize="20" Foreground="#F59E0B" HorizontalAlignment="Center" Margin="0,0,0,4" />
+                    <TextBlock x:Name="TxtKpiAvgDuration" Text="—" FontSize="20" FontWeight="Bold" Foreground="#F59E0B" HorizontalAlignment="Center" />
+                    <TextBlock Text="Avg duration" FontSize="10.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
+                </StackPanel>
+            </ui:Card>
+        </Grid>
+
+        <!-- Hàng 2 Panel: Theo provider & Cảnh báo quota -->
+        <Grid Grid.Row="3" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Panel Theo Provider -->
+            <ui:Card Grid.Column="0" Margin="0,0,5,0" Padding="12,8">
+                <StackPanel>
+                    <TextBlock Text="Theo provider" FontWeight="SemiBold" FontSize="11.5" Margin="0,0,0,4" />
+                    <TextBlock x:Name="TxtProviderBreakdown" Text="(Chưa có request nào)" FontSize="11" 
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" MinHeight="40" />
+                </StackPanel>
+            </ui:Card>
+
+            <!-- Panel Cảnh báo quota -->
+            <ui:Card Grid.Column="1" Margin="5,0,0,0" Padding="12,8">
+                <StackPanel>
+                    <TextBlock Text="Cảnh báo quota" FontWeight="SemiBold" FontSize="11.5" Margin="0,0,0,4" />
+                    <TextBlock x:Name="TxtQuotaWarning" Text="✓ Hôm nay chưa dùng AI" FontSize="11" 
+                               Foreground="#10B981" FontWeight="SemiBold" TextWrapping="Wrap" MinHeight="40" />
+                </StackPanel>
+            </ui:Card>
+        </Grid>
+
+        <!-- Bảng 50 request gần nhất -->
+        <ui:Card Grid.Row="4" Padding="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="50 request gần nhất" FontWeight="SemiBold" FontSize="12" Margin="0,0,0,6" />
+
+                <DataGrid x:Name="DataGridRecentRequests" Grid.Row="1"
+                          AutoGenerateColumns="False" IsReadOnly="True"
+                          HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                          CanUserResizeColumns="True" CanUserSortColumns="True"
+                          FontSize="11" RowHeight="26"
+                          Background="Transparent" BorderThickness="0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Thời gian" Binding="{Binding FormattedTime}" Width="140" />
+                        <DataGridTextColumn Header="Provider" Binding="{Binding Provider}" Width="110" />
+                        <DataGridTextColumn Header="Model" Binding="{Binding Model}" Width="200" />
+                        <DataGridTextColumn Header="Kind" Binding="{Binding Kind}" Width="130" />
+                        <DataGridTextColumn Header="OK" Binding="{Binding StatusDisplay}" Width="45">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                    <Setter Property="Foreground" Value="#10B981" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Prompt" Binding="{Binding FormattedPrompt}" Width="75">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Response" Binding="{Binding FormattedResponse}" Width="85">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Time(ms)" Binding="{Binding DurationMs}" Width="85">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </ui:Card>
+    </Grid>
+</UserControl>

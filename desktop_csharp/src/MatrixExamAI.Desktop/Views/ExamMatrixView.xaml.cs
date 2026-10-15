@@ -226,6 +226,8 @@ namespace MatrixExamAI.Desktop.Views
             InfoExamNotification.IsOpen = true;
         }
 
+        public void GenerateExamWithAi() => BtnAiGenerateExam_Click(this, new RoutedEventArgs());
+
         private async void BtnAiGenerateExam_Click(object sender, RoutedEventArgs e)
         {
             string subject = (CmbSubject.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Toán học";
