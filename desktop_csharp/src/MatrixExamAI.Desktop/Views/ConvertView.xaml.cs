@@ -73,11 +73,16 @@ namespace MatrixExamAI.Desktop.Views
                     ColSource.MinWidth = 0;
                     ColSource.Width = new GridLength(0);
                     ColSplitter.Width = new GridLength(0);
-                    ColPreview.MinWidth = 300;
+                    ColPreview.MinWidth = 0;
                     ColPreview.Width = new GridLength(1, GridUnitType.Star);
+
                     CardSource.Visibility = Visibility.Collapsed;
                     SplitterConvert.Visibility = Visibility.Collapsed;
                     CardPreview.Visibility = Visibility.Visible;
+
+                    Grid.SetColumn(CardPreview, 0);
+                    Grid.SetColumnSpan(CardPreview, 3);
+
                     BtnExpandSource.Visibility = Visibility.Visible;
                     BtnExpandPreviewFromSource.Visibility = Visibility.Collapsed;
                     break;
@@ -91,22 +96,35 @@ namespace MatrixExamAI.Desktop.Views
                     ColPreview.MinWidth = 0;
                     ColPreview.Width = new GridLength(0);
                     ColSplitter.Width = new GridLength(0);
-                    ColSource.MinWidth = 260;
+                    ColSource.MinWidth = 0;
                     ColSource.Width = new GridLength(1, GridUnitType.Star);
+
                     CardPreview.Visibility = Visibility.Collapsed;
                     SplitterConvert.Visibility = Visibility.Collapsed;
                     CardSource.Visibility = Visibility.Visible;
+
+                    Grid.SetColumn(CardSource, 0);
+                    Grid.SetColumnSpan(CardSource, 3);
+
                     BtnExpandSource.Visibility = Visibility.Collapsed;
                     BtnExpandPreviewFromSource.Visibility = Visibility.Visible;
                     break;
 
                 case ConvertLayoutMode.Split:
                 default:
+                    Grid.SetColumn(CardSource, 0);
+                    Grid.SetColumnSpan(CardSource, 1);
+                    Grid.SetColumn(SplitterConvert, 1);
+                    Grid.SetColumnSpan(SplitterConvert, 1);
+                    Grid.SetColumn(CardPreview, 2);
+                    Grid.SetColumnSpan(CardPreview, 1);
+
                     ColSource.MinWidth = 260;
                     ColPreview.MinWidth = 320;
                     ColSource.Width = _lastSourceWidth.Value > 0 ? _lastSourceWidth : new GridLength(1, GridUnitType.Star);
                     ColSplitter.Width = new GridLength(8);
                     ColPreview.Width = _lastPreviewWidth.Value > 0 ? _lastPreviewWidth : new GridLength(1, GridUnitType.Star);
+
                     CardSource.Visibility = Visibility.Visible;
                     CardPreview.Visibility = Visibility.Visible;
                     SplitterConvert.Visibility = Visibility.Visible;

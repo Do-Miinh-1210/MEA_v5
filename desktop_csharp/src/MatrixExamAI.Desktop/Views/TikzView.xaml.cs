@@ -65,9 +65,7 @@ namespace MatrixExamAI.Desktop.Views
         {
             try
             {
-                ColCode.Width = new GridLength(3.2, GridUnitType.Star);
-                ColPreview.Width = new GridLength(6.8, GridUnitType.Star);
-                UpdateModeButtonStyles();
+                SetLayoutMode(_currentLayoutMode);
             }
             catch { }
         }
@@ -86,11 +84,16 @@ namespace MatrixExamAI.Desktop.Views
                     ColCode.MinWidth = 0;
                     ColCode.Width = new GridLength(0);
                     ColSplitter.Width = new GridLength(0);
-                    ColPreview.MinWidth = 300;
+                    ColPreview.MinWidth = 0;
                     ColPreview.Width = new GridLength(1, GridUnitType.Star);
+
                     CardCode.Visibility = Visibility.Collapsed;
                     SplitterTikz.Visibility = Visibility.Collapsed;
                     CardPreview.Visibility = Visibility.Visible;
+
+                    Grid.SetColumn(CardPreview, 0);
+                    Grid.SetColumnSpan(CardPreview, 3);
+
                     BtnExpandCode.Visibility = Visibility.Visible;
                     BtnExpandPreviewFromCode.Visibility = Visibility.Collapsed;
                     break;
@@ -104,22 +107,35 @@ namespace MatrixExamAI.Desktop.Views
                     ColPreview.MinWidth = 0;
                     ColPreview.Width = new GridLength(0);
                     ColSplitter.Width = new GridLength(0);
-                    ColCode.MinWidth = 300;
+                    ColCode.MinWidth = 0;
                     ColCode.Width = new GridLength(1, GridUnitType.Star);
+
                     CardPreview.Visibility = Visibility.Collapsed;
                     SplitterTikz.Visibility = Visibility.Collapsed;
                     CardCode.Visibility = Visibility.Visible;
+
+                    Grid.SetColumn(CardCode, 0);
+                    Grid.SetColumnSpan(CardCode, 3);
+
                     BtnExpandCode.Visibility = Visibility.Collapsed;
                     BtnExpandPreviewFromCode.Visibility = Visibility.Visible;
                     break;
 
                 case TikzLayoutMode.Split:
                 default:
-                    ColCode.MinWidth = 240;
+                    Grid.SetColumn(CardCode, 0);
+                    Grid.SetColumnSpan(CardCode, 1);
+                    Grid.SetColumn(SplitterTikz, 1);
+                    Grid.SetColumnSpan(SplitterTikz, 1);
+                    Grid.SetColumn(CardPreview, 2);
+                    Grid.SetColumnSpan(CardPreview, 1);
+
+                    ColCode.MinWidth = 300;
                     ColPreview.MinWidth = 300;
                     ColCode.Width = _lastCodeWidth.Value > 0 ? _lastCodeWidth : new GridLength(3.2, GridUnitType.Star);
                     ColSplitter.Width = new GridLength(8);
                     ColPreview.Width = _lastPreviewWidth.Value > 0 ? _lastPreviewWidth : new GridLength(6.8, GridUnitType.Star);
+
                     CardCode.Visibility = Visibility.Visible;
                     CardPreview.Visibility = Visibility.Visible;
                     SplitterTikz.Visibility = Visibility.Visible;

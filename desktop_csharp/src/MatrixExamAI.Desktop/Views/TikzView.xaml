@@ -65,8 +65,8 @@
                     <WrapPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock Text="Thể loại:" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,4,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <ComboBox x:Name="CmbDiagramType" Width="112" Height="26" SelectedIndex="2" FontSize="10.5"
-                                  Padding="6,0,18,0" VerticalContentAlignment="Center" Margin="0,0,6,0"
+                        <ComboBox x:Name="CmbDiagramType" Width="128" Height="26" SelectedIndex="2" FontSize="10.5"
+                                  Padding="6,0,2,0" VerticalContentAlignment="Center" Margin="0,0,6,0"
                                   ToolTip="Định hướng thể loại hình vẽ cho AI">
                             <ComboBoxItem Content="Bảng biến thiên" Tag="BBT" Padding="6,2" />
                             <ComboBoxItem Content="Bảng xét dấu" Tag="BXD" Padding="6,2" />
@@ -77,12 +77,12 @@
 
                         <TextBlock Text="Mẫu:" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,4,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <ComboBox x:Name="CmbTemplateCategory" Width="100" Height="26" FontSize="10.5"
-                                  Padding="6,0,18,0" VerticalContentAlignment="Center" Margin="0,0,4,0"
+                        <ComboBox x:Name="CmbTemplateCategory" Width="110" Height="26" FontSize="10.5"
+                                  Padding="6,0,2,0" VerticalContentAlignment="Center" Margin="0,0,4,0"
                                   ToolTip="Chọn nhóm chuyên đề mẫu TikZ"
                                   SelectionChanged="CmbTemplateCategory_SelectionChanged" />
-                        <ComboBox x:Name="CmbTemplateItem" Width="120" Height="26" FontSize="10.5"
-                                  Padding="6,0,18,0" VerticalContentAlignment="Center" Margin="0,0,8,0"
+                        <ComboBox x:Name="CmbTemplateItem" Width="135" Height="26" FontSize="10.5"
+                                  Padding="6,0,2,0" VerticalContentAlignment="Center" Margin="0,0,8,0"
                                   ToolTip="Chọn mẫu hình học để nạp mã TikZ"
                                   SelectionChanged="CmbTemplateItem_SelectionChanged" />
                     </WrapPanel>
@@ -329,9 +329,9 @@
                                     </StackPanel>
                                 </Border>
 
-                                <!-- DPI Selector (độ rộng 82px để không bị cắt thành 600 D) -->
-                                <ComboBox x:Name="CmbDpi" Width="82" Height="24" SelectedIndex="2" FontSize="9.5"
-                                          Padding="4,0,14,0" VerticalContentAlignment="Center" Margin="0,0,6,2" ToolTip="Độ phân giải xuất hình">
+                                <!-- DPI Selector -->
+                                <ComboBox x:Name="CmbDpi" Width="90" Height="24" SelectedIndex="2" FontSize="9.5"
+                                          Padding="6,0,2,0" VerticalContentAlignment="Center" Margin="0,0,6,2" ToolTip="Độ phân giải xuất hình">
                                     <ComboBoxItem Content="150 DPI" Tag="150" Padding="4,2" />
                                     <ComboBoxItem Content="300 DPI" Tag="300" Padding="4,2" />
                                     <ComboBoxItem Content="600 DPI" Tag="600" Padding="4,2" />
