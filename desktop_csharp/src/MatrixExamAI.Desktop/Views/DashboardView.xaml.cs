@@ -30,12 +30,8 @@ namespace MatrixExamAI.Desktop.Views
         {
             try
             {
-                string dir = AppDomain.CurrentDomain.BaseDirectory;
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = dir,
-                    UseShellExecute = true
-                });
+                string dir = Services.StorageLocationService.GetDefaultExportDirectory();
+                Services.StorageLocationService.OpenFolderInExplorer(dir);
             }
             catch (Exception ex)
             {

@@ -2389,10 +2389,12 @@ Bắt đầu ngay câu đầu tiên. Không thêm lời mở đầu hay markdown
                 }
             }
 
+            string defaultDir = StorageLocationService.GetDefaultExportDirectory();
             var saveDialog = new Microsoft.Win32.SaveFileDialog
             {
                 Filter = "Tài liệu Microsoft Word (*.docx)|*.docx",
                 FileName = $"De_Thi_Chuan_Hoa_{DateTime.Now:yyyyMMdd_HHmm}.docx",
+                InitialDirectory = Directory.Exists(defaultDir) ? defaultDir : Environment.CurrentDirectory,
                 Title = "Lưu tài liệu Word chuẩn hóa A4"
             };
 
@@ -2400,9 +2402,25 @@ Bắt đầu ngay câu đầu tiên. Không thêm lời mở đầu hay markdown
             {
                 try
                 {
+                    string? chosenDir = Path.GetDirectoryName(saveDialog.FileName);
+                    if (!string.IsNullOrEmpty(chosenDir))
+                    {
+                        StorageLocationService.SetDefaultExportDirectory(chosenDir);
+                    }
+
                     StartStopwatch();
                     ExportExamToFile(saveDialog.FileName);
                     StopStopwatch();
+
+                    if (StorageLocationService.GetOpenAfterExport())
+                    {
+                        Process.Start(new ProcessStartInfo
+                        {
+                            FileName = saveDialog.FileName,
+                            UseShellExecute = true
+                        });
+                        return;
+                    }
 
                     var result = MessageBox.Show(
                         $"Đã xuất thành công tệp Word Native!\n\nĐường dẫn: {saveDialog.FileName}\nThời gian xuất: {TxtTimer.Text}\n\nBạn có muốn mở ngay tài liệu bằng Microsoft Word không?",

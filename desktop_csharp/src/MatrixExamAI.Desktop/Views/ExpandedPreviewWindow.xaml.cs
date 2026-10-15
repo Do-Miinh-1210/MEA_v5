@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -623,10 +624,12 @@ namespace MatrixExamAI.Desktop.Views
 
         private void BtnExportWord_Click(object sender, RoutedEventArgs e)
         {
+            string defaultDir = StorageLocationService.GetDefaultExportDirectory();
             var saveDialog = new Microsoft.Win32.SaveFileDialog
             {
                 Filter = "Tài liệu Word (*.docx)|*.docx",
                 FileName = $"De_Thi_Chuan_Hoa_{DateTime.Now:yyyyMMdd_HHmm}.docx",
+                InitialDirectory = Directory.Exists(defaultDir) ? defaultDir : Environment.CurrentDirectory,
                 Title = "Xuất tài liệu Word chuẩn"
             };
 
@@ -634,6 +637,12 @@ namespace MatrixExamAI.Desktop.Views
             {
                 try
                 {
+                    string? chosenDir = Path.GetDirectoryName(saveDialog.FileName);
+                    if (!string.IsNullOrEmpty(chosenDir))
+                    {
+                        StorageLocationService.SetDefaultExportDirectory(chosenDir);
+                    }
+
                     if (_questions.Count > 0)
                     {
                         _wordService.ExportExamToDocx(saveDialog.FileName, _questions, _examOptions);

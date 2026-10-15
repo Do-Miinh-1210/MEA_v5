@@ -168,6 +168,28 @@
                                        FontSize="10" Foreground="#047857" Margin="24,2,0,0" />
                         </StackPanel>
                     </Border>
+
+                    <!-- Hàng 7: Vị trí lưu trữ các mã đề -->
+                    <Grid Margin="0,10,0,2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                            <ui:SymbolIcon Symbol="Folder24" FontSize="14" Foreground="#2563EB" Margin="0,0,4,0" />
+                            <TextBlock Text="Vị trí lưu các mã đề:" FontWeight="SemiBold" FontSize="11" />
+                        </StackPanel>
+                        <ui:TextBox x:Name="TxtShuffleOutputDir" Grid.Column="1" Height="30" FontSize="11"
+                                    VerticalContentAlignment="Center" Margin="0,0,6,0" IsReadOnly="True" />
+                        <ui:Button x:Name="BtnBrowseShuffleOutputDir" Grid.Column="2" Appearance="Secondary"
+                                   Icon="{ui:SymbolIcon FolderOpen24}" Content="Chọn thư mục..." Height="30" Padding="10,0" Margin="0,0,6,0" FontSize="11"
+                                   Click="BtnBrowseShuffleOutputDir_Click" ToolTip="Chọn thư mục lưu các file đề thi sau khi trộn" />
+                        <ui:Button x:Name="BtnOpenShuffleOutputDir" Grid.Column="3" Appearance="Secondary"
+                                   Icon="{ui:SymbolIcon Open24}" Content="Mở thư mục" Height="30" Padding="10,0" FontSize="11"
+                                   Click="BtnOpenShuffleOutputDir_Click" ToolTip="Mở thư mục chứa các mã đề thi đã xuất" />
+                    </Grid>
                 </StackPanel>
             </ui:Card>
 

@@ -415,10 +415,12 @@ namespace MatrixExamAI.Desktop.Views
                 return;
             }
 
+            string defaultDir = StorageLocationService.GetDefaultExportDirectory();
             var saveDialog = new Microsoft.Win32.SaveFileDialog
             {
                 Filter = "Tài liệu Microsoft Word (*.docx)|*.docx",
                 FileName = $"De_Thi_Ma_Tran_BGD_{DateTime.Now:yyyyMMdd_HHmm}.docx",
+                InitialDirectory = Directory.Exists(defaultDir) ? defaultDir : Environment.CurrentDirectory,
                 Title = "Lưu Đề thi & Ma trận đặc tả Word"
             };
 
@@ -426,6 +428,12 @@ namespace MatrixExamAI.Desktop.Views
             {
                 try
                 {
+                    string? chosenDir = Path.GetDirectoryName(saveDialog.FileName);
+                    if (!string.IsNullOrEmpty(chosenDir))
+                    {
+                        StorageLocationService.SetDefaultExportDirectory(chosenDir);
+                    }
+
                     string subject = (CmbSubject.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Toán học";
                     string grade = (CmbGrade.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Lớp 12";
 
@@ -436,6 +444,16 @@ namespace MatrixExamAI.Desktop.Views
 
                     // Xuất CẢ BẢNG 1 (MA TRẬN 19 CỘT LANDSCAPE) VÀ BẢNG 2 (BẢN ĐẶC TẢ 6 CỘT) CÙNG NỘI DUNG ĐỀ THI
                     MatrixWordExporter.ExportMatrixDocx(saveDialog.FileName, _currentMatrixData, content);
+
+                    if (StorageLocationService.GetOpenAfterExport())
+                    {
+                        Process.Start(new ProcessStartInfo
+                        {
+                            FileName = saveDialog.FileName,
+                            UseShellExecute = true
+                        });
+                        return;
+                    }
 
                     var result = MessageBox.Show(
                         $"Đã xuất thành công Ma trận & Bản đặc tả kèm Đề thi chuẩn BGD 2025!\n\nĐường dẫn: {saveDialog.FileName}\n(Bao gồm Bảng ma trận 19 cột Landscape A4 và Bảng đặc tả 6 cột)\n\nBạn có muốn mở ngay tệp Word không?",

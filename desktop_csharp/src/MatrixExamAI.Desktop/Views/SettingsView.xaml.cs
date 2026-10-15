@@ -131,6 +131,11 @@ namespace MatrixExamAI.Desktop.Views
                 _unmaskedKeyText = currentKey;
                 TxtApiKey.Text = currentKey;
                 UpdateKeyStatus(currentKey);
+
+                // Khởi tạo các đường dẫn thư mục lưu trữ
+                TxtDefaultExportPath.Text = StorageLocationService.GetDefaultExportDirectory();
+                TxtQuestionBankPath.Text = StorageLocationService.GetQuestionBankDirectory();
+                ChkOpenAfterExport.IsChecked = StorageLocationService.GetOpenAfterExport();
             }
             catch (Exception ex)
             {
@@ -351,6 +356,44 @@ namespace MatrixExamAI.Desktop.Views
             UpdateKeyStatus(string.Empty);
         }
 
+        private void BtnBrowseExportPath_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new OpenFolderDialog
+            {
+                Title = "Chọn thư mục lưu mặc định khi xuất Đề thi / Word",
+                InitialDirectory = Directory.Exists(TxtDefaultExportPath.Text) ? TxtDefaultExportPath.Text : StorageLocationService.GetDefaultExportDirectory()
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                TxtDefaultExportPath.Text = dlg.FolderName;
+                StorageLocationService.SetDefaultExportDirectory(dlg.FolderName);
+            }
+        }
+
+        private void BtnOpenExportPath_Click(object sender, RoutedEventArgs e)
+        {
+            StorageLocationService.OpenFolderInExplorer(TxtDefaultExportPath.Text);
+        }
+
+        private void BtnBrowseBankPath_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new OpenFolderDialog
+            {
+                Title = "Chọn thư mục lưu trữ Ngân hàng câu hỏi",
+                InitialDirectory = Directory.Exists(TxtQuestionBankPath.Text) ? TxtQuestionBankPath.Text : StorageLocationService.GetQuestionBankDirectory()
+            };
+            if (dlg.ShowDialog() == true)
+            {
+                TxtQuestionBankPath.Text = dlg.FolderName;
+                StorageLocationService.SetQuestionBankDirectory(dlg.FolderName);
+            }
+        }
+
+        private void BtnOpenBankPath_Click(object sender, RoutedEventArgs e)
+        {
+            StorageLocationService.OpenFolderInExplorer(TxtQuestionBankPath.Text);
+        }
+
         private void BtnSaveSettings_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -364,6 +407,14 @@ namespace MatrixExamAI.Desktop.Views
 
                 _keysByProvider[provider] = key;
 
+                string exportDir = TxtDefaultExportPath.Text.Trim();
+                string bankDir = TxtQuestionBankPath.Text.Trim();
+                bool openAfterExport = ChkOpenAfterExport.IsChecked == true;
+
+                StorageLocationService.SetDefaultExportDirectory(exportDir);
+                StorageLocationService.SetQuestionBankDirectory(bankDir);
+                StorageLocationService.SetOpenAfterExport(openAfterExport);
+
                 var configObj = new
                 {
                     provider = provider,
@@ -371,7 +422,10 @@ namespace MatrixExamAI.Desktop.Views
                     apiKey = key,
                     nineRouterApiKey = _keysByProvider.TryGetValue("9Router", out var k9) ? k9 : key,
                     openAiApiKey = _keysByProvider.TryGetValue("OpenAI GPT", out var kOai) ? kOai : "",
-                    keysByProvider = _keysByProvider
+                    keysByProvider = _keysByProvider,
+                    defaultExportDir = exportDir,
+                    questionBankDir = bankDir,
+                    openAfterExport = openAfterExport
                 };
 
                 string json = JsonSerializer.Serialize(configObj, new JsonSerializerOptions { WriteIndented = true });
@@ -389,14 +443,17 @@ namespace MatrixExamAI.Desktop.Views
                         pyDict["selected_ai_provider"] = provider;
                         pyDict["selected_ai_model"] = modelTag;
                         pyDict[$"selected_ai_model_{provider}"] = modelTag;
+                        pyDict["default_export_dir"] = exportDir;
+                        pyDict["nhch_dir"] = bankDir;
+                        pyDict["open_after_export"] = openAfterExport;
                         File.WriteAllText(pySettingsFile, JsonSerializer.Serialize(pyDict, new JsonSerializerOptions { WriteIndented = true }));
                     }
                 }
                 catch { }
 
                 InfoSettingsNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
-                InfoSettingsNotification.Title = "Đã lưu cài đặt AI";
-                InfoSettingsNotification.Message = $"Nhà cung cấp: {provider} | Mô hình: {modelTag} | Số key: {DesktopGeminiFactory.SplitKeys(key).Count}";
+                InfoSettingsNotification.Title = "Đã lưu cài đặt hệ thống";
+                InfoSettingsNotification.Message = $"Nhà cung cấp: {provider} | Thư mục xuất: {exportDir} | Số key: {DesktopGeminiFactory.SplitKeys(key).Count}";
                 InfoSettingsNotification.IsOpen = true;
             }
             catch (Exception ex)

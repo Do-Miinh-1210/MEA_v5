@@ -38,6 +38,7 @@ namespace MatrixExamAI.Desktop.Views
             InitializeComponent();
             Loaded += (s, e) =>
             {
+                TxtShuffleOutputDir.Text = StorageLocationService.GetDefaultExportDirectory();
                 if (_loadedExams.Count == 0)
                 {
                     LoadSampleExam();
@@ -528,6 +529,27 @@ namespace MatrixExamAI.Desktop.Views
             return q;
         }
 
+        private void BtnBrowseShuffleOutputDir_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new Microsoft.Win32.OpenFolderDialog
+            {
+                Title = "Chọn thư mục lưu trữ các mã đề thi đã trộn",
+                InitialDirectory = Directory.Exists(TxtShuffleOutputDir.Text) ? TxtShuffleOutputDir.Text : StorageLocationService.GetDefaultExportDirectory()
+            };
+
+            if (dlg.ShowDialog() == true && !string.IsNullOrWhiteSpace(dlg.FolderName))
+            {
+                TxtShuffleOutputDir.Text = dlg.FolderName;
+                StorageLocationService.SetDefaultExportDirectory(dlg.FolderName);
+            }
+        }
+
+        private void BtnOpenShuffleOutputDir_Click(object sender, RoutedEventArgs e)
+        {
+            string target = !string.IsNullOrWhiteSpace(TxtShuffleOutputDir.Text) ? TxtShuffleOutputDir.Text : StorageLocationService.GetDefaultExportDirectory();
+            StorageLocationService.OpenFolderInExplorer(target);
+        }
+
         private void BtnExportAllDocx_Click(object sender, RoutedEventArgs e)
         {
             var activeExam = _activeExamIndex >= 0 && _activeExamIndex < _loadedExams.Count ? _loadedExams[_activeExamIndex] : null;
@@ -537,16 +559,21 @@ namespace MatrixExamAI.Desktop.Views
                 return;
             }
 
+            string defaultDir = !string.IsNullOrWhiteSpace(TxtShuffleOutputDir.Text) ? TxtShuffleOutputDir.Text : StorageLocationService.GetDefaultExportDirectory();
             var dlg = new Microsoft.Win32.SaveFileDialog
             {
                 Filter = "Thư mục xuất Word|*.docx",
                 FileName = $"De_Thi_Ma_{activeExam.ShuffledVariants[0].ExamCode}.docx",
+                InitialDirectory = Directory.Exists(defaultDir) ? defaultDir : Environment.CurrentDirectory,
                 Title = "Chọn thư mục và tên tệp cơ sở để xuất các mã đề"
             };
 
             if (dlg.ShowDialog() == true)
             {
                 string dir = Path.GetDirectoryName(dlg.FileName) ?? Environment.CurrentDirectory;
+                TxtShuffleOutputDir.Text = dir;
+                StorageLocationService.SetDefaultExportDirectory(dir);
+
                 int count = 0;
                 foreach (var variant in activeExam.ShuffledVariants)
                 {
@@ -564,6 +591,11 @@ namespace MatrixExamAI.Desktop.Views
                     count++;
                 }
 
+                if (StorageLocationService.GetOpenAfterExport())
+                {
+                    StorageLocationService.OpenFolderInExplorer(dir);
+                }
+
                 MessageBox.Show($"Đã xuất thành công {count} tệp Word riêng biệt tại:\n{dir}", "Xuất Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -577,16 +609,31 @@ namespace MatrixExamAI.Desktop.Views
                 return;
             }
 
+            string defaultDir = !string.IsNullOrWhiteSpace(TxtShuffleOutputDir.Text) ? TxtShuffleOutputDir.Text : StorageLocationService.GetDefaultExportDirectory();
             var dlg = new Microsoft.Win32.SaveFileDialog
             {
                 Filter = "Tài liệu Word Gộp (*.docx)|*.docx",
                 FileName = $"De_Thi_GOP_Tat_Ca_Ma_De_{DateTime.Now:yyyyMMdd}.docx",
+                InitialDirectory = Directory.Exists(defaultDir) ? defaultDir : Environment.CurrentDirectory,
                 Title = "Lưu file Word gộp tất cả các mã đề"
             };
 
             if (dlg.ShowDialog() == true)
             {
+                string? dir = Path.GetDirectoryName(dlg.FileName);
+                if (!string.IsNullOrEmpty(dir))
+                {
+                    TxtShuffleOutputDir.Text = dir;
+                    StorageLocationService.SetDefaultExportDirectory(dir);
+                }
+
                 _wordService.ExportMergedVariantsToDocx(dlg.FileName, activeExam.ShuffledVariants);
+
+                if (StorageLocationService.GetOpenAfterExport() && !string.IsNullOrEmpty(dir))
+                {
+                    StorageLocationService.OpenFolderInExplorer(dir);
+                }
+
                 MessageBox.Show($"Đã xuất thành công file Word GỘP chứa tất cả {activeExam.ShuffledVariants.Count} mã đề tại:\n{dlg.FileName}", "Xuất Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
@@ -600,15 +647,24 @@ namespace MatrixExamAI.Desktop.Views
                 return;
             }
 
+            string defaultDir = !string.IsNullOrWhiteSpace(TxtShuffleOutputDir.Text) ? TxtShuffleOutputDir.Text : StorageLocationService.GetDefaultExportDirectory();
             var dlg = new Microsoft.Win32.SaveFileDialog
             {
                 Filter = "Bảng tính Excel (*.csv)|*.csv|Tất cả tệp (*.*)|*.*",
                 FileName = $"Bang_Dap_An_Ma_Tran_{DateTime.Now:yyyyMMdd_HHmm}.csv",
+                InitialDirectory = Directory.Exists(defaultDir) ? defaultDir : Environment.CurrentDirectory,
                 Title = "Lưu bảng đáp án ma trận đối chiếu"
             };
 
             if (dlg.ShowDialog() == true)
             {
+                string? dir = Path.GetDirectoryName(dlg.FileName);
+                if (!string.IsNullOrEmpty(dir))
+                {
+                    TxtShuffleOutputDir.Text = dir;
+                    StorageLocationService.SetDefaultExportDirectory(dir);
+                }
+
                 var sb = new StringBuilder();
                 sb.AppendLine("Câu," + string.Join(",", activeExam.ShuffledVariants.Select(v => $"Mã {v.ExamCode}")));
 
@@ -626,6 +682,12 @@ namespace MatrixExamAI.Desktop.Views
                 }
 
                 File.WriteAllText(dlg.FileName, sb.ToString(), Encoding.UTF8);
+
+                if (StorageLocationService.GetOpenAfterExport() && !string.IsNullOrEmpty(dir))
+                {
+                    StorageLocationService.OpenFolderInExplorer(dir);
+                }
+
                 MessageBox.Show($"Đã xuất bảng đáp án đối chiếu thành công tại:\n{dlg.FileName}", "Xuất Excel Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }

@@ -110,7 +110,71 @@
                 </StackPanel>
             </ui:CardExpander>
 
-            <!-- Section 2: Word Add-in & Toolchain -->
+            <!-- Section 2: Vị trí Lưu trữ & Đường dẫn Thư mục -->
+            <ui:CardExpander Header="Vị trí Lưu trữ &amp; Thư mục Dữ liệu" 
+                             Icon="{ui:SymbolIcon FolderOpen24}"
+                             IsExpanded="True" Margin="0,0,0,16">
+                <StackPanel Margin="0,8,0,0">
+                    <!-- Hàng 1: Thư mục xuất tài liệu / Đề thi mặc định -->
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" MinWidth="200" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Thư mục xuất Đề thi / Word:" FontWeight="Medium" />
+                            <TextBlock Text="Vị trí lưu mặc định khi xuất file Word, PDF, LaTeX" 
+                                       FontSize="10.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <ui:TextBox x:Name="TxtDefaultExportPath" Grid.Column="1" Height="28" FontSize="11" 
+                                    VerticalContentAlignment="Center" Margin="0,0,6,0" IsReadOnly="True" />
+                        <ui:Button x:Name="BtnBrowseExportPath" Grid.Column="2" Appearance="Primary" Icon="{ui:SymbolIcon FolderOpen24}" 
+                                   Content="Chọn thư mục" Height="28" Padding="10,0" Margin="0,0,6,0" FontSize="11"
+                                   Click="BtnBrowseExportPath_Click" ToolTip="Chọn thư mục trên máy tính để lưu tài liệu xuất ra" />
+                        <ui:Button x:Name="BtnOpenExportPath" Grid.Column="3" Appearance="Secondary" Icon="{ui:SymbolIcon Open24}" 
+                                   Content="Mở thư mục" Height="28" Padding="10,0" FontSize="11"
+                                   Click="BtnOpenExportPath_Click" ToolTip="Mở thư mục xuất tài liệu trong File Explorer" />
+                    </Grid>
+
+                    <!-- Hàng 2: Thư mục Ngân hàng câu hỏi (NHCH / Database) -->
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" MinWidth="200" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Thư mục Ngân hàng câu hỏi:" FontWeight="Medium" />
+                            <TextBlock Text="Nơi lưu trữ file cơ sở dữ liệu SQLite (.db)" 
+                                       FontSize="10.5" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <ui:TextBox x:Name="TxtQuestionBankPath" Grid.Column="1" Height="28" FontSize="11" 
+                                    VerticalContentAlignment="Center" Margin="0,0,6,0" IsReadOnly="True" />
+                        <ui:Button x:Name="BtnBrowseBankPath" Grid.Column="2" Appearance="Primary" Icon="{ui:SymbolIcon FolderOpen24}" 
+                                   Content="Chọn thư mục" Height="28" Padding="10,0" Margin="0,0,6,0" FontSize="11"
+                                   Click="BtnBrowseBankPath_Click" ToolTip="Chọn thư mục lưu cơ sở dữ liệu Ngân hàng câu hỏi" />
+                        <ui:Button x:Name="BtnOpenBankPath" Grid.Column="3" Appearance="Secondary" Icon="{ui:SymbolIcon Open24}" 
+                                   Content="Mở thư mục" Height="28" Padding="10,0" FontSize="11"
+                                   Click="BtnOpenBankPath_Click" ToolTip="Mở thư mục cơ sở dữ liệu Ngân hàng câu hỏi" />
+                    </Grid>
+
+                    <!-- Hàng 3: Tự động mở file sau khi xuất -->
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" MinWidth="200" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Tự động mở sau khi xuất:" VerticalAlignment="Center" FontWeight="Medium" />
+                        <ui:ToggleSwitch x:Name="ChkOpenAfterExport" Grid.Column="1" IsChecked="True" 
+                                         Content="Tự động mở file Word hoặc thư mục lưu trữ ngay khi xuất hoàn tất" />
+                    </Grid>
+                </StackPanel>
+            </ui:CardExpander>
+
+            <!-- Section 3: Word Add-in & Toolchain -->
             <ui:CardExpander Header="Tiện ích Mở rộng Microsoft Word" 
                              Icon="{ui:SymbolIcon DocumentOnePage24}"
                              IsExpanded="True" Margin="0,0,0,16">

@@ -1279,16 +1279,24 @@ namespace MatrixExamAI.Desktop.Views
                 return;
             }
 
+            string defaultDir = StorageLocationService.GetDefaultExportDirectory();
             var dialog = new Microsoft.Win32.SaveFileDialog
             {
                 Filter = "Hình ảnh PNG (*.png)|*.png|Vector SVG (*.svg)|*.svg",
-                FileName = $"Hinh_TikZ_{DateTime.Now:yyyyMMdd_HHmm}.png"
+                FileName = $"Hinh_TikZ_{DateTime.Now:yyyyMMdd_HHmm}.png",
+                InitialDirectory = Directory.Exists(defaultDir) ? defaultDir : Environment.CurrentDirectory
             };
 
             if (dialog.ShowDialog() == true)
             {
                 try
                 {
+                    string? chosenDir = Path.GetDirectoryName(dialog.FileName);
+                    if (!string.IsNullOrEmpty(chosenDir))
+                    {
+                        StorageLocationService.SetDefaultExportDirectory(chosenDir);
+                    }
+
                     if (dialog.FileName.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
                     {
                         TxtDiagramStats.Text = "Đang xuất định dạng vector SVG...";

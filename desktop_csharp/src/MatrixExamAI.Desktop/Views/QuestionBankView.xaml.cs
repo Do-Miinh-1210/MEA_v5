@@ -32,6 +32,17 @@ namespace MatrixExamAI.Desktop.Views
     {
         public static string ResolveDatabasePath()
         {
+            // 0. Ưu tiên đường dẫn cấu hình bởi người dùng trong Cài đặt
+            string customBankDir = StorageLocationService.GetQuestionBankDirectory();
+            if (!string.IsNullOrEmpty(customBankDir))
+            {
+                string customDb = Path.Combine(customBankDir, "question_bank.db");
+                if (File.Exists(customDb))
+                {
+                    return customDb;
+                }
+            }
+
             // 1. Ưu tiên đường dẫn SQLite dùng chung của Python MEA v5.0: ~/.exam_generator/question_bank.db
             string userProfile = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             string pyDbPath = Path.Combine(userProfile, ".exam_generator", "question_bank.db");
@@ -48,7 +59,16 @@ namespace MatrixExamAI.Desktop.Views
                 return csDbPath;
             }
 
-            // Mặc định tạo thư mục ~/.exam_generator nếu cả 2 chưa có
+            // Mặc định tạo thư mục nếu chưa có
+            if (!string.IsNullOrEmpty(customBankDir))
+            {
+                if (!Directory.Exists(customBankDir))
+                {
+                    Directory.CreateDirectory(customBankDir);
+                }
+                return Path.Combine(customBankDir, "question_bank.db");
+            }
+
             string pyDir = Path.Combine(userProfile, ".exam_generator");
             if (!Directory.Exists(pyDir))
             {
@@ -708,10 +728,12 @@ namespace MatrixExamAI.Desktop.Views
                 sb.AppendLine();
             }
 
+            string defaultDir = StorageLocationService.GetDefaultExportDirectory();
             var saveDialog = new Microsoft.Win32.SaveFileDialog
             {
                 Filter = "Tài liệu Microsoft Word (*.docx)|*.docx",
                 FileName = $"Ngan_Hang_Cau_Hoi_{DateTime.Now:yyyyMMdd_HHmm}.docx",
+                InitialDirectory = Directory.Exists(defaultDir) ? defaultDir : Environment.CurrentDirectory,
                 Title = "Xuất Ngân hàng câu hỏi ra file Word"
             };
 
@@ -719,8 +741,21 @@ namespace MatrixExamAI.Desktop.Views
             {
                 try
                 {
+                    string? chosenDir = Path.GetDirectoryName(saveDialog.FileName);
+                    if (!string.IsNullOrEmpty(chosenDir))
+                    {
+                        StorageLocationService.SetDefaultExportDirectory(chosenDir);
+                    }
+
                     var wordService = new WordExportService();
                     wordService.ExportToDocx(saveDialog.FileName, sb.ToString());
+
+                    if (StorageLocationService.GetOpenAfterExport())
+                    {
+                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = saveDialog.FileName, UseShellExecute = true });
+                        return;
+                    }
+
                     var res = MessageBox.Show($"Đã xuất thành công ngân hàng câu hỏi:\n{saveDialog.FileName}\n\nBạn có muốn mở ngay tệp Word không?", "Thành công", MessageBoxButton.YesNo, MessageBoxImage.Information);
                     if (res == MessageBoxResult.Yes)
                     {
