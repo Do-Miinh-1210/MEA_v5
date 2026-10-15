@@ -225,6 +225,69 @@ Một vật chuyển động theo quy luật $s(t) = -t^3 + 6t^2$. Tính vận t
         }
 
         [Fact]
+        public void STA_Thread_ConvertView_NaturalExamText_RenderQuestions()
+        {
+            Exception? threadEx = null;
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    var view = new ConvertView();
+                    var txtInput = GetControl<TextBox>(view, "TxtInput");
+                    var btnConvert = GetControl<Button>(view, "BtnConvert");
+                    var panelDoc = GetControl<StackPanel>(view, "PanelDocContent");
+
+                    txtInput.Text = @"% ĐỀ THI TẠO NHANH CHUẨN BGD 2025
+PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn. Thí sinh trả lời từ câu 1 đến câu 12. Mỗi câu hỏi thí sinh chỉ chọn một phương án.
+Câu 1. Cho hàm số y = f(x) có đạo hàm f'(x) = x(x - 1)^2. Số điểm cực trị của hàm số là:
+A. 1.
+B. 2.
+C. 0.
+D. 3.
+Lời giải:
+Ta có f'(x) đổi dấu khi qua nghiệm đơn x = 0. Vậy hàm số có 1 cực trị. Chọn A.
+
+PHẦN II. Câu trắc nghiệm đúng sai. Thí sinh trả lời từ câu 1 đến câu 4. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.
+Câu 1. Cho hàm số y = x^3 - 3x + 2.
+a) Tập xác định của hàm số là R.
+b) Đạo hàm y' = 3x^2 - 3.
+c) Hàm số đồng biến trên khoảng (-1; 1).
+d) Giá trị cực đại của hàm số bằng 4.
+
+PHẦN III. Câu trắc nghiệm trả lời ngắn. Thí sinh trả lời từ câu 1 đến câu 6.
+Câu 1. Tìm giá trị lớn nhất của hàm số y = -x^2 + 4x + 1.
+Đáp án: 5";
+
+                    // Raise click
+                    btnConvert.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+                    // Force measure and arrange
+                    view.Measure(new Size(1280, 1024));
+                    view.Arrange(new Rect(0, 0, 1280, 1024));
+
+                    var borderA4 = GetControl<Border>(view, "BorderWordA4Page");
+                    int count = panelDoc.Children.Count;
+
+                    var childTypes = panelDoc.Children.OfType<UIElement>().Select(c => c.GetType().Name).ToList();
+                    string details = string.Join(", ", childTypes);
+
+                    Assert.True(count >= 5, $"Expected >= 5, but got {count}. Types: {details}");
+                    Assert.True(borderA4.ActualHeight >= 500, $"BorderWordA4Page ActualHeight is {borderA4.ActualHeight}, should be >= 500");
+                }
+                catch (Exception ex)
+                {
+                    threadEx = ex;
+                }
+            });
+
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+
+            Assert.Null(threadEx);
+        }
+
+        [Fact]
         public void STA_Thread_TikzView_InteractiveCanvas_Validation()
         {
             Exception? threadEx = null;
@@ -765,6 +828,43 @@ Một vật chuyển động theo quy luật $s(t) = -t^3 + 6t^2$. Tính vận t
                     try { File.Delete(tempDocx); } catch { }
                 }
             }
+        }
+
+        [Fact]
+        public void STA_Thread_BusinessDialogs_InitializeCorrectly()
+        {
+            Exception? threadEx = null;
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    var quickGen = new QuickGenDialog();
+                    Assert.NotNull(quickGen);
+                    Assert.Equal("Toán", quickGen.Subject);
+                    Assert.Equal("12", quickGen.Grade);
+
+                    var aiMatrix = new AiMatrixDialog();
+                    Assert.NotNull(aiMatrix);
+                    Assert.Equal("Toán", aiMatrix.Subject);
+                    Assert.Equal("12", aiMatrix.Grade);
+
+                    var sourceMethod = new SourceMethodDialog();
+                    Assert.NotNull(sourceMethod);
+                    Assert.Equal("ai_only", sourceMethod.SelectedMode);
+
+                    var quickGuide = new QuickGuideDialog();
+                    Assert.NotNull(quickGuide);
+                }
+                catch (Exception ex)
+                {
+                    threadEx = ex;
+                }
+            });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+
+            Assert.Null(threadEx);
         }
     }
 }

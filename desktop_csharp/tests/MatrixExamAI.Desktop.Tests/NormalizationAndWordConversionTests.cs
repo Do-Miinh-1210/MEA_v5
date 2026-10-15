@@ -93,6 +93,38 @@ D. $P = 0$.";
         }
 
         [Fact]
+        public void ParseQuestions_NaturalExamText_ShouldExtractAll3Questions()
+        {
+            string raw = @"% ĐỀ THI TẠO NHANH CHUẨN BGD 2025
+PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn. Thí sinh trả lời từ câu 1 đến câu 12. Mỗi câu hỏi thí sinh chỉ chọn một phương án.
+Câu 1. Cho hàm số y = f(x) có đạo hàm f'(x) = x(x - 1)^2. Số điểm cực trị của hàm số là:
+A. 1.
+B. 2.
+C. 0.
+D. 3.
+Lời giải:
+Ta có f'(x) đổi dấu khi qua nghiệm đơn x = 0. Vậy hàm số có 1 cực trị. Chọn A.
+
+PHẦN II. Câu trắc nghiệm đúng sai. Thí sinh trả lời từ câu 1 đến câu 4. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.
+Câu 1. Cho hàm số y = x^3 - 3x + 2.
+a) Tập xác định của hàm số là R.
+b) Đạo hàm y' = 3x^2 - 3.
+c) Hàm số đồng biến trên khoảng (-1; 1).
+d) Giá trị cực đại của hàm số bằng 4.
+
+PHẦN III. Câu trắc nghiệm trả lời ngắn. Thí sinh trả lời từ câu 1 đến câu 6.
+Câu 1. Tìm giá trị lớn nhất của hàm số y = -x^2 + 4x + 1.
+Đáp án: 5";
+
+            var res = QuestionParserEngine.ParseQuestions(raw, "Toán", 12);
+            res.TotalCount.Should().Be(3);
+            res.Questions[0].Content.Should().NotBeNullOrWhiteSpace();
+            res.Questions[0].Options.Should().HaveCount(4);
+            res.Questions[1].Options.Should().HaveCount(4);
+            res.Questions[2].QuestionType.Should().Be("ShortAnswer");
+        }
+
+        [Fact]
         public void NativeDocxExport_ValidContent_ShouldGenerateOpenXmlA4DocumentWithCorrectStructure()
         {
             // Arrange

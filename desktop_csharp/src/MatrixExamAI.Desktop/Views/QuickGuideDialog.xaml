@@ -1,0 +1,111 @@
+<Window x:Class="MatrixExamAI.Desktop.Views.QuickGuideDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="📖 Hướng dẫn sử dụng MatrixExamAI Pro" Height="650" Width="850" MinHeight="550" MinWidth="750"
+        WindowStartupLocation="CenterOwner" Background="#F8FAFC"
+        TextElement.FontFamily="Segoe UI" TextElement.FontSize="12">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#0F2D52" Padding="16,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:SymbolIcon Symbol="BookOpen24" Foreground="#38BDF8" FontSize="20" Margin="0,0,10,0" />
+                    <TextBlock Text="HƯỚNG DẪN SỬ DỤNG — MATRIXEXAMAI PRO"
+                               Foreground="White" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
+                </StackPanel>
+                <Border Grid.Column="1" Background="#0284C7" CornerRadius="4" Padding="8,3">
+                    <TextBlock Text="Cẩm nang sư phạm THPT" Foreground="White" FontSize="10.5" FontWeight="SemiBold" />
+                </Border>
+            </Grid>
+        </Border>
+        <Border Grid.Row="0" VerticalAlignment="Bottom" Height="3" Background="#38BDF8" />
+
+        <!-- Body: TabControl containing guides -->
+        <TabControl Grid.Row="1" Margin="12,10,12,6" Background="White">
+            <!-- Tab 1: Cài đặt & Kết nối AI -->
+            <TabItem Header=" 1. Cài đặt AI " FontWeight="SemiBold">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16,12">
+                    <StackPanel>
+                        <TextBlock Text="Cấu hình Kết nối Trí tuệ Nhân tạo (AI)" FontSize="14" FontWeight="Bold" Foreground="#1F497D" Margin="0,0,0,8" />
+                        <TextBlock Text="• Vào menu 'Cài đặt &amp; Bản quyền' (phím tắt Ctrl+8)." Margin="0,2,0,4" />
+                        <TextBlock Text="• Chọn nhà cung cấp AI: Google Gemini (khuyên dùng), Claude, hoặc DeepSeek." Margin="0,2,0,4" />
+                        <TextBlock Text="• Nhập API Key hợp lệ và bấm 'Kiểm tra kết nối'." Margin="0,2,0,4" />
+                        <TextBlock Text="• Thiết lập sẵn Môn học, Khối lớp mặc định để tiện lợi khi tạo đề tự động." Margin="0,2,0,8" />
+
+                        <Border Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="12,8" Margin="0,6,0,0">
+                            <TextBlock Text="💡 Mẹo: Toàn bộ API Key được bảo mật an toàn trên máy cục bộ của quý thầy cô." Foreground="#475569" FontStyle="Italic" />
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 2: Tạo đề nhanh & Tạo ma trận -->
+            <TabItem Header=" 2. Tạo đề &amp; Ma trận " FontWeight="SemiBold">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16,12">
+                    <StackPanel>
+                        <TextBlock Text="Khởi tạo Đề thi &amp; Ma trận chuẩn BGD 2025" FontSize="14" FontWeight="Bold" Foreground="#1F497D" Margin="0,0,0,8" />
+                        <TextBlock Text="• Bấm nút '⚡ Tạo đề nhanh' trên thanh Quick Action Bar để mở giao diện nhập ma trận số câu và thang điểm 10." Margin="0,2,0,4" />
+                        <TextBlock Text="• Hoặc bấm '🤖 Tạo ma trận AI' để trợ lý AI phân tích theo Môn học, Khối lớp, Thời lượng (15p, 45p, 60p, 90p) và sinh tự động ma trận chuẩn BGD." Margin="0,2,0,4" />
+                        <TextBlock Text="• Nút '🎯 Nguồn tạo đề' cho phép lựa chọn: Tạo mới hoàn toàn bằng AI, Lấy 100% từ Ngân hàng câu hỏi hoặc Kết hợp theo tỷ lệ % mong muốn." Margin="0,2,0,4" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 3: Phân hệ Convert & Xem trước Word -->
+            <TabItem Header=" 3. Soạn &amp; Chuẩn hóa đề " FontWeight="SemiBold">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16,12">
+                    <StackPanel>
+                        <TextBlock Text="Nhận diện và Chuẩn hóa Đề thi Word" FontSize="14" FontWeight="Bold" Foreground="#1F497D" Margin="0,0,0,8" />
+                        <TextBlock Text="• Dán đề thi thô hoặc mở tệp Word có sẵn (.docx) vào ô soạn thảo bên trái." Margin="0,2,0,4" />
+                        <TextBlock Text="• Bấm '🔍 Nhận diện câu hỏi' (phím tắt F5 hoặc Ctrl+Enter): Hệ thống sẽ tự động bóc tách từng câu (Phần I, II, III, IV), gắn mức độ nhận thức và phân tích đáp án." Margin="0,2,0,4" />
+                        <TextBlock Text="• Khung Xem trước Word A4 bên phải tái hiện chính xác 1:1 trang in Microsoft Word (Times New Roman 12pt, lề chuẩn, dãn dòng 1.15, phương án A/B/C/D dàn tab phẳng)." Margin="0,2,0,4" />
+                        <TextBlock Text="• Bấm 'Xuất Word' hoặc 'Mở trong Word' để làm việc trực tiếp với Microsoft Word." Margin="0,2,0,4" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 4: AI Vẽ hình TikZ -->
+            <TabItem Header=" 4. Vẽ hình TikZ " FontWeight="SemiBold">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16,12">
+                    <StackPanel>
+                        <TextBlock Text="Vẽ Hình học Toán học &amp; Đồ thị Hàm số bằng TikZ" FontSize="14" FontWeight="Bold" Foreground="#1F497D" Margin="0,0,0,8" />
+                        <TextBlock Text="• Chọn mẫu có sẵn từ Thư viện hình vẽ (Hình không gian, Đồ thị đa thức, Bảng biến thiên tkz-tab, Hình học phẳng)." Margin="0,2,0,4" />
+                        <TextBlock Text="• Hoặc bấm '🤖 AI Sinh mã TikZ' và nhập mô tả hình cần vẽ bằng tiếng Việt." Margin="0,2,0,4" />
+                        <TextBlock Text="• Bấm 'Biên dịch hình' (F5): Hình ảnh sẽ xuất ra với độ phân giải siêu nét 600 DPI." Margin="0,2,0,4" />
+                        <TextBlock Text="• Bấm 'Chèn Word' để dán thẳng hình vector/ảnh sắc nét vào tài liệu Word đang mở." Margin="0,2,0,4" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab 5: Trộn đề & Phiếu OMR -->
+            <TabItem Header=" 5. Trộn đề &amp; OMR " FontWeight="SemiBold">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16,12">
+                    <StackPanel>
+                        <TextBlock Text="Trộn Đề thi Hoán vị &amp; Xuất Phiếu soi Tô tròn OMR" FontSize="14" FontWeight="Bold" Foreground="#1F497D" Margin="0,0,0,8" />
+                        <TextBlock Text="• Chọn số lượng mã đề cần tạo (ví dụ 101, 102, 103, 104...)." Margin="0,2,0,4" />
+                        <TextBlock Text="• Chọn chế độ trộn câu hỏi, đảo thứ tự phương án trắc nghiệm." Margin="0,2,0,4" />
+                        <TextBlock Text="• Xuất bộ đề kèm bảng đáp án ma trận và phiếu soi chấm thi trắc nghiệm tiện lợi." Margin="0,2,0,4" />
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="16,10">
+            <ui:Button HorizontalAlignment="Right" Height="32" Padding="20,0"
+                       Background="#1F497D" Foreground="White" BorderThickness="0" CornerRadius="4"
+                       FontWeight="SemiBold" Cursor="Hand" Click="BtnClose_Click" Content="Đóng" />
+        </Border>
+    </Grid>
+</Window>

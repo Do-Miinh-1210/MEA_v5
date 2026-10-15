@@ -1,0 +1,251 @@
+<Window x:Class="MatrixExamAI.Desktop.Views.QuickGenDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="Tạo đề nhanh" Height="680" Width="960" MinHeight="600" MinWidth="850"
+        WindowStartupLocation="CenterOwner" Background="#F8FAFC"
+        TextElement.FontFamily="Segoe UI" TextElement.FontSize="12">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#0F2D52" Padding="16,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <ui:SymbolIcon Symbol="Flash24" Foreground="#F59E0B" FontSize="20" Margin="0,0,10,0" />
+                    <TextBlock Text="TẠO ĐỀ NHANH — Thiết lập cấu trúc đề kiểm tra"
+                               Foreground="White" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
+                </StackPanel>
+                <Border Grid.Column="1" Background="#10B981" CornerRadius="4" Padding="8,2">
+                    <TextBlock Text="Chuẩn BGD 2025" Foreground="White" FontSize="10.5" FontWeight="SemiBold" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Main Body -->
+        <TabControl Grid.Row="1" Margin="12,8,12,4" Background="White">
+            <!-- Tab 1: Tự nhập dữ liệu -->
+            <TabItem Header="  Tự nhập dữ liệu  " FontWeight="SemiBold">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Thông tin chung -->
+                    <GroupBox Grid.Row="0" Header="Thông tin chung" Padding="8,6" Margin="0,0,0,6">
+                        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Margin="0,2,14,2">
+                                <TextBlock Text="Môn:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <ComboBox x:Name="CmbSubject" Width="100" Height="26" SelectedIndex="0">
+                                    <ComboBoxItem Content="Toán" />
+                                    <ComboBoxItem Content="Vật lý" />
+                                    <ComboBoxItem Content="Hóa học" />
+                                    <ComboBoxItem Content="Sinh học" />
+                                    <ComboBoxItem Content="Ngữ văn" />
+                                    <ComboBoxItem Content="Tiếng Anh" />
+                                    <ComboBoxItem Content="Lịch sử" />
+                                    <ComboBoxItem Content="Địa lý" />
+                                    <ComboBoxItem Content="Tin học" />
+                                    <ComboBoxItem Content="Công nghệ" />
+                                </ComboBox>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,2,14,2">
+                                <TextBlock Text="Lớp:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <ComboBox x:Name="CmbGrade" Width="60" Height="26" SelectedIndex="6">
+                                    <ComboBoxItem Content="6" />
+                                    <ComboBoxItem Content="7" />
+                                    <ComboBoxItem Content="8" />
+                                    <ComboBoxItem Content="9" />
+                                    <ComboBoxItem Content="10" />
+                                    <ComboBoxItem Content="11" />
+                                    <ComboBoxItem Content="12" />
+                                </ComboBox>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,2,14,2">
+                                <TextBlock Text="Kỳ:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <ComboBox x:Name="CmbSemester" Width="100" Height="26" SelectedIndex="2">
+                                    <ComboBoxItem Content="Giữa kì I" />
+                                    <ComboBoxItem Content="Cuối kì I" />
+                                    <ComboBoxItem Content="Giữa kì II" />
+                                    <ComboBoxItem Content="Cuối kì II" />
+                                </ComboBox>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,2,14,2">
+                                <TextBlock Text="Năm:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <TextBox x:Name="TxtYear" Width="90" Height="26" Text="2025-2026" VerticalContentAlignment="Center" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
+                                <TextBlock Text="Thời gian:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <ComboBox x:Name="CmbDuration" Width="90" Height="26" SelectedIndex="3">
+                                    <ComboBoxItem Content="15 phút" />
+                                    <ComboBoxItem Content="45 phút" />
+                                    <ComboBoxItem Content="60 phút" />
+                                    <ComboBoxItem Content="90 phút" />
+                                </ComboBox>
+                            </StackPanel>
+                        </WrapPanel>
+                    </GroupBox>
+
+                    <!-- Yêu cầu thêm cho AI -->
+                    <GroupBox Grid.Row="1" Header="Yêu cầu thêm cho AI (tùy chọn)" Padding="8,4" Margin="0,0,0,6">
+                        <TextBox x:Name="TxtAiRequirement" Height="32" VerticalContentAlignment="Center"
+                                 Text="VD: Câu hỏi phải có bảng số liệu, câu hỏi thực tế, không quá khó..."
+                                 GotFocus="TxtAiRequirement_GotFocus" LostFocus="TxtAiRequirement_LostFocus"
+                                 Foreground="#64748B" />
+                    </GroupBox>
+
+                    <!-- Buttons thao tác hàng -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,4,0,6">
+                        <Button x:Name="BtnAddRow" Content="+ Thêm hàng" Background="#3B82F6" Foreground="White"
+                                FontWeight="Bold" Padding="12,5" Margin="0,0,8,0" Click="BtnAddRow_Click" />
+                        <Button x:Name="BtnAdd5SampleRows" Content="Thêm mẫu 5 hàng" Background="#8B5CF6" Foreground="White"
+                                FontWeight="Bold" Padding="12,5" Margin="0,0,8,0" Click="BtnAdd5SampleRows_Click" />
+                        <Button x:Name="BtnClearAllRows" Content="Xóa tất cả" Background="#6B7280" Foreground="White"
+                                FontWeight="Bold" Padding="12,5" Click="BtnClearAllRows_Click" />
+                    </StackPanel>
+
+                    <!-- DataGrid danh sách cấu hình hàng -->
+                    <DataGrid Grid.Row="3" x:Name="DgQuickRows" AutoGenerateColumns="False" CanUserAddRows="False"
+                              HeadersVisibility="Column" GridLinesVisibility="Horizontal" RowHeight="32"
+                              Background="White" BorderBrush="#CBD5E1" BorderThickness="1"
+                              CellEditEnding="DgQuickRows_CellEditEnding">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="STT" Binding="{Binding Stt}" Width="45" IsReadOnly="True" />
+                            <DataGridTextColumn Header="Chủ đề / Nội dung" Binding="{Binding Topic}" Width="2*" />
+                            <DataGridTemplateColumn Header="Loại câu" Width="1.5*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedValue="{Binding QuestionType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  SelectedValuePath="Tag" Height="24" SelectionChanged="RowData_Changed">
+                                            <ComboBoxItem Content="TN — Trắc nghiệm" Tag="TN" />
+                                            <ComboBoxItem Content="DS — Đúng / Sai" Tag="DS" />
+                                            <ComboBoxItem Content="TLN — Trả lời ngắn" Tag="TLN" />
+                                            <ComboBoxItem Content="TL — Tự luận" Tag="TL" />
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Mức độ" Width="1.5*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedValue="{Binding Level, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  SelectedValuePath="Tag" Height="24" SelectionChanged="RowData_Changed">
+                                            <ComboBoxItem Content="NB — Nhận biết" Tag="NB" />
+                                            <ComboBoxItem Content="TH — Thông hiểu" Tag="TH" />
+                                            <ComboBoxItem Content="VD — Vận dụng" Tag="VD" />
+                                            <ComboBoxItem Content="VDC — Vận dụng cao" Tag="VDC" />
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Số câu" Binding="{Binding Count, UpdateSourceTrigger=PropertyChanged}" Width="65" />
+                            <DataGridTextColumn Header="Điểm/câu" Binding="{Binding PointsPerQuestion, UpdateSourceTrigger=PropertyChanged}" Width="75" />
+                            <DataGridTextColumn Header="Yêu cầu cần đạt" Binding="{Binding Requirement}" Width="2*" />
+                            <DataGridTemplateColumn Header="Xóa" Width="50">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="X" Foreground="#EF4444" FontWeight="Bold" Width="26" Height="22"
+                                                Padding="0" Background="Transparent" BorderThickness="0"
+                                                Click="BtnDeleteRow_Click" ToolTip="Xóa hàng này" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <!-- Tab 2: Dùng mẫu nhanh -->
+            <TabItem Header="  Dùng mẫu nhanh  " FontWeight="SemiBold">
+                <Grid Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="Chọn cấu trúc mẫu định sẵn theo chuẩn Bộ GD&amp;ĐT:" FontWeight="SemiBold" FontSize="12.5" Margin="0,0,0,12" />
+
+                    <UniformGrid Grid.Row="1" Columns="2" Rows="2">
+                        <!-- Mẫu 15 phút -->
+                        <Border Margin="6" Background="#EFF6FF" BorderBrush="#93C5FD" BorderThickness="1" CornerRadius="6" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="⚡ Đề kiểm tra 15 phút" FontSize="13" FontWeight="Bold" Foreground="#1E40AF" />
+                                <TextBlock Text="• Cấu trúc: 7 câu Trắc nghiệm 4 lựa chọn" Margin="0,6,0,2" />
+                                <TextBlock Text="• Phù hợp: Kiểm tra đầu giờ, kiểm tra nhanh kiến thức" Foreground="#475569" Margin="0,0,0,10" />
+                                <Button Content="Áp dụng mẫu 15 phút" Background="#2563EB" Foreground="White" FontWeight="Bold"
+                                        Padding="10,6" Click="BtnApply15m_Click" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Mẫu 45 phút -->
+                        <Border Margin="6" Background="#F0FDF4" BorderBrush="#86EFAC" BorderThickness="1" CornerRadius="6" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="📚 Đề kiểm tra 45 phút (1 tiết)" FontSize="13" FontWeight="Bold" Foreground="#166534" />
+                                <TextBlock Text="• Cấu trúc: 12 câu TN (3đ) + 2 câu DS (4đ) + 3 câu TLN (3đ)" Margin="0,6,0,2" />
+                                <TextBlock Text="• Phù hợp: Kiểm tra định kỳ 1 tiết chuẩn cấu trúc 2025" Foreground="#475569" Margin="0,0,0,10" />
+                                <Button Content="Áp dụng mẫu 45 phút" Background="#16A34A" Foreground="White" FontWeight="Bold"
+                                        Padding="10,6" Click="BtnApply45m_Click" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Mẫu 60 phút -->
+                        <Border Margin="6" Background="#FAF5FF" BorderBrush="#D8B4FE" BorderThickness="1" CornerRadius="6" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="📝 Đề kiểm tra 60 phút" FontSize="13" FontWeight="Bold" Foreground="#6B21A8" />
+                                <TextBlock Text="• Cấu trúc: 15 câu TN + 3 câu DS + 4 câu TLN + 1 câu TL" Margin="0,6,0,2" />
+                                <TextBlock Text="• Phù hợp: Kiểm tra giữa kỳ nâng cao" Foreground="#475569" Margin="0,0,0,10" />
+                                <Button Content="Áp dụng mẫu 60 phút" Background="#9333EA" Foreground="White" FontWeight="Bold"
+                                        Padding="10,6" Click="BtnApply60m_Click" />
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Mẫu 90 phút -->
+                        <Border Margin="6" Background="#FFFBEB" BorderBrush="#FCD34D" BorderThickness="1" CornerRadius="6" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="🏆 Đề kiểm tra 90 phút (Học kỳ / THPT)" FontSize="13" FontWeight="Bold" Foreground="#92400E" />
+                                <TextBlock Text="• Cấu trúc chuẩn BGD 2025: 12 TN (3đ) + 4 DS (4đ) + 6 TLN (3đ)" Margin="0,6,0,2" />
+                                <TextBlock Text="• Phù hợp: Thi cuối học kỳ, thi thử tốt nghiệp THPT" Foreground="#475569" Margin="0,0,0,10" />
+                                <Button Content="Áp dụng mẫu 90 phút" Background="#D97706" Foreground="White" FontWeight="Bold"
+                                        Padding="10,6" Click="BtnApply90m_Click" />
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Bottom Footer Bar -->
+        <Border Grid.Row="2" Background="#E2E8F0" BorderBrush="#CBD5E1" BorderThickness="0,1,0,0" Padding="16,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="TxtSummary" Text="Tổng số: 3 câu | Tổng điểm: 0.8 điểm"
+                           FontWeight="Bold" FontSize="12.5" Foreground="#0F2D52" VerticalAlignment="Center" />
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="Hủy bỏ" Width="100" Height="34" Margin="0,0,10,0"
+                            Background="#64748B" Foreground="White" FontWeight="SemiBold" Click="BtnCancel_Click" />
+                    <Button Content="TẠO ĐỀ NGAY" Width="140" Height="34"
+                            Background="#10B981" Foreground="White" FontWeight="Bold" Click="BtnCreateExam_Click" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

@@ -228,6 +228,43 @@ namespace MatrixExamAI.Desktop.Views
 
         public void GenerateExamWithAi() => BtnAiGenerateExam_Click(this, new RoutedEventArgs());
 
+        public void ApplyAiMatrixConfig(string subject, string gradeStr, string durationStr, string semester, string extraRequirements)
+        {
+            foreach (ComboBoxItem item in CmbSubject.Items)
+            {
+                if (item.Content?.ToString()?.Contains(subject, StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    CmbSubject.SelectedItem = item;
+                    break;
+                }
+            }
+
+            foreach (ComboBoxItem item in CmbGrade.Items)
+            {
+                if (item.Content?.ToString()?.Contains(gradeStr, StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    CmbGrade.SelectedItem = item;
+                    break;
+                }
+            }
+
+            foreach (ComboBoxItem item in CmbDuration.Items)
+            {
+                if (item.Content?.ToString()?.Contains(durationStr, StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    CmbDuration.SelectedItem = item;
+                    break;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(extraRequirements))
+            {
+                TxtExamTopic.Text = extraRequirements;
+            }
+
+            GenerateExamWithAi();
+        }
+
         private async void BtnAiGenerateExam_Click(object sender, RoutedEventArgs e)
         {
             string subject = (CmbSubject.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Toán học";

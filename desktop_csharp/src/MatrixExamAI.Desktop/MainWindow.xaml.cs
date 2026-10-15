@@ -158,37 +158,31 @@ namespace MatrixExamAI.Desktop
 
         private void BtnQuickGen_Click(object sender, RoutedEventArgs e)
         {
-            NavigateTo("convert");
-            if (string.IsNullOrWhiteSpace(_convertView.TxtInput.Text))
+            var dlg = new QuickGenDialog
             {
-                _convertView.TxtInput.Text = @"% ĐỀ THI TẠO NHANH CHUẨN BGD 2025
-PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn. Thí sinh trả lời từ câu 1 đến câu 12. Mỗi câu hỏi thí sinh chỉ chọn một phương án.
-Câu 1. Cho hàm số y = f(x) có đạo hàm f'(x) = x(x - 1)^2. Số điểm cực trị của hàm số là:
-A. 1.
-B. 2.
-C. 0.
-D. 3.
-Lời giải:
-Ta có f'(x) đổi dấu khi qua nghiệm đơn x = 0. Vậy hàm số có 1 cực trị. Chọn A.
+                Owner = this
+            };
 
-PHẦN II. Câu trắc nghiệm đúng sai. Thí sinh trả lời từ câu 1 đến câu 4. Trong mỗi ý a), b), c), d) ở mỗi câu, thí sinh chọn đúng hoặc sai.
-Câu 1. Cho hàm số y = x^3 - 3x + 2.
-a) Tập xác định của hàm số là R.
-b) Đạo hàm y' = 3x^2 - 3.
-c) Hàm số đồng biến trên khoảng (-1; 1).
-d) Giá trị cực đại của hàm số bằng 4.
-
-PHẦN III. Câu trắc nghiệm trả lời ngắn. Thí sinh trả lời từ câu 1 đến câu 6.
-Câu 1. Tìm giá trị lớn nhất của hàm số y = -x^2 + 4x + 1.
-Đáp án: 5
-";
+            if (dlg.ShowDialog() == true && !string.IsNullOrWhiteSpace(dlg.GeneratedExamPrompt))
+            {
+                NavigateTo("convert");
+                _convertView.TxtInput.Text = dlg.GeneratedExamPrompt;
+                _convertView.TriggerConvertWithAi();
             }
         }
 
         private void BtnAiMatrix_Click(object sender, RoutedEventArgs e)
         {
-            NavigateTo("matrix");
-            _examMatrixView.GenerateExamWithAi();
+            var dlg = new AiMatrixDialog
+            {
+                Owner = this
+            };
+
+            if (dlg.ShowDialog() == true)
+            {
+                NavigateTo("matrix");
+                _examMatrixView.ApplyAiMatrixConfig(dlg.Subject, dlg.Grade, dlg.Duration, dlg.Semester, dlg.ExtraRequirements);
+            }
         }
 
         private void BtnSmartPrompt_Click(object sender, RoutedEventArgs e)
@@ -199,8 +193,36 @@ Câu 1. Tìm giá trị lớn nhất của hàm số y = -x^2 + 4x + 1.
 
         private void BtnChooseSource_Click(object sender, RoutedEventArgs e)
         {
-            NavigateTo("convert");
-            _convertView.TriggerOpenFile();
+            var dlg = new SourceMethodDialog
+            {
+                Owner = this
+            };
+
+            if (dlg.ShowDialog() == true)
+            {
+                if (dlg.SelectedMode == "bank_only")
+                {
+                    NavigateTo("bank");
+                }
+                else if (dlg.SelectedMode == "mixed")
+                {
+                    NavigateTo("matrix");
+                    System.Windows.MessageBox.Show($"Đã chọn phương thức: Kết hợp ({dlg.BankRatio}% từ Ngân hàng câu hỏi, {100 - dlg.BankRatio}% tạo bằng AI).", "Nguồn tạo đề", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                }
+                else
+                {
+                    NavigateTo("convert");
+                }
+            }
+        }
+
+        private void BtnGuide_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new QuickGuideDialog
+            {
+                Owner = this
+            };
+            dlg.ShowDialog();
         }
 
         private void BtnAiGen_Click(object sender, RoutedEventArgs e)
@@ -549,6 +571,13 @@ Câu 1. Tìm giá trị lớn nhất của hàm số y = -x^2 + 4x + 1.
                     _tikzView.ToggleCodePanel();
                     return true;
                 }
+            }
+
+            // 12. Ctrl + H: Open Quick Guide
+            if (isCtrl && !isAlt && !isShift && key == Key.H)
+            {
+                TriggerButtonClick(BtnGuide);
+                return true;
             }
 
             return false;

@@ -1359,7 +1359,7 @@ Bắt đầu ngay câu đầu tiên. Không thêm lời mở đầu hay markdown
             get
             {
                 if (CmbWordFontSize?.SelectedItem is ComboBoxItem item &&
-                    double.TryParse(item.Tag?.ToString(), out double size))
+                    double.TryParse(item.Tag?.ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double size))
                 {
                     return size;
                 }
@@ -1372,7 +1372,7 @@ Bắt đầu ngay câu đầu tiên. Không thêm lời mở đầu hay markdown
             get
             {
                 if (CmbWordLineSpacing?.SelectedItem is ComboBoxItem item &&
-                    double.TryParse(item.Tag?.ToString(), out double factor))
+                    double.TryParse(item.Tag?.ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double factor))
                 {
                     return factor;
                 }
@@ -1475,8 +1475,10 @@ Bắt đầu ngay câu đầu tiên. Không thêm lời mở đầu hay markdown
 
         private void RenderParsedQuestionsToPreview()
         {
-            PanelDocContent.Children.Clear();
-            if (_parsedQuestions == null || _parsedQuestions.Count == 0) return;
+            try
+            {
+                PanelDocContent.Children.Clear();
+                if (_parsedQuestions == null || _parsedQuestions.Count == 0) return;
 
             string subject = _parsedQuestions.FirstOrDefault(q => !string.IsNullOrWhiteSpace(q.Subject))?.Subject ?? "Toán";
             int grade = _parsedQuestions.FirstOrDefault(q => q.Grade > 0)?.Grade ?? 12;
@@ -1637,83 +1639,137 @@ Bắt đầu ngay câu đầu tiên. Không thêm lời mở đầu hay markdown
                 }
             }
         }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[RenderParsedQuestionsToPreview] Error: {ex.Message}");
+        }
+    }
 
         private void RenderSingleQuestionPreview(QuestionItem q, int qIndex)
         {
-            string cleanContent = Regex.Replace(q.Content ?? "", @"\[(?:HINH_ANH|IMAGE|ANH|H[ÌI]NH(?:\s*\d+)?):\s*[^\]]+\]", "").Trim();
-            string qTitle = $"Câu {qIndex}. {cleanContent}";
-            var qPara = RenderVisualParagraph(qTitle, forceBold: false);
-
-            var imgCtrl = CreatePreviewImageForQuestion(q, qIndex);
-
-            if (imgCtrl != null)
+            try
             {
-                // Dạng 2 cột: Cột trái nội dung + phương án, Cột phải hình ảnh
-                var qGrid = new Grid { Margin = new Thickness(0, 2, 0, 6) };
-                qGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(68, GridUnitType.Star) });
-                qGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(32, GridUnitType.Star) });
+                string cleanContent = Regex.Replace(q.Content ?? "", @"\[(?:HINH_ANH|IMAGE|ANH|H[ÌI]NH(?:\s*\d+)?):\s*[^\]]+\]", "").Trim();
+                string qTitle = $"Câu {qIndex}. {cleanContent}";
+                var qPara = RenderVisualParagraph(qTitle, forceBold: false);
 
-                var leftStack = new StackPanel { Margin = new Thickness(0, 0, 8, 0) };
-                leftStack.Children.Add(qPara);
+                var imgCtrl = CreatePreviewImageForQuestion(q, qIndex);
 
-                if (q.QuestionType == "MultipleChoice4" && q.Options != null && q.Options.Count > 0)
+                if (imgCtrl != null)
                 {
-                    var choiceGrid = RenderChoiceGrid(q.Options);
-                    leftStack.Children.Add(choiceGrid);
-                }
-                else if (q.QuestionType == "TrueFalse4" && q.Options != null && q.Options.Count > 0)
-                {
-                    string[] keys = { "a", "b", "c", "d" };
-                    foreach (var k in keys)
+                    // Dạng 2 cột: Cột trái nội dung + phương án, Cột phải hình ảnh
+                    var qGrid = new Grid { Margin = new Thickness(0, 2, 0, 6) };
+                    qGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(68, GridUnitType.Star) });
+                    qGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(32, GridUnitType.Star) });
+
+                    var leftStack = new StackPanel { Margin = new Thickness(0, 0, 8, 0) };
+                    leftStack.Children.Add(qPara);
+
+                    if (q.QuestionType == "MultipleChoice4" && q.Options != null && q.Options.Count > 0)
                     {
-                        if (q.Options.ContainsKey(k))
+                        var choiceGrid = RenderChoiceGrid(q.Options);
+                        leftStack.Children.Add(choiceGrid);
+                    }
+                    else if (q.QuestionType == "TrueFalse4" && q.Options != null && q.Options.Count > 0)
+                    {
+                        string[] keys = { "a", "b", "c", "d" };
+                        foreach (var k in keys)
                         {
-                            var itemPara = RenderVisualParagraph($"{k}) {q.Options[k]}");
-                            leftStack.Children.Add(itemPara);
+                            if (q.Options.ContainsKey(k))
+                            {
+                                var itemPara = RenderVisualParagraph($"{k}) {q.Options[k]}");
+                                leftStack.Children.Add(itemPara);
+                            }
                         }
                     }
-                }
-                else if (q.QuestionType == "ShortAnswer")
-                {
-                    var ansPara = RenderVisualParagraph("Đáp án: | | | | |", forceBold: true);
-                    leftStack.Children.Add(ansPara);
-                }
-
-                Grid.SetColumn(leftStack, 0);
-                Grid.SetColumn(imgCtrl, 1);
-                qGrid.Children.Add(leftStack);
-                qGrid.Children.Add(imgCtrl);
-                PanelDocContent.Children.Add(qGrid);
-            }
-            else
-            {
-                PanelDocContent.Children.Add(qPara);
-
-                if (q.QuestionType == "MultipleChoice4" && q.Options != null && q.Options.Count > 0)
-                {
-                    var choiceGrid = RenderChoiceGrid(q.Options);
-                    PanelDocContent.Children.Add(choiceGrid);
-                }
-                else if (q.QuestionType == "TrueFalse4" && q.Options != null && q.Options.Count > 0)
-                {
-                    string[] keys = { "a", "b", "c", "d" };
-                    foreach (var k in keys)
+                    else if (q.QuestionType == "ShortAnswer")
                     {
-                        if (q.Options.ContainsKey(k))
+                        var ansPara = RenderVisualParagraph("Đáp án: | | | | |", forceBold: true);
+                        leftStack.Children.Add(ansPara);
+                    }
+                    else if (q.Options != null && q.Options.Count > 0)
+                    {
+                        var choiceGrid = RenderChoiceGrid(q.Options);
+                        leftStack.Children.Add(choiceGrid);
+                    }
+
+                    Grid.SetColumn(leftStack, 0);
+                    Grid.SetColumn(imgCtrl, 1);
+                    qGrid.Children.Add(leftStack);
+                    qGrid.Children.Add(imgCtrl);
+                    PanelDocContent.Children.Add(qGrid);
+                }
+                else
+                {
+                    PanelDocContent.Children.Add(qPara);
+
+                    if (q.QuestionType == "MultipleChoice4" && q.Options != null && q.Options.Count > 0)
+                    {
+                        var choiceGrid = RenderChoiceGrid(q.Options);
+                        PanelDocContent.Children.Add(choiceGrid);
+                    }
+                    else if (q.QuestionType == "TrueFalse4" && q.Options != null && q.Options.Count > 0)
+                    {
+                        string[] keys = { "a", "b", "c", "d" };
+                        foreach (var k in keys)
                         {
-                            var itemPara = RenderVisualParagraph($"{k}) {q.Options[k]}");
-                            PanelDocContent.Children.Add(itemPara);
+                            if (q.Options.ContainsKey(k))
+                            {
+                                var itemPara = RenderVisualParagraph($"{k}) {q.Options[k]}");
+                                PanelDocContent.Children.Add(itemPara);
+                            }
                         }
                     }
+                    else if (q.QuestionType == "ShortAnswer")
+                    {
+                        var ansPara = RenderVisualParagraph("Đáp án: | | | | |", forceBold: true);
+                        PanelDocContent.Children.Add(ansPara);
+                    }
+                    else if (q.Options != null && q.Options.Count > 0)
+                    {
+                        var choiceGrid = RenderChoiceGrid(q.Options);
+                        PanelDocContent.Children.Add(choiceGrid);
+                    }
                 }
-                else if (q.QuestionType == "ShortAnswer")
-                {
-                    var ansPara = RenderVisualParagraph("Đáp án: | | | | |", forceBold: true);
-                    PanelDocContent.Children.Add(ansPara);
-                }
-            }
 
-            PanelDocContent.Children.Add(new Border { Height = 4 });
+                PanelDocContent.Children.Add(new Border { Height = 4 });
+            }
+            catch
+            {
+                // Fallback cứu hộ: không bao giờ để trống câu hỏi
+                try
+                {
+                    var fallbackTb = new TextBlock
+                    {
+                        Text = $"Câu {qIndex}. {q.Content ?? string.Empty}",
+                        FontFamily = new FontFamily("Times New Roman"),
+                        FontSize = CurrentWordFontSize * 1.125,
+                        TextWrapping = TextWrapping.Wrap,
+                        Foreground = new SolidColorBrush(Color.FromRgb(15, 23, 42)),
+                        Margin = new Thickness(0, 2, 0, 2)
+                    };
+                    PanelDocContent.Children.Add(fallbackTb);
+
+                    if (q.Options != null && q.Options.Count > 0)
+                    {
+                        foreach (var kvp in q.Options)
+                        {
+                            var optTb = new TextBlock
+                            {
+                                Text = $"{kvp.Key}. {kvp.Value}",
+                                FontFamily = new FontFamily("Times New Roman"),
+                                FontSize = CurrentWordFontSize * 1.125,
+                                TextWrapping = TextWrapping.Wrap,
+                                Foreground = new SolidColorBrush(Color.FromRgb(15, 23, 42)),
+                                Margin = new Thickness(12, 1, 0, 1)
+                            };
+                            PanelDocContent.Children.Add(optTb);
+                        }
+                    }
+                    PanelDocContent.Children.Add(new Border { Height = 4 });
+                }
+                catch { }
+            }
         }
 
         private Image? CreatePreviewImageForQuestion(QuestionItem q, int qIndex)
@@ -1808,8 +1864,8 @@ Bắt đầu ngay câu đầu tiên. Không thêm lời mở đầu hay markdown
             else if (layout == "1col") cols = 1;
             else
             {
-                int maxLen = options.Values.Select(v => v.Length).DefaultIfEmpty(0).Max();
-                int totalLen = options.Values.Select(v => v.Length).Sum();
+                int maxLen = options.Values.Where(v => v != null).Select(v => v.Length).DefaultIfEmpty(0).Max();
+                int totalLen = options.Values.Where(v => v != null).Select(v => v.Length).Sum();
                 if (maxLen > 55 || totalLen > 110) cols = 1;
                 else if (maxLen > 25 || totalLen > 55) cols = 2;
                 else cols = 4;
