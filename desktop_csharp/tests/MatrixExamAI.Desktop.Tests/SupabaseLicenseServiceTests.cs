@@ -156,6 +156,99 @@ public class SupabaseLicenseServiceTests
         Assert.Null(threadEx);
     }
 
+    [Fact]
+    public void SupabaseLicenseService_ObfuscatedStrings_DeobfuscateCorrectly()
+    {
+        Assert.Equal("https://rjilazlxrlqsqvobobvc.supabase.co", SupabaseLicenseService.SupabaseUrl);
+        Assert.Equal("sb_publishable_4xA76_VnO6EE5AlykJPAeg_VgwZIG4J", SupabaseLicenseService.SupabaseAnonKey);
+    }
+
+    [Fact]
+    public void SupabaseLicenseService_AlgorithmicKey_GeneratesAndVerifiesCorrectly()
+    {
+        string vipKey = SupabaseLicenseService.GenerateLicenseKey("VIP", "2026");
+        Assert.StartsWith("MEA-VIP-2026-", vipKey);
+        bool isVipOk = SupabaseLicenseService.VerifyLicenseKey(vipKey, out string vipTier);
+        Assert.True(isVipOk);
+        Assert.Equal("premium", vipTier);
+
+        string proKey = SupabaseLicenseService.GenerateLicenseKey("PRO", "TESTING");
+        Assert.StartsWith("MEA-PRO-TESTING-", proKey);
+        bool isProOk = SupabaseLicenseService.VerifyLicenseKey(proKey, out string proTier);
+        Assert.True(isProOk);
+        Assert.Equal("pro", proTier);
+    }
+
+    [Fact]
+    public void SupabaseLicenseService_AlgorithmicKey_RejectsWeakAndTamperedKeys()
+    {
+        // Loại bỏ hoàn toàn lỗ hổng bypass chuỗi độ dài >= 8 hoặc chứa từ khóa đơn giản
+        Assert.False(SupabaseLicenseService.VerifyLicenseKey("12345678", out _));
+        Assert.False(SupabaseLicenseService.VerifyLicenseKey("abcdefgh", out _));
+        Assert.False(SupabaseLicenseService.VerifyLicenseKey("PRO12345", out _));
+        Assert.False(SupabaseLicenseService.VerifyLicenseKey("MEA-PRO-2026-0000", out _)); // Sai Checksum
+    }
+
+    [Fact]
+    public void SupabaseLicenseService_TamperedPlaintextCache_IsRejected()
+    {
+        string tempCache = Path.GetTempFileName();
+        try
+        {
+            var service = new SupabaseLicenseService(customCachePath: tempCache, customMachineId: "TEST-TAMPER-0001");
+            
+            // Attacker cố tình tạo file plaintext JSON giả mạo status active vĩnh viễn
+            string fakeJson = @"{
+                ""MachineId"": ""TEST-TAMPER-0001"",
+                ""Status"": ""active"",
+                ""Tier"": ""premium"",
+                ""Name"": ""Cracker"",
+                ""Expiry"": ""Vĩnh viễn"",
+                ""Signature"": ""INVALID_TAMPERED_SIGNATURE""
+            }";
+            File.WriteAllText(tempCache, fakeJson);
+
+            var loaded = service.LoadCache();
+            Assert.Null(loaded); // Bị chữ ký HMAC phát hiện và từ chối nạp!
+        }
+        finally
+        {
+            if (File.Exists(tempCache)) File.Delete(tempCache);
+        }
+    }
+
+    [Fact]
+    public void SupabaseLicenseService_CrossMachineCache_IsRejected()
+    {
+        string tempCache = Path.GetTempFileName();
+        try
+        {
+            // Máy A lưu cache hợp lệ
+            var serviceA = new SupabaseLicenseService(customCachePath: tempCache, customMachineId: "MCH-AAAA-1111");
+            var licA = new LicenseInfo
+            {
+                Ok = true,
+                MachineId = "MCH-AAAA-1111",
+                Status = "active",
+                Tier = "premium",
+                Name = "Giáo viên A",
+                Expiry = "Vĩnh viễn"
+            };
+            serviceA.SaveCache(licA);
+
+            // Attacker copy file sang Máy B
+            var serviceB = new SupabaseLicenseService(customCachePath: tempCache, customMachineId: "MCH-BBBB-2222");
+            var loadedOnB = serviceB.LoadCache();
+
+            // Máy B giải mã thất bại hoặc không trùng MachineId -> Từ chối!
+            Assert.Null(loadedOnB);
+        }
+        finally
+        {
+            if (File.Exists(tempCache)) File.Delete(tempCache);
+        }
+    }
+
     private class MockHttpMessageHandler : HttpMessageHandler
     {
         private readonly string _response;

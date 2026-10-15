@@ -37,6 +37,9 @@ public class GitHubUpdateServiceTests
     [InlineData("5.2.0.4", "5.2.0.3", true)]
     [InlineData("v5.2.0.4", "5.2.0.3", true)]
     [InlineData("5.2.0.3", "5.2.0.4", false)]
+    [InlineData("5.3.0.0", "5.2.0.4", true)]
+    [InlineData("v5.3.0.0", "5.2.0.4", true)]
+    [InlineData("5.2.0.4", "5.3.0.0", false)]
     public void IsNewerVersion_ShouldCorrectlyCompareSemver(string remote, string local, bool expected)
     {
         bool result = GitHubUpdateService.IsNewerVersion(remote, local);
