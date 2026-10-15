@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="🎯  Chọn phương thức tạo đề" Height="420" Width="520" MinHeight="380" MinWidth="460"
-        WindowStartupLocation="CenterOwner" Background="#F8FAFC"
+        WindowStartupLocation="CenterOwner" Background="{DynamicResource ApplicationBackgroundBrush}"
+        TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
         TextElement.FontFamily="Segoe UI" TextElement.FontSize="12">
     <Grid Margin="18,14">
         <Grid.RowDefinitions>
@@ -15,42 +16,42 @@
 
         <!-- Header -->
         <TextBlock Grid.Row="0" Text="🎯  Chọn phương thức tạo đề"
-                   FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="#1F497D" Margin="0,0,0,12" />
+                   FontFamily="Segoe UI" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,12" />
 
         <!-- Cards -->
         <StackPanel Grid.Row="1" Orientation="Vertical">
             <!-- Card 1: AI only -->
-            <Border BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Background="White" Padding="12,10" Margin="0,0,0,8"
+            <Border BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1" CornerRadius="6" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" Padding="12,10" Margin="0,0,0,8"
                     MouseLeftButtonDown="Card1_MouseLeftButtonDown" Cursor="Hand">
                 <StackPanel>
-                    <RadioButton x:Name="RbAiOnly" Content="✨  Tạo mới hoàn toàn bằng AI" FontWeight="SemiBold" FontSize="12.5" Foreground="#1E293B" IsChecked="True" />
-                    <TextBlock Text="AI sẽ tạo câu hỏi hoàn toàn mới theo ma trận. Không dùng NHCH." Foreground="#64748B" FontSize="11" Margin="22,3,0,0" TextWrapping="Wrap" />
+                    <RadioButton x:Name="RbAiOnly" Content="✨  Tạo mới hoàn toàn bằng AI" FontWeight="SemiBold" FontSize="12.5" Foreground="{DynamicResource TextFillColorPrimaryBrush}" IsChecked="True" />
+                    <TextBlock Text="AI sẽ tạo câu hỏi hoàn toàn mới theo ma trận. Không dùng NHCH." Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11" Margin="22,3,0,0" TextWrapping="Wrap" />
                 </StackPanel>
             </Border>
 
             <!-- Card 2: Bank only -->
-            <Border BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Background="White" Padding="12,10" Margin="0,0,0,8"
+            <Border BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1" CornerRadius="6" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" Padding="12,10" Margin="0,0,0,8"
                     MouseLeftButtonDown="Card2_MouseLeftButtonDown" Cursor="Hand">
                 <StackPanel>
-                    <RadioButton x:Name="RbBankOnly" Content="📚  Lấy 100% từ Ngân hàng câu hỏi" FontWeight="SemiBold" FontSize="12.5" Foreground="#1E293B" />
-                    <TextBlock Text="Chỉ lấy câu từ NHCH đã lưu. Nếu thiếu câu, sẽ thông báo." Foreground="#64748B" FontSize="11" Margin="22,3,0,0" TextWrapping="Wrap" />
+                    <RadioButton x:Name="RbBankOnly" Content="📚  Lấy 100% từ Ngân hàng câu hỏi" FontWeight="SemiBold" FontSize="12.5" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock Text="Chỉ lấy câu từ NHCH đã lưu. Nếu thiếu câu, sẽ thông báo." Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11" Margin="22,3,0,0" TextWrapping="Wrap" />
                 </StackPanel>
             </Border>
 
             <!-- Card 3: Mixed -->
-            <Border BorderBrush="#CBD5E1" BorderThickness="1" CornerRadius="6" Background="White" Padding="12,10" Margin="0,0,0,8"
+            <Border BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1" CornerRadius="6" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" Padding="12,10" Margin="0,0,0,8"
                     MouseLeftButtonDown="Card3_MouseLeftButtonDown" Cursor="Hand">
                 <StackPanel>
-                    <RadioButton x:Name="RbMixed" Content="🔀  Kết hợp AI + Ngân hàng câu hỏi" FontWeight="SemiBold" FontSize="12.5" Foreground="#1E293B" />
-                    <TextBlock Text="Ưu tiên lấy từ NHCH, câu còn thiếu sẽ được AI tạo mới." Foreground="#64748B" FontSize="11" Margin="22,3,0,0" TextWrapping="Wrap" />
+                    <RadioButton x:Name="RbMixed" Content="🔀  Kết hợp AI + Ngân hàng câu hỏi" FontWeight="SemiBold" FontSize="12.5" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock Text="Ưu tiên lấy từ NHCH, câu còn thiếu sẽ được AI tạo mới." Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="11" Margin="22,3,0,0" TextWrapping="Wrap" />
                 </StackPanel>
             </Border>
         </StackPanel>
 
         <!-- Ratio for Mixed Mode -->
-        <Border Grid.Row="2" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="10,8" Margin="0,4,0,12">
+        <Border Grid.Row="2" Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10,8" Margin="0,4,0,12">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock Text="% câu lấy từ NHCH (chế độ Kết hợp):" VerticalAlignment="Center" Margin="0,0,8,0" FontSize="11.5" Foreground="#334155" />
+                <TextBlock Text="% câu lấy từ NHCH (chế độ Kết hợp):" VerticalAlignment="Center" Margin="0,0,8,0" FontSize="11.5" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                 <ComboBox x:Name="CmbBankRatio" Width="70" Height="26" SelectedIndex="4">
                     <ComboBoxItem Content="10%" Tag="10" />
                     <ComboBoxItem Content="20%" Tag="20" />
@@ -62,7 +63,7 @@
                     <ComboBoxItem Content="80%" Tag="80" />
                     <ComboBoxItem Content="90%" Tag="90" />
                 </ComboBox>
-                <TextBlock Text="(phần còn lại AI tạo mới)" VerticalAlignment="Center" Margin="8,0,0,0" FontSize="11" Foreground="#64748B" />
+                <TextBlock Text="(phần còn lại AI tạo mới)" VerticalAlignment="Center" Margin="8,0,0,0" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             </StackPanel>
         </Border>
 

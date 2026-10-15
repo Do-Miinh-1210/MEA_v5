@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="🤖 Tạo ma trận đề bằng AI" Height="540" Width="680" MinHeight="480" MinWidth="580"
-        WindowStartupLocation="CenterOwner" Background="#F8FAFC"
+        WindowStartupLocation="CenterOwner" Background="{DynamicResource ApplicationBackgroundBrush}"
+        TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
         TextElement.FontFamily="Segoe UI" TextElement.FontSize="12">
     <Grid>
         <Grid.RowDefinitions>
@@ -42,7 +43,7 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="Môn học:" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,6" />
+                        <TextBlock Text="Môn học:" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,6" />
                         <ComboBox x:Name="CmbSubject" Height="32" SelectedIndex="0">
                             <ComboBoxItem Content="Toán" />
                             <ComboBoxItem Content="Vật lý" />
@@ -59,7 +60,7 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="2">
-                        <TextBlock Text="Lớp:" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,6" />
+                        <TextBlock Text="Lớp:" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,6" />
                         <ComboBox x:Name="CmbGrade" Height="32" SelectedIndex="6">
                             <ComboBoxItem Content="6" />
                             <ComboBoxItem Content="7" />
@@ -81,7 +82,7 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="Thời lượng:" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,6" />
+                        <TextBlock Text="Thời lượng:" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,6" />
                         <ComboBox x:Name="CmbDuration" Height="32" SelectedIndex="1">
                             <ComboBoxItem Content="15 phút" />
                             <ComboBoxItem Content="45 phút" />
@@ -91,7 +92,7 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="2">
-                        <TextBlock Text="Học kỳ:" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,6" />
+                        <TextBlock Text="Học kỳ:" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,6" />
                         <ComboBox x:Name="CmbSemester" Height="32" SelectedIndex="0">
                             <ComboBoxItem Content="I" />
                             <ComboBoxItem Content="II" />
@@ -100,20 +101,23 @@
                 </Grid>
 
                 <!-- Row 3: Yêu cầu thêm -->
-                <TextBlock Text="Yêu cầu thêm (tùy chọn):" FontWeight="Bold" Foreground="#1E293B" Margin="0,0,0,6" />
+                <TextBlock Text="Yêu cầu thêm (tùy chọn):" FontWeight="Bold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,6" />
                 <TextBox x:Name="TxtExtraRequirements" Height="90" AcceptsReturn="True" TextWrapping="Wrap"
-                         VerticalScrollBarVisibility="Auto" Padding="8,6" Background="White" BorderBrush="#CBD5E1"
+                         VerticalScrollBarVisibility="Auto" Padding="8,6" 
+                         Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                         Foreground="{DynamicResource TextFillColorPrimaryBrush}" 
+                         BorderBrush="{DynamicResource ControlElevationBorderBrush}"
                          BorderThickness="1"
                          Text="• Tập trung chương Đạo hàm và Tích phân&#x0a;• Thêm bài tập thực tế, ứng dụng" />
 
                 <!-- Info Box: AI sẽ tạo gì -->
-                <Border Background="#EBF5FF" BorderBrush="#0284C7" BorderThickness="1" CornerRadius="6" Padding="14,10" Margin="0,14,0,4">
+                <Border Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="#0284C7" BorderThickness="1" CornerRadius="6" Padding="14,10" Margin="0,14,0,4">
                     <StackPanel Orientation="Vertical">
-                        <TextBlock Text="💡 AI sẽ tự động:" FontWeight="Bold" Foreground="#0284C7" FontSize="12.5" Margin="0,0,0,6" />
-                        <TextBlock Text="• Phân bổ câu hỏi TN / DS / TLN / TL theo chuẩn BGD" Foreground="#334155" Margin="4,2,0,2" />
-                        <TextBlock Text="• Chia mức độ NB / TH / VD phù hợp thời lượng" Foreground="#334155" Margin="4,2,0,2" />
-                        <TextBlock Text="• Chọn chủ đề đa dạng theo chương trình lớp đã chọn" Foreground="#334155" Margin="4,2,0,2" />
-                        <TextBlock Text="• Tổng điểm = 10.0, có yêu cầu cần đạt chi tiết" Foreground="#334155" Margin="4,2,0,2" />
+                        <TextBlock Text="💡 AI sẽ tự động:" FontWeight="Bold" Foreground="#38BDF8" FontSize="12.5" Margin="0,0,0,6" />
+                        <TextBlock Text="• Phân bổ câu hỏi TN / DS / TLN / TL theo chuẩn BGD" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="4,2,0,2" />
+                        <TextBlock Text="• Chia mức độ NB / TH / VD phù hợp thời lượng" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="4,2,0,2" />
+                        <TextBlock Text="• Chọn chủ đề đa dạng theo chương trình lớp đã chọn" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="4,2,0,2" />
+                        <TextBlock Text="• Tổng điểm = 10.0, có yêu cầu cần đạt chi tiết" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="4,2,0,2" />
                     </StackPanel>
                 </Border>
 
@@ -126,7 +130,7 @@
         </ScrollViewer>
 
         <!-- Footer Buttons -->
-        <Border Grid.Row="2" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="0,1,0,0" Padding="16,12">
+        <Border Grid.Row="2" Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="0,1,0,0" Padding="16,12">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />

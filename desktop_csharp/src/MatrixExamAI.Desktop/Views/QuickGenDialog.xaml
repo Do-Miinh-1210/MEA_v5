@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         Title="Tạo đề nhanh" Height="680" Width="960" MinHeight="600" MinWidth="850"
-        WindowStartupLocation="CenterOwner" Background="#F8FAFC"
+        WindowStartupLocation="CenterOwner" Background="{DynamicResource ApplicationBackgroundBrush}"
+        TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
         TextElement.FontFamily="Segoe UI" TextElement.FontSize="12">
     <Grid>
         <Grid.RowDefinitions>
@@ -31,7 +32,7 @@
         </Border>
 
         <!-- Main Body -->
-        <TabControl Grid.Row="1" Margin="12,8,12,4" Background="White">
+        <TabControl Grid.Row="1" Margin="12,8,12,4" Background="{DynamicResource ApplicationBackgroundBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1">
             <!-- Tab 1: Tự nhập dữ liệu -->
             <TabItem Header="  Tự nhập dữ liệu  " FontWeight="SemiBold">
                 <Grid Margin="10">
@@ -43,10 +44,10 @@
                     </Grid.RowDefinitions>
 
                     <!-- Thông tin chung -->
-                    <GroupBox Grid.Row="0" Header="Thông tin chung" Padding="8,6" Margin="0,0,0,6">
+                    <GroupBox Grid.Row="0" Header="Thông tin chung" Padding="8,6" Margin="0,0,0,6" Foreground="{DynamicResource TextFillColorPrimaryBrush}">
                         <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal" Margin="0,2,14,2">
-                                <TextBlock Text="Môn:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <TextBlock Text="Môn:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                 <ComboBox x:Name="CmbSubject" Width="100" Height="26" SelectedIndex="0">
                                     <ComboBoxItem Content="Toán" />
                                     <ComboBoxItem Content="Vật lý" />
@@ -62,7 +63,7 @@
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Margin="0,2,14,2">
-                                <TextBlock Text="Lớp:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <TextBlock Text="Lớp:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                 <ComboBox x:Name="CmbGrade" Width="60" Height="26" SelectedIndex="6">
                                     <ComboBoxItem Content="6" />
                                     <ComboBoxItem Content="7" />
@@ -75,7 +76,7 @@
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Margin="0,2,14,2">
-                                <TextBlock Text="Kỳ:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <TextBlock Text="Kỳ:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                 <ComboBox x:Name="CmbSemester" Width="100" Height="26" SelectedIndex="2">
                                     <ComboBoxItem Content="Giữa kì I" />
                                     <ComboBoxItem Content="Cuối kì I" />
@@ -85,12 +86,14 @@
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Margin="0,2,14,2">
-                                <TextBlock Text="Năm:" VerticalAlignment="Center" Margin="0,0,6,0" />
-                                <TextBox x:Name="TxtYear" Width="90" Height="26" Text="2025-2026" VerticalContentAlignment="Center" />
+                                <TextBlock Text="Năm:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                <TextBox x:Name="TxtYear" Width="90" Height="26" Text="2025-2026" VerticalContentAlignment="Center"
+                                         Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
-                                <TextBlock Text="Thời gian:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <TextBlock Text="Thời gian:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                 <ComboBox x:Name="CmbDuration" Width="90" Height="26" SelectedIndex="3">
                                     <ComboBoxItem Content="15 phút" />
                                     <ComboBoxItem Content="45 phút" />
@@ -102,11 +105,12 @@
                     </GroupBox>
 
                     <!-- Yêu cầu thêm cho AI -->
-                    <GroupBox Grid.Row="1" Header="Yêu cầu thêm cho AI (tùy chọn)" Padding="8,4" Margin="0,0,0,6">
+                    <GroupBox Grid.Row="1" Header="Yêu cầu thêm cho AI (tùy chọn)" Padding="8,4" Margin="0,0,0,6" Foreground="{DynamicResource TextFillColorPrimaryBrush}">
                         <TextBox x:Name="TxtAiRequirement" Height="32" VerticalContentAlignment="Center"
                                  Text="VD: Câu hỏi phải có bảng số liệu, câu hỏi thực tế, không quá khó..."
                                  GotFocus="TxtAiRequirement_GotFocus" LostFocus="TxtAiRequirement_LostFocus"
-                                 Foreground="#64748B" />
+                                 Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                 Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     </GroupBox>
 
                     <!-- Buttons thao tác hàng -->
@@ -122,8 +126,24 @@
                     <!-- DataGrid danh sách cấu hình hàng -->
                     <DataGrid Grid.Row="3" x:Name="DgQuickRows" AutoGenerateColumns="False" CanUserAddRows="False"
                               HeadersVisibility="Column" GridLinesVisibility="Horizontal" RowHeight="32"
-                              Background="White" BorderBrush="#CBD5E1" BorderThickness="1"
+                              Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                              HorizontalGridLinesBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+                              BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1"
                               CellEditEnding="DgQuickRows_CellEditEnding">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </Style>
+                        </DataGrid.RowStyle>
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#0F2D52" />
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                                <Setter Property="Padding" Value="6,6" />
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="STT" Binding="{Binding Stt}" Width="45" IsReadOnly="True" />
                             <DataGridTextColumn Header="Chủ đề / Nội dung" Binding="{Binding Topic}" Width="2*" />
@@ -177,48 +197,48 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="Chọn cấu trúc mẫu định sẵn theo chuẩn Bộ GD&amp;ĐT:" FontWeight="SemiBold" FontSize="12.5" Margin="0,0,0,12" />
+                    <TextBlock Grid.Row="0" Text="Chọn cấu trúc mẫu định sẵn theo chuẩn Bộ GD&amp;ĐT:" FontWeight="SemiBold" FontSize="12.5" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,12" />
 
                     <UniformGrid Grid.Row="1" Columns="2" Rows="2">
                         <!-- Mẫu 15 phút -->
-                        <Border Margin="6" Background="#EFF6FF" BorderBrush="#93C5FD" BorderThickness="1" CornerRadius="6" Padding="14">
+                        <Border Margin="6" Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="#3B82F6" BorderThickness="1" CornerRadius="6" Padding="14">
                             <StackPanel>
-                                <TextBlock Text="⚡ Đề kiểm tra 15 phút" FontSize="13" FontWeight="Bold" Foreground="#1E40AF" />
-                                <TextBlock Text="• Cấu trúc: 7 câu Trắc nghiệm 4 lựa chọn" Margin="0,6,0,2" />
-                                <TextBlock Text="• Phù hợp: Kiểm tra đầu giờ, kiểm tra nhanh kiến thức" Foreground="#475569" Margin="0,0,0,10" />
+                                <TextBlock Text="⚡ Đề kiểm tra 15 phút" FontSize="13" FontWeight="Bold" Foreground="#38BDF8" />
+                                <TextBlock Text="• Cấu trúc: 7 câu Trắc nghiệm 4 lựa chọn" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,6,0,2" />
+                                <TextBlock Text="• Phù hợp: Kiểm tra đầu giờ, kiểm tra nhanh kiến thức" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,10" />
                                 <Button Content="Áp dụng mẫu 15 phút" Background="#2563EB" Foreground="White" FontWeight="Bold"
                                         Padding="10,6" Click="BtnApply15m_Click" />
                             </StackPanel>
                         </Border>
 
                         <!-- Mẫu 45 phút -->
-                        <Border Margin="6" Background="#F0FDF4" BorderBrush="#86EFAC" BorderThickness="1" CornerRadius="6" Padding="14">
+                        <Border Margin="6" Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="#10B981" BorderThickness="1" CornerRadius="6" Padding="14">
                             <StackPanel>
-                                <TextBlock Text="📚 Đề kiểm tra 45 phút (1 tiết)" FontSize="13" FontWeight="Bold" Foreground="#166534" />
-                                <TextBlock Text="• Cấu trúc: 12 câu TN (3đ) + 2 câu DS (4đ) + 3 câu TLN (3đ)" Margin="0,6,0,2" />
-                                <TextBlock Text="• Phù hợp: Kiểm tra định kỳ 1 tiết chuẩn cấu trúc 2025" Foreground="#475569" Margin="0,0,0,10" />
+                                <TextBlock Text="📚 Đề kiểm tra 45 phút (1 tiết)" FontSize="13" FontWeight="Bold" Foreground="#34D399" />
+                                <TextBlock Text="• Cấu trúc: 12 câu TN (3đ) + 2 câu DS (4đ) + 3 câu TLN (3đ)" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,6,0,2" />
+                                <TextBlock Text="• Phù hợp: Kiểm tra định kỳ 1 tiết chuẩn cấu trúc 2025" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,10" />
                                 <Button Content="Áp dụng mẫu 45 phút" Background="#16A34A" Foreground="White" FontWeight="Bold"
                                         Padding="10,6" Click="BtnApply45m_Click" />
                             </StackPanel>
                         </Border>
 
                         <!-- Mẫu 60 phút -->
-                        <Border Margin="6" Background="#FAF5FF" BorderBrush="#D8B4FE" BorderThickness="1" CornerRadius="6" Padding="14">
+                        <Border Margin="6" Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="#A855F7" BorderThickness="1" CornerRadius="6" Padding="14">
                             <StackPanel>
-                                <TextBlock Text="📝 Đề kiểm tra 60 phút" FontSize="13" FontWeight="Bold" Foreground="#6B21A8" />
-                                <TextBlock Text="• Cấu trúc: 15 câu TN + 3 câu DS + 4 câu TLN + 1 câu TL" Margin="0,6,0,2" />
-                                <TextBlock Text="• Phù hợp: Kiểm tra giữa kỳ nâng cao" Foreground="#475569" Margin="0,0,0,10" />
+                                <TextBlock Text="📝 Đề kiểm tra 60 phút" FontSize="13" FontWeight="Bold" Foreground="#C084FC" />
+                                <TextBlock Text="• Cấu trúc: 15 câu TN + 3 câu DS + 4 câu TLN + 1 câu TL" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,6,0,2" />
+                                <TextBlock Text="• Phù hợp: Kiểm tra giữa kỳ nâng cao" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,10" />
                                 <Button Content="Áp dụng mẫu 60 phút" Background="#9333EA" Foreground="White" FontWeight="Bold"
                                         Padding="10,6" Click="BtnApply60m_Click" />
                             </StackPanel>
                         </Border>
 
                         <!-- Mẫu 90 phút -->
-                        <Border Margin="6" Background="#FFFBEB" BorderBrush="#FCD34D" BorderThickness="1" CornerRadius="6" Padding="14">
+                        <Border Margin="6" Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="#F59E0B" BorderThickness="1" CornerRadius="6" Padding="14">
                             <StackPanel>
-                                <TextBlock Text="🏆 Đề kiểm tra 90 phút (Học kỳ / THPT)" FontSize="13" FontWeight="Bold" Foreground="#92400E" />
-                                <TextBlock Text="• Cấu trúc chuẩn BGD 2025: 12 TN (3đ) + 4 DS (4đ) + 6 TLN (3đ)" Margin="0,6,0,2" />
-                                <TextBlock Text="• Phù hợp: Thi cuối học kỳ, thi thử tốt nghiệp THPT" Foreground="#475569" Margin="0,0,0,10" />
+                                <TextBlock Text="🏆 Đề kiểm tra 90 phút (Học kỳ / THPT)" FontSize="13" FontWeight="Bold" Foreground="#FBBF24" />
+                                <TextBlock Text="• Cấu trúc chuẩn BGD 2025: 12 TN (3đ) + 4 DS (4đ) + 6 TLN (3đ)" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,6,0,2" />
+                                <TextBlock Text="• Phù hợp: Thi cuối học kỳ, thi thử tốt nghiệp THPT" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,0,10" />
                                 <Button Content="Áp dụng mẫu 90 phút" Background="#D97706" Foreground="White" FontWeight="Bold"
                                         Padding="10,6" Click="BtnApply90m_Click" />
                             </StackPanel>
@@ -229,7 +249,7 @@
         </TabControl>
 
         <!-- Bottom Footer Bar -->
-        <Border Grid.Row="2" Background="#E2E8F0" BorderBrush="#CBD5E1" BorderThickness="0,1,0,0" Padding="16,10">
+        <Border Grid.Row="2" Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="0,1,0,0" Padding="16,10">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -237,7 +257,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock x:Name="TxtSummary" Text="Tổng số: 3 câu | Tổng điểm: 0.8 điểm"
-                           FontWeight="Bold" FontSize="12.5" Foreground="#0F2D52" VerticalAlignment="Center" />
+                           FontWeight="Bold" FontSize="12.5" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                     <Button Content="Hủy bỏ" Width="100" Height="34" Margin="0,0,10,0"

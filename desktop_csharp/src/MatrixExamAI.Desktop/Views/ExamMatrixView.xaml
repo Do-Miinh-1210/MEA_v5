@@ -143,7 +143,7 @@
         </ui:Card>
 
         <!-- Toàn bộ không gian hiển thị: Bảng ma trận kẻ khung + Bản đặc tả + Soạn thảo Word -->
-        <TabControl Grid.Row="2" x:Name="TabMatrixMain" Background="White" BorderBrush="#CBD5E1" BorderThickness="1">
+        <TabControl Grid.Row="2" x:Name="TabMatrixMain" Background="{DynamicResource ApplicationBackgroundBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1">
             <!-- TAB 1: BẢNG MA TRẬN ĐỀ THI KẺ KHUNG -->
             <TabItem Header="Bảng 1: Ma trận đề thi" FontWeight="SemiBold" FontSize="11.5">
                 <Grid Margin="10">
@@ -154,11 +154,11 @@
                     </Grid.RowDefinitions>
 
                     <!-- Thanh công cụ Bảng Ma trận -->
-                    <Border Grid.Row="0" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,8">
+                    <Border Grid.Row="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,8">
                         <Grid>
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <ui:SymbolIcon Symbol="Table24" Foreground="#0284C7" FontSize="16" Margin="0,0,6,0" VerticalAlignment="Center" />
-                                <TextBlock Text="BẢNG MA TRẬN ĐỀ KIỂM TRA ĐỊNH KỲ — CHUẨN BỘ GIÁO DỤC &amp; ĐÀO TẠO" FontWeight="Bold" FontSize="12" Foreground="#0F2D52" VerticalAlignment="Center" />
+                                <TextBlock Text="BẢNG MA TRẬN ĐỀ KIỂM TRA ĐỊNH KỲ — CHUẨN BỘ GIÁO DỤC &amp; ĐÀO TẠO" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                 <ui:Button x:Name="BtnAddTopic" Appearance="Secondary" Icon="{ui:SymbolIcon Add24}" Content="Thêm chủ đề" Height="26" Padding="8,0" FontSize="10.5" Margin="0,0,4,0" Click="BtnAddTopic_Click" ToolTip="Thêm dòng chủ đề mới vào bảng ma trận" />
@@ -172,9 +172,17 @@
                     <DataGrid x:Name="DgMatrixTopics" Grid.Row="1"
                               AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
                               GridLinesVisibility="All" HeadersVisibility="Column"
-                              BorderBrush="#94A3B8" BorderThickness="1" Background="White"
-                              HorizontalGridLinesBrush="#E2E8F0" VerticalGridLinesBrush="#E2E8F0"
+                              BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1" 
+                              Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                              HorizontalGridLinesBrush="{DynamicResource DividerStrokeColorDefaultBrush}" 
+                              VerticalGridLinesBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
                               RowHeight="34" FontSize="11" SelectionMode="Single">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </Style>
+                        </DataGrid.RowStyle>
                         <DataGrid.ColumnHeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="Background" Value="#0F2D52" />
@@ -192,6 +200,7 @@
                                     <Style TargetType="TextBlock">
                                         <Setter Property="HorizontalAlignment" Value="Center" />
                                         <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
@@ -201,6 +210,7 @@
                                     <Style TargetType="TextBlock">
                                         <Setter Property="VerticalAlignment" Value="Center" />
                                         <Setter Property="FontWeight" Value="SemiBold" />
+                                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                                         <Setter Property="Padding" Value="4,0" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
@@ -211,6 +221,7 @@
                                     <Style TargetType="TextBlock">
                                         <Setter Property="VerticalAlignment" Value="Center" />
                                         <Setter Property="TextWrapping" Value="Wrap" />
+                                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                                         <Setter Property="Padding" Value="4,0" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
@@ -315,7 +326,7 @@
                                         <Setter Property="HorizontalAlignment" Value="Center" />
                                         <Setter Property="VerticalAlignment" Value="Center" />
                                         <Setter Property="FontWeight" Value="Bold" />
-                                        <Setter Property="Foreground" Value="#0F2D52" />
+                                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
@@ -334,10 +345,10 @@
                     </DataGrid>
 
                     <!-- Footer Thống kê Bảng Ma trận -->
-                    <Border Grid.Row="2" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1,0,1,1" Padding="12,8">
+                    <Border Grid.Row="2" Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1,0,1,1" Padding="12,8">
                         <TextBlock x:Name="TxtMatrixFooterSummary" 
                                    Text="Tổng cộng: 22 câu hỏi (Phần I: 12 câu, Phần II: 4 câu, Phần III: 6 câu) | Tổng điểm: 10.0 điểm | Tỉ lệ: Nhận biết 40% (6 câu) • Thông hiểu 30% (6 câu) • Vận dụng 20% (8 câu) • Vận dụng cao 10% (2 câu)"
-                                   FontWeight="SemiBold" FontSize="11" Foreground="#334155" HorizontalAlignment="Center" />
+                                   FontWeight="SemiBold" FontSize="11" Foreground="{DynamicResource TextFillColorPrimaryBrush}" HorizontalAlignment="Center" />
                     </Border>
                 </Grid>
             </TabItem>
@@ -351,10 +362,10 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <Border Grid.Row="0" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,8">
+                    <Border Grid.Row="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,8">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <ui:SymbolIcon Symbol="DocumentBulletList24" Foreground="#7C3AED" FontSize="16" Margin="0,0,6,0" VerticalAlignment="Center" />
-                            <TextBlock Text="BẢN ĐẶC TẢ MA TRẬN ĐỀ KIỂM TRA ĐỊNH KỲ — CHI TIẾT TỪNG CÂU HỎI &amp; YÊU CẦU CẦN ĐẠT" FontWeight="Bold" FontSize="12" Foreground="#0F2D52" VerticalAlignment="Center" />
+                            <TextBlock Text="BẢN ĐẶC TẢ MA TRẬN ĐỀ KIỂM TRA ĐỊNH KỲ — CHI TIẾT TỪNG CÂU HỎI &amp; YÊU CẦU CẦN ĐẠT" FontWeight="Bold" FontSize="12" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
                         </StackPanel>
                     </Border>
 
@@ -362,9 +373,17 @@
                     <DataGrid x:Name="DgMatrixSpecs" Grid.Row="1"
                               AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
                               GridLinesVisibility="All" HeadersVisibility="Column"
-                              BorderBrush="#94A3B8" BorderThickness="1" Background="White"
-                              HorizontalGridLinesBrush="#E2E8F0" VerticalGridLinesBrush="#E2E8F0"
+                              BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1" 
+                              Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                              HorizontalGridLinesBrush="{DynamicResource DividerStrokeColorDefaultBrush}" 
+                              VerticalGridLinesBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
                               RowHeight="36" FontSize="11" SelectionMode="Single">
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                            </Style>
+                        </DataGrid.RowStyle>
                         <DataGrid.ColumnHeaderStyle>
                             <Style TargetType="DataGridColumnHeader">
                                 <Setter Property="Background" Value="#1E293B" />
@@ -382,6 +401,7 @@
                                     <Style TargetType="TextBlock">
                                         <Setter Property="HorizontalAlignment" Value="Center" />
                                         <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
@@ -391,6 +411,7 @@
                                     <Style TargetType="TextBlock">
                                         <Setter Property="VerticalAlignment" Value="Center" />
                                         <Setter Property="FontWeight" Value="SemiBold" />
+                                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                                         <Setter Property="Padding" Value="4,0" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
@@ -402,6 +423,7 @@
                                         <Setter Property="HorizontalAlignment" Value="Center" />
                                         <Setter Property="VerticalAlignment" Value="Center" />
                                         <Setter Property="FontWeight" Value="SemiBold" />
+                                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
@@ -411,6 +433,7 @@
                                     <Style TargetType="TextBlock">
                                         <Setter Property="HorizontalAlignment" Value="Center" />
                                         <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
@@ -431,6 +454,7 @@
                                     <Style TargetType="TextBlock">
                                         <Setter Property="VerticalAlignment" Value="Center" />
                                         <Setter Property="TextWrapping" Value="Wrap" />
+                                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                                         <Setter Property="Padding" Value="6,2" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
@@ -438,9 +462,9 @@
                         </DataGrid.Columns>
                     </DataGrid>
 
-                    <Border Grid.Row="2" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1,0,1,1" Padding="12,8">
+                    <Border Grid.Row="2" Background="{DynamicResource CardBackgroundFillColorSecondaryBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1,0,1,1" Padding="12,8">
                         <TextBlock Text="Đặc tả đầy đủ 22 câu hỏi theo quy định thông tư chuẩn Bộ GD&amp;ĐT (Phần I: 12 câu, Phần II: 4 câu, Phần III: 6 câu)"
-                                   FontWeight="SemiBold" FontSize="11" Foreground="#475569" HorizontalAlignment="Center" />
+                                   FontWeight="SemiBold" FontSize="11" Foreground="{DynamicResource TextFillColorPrimaryBrush}" HorizontalAlignment="Center" />
                     </Border>
                 </Grid>
             </TabItem>
@@ -455,7 +479,7 @@
                     </Grid.RowDefinitions>
 
                     <!-- Top Bar của khung soạn thảo -->
-                    <Border Grid.Row="0" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,8">
+                    <Border Grid.Row="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,8">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -463,16 +487,19 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="Chuyên đề trọng tâm:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <TextBlock Text="Chuyên đề trọng tâm:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                 <TextBox x:Name="TxtExamTopic" Width="360" Height="26" VerticalContentAlignment="Center" FontSize="11"
+                                         Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                         BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
                                          Text="Khảo sát hàm số, Nguyên hàm - Tích phân, Hình học Oxyz" />
                             </StackPanel>
 
                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock x:Name="TxtExamStats" Text="Sẵn sàng soạn đề" FontSize="11" 
                                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,10,0" />
-                                <CheckBox x:Name="ChkIncludeAnswers" IsChecked="True" Content="Kèm đáp án &amp; lời giải" FontSize="11" Margin="0,0,8,0" VerticalAlignment="Center" />
-                                <CheckBox x:Name="ChkBraceMathMatrix" IsChecked="True" Content="Kẹp công thức ${...}$" FontSize="11" VerticalAlignment="Center" />
+                                <CheckBox x:Name="ChkIncludeAnswers" IsChecked="True" Content="Kèm đáp án &amp; lời giải" FontSize="11" Margin="0,0,8,0" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                <CheckBox x:Name="ChkBraceMathMatrix" IsChecked="True" Content="Kẹp công thức ${...}$" FontSize="11" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -481,6 +508,9 @@
                     <ui:TextBox x:Name="TxtExamContent" Grid.Row="1"
                                 VerticalAlignment="Stretch" AcceptsReturn="True" TextWrapping="Wrap"
                                 VerticalContentAlignment="Top"
+                                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                BorderBrush="{DynamicResource ControlElevationBorderBrush}"
                                 FontFamily="Consolas, 'Segoe UI', Arial" FontSize="12.5"
                                 PlaceholderText="Bấm 'Khởi tạo khung ma trận BGD' hoặc 'AI Soạn đề theo ma trận' để nạp nội dung đề thi..." />
 
