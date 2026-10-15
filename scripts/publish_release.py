@@ -27,9 +27,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.2.0.3"
-TITLE = "MatrixExamAI Pro v5.2.0.3 (One-Time Permission Grant & Silent Auto-Update)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.2.0.3: Tự động cấp toàn quyền Full Control cho thư mục cài đặt ứng dụng. Người dùng chỉ cần xác nhận UAC đúng 1 lần duy nhất từ đầu; toàn bộ các lần tự động cập nhật về sau diễn ra siêu tốc trong 1 giây hoàn toàn không hiện thông báo hỏi lại."
+TAG = "v5.2.0.4"
+TITLE = "MatrixExamAI Pro v5.2.0.4 (Centered Word A4 Paper Preview)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.2.0.4: Căn giữa hoàn hảo trang in Word A4 (khung giấy trắng) trong chế độ xem trước; tự động cân đối hai bên lề đối xứng đẹp mắt trên mọi kích thước màn hình."
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)

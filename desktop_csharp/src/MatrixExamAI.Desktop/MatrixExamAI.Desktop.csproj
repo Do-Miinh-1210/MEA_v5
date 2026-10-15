@@ -19,9 +19,9 @@
     <UseWPF>true</UseWPF>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
-    <Version>5.2.0.3</Version>
-    <AssemblyVersion>5.2.0.3</AssemblyVersion>
-    <FileVersion>5.2.0.3</FileVersion>
+    <Version>5.2.0.4</Version>
+    <AssemblyVersion>5.2.0.4</AssemblyVersion>
+    <FileVersion>5.2.0.4</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

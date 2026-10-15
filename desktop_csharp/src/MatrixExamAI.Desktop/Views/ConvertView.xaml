@@ -459,7 +459,7 @@
                                     <Border x:Name="BorderWordA4Page" Margin="20,16,20,36" Background="#FFFFFF" TextElement.Foreground="#0F172A" 
                                             CornerRadius="2" BorderThickness="1" BorderBrush="#D1D5DB"
                                             Padding="48,44,48,44" Width="720" MinHeight="1018"
-                                            HorizontalAlignment="Left" VerticalAlignment="Top">
+                                            HorizontalAlignment="Center" VerticalAlignment="Top">
                                         <Border.Effect>
                                             <DropShadowEffect BlurRadius="20" Direction="270" Opacity="0.22" ShadowDepth="4" Color="#000000" />
                                         </Border.Effect>
