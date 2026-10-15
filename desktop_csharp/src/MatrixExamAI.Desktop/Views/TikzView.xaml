@@ -61,11 +61,11 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- Chọn Thể loại & Mẫu (Đủ rộng, không bao giờ che chữ) -->
+                    <!-- Chọn Thể loại & Mẫu (Ưu tiên đủ rộng, chống che chữ 100%) -->
                     <WrapPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock Text="Thể loại:" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,4,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <ComboBox x:Name="CmbDiagramType" Width="145" Height="26" SelectedIndex="2" FontSize="10.5"
+                        <ComboBox x:Name="CmbDiagramType" Width="165" Height="26" SelectedIndex="2" FontSize="10.5"
                                   Padding="6,0,2,0" VerticalContentAlignment="Center" Margin="0,0,8,0"
                                   ToolTip="Định hướng thể loại hình vẽ cho AI">
                             <ComboBoxItem Content="Bảng biến thiên" Tag="BBT" Padding="6,2" />
@@ -77,21 +77,22 @@
 
                         <TextBlock Text="Mẫu:" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,4,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <ComboBox x:Name="CmbTemplateCategory" Width="140" Height="26" FontSize="10.5"
+                        <ComboBox x:Name="CmbTemplateCategory" Width="155" Height="26" FontSize="10.5"
                                   Padding="6,0,2,0" VerticalContentAlignment="Center" Margin="0,0,6,0"
                                   ToolTip="Chọn nhóm chuyên đề mẫu TikZ"
                                   SelectionChanged="CmbTemplateCategory_SelectionChanged" />
-                        <ComboBox x:Name="CmbTemplateItem" Width="185" Height="26" FontSize="10.5"
+                        <ComboBox x:Name="CmbTemplateItem" Width="205" Height="26" FontSize="10.5"
                                   Padding="6,0,2,0" VerticalContentAlignment="Center" Margin="0,0,8,0"
                                   ToolTip="Chọn mẫu hình học để nạp mã TikZ"
                                   SelectionChanged="CmbTemplateItem_SelectionChanged" />
                     </WrapPanel>
 
-                    <!-- Ô NHẬP ĐỀ BÀI HOẶC MÔ TẢ HÌNH VẼ TRỰC TIẾP -->
+                    <!-- Ô NHẬP ĐỀ BÀI HOẶC MÔ TẢ HÌNH VẼ TRỰC TIẾP (Thu nhỏ gọn gàng) -->
                     <Grid Grid.Column="1" VerticalAlignment="Center">
                         <ui:TextBox x:Name="TxtFigurePrompt" Height="26" FontSize="10.5" Padding="8,2"
+                                    MaxWidth="280" HorizontalAlignment="Left"
                                     VerticalContentAlignment="Center"
-                                    PlaceholderText="Nhập đề bài hoặc mô tả hình vẽ (VD: Cho hình chóp S.ABCD đáy hình vuông, SA vuông góc đáy...)"
+                                    PlaceholderText="Nhập đề bài / mô tả hình..."
                                     ToolTip="Nhập đề bài hoặc mô tả hình học để AI tự động dựng hình (Nhấn Enter hoặc bấm 'AI vẽ')"
                                     KeyDown="TxtFigurePrompt_KeyDown" />
                     </Grid>
