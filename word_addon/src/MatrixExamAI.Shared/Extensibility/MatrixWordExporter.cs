@@ -83,6 +83,11 @@ namespace MatrixExamAI.Shared.Extensibility
         /// </summary>
         public static ExamMatrixData CreateStandardHighSchoolMatrix(string subject = "TOÁN HỌC", string grade = "12")
         {
+            if (!string.IsNullOrEmpty(subject) && subject.IndexOf("TIN", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return CreateInformatics11Matrix();
+            }
+
             var data = new ExamMatrixData
             {
                 Title = $"MA TRẬN VÀ BẢN ĐẶC TẢ ĐỀ KIỂM TRA MÔN {subject.ToUpperInvariant()}",
@@ -199,6 +204,242 @@ namespace MatrixExamAI.Shared.Extensibility
                 QuestionType = "TLN",
                 QuestionCodes = "Câu 22",
                 RequiredOutcome = "Tìm tọa độ điểm trên mặt cầu sao cho khoảng cách tới mặt phẳng đạt cực trị trong mô hình 3D thực tế."
+            });
+
+            return data;
+        }
+
+        /// <summary>
+        /// Tạo mẫu ma trận chuẩn Tin học 11 (KNTT - ICT) 45 phút Cuối học kì I theo đúng quy chuẩn Bộ GD&ĐT:
+        /// 4 Chủ đề, 7 đơn vị kiến thức, 24 câu TNKQ Nhiều lựa chọn (6.0đ) + 4 câu Đúng - Sai (16 ý = 4.0đ) = 28 câu (10.0đ).
+        /// </summary>
+        public static ExamMatrixData CreateInformatics11Matrix()
+        {
+            var data = new ExamMatrixData
+            {
+                Title = "MA TRẬN VÀ BẢN ĐẶC TẢ ĐỀ KIỂM TRA CUỐI HỌC KÌ I",
+                Subject = "TIN HỌC",
+                Grade = "11",
+                SchoolYear = "2025 - 2026",
+                DurationMinutes = 45,
+                TotalPoints = 10.0
+            };
+
+            // 7 Đơn vị kiến thức theo 4 Chủ đề chuẩn SGK Tin học 11 (KNTT - ICT)
+            data.Rows.Add(new MatrixTopicRow
+            {
+                Stt = 1,
+                Topic = "1. Khái niệm cơ bản về hệ điều hành và phần mềm ứng dụng (Chủ đề 1)",
+                Requirements = "Lịch sử phát triển HĐH cho PC và di động, phần mềm nguồn mở/thương mại; quan hệ phần cứng, HĐH và phần mềm ứng dụng.",
+                TnNb = 2, TnTh = 2, TnVd = 0,
+                DsNb = 0, DsTh = 0, DsVd = 0,
+                Points = 1.0
+            });
+
+            data.Rows.Add(new MatrixTopicRow
+            {
+                Stt = 2,
+                Topic = "2. Những bộ phận chính bên trong máy tính (Chủ đề 1)",
+                Requirements = "Bo mạch chủ, CPU, RAM, ROM, thiết bị lưu trữ; thông số kỹ thuật và ghép nối linh kiện; nhận định đúng/sai về linh kiện phần cứng.",
+                TnNb = 1, TnTh = 1, TnVd = 1,
+                DsNb = 4, DsTh = 2, DsVd = 2,
+                Points = 2.75
+            });
+
+            data.Rows.Add(new MatrixTopicRow
+            {
+                Stt = 3,
+                Topic = "3. Chức năng và hoạt động của thiết bị ngoại vi và thiết bị số (Chủ đề 1)",
+                Requirements = "Chức năng, cổng giao tiếp (USB, HDMI, Bluetooth); xử lý sự cố kết nối thiết bị ngoại vi thông dụng.",
+                TnNb = 0, TnTh = 1, TnVd = 1,
+                DsNb = 0, DsTh = 0, DsVd = 0,
+                Points = 0.5
+            });
+
+            data.Rows.Add(new MatrixTopicRow
+            {
+                Stt = 4,
+                Topic = "4. Tìm kiếm và trao đổi thông tin trên mạng (Chủ đề 2)",
+                Requirements = "Máy tìm kiếm, toán tử logic (AND, OR, NOT, site:); chia sẻ dữ liệu và lưu trữ đám mây an toàn; nhận định đúng/sai về trao đổi thông tin mạng.",
+                TnNb = 0, TnTh = 2, TnVd = 3,
+                DsNb = 4, DsTh = 2, DsVd = 2,
+                Points = 3.25
+            });
+
+            data.Rows.Add(new MatrixTopicRow
+            {
+                Stt = 5,
+                Topic = "5. Ứng xử văn hoá và an toàn trên mạng (Chủ đề 3)",
+                Requirements = "Quy tắc văn hóa mạng, bảo vệ quyền riêng tư, nhận biết lừa đảo mạng và tuân thủ Luật An ninh mạng.",
+                TnNb = 2, TnTh = 0, TnVd = 3,
+                DsNb = 0, DsTh = 0, DsVd = 0,
+                Points = 1.25
+            });
+
+            data.Rows.Add(new MatrixTopicRow
+            {
+                Stt = 6,
+                Topic = "6. Lưu trữ dữ liệu và khai thác thông tin quản lí (Chủ đề 4)",
+                Requirements = "Khái niệm CSDL, bảng dữ liệu, trường, bản ghi; vai trò của CSDL trong quản lý trường học, bệnh viện, thư viện.",
+                TnNb = 1, TnTh = 2, TnVd = 0,
+                DsNb = 0, DsTh = 0, DsVd = 0,
+                Points = 0.75
+            });
+
+            data.Rows.Add(new MatrixTopicRow
+            {
+                Stt = 7,
+                Topic = "7. Hệ quản trị cơ sở dữ liệu và hệ cơ sở dữ liệu (Chủ đề 4)",
+                Requirements = "Khái niệm DBMS, chức năng định nghĩa dữ liệu, cập nhật và truy vấn; kiểm soát truy cập và bảo mật CSDL.",
+                TnNb = 2, TnTh = 0, TnVd = 0,
+                DsNb = 0, DsTh = 0, DsVd = 0,
+                Points = 0.5
+            });
+
+            // Bản đặc tả chi tiết 24 câu TN + 4 câu Đ/S theo đúng ảnh mẫu
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "1",
+                Topic = "Khái niệm HĐH và phần mềm ứng dụng",
+                CognitiveLevel = "Nhận biết",
+                QuestionType = "TN",
+                QuestionCodes = "Câu 1, 2",
+                RequiredOutcome = "Trình bày được sơ lược lịch sử phát triển HĐH cho PC (nguồn mở, thương mại) và thiết bị di động."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "",
+                Topic = "",
+                CognitiveLevel = "Thông hiểu",
+                QuestionType = "TN",
+                QuestionCodes = "Câu 3, 4",
+                RequiredOutcome = "Trình bày mối quan hệ giữa phần cứng, hệ điều hành và phần mềm ứng dụng trong hệ thống máy tính."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "2",
+                Topic = "Các bộ phận chính bên trong máy tính",
+                CognitiveLevel = "Nhận biết",
+                QuestionType = "TN",
+                QuestionCodes = "Câu 5",
+                RequiredOutcome = "Nhận biết các khối chức năng chính: Bo mạch chủ, CPU, RAM, ROM và ổ đĩa lưu trữ."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "",
+                Topic = "",
+                CognitiveLevel = "Thông hiểu",
+                QuestionType = "TN",
+                QuestionCodes = "Câu 6",
+                RequiredOutcome = "Giải thích ý nghĩa các thông số kỹ thuật (tốc độ xung nhịp CPU, dung lượng RAM, chuẩn bus)."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "",
+                Topic = "",
+                CognitiveLevel = "Vận dụng",
+                QuestionType = "TN",
+                QuestionCodes = "Câu 7",
+                RequiredOutcome = "Đánh giá và lựa chọn cấu hình máy tính phù hợp mục đích học tập, lập trình hoặc xử lý đồ họa."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "",
+                Topic = "",
+                CognitiveLevel = "Nhận biết - Vận dụng",
+                QuestionType = "DS",
+                QuestionCodes = "Câu 1 (1a,1b,1c,1d); Câu 2 (2a,2b,2c,2d)",
+                RequiredOutcome = "Phân tích tính đúng/sai của nhận định về cơ chế hoạt động của bộ vi xử lý và hệ thống nhớ."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "3",
+                Topic = "Thiết bị ngoại vi và thiết bị số",
+                CognitiveLevel = "Thông hiểu",
+                QuestionType = "TN",
+                QuestionCodes = "Câu 8",
+                RequiredOutcome = "Phân loại các thiết bị vào, ra và chức năng truyền tải qua các cổng chuẩn (USB, Type-C, HDMI)."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "",
+                Topic = "",
+                CognitiveLevel = "Vận dụng",
+                QuestionType = "TN",
+                QuestionCodes = "Câu 9",
+                RequiredOutcome = "Chẩn đoán và khắc phục sự cố không nhận diện chuột, bàn phím hoặc máy in kết nối với máy tính."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "4",
+                Topic = "Tìm kiếm và trao đổi thông tin trên mạng",
+                CognitiveLevel = "Thông hiểu",
+                QuestionType = "TN",
+                QuestionCodes = "Câu 10, 11",
+                RequiredOutcome = "Sử dụng máy tìm kiếm, áp dụng các toán tử từ khóa nâng cao (site, filetype, AND, OR) để chọn lọc tài liệu."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "",
+                Topic = "",
+                CognitiveLevel = "Vận dụng",
+                QuestionType = "TN",
+                QuestionCodes = "Câu 12, 13, 14",
+                RequiredOutcome = "Khai thác hiệu quả dịch vụ lưu trữ đám mây, chia sẻ tệp phân quyền an toàn phục vụ học tập nhóm."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "",
+                Topic = "",
+                CognitiveLevel = "Nhận biết - Vận dụng",
+                QuestionType = "DS",
+                QuestionCodes = "Câu 3 (3a,3b,3c,3d); Câu 4 (4a,4b,4c,4d)",
+                RequiredOutcome = "Xét tính đúng sai về phương thức phòng chống mã độc, bảo vệ dữ liệu cá nhân khi kết nối mạng công cộng."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "5",
+                Topic = "Ứng xử văn hoá và an toàn trên mạng",
+                CognitiveLevel = "Nhận biết",
+                QuestionType = "TN",
+                QuestionCodes = "Câu 15, 16",
+                RequiredOutcome = "Nhận diện hành vi vi phạm đạo đức, văn hóa ứng xử trên mạng xã hội và các điều cấm trong Luật An ninh mạng."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "",
+                Topic = "",
+                CognitiveLevel = "Vận dụng",
+                QuestionType = "TN",
+                QuestionCodes = "Câu 17, 18, 19",
+                RequiredOutcome = "Ứng phó với các tình huống lừa đảo giả mạo, bảo vệ thông tin nhận dạng cá nhân khi trực tuyến."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "6",
+                Topic = "Lưu trữ dữ liệu và hệ CSDL",
+                CognitiveLevel = "Nhận biết",
+                QuestionType = "TN",
+                QuestionCodes = "Câu 20",
+                RequiredOutcome = "Nêu định nghĩa cơ sở dữ liệu (CSDL) và sự cần thiết của CSDL trong tin học hóa quản lý."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "",
+                Topic = "",
+                CognitiveLevel = "Thông hiểu",
+                QuestionType = "TN",
+                QuestionCodes = "Câu 21, 22",
+                RequiredOutcome = "Giải thích các khái niệm bảng, trường (cột), bản ghi (hàng) và khóa chính trong mô hình dữ liệu quan hệ."
+            });
+            data.Specs.Add(new MatrixSpecRow
+            {
+                Stt = "7",
+                Topic = "Hệ quản trị cơ sở dữ liệu (DBMS)",
+                CognitiveLevel = "Nhận biết",
+                QuestionType = "TN",
+                QuestionCodes = "Câu 23, 24",
+                RequiredOutcome = "Kể tên các chức năng cơ bản của hệ quản trị CSDL (tạo lập, cập nhật, tìm kiếm kết xuất dữ liệu và bảo mật)."
             });
 
             return data;

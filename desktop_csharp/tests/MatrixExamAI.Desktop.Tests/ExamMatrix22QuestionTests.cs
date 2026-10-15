@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
+using MatrixExamAI.Desktop.Services;
 using MatrixExamAI.Shared.Extensibility;
 using Xunit;
 
@@ -167,6 +168,131 @@ namespace MatrixExamAI.Desktop.Tests
                 draft.Success.Should().BeTrue();
                 draft.TotalSelectedQuestions.Should().Be(22);
             }
+        }
+
+        #endregion
+
+        #region Tier 5 - Informatics 11 & Parser Compatibility Tests
+
+        [Fact]
+        public void CreateInformatics11Matrix_Structure_ShouldMatchMinistryAndUserImages()
+        {
+            // Act
+            var matrix = MatrixWordExporter.CreateInformatics11Matrix();
+
+            // Assert
+            matrix.Subject.Should().Be("TIN HỌC");
+            matrix.Grade.Should().Be("11");
+            matrix.DurationMinutes.Should().Be(45);
+            matrix.TotalPoints.Should().Be(10.0);
+            matrix.Rows.Should().HaveCount(7, "Must have exactly 7 knowledge units across 4 topics");
+
+            // Part I: 24 MCQ questions = 6.0 points (8 NB, 8 TH, 8 VD)
+            int totalTnNb = matrix.Rows.Sum(r => r.TnNb);
+            int totalTnTh = matrix.Rows.Sum(r => r.TnTh);
+            int totalTnVd = matrix.Rows.Sum(r => r.TnVd);
+            int totalTn = totalTnNb + totalTnTh + totalTnVd;
+
+            totalTnNb.Should().Be(8, "TN Nhận biết must equal 8");
+            totalTnTh.Should().Be(8, "TN Thông hiểu must equal 8");
+            totalTnVd.Should().Be(8, "TN Vận dụng must equal 8");
+            totalTn.Should().Be(24, "Total Part I MCQ must equal 24 questions (6.0 points)");
+
+            // Part II: 4 True/False questions = 16 sub-items = 4.0 points (8 NB, 4 TH, 4 VD)
+            int totalDsNb = matrix.Rows.Sum(r => r.DsNb);
+            int totalDsTh = matrix.Rows.Sum(r => r.DsTh);
+            int totalDsVd = matrix.Rows.Sum(r => r.DsVd);
+            int totalDsItems = totalDsNb + totalDsTh + totalDsVd;
+
+            totalDsNb.Should().Be(8, "Đ/S Nhận biết must equal 8 sub-items");
+            totalDsTh.Should().Be(4, "Đ/S Thông hiểu must equal 4 sub-items");
+            totalDsVd.Should().Be(4, "Đ/S Vận dụng must equal 4 sub-items");
+            totalDsItems.Should().Be(16, "Total True/False sub-items must equal 16 (4 questions)");
+
+            // Specs table verification
+            matrix.Specs.Should().NotBeEmpty("Specification table must be populated");
+            matrix.Specs.Should().Contain(s => s.QuestionCodes.Contains("Câu 1, 2"));
+            matrix.Specs.Should().Contain(s => s.QuestionType == "DS");
+        }
+
+        [Fact]
+        public void MatrixDocumentParserService_ParseJsonFile_ShouldExtractMatrixData()
+        {
+            // Arrange
+            string tempJsonPath = Path.Combine(Path.GetTempPath(), $"matrix_test_{Guid.NewGuid():N}.json");
+            try
+            {
+                string jsonContent = @"{
+                    ""title"": ""MA TRẬN ĐỀ KIỂM TRA ĐỊNH KỲ"",
+                    ""subject"": ""Tin học"",
+                    ""grade"": ""11"",
+                    ""durationMinutes"": 45,
+                    ""totalPoints"": 10.0,
+                    ""rows"": [
+                        { ""stt"": 1, ""topic"": ""Khái niệm HĐH"", ""tnNb"": 2, ""tnTh"": 2, ""tnVd"": 0, ""dsNb"": 0, ""dsTh"": 0, ""dsVd"": 0, ""points"": 1.0 },
+                        { ""stt"": 2, ""topic"": ""Linh kiện máy tính"", ""tnNb"": 1, ""tnTh"": 1, ""tnVd"": 1, ""dsNb"": 4, ""dsTh"": 2, ""dsVd"": 2, ""points"": 2.75 }
+                    ],
+                    ""specs"": [
+                        { ""stt"": ""1"", ""topic"": ""Khái niệm HĐH"", ""cognitiveLevel"": ""Nhận biết"", ""questionType"": ""TN"", ""questionCodes"": ""Câu 1, 2"", ""requiredOutcome"": ""Trình bày sơ lược HĐH"" }
+                    ]
+                }";
+                File.WriteAllText(tempJsonPath, jsonContent);
+
+                // Act
+                var result = MatrixDocumentParserService.ParseFile(tempJsonPath);
+
+                // Assert
+                result.Success.Should().BeTrue();
+                result.MatrixData.Should().NotBeNull();
+                result.MatrixData.Subject.Should().Be("Tin học");
+                result.MatrixData.Grade.Should().Be("11");
+                result.MatrixData.DurationMinutes.Should().Be(45);
+                result.MatrixData.Rows.Should().HaveCount(2);
+                result.MatrixData.Rows[0].TnNb.Should().Be(2);
+                result.MatrixData.Rows[1].DsNb.Should().Be(4);
+                result.MatrixData.Specs.Should().HaveCount(1);
+            }
+            finally
+            {
+                if (File.Exists(tempJsonPath))
+                {
+                    File.Delete(tempJsonPath);
+                }
+            }
+        }
+
+        [Fact]
+        public void MatrixDocumentParserService_ParseTextContent_ShouldExtractOutlineStructure()
+        {
+            // Arrange
+            string sampleOutline = @"[THÔNG TIN MA TRẬN ĐỀ THI]
+Môn học: TIN HỌC | Khối lớp: Lớp 11 | Thời gian: 45 phút
+PHẦN I. Câu trắc nghiệm nhiều phương án lựa chọn (24 câu - 6.0 điểm)
+Câu 1. [Nhận biết - Khái niệm HĐH] Câu hỏi 1...
+*A. Phương án đúng
+B. Phương án sai
+Đáp án: A
+
+Câu 2. [Thông hiểu - Thiết bị ngoại vi] Câu hỏi 2...
+A. Phương án sai
+*B. Phương án đúng
+Đáp án: B
+
+PHẦN II. Câu trắc nghiệm đúng sai (4 câu - 4.0 điểm)
+Câu 1. [Bộ phận chính bên trong máy tính]
+a) [Đúng] Ý a
+b) [Sai] Ý b
+Đáp án: a-Đ, b-S";
+
+            // Act
+            var result = MatrixDocumentParserService.ParseTextContent(sampleOutline, "De_Thi_Mau");
+
+            // Assert
+            result.Success.Should().BeTrue();
+            result.MatrixData.Subject.Should().BeEquivalentTo("Tin học");
+            result.MatrixData.Grade.Should().Be("11");
+            result.MatrixData.DurationMinutes.Should().Be(45);
+            result.MatrixData.Rows.Should().NotBeEmpty();
         }
 
         #endregion

@@ -89,7 +89,7 @@
                     </ComboBox>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,4">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,4">
                     <TextBlock Text="Thời gian:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     <ComboBox x:Name="CmbDuration" Width="105" Height="30" SelectedIndex="1" FontSize="11" 
@@ -97,6 +97,18 @@
                         <ComboBoxItem Content="45 phút" Padding="6,3" />
                         <ComboBoxItem Content="90 phút" Padding="6,3" />
                         <ComboBoxItem Content="120 phút" Padding="6,3" />
+                    </ComboBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,4">
+                    <TextBlock Text="Mẫu cấu trúc:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <ComboBox x:Name="CmbMatrixPreset" Width="180" Height="30" SelectedIndex="0" FontSize="11" 
+                              Padding="6,2,2,2" VerticalContentAlignment="Center"
+                              SelectionChanged="CmbMatrixPreset_SelectionChanged"
+                              ToolTip="Chọn mẫu ma trận chuẩn">
+                        <ComboBoxItem Content="Toán 12 (BGD 22 câu)" Tag="TOAN_12" Padding="6,3" />
+                        <ComboBoxItem Content="Tin học 11 (KNTT 28 câu)" Tag="TIN_11" Padding="6,3" />
                     </ComboBox>
                 </StackPanel>
 
@@ -234,6 +246,17 @@
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
 
+                            <DataGridTextColumn Header="Đ/S (NB)" Binding="{Binding DsNb}" Width="65">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="#8B5CF6" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
                             <DataGridTextColumn Header="Đ/S (TH)" Binding="{Binding DsTh}" Width="65">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
@@ -250,6 +273,17 @@
                                         <Setter Property="HorizontalAlignment" Value="Center" />
                                         <Setter Property="VerticalAlignment" Value="Center" />
                                         <Setter Property="Foreground" Value="#8B5CF6" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="TLN (NB)" Binding="{Binding TlnNb}" Width="65">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="#10B981" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
