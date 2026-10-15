@@ -451,33 +451,36 @@
                                     </WrapPanel>
                                 </Border>
 
-                                <ScrollViewer Grid.Row="1" x:Name="ScrollWordPage" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" VerticalAlignment="Stretch">
-                                    <Border x:Name="BorderWordA4Page" Margin="12" Background="#FFFFFF" TextElement.Foreground="#0F172A" CornerRadius="4" Padding="20" MaxWidth="680" HorizontalAlignment="Stretch">
+                                <ScrollViewer Grid.Row="1" x:Name="ScrollWordPage" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" VerticalAlignment="Stretch" Background="{DynamicResource ApplicationBackgroundBrush}">
+                                    <Border x:Name="BorderWordA4Page" Margin="24,20,24,36" Background="#FFFFFF" TextElement.Foreground="#0F172A" 
+                                            CornerRadius="2" BorderThickness="1" BorderBrush="#D1D5DB"
+                                            Padding="56,44,44,44" Width="720" MinHeight="1018"
+                                            HorizontalAlignment="Center" VerticalAlignment="Top">
                                         <Border.Effect>
-                                            <DropShadowEffect BlurRadius="10" Direction="270" Opacity="0.10" ShadowDepth="2" />
+                                            <DropShadowEffect BlurRadius="20" Direction="270" Opacity="0.22" ShadowDepth="4" Color="#000000" />
                                         </Border.Effect>
                                     <StackPanel x:Name="PanelRichDocContainer">
                                         <!-- Header tài liệu mô phỏng Word chuẩn THPT (kế thừa m:\LOP\KT15P-1) -->
-                                        <Grid Margin="0,0,0,10">
+                                        <Grid Margin="0,0,0,12">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="2*" />
                                                 <ColumnDefinition Width="3*" />
                                             </Grid.ColumnDefinitions>
                                             <StackPanel Grid.Column="0">
-                                                <TextBlock Text="SỞ/PHÒNG GD&amp;ĐT" FontSize="10" FontWeight="Bold" FontFamily="Times New Roman" HorizontalAlignment="Center" Foreground="#0F172A" />
-                                                <TextBlock Text="ĐỀ KIỂM TRA" FontSize="10" FontWeight="Bold" FontFamily="Times New Roman" HorizontalAlignment="Center" Foreground="#0F172A" />
-                                                <TextBlock Text="(Đề thi gồm 20 câu)" FontSize="9" FontStyle="Italic" FontFamily="Times New Roman" HorizontalAlignment="Center" Foreground="#475569" />
+                                                <TextBlock Text="SỞ/PHÒNG GD&amp;ĐT" FontSize="11" FontWeight="Bold" FontFamily="Times New Roman" HorizontalAlignment="Center" Foreground="#0F172A" />
+                                                <TextBlock Text="ĐỀ KIỂM TRA" FontSize="11" FontWeight="Bold" FontFamily="Times New Roman" HorizontalAlignment="Center" Foreground="#0F172A" />
+                                                <TextBlock Text="(Đề thi gồm 20 câu)" FontSize="10" FontStyle="Italic" FontFamily="Times New Roman" HorizontalAlignment="Center" Foreground="#475569" Margin="0,2,0,0" />
                                             </StackPanel>
                                             <StackPanel Grid.Column="1">
-                                                <TextBlock Text="ĐỀ THI MÔN TOÁN - LỚP 12" FontSize="10" FontWeight="Bold" FontFamily="Times New Roman" HorizontalAlignment="Center" Foreground="#0F172A" />
-                                                <TextBlock Text="Môn thi: TOÁN" FontSize="10" FontWeight="Bold" FontFamily="Times New Roman" HorizontalAlignment="Center" Foreground="#0F172A" />
-                                                <TextBlock Text="Thời gian làm bài: 90 phút, không kể thời gian phát đề" FontSize="9" FontStyle="Italic" FontFamily="Times New Roman" HorizontalAlignment="Center" Foreground="#475569" />
-                                                <TextBlock Text="Lớp: 12  Năm học: 2025-2026" FontSize="9" FontFamily="Times New Roman" HorizontalAlignment="Center" Foreground="#475569" />
+                                                <TextBlock Text="ĐỀ THI MÔN TOÁN - LỚP 12" FontSize="11" FontWeight="Bold" FontFamily="Times New Roman" HorizontalAlignment="Center" Foreground="#0F172A" />
+                                                <TextBlock Text="Môn thi: TOÁN" FontSize="11" FontWeight="Bold" FontFamily="Times New Roman" HorizontalAlignment="Center" Foreground="#0F172A" />
+                                                <TextBlock Text="Thời gian làm bài: 90 phút, không kể thời gian phát đề" FontSize="10" FontStyle="Italic" FontFamily="Times New Roman" HorizontalAlignment="Center" Foreground="#475569" Margin="0,2,0,0" />
+                                                <TextBlock Text="Lớp: 12  Năm học: 2025-2026" FontSize="10" FontFamily="Times New Roman" HorizontalAlignment="Center" Foreground="#475569" Margin="0,1,0,0" />
                                             </StackPanel>
                                         </Grid>
                                         <!-- Dòng thông tin thí sinh phẳng không viền hộp -->
-                                        <TextBlock Text="Họ và tên: …………………………………………..   Số báo danh: ………………   Mã đề: 101" FontFamily="Times New Roman" FontSize="10.5" Margin="0,0,0,10" Foreground="#0F172A" />
-                                        <Separator Margin="0,0,0,10" Background="#CBD5E1" />
+                                        <TextBlock Text="Họ và tên: …………………………………………..   Số báo danh: ………………   Mã đề: 101" FontFamily="Times New Roman" FontSize="11" Margin="0,0,0,12" Foreground="#0F172A" />
+                                        <Separator Margin="0,0,0,14" Background="#CBD5E1" />
 
                                         <!-- Nội dung được dựng trực tiếp (Đoạn văn + Bảng biểu Table Grid) -->
                                         <StackPanel x:Name="PanelDocContent" />

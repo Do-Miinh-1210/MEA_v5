@@ -81,11 +81,13 @@
             <!-- Chế độ 1: Mô phỏng Word A4 -->
             <Border x:Name="BorderWordContainer" Background="{DynamicResource ApplicationBackgroundBrush}" CornerRadius="6" 
                     BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                    <Border Margin="24" Background="#FFFFFF" TextElement.Foreground="#0F172A" CornerRadius="4" Padding="32" 
-                            MaxWidth="820" HorizontalAlignment="Stretch">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="{DynamicResource ApplicationBackgroundBrush}">
+                    <Border Margin="24,20,24,36" Background="#FFFFFF" TextElement.Foreground="#0F172A" 
+                            CornerRadius="2" BorderThickness="1" BorderBrush="#D1D5DB"
+                            Padding="60,48,48,48" Width="760" MinHeight="1075" 
+                            HorizontalAlignment="Center" VerticalAlignment="Top">
                         <Border.Effect>
-                            <DropShadowEffect BlurRadius="12" Direction="270" Opacity="0.12" ShadowDepth="3" />
+                            <DropShadowEffect BlurRadius="20" Direction="270" Opacity="0.24" ShadowDepth="5" Color="#000000" />
                         </Border.Effect>
                         <StackPanel x:Name="PanelDocContent" />
                     </Border>

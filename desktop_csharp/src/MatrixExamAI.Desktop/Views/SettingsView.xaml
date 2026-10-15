@@ -138,7 +138,7 @@
                             <TextBlock Text="Dùng để xuất vector EMF / SVG sắc nét 600 DPI khi vẽ hình TikZ" 
                                        FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
                         </StackPanel>
-                        <Border Grid.Column="1" Background="#1A10B981" CornerRadius="4" Padding="8,4">
+                        <Border Grid.Column="1" Background="#1A10B981" CornerRadius="4" Padding="8,4" VerticalAlignment="Center">
                             <TextBlock Text="Đã sẵn sàng" Foreground="#10B981" FontSize="11" FontWeight="Bold" />
                         </Border>
                     </Grid>
@@ -204,7 +204,7 @@
                             <TextBlock Text="github.com/Do-Miinh-1210/MEA_v5" 
                                        FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
                         </StackPanel>
-                        <Border Grid.Column="1" Background="#1A0D9488" CornerRadius="4" Padding="8,4">
+                        <Border Grid.Column="1" Background="#1A0D9488" CornerRadius="4" Padding="8,4" VerticalAlignment="Center">
                             <TextBlock Text="CDN Trực tiếp" Foreground="#0D9488" FontSize="11" FontWeight="Bold" />
                         </Border>
                     </Grid>
