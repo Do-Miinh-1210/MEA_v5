@@ -60,9 +60,11 @@ public class SupabaseLicenseService
     private readonly string _pyCacheFilePath;
     private LicenseInfo? _currentLicense;
 
+    private readonly bool _isCustomCache;
+
     public event EventHandler<LicenseInfo>? LicenseChanged;
 
-    public SupabaseLicenseService(HttpClient? httpClient = null)
+    public SupabaseLicenseService(HttpClient? httpClient = null, string? customCachePath = null)
     {
         _httpClient = httpClient ?? new HttpClient();
         _httpClient.Timeout = TimeSpan.FromSeconds(8);
@@ -70,9 +72,18 @@ public class SupabaseLicenseService
         string userHome = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         _pyCacheFilePath = Path.Combine(userHome, ".exam_generator", "license_cache.json");
 
-        string localApp = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MatrixExamAI");
-        Directory.CreateDirectory(localApp);
-        _cacheFilePath = Path.Combine(localApp, "license_cache.json");
+        if (!string.IsNullOrEmpty(customCachePath))
+        {
+            _cacheFilePath = customCachePath;
+            _isCustomCache = true;
+        }
+        else
+        {
+            _isCustomCache = false;
+            string localApp = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MatrixExamAI");
+            Directory.CreateDirectory(localApp);
+            _cacheFilePath = Path.Combine(localApp, "license_cache.json");
+        }
     }
 
     public LicenseInfo GetCurrentLicense()
@@ -336,22 +347,25 @@ public class SupabaseLicenseService
             File.WriteAllText(_cacheFilePath, json);
 
             // Ghi dự phòng vào .exam_generator để đồng bộ chéo
-            try
+            if (!_isCustomCache)
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(_pyCacheFilePath)!);
-                var pyObj = new
+                try
                 {
-                    ok = info.Ok,
-                    mid = info.MachineId,
-                    status = info.Status,
-                    tier = info.Tier,
-                    name = info.Name,
-                    expiry = info.Expiry,
-                    cached_at = DateTime.UtcNow.ToString("o")
-                };
-                File.WriteAllText(_pyCacheFilePath, JsonSerializer.Serialize(pyObj, new JsonSerializerOptions { WriteIndented = true }));
+                    Directory.CreateDirectory(Path.GetDirectoryName(_pyCacheFilePath)!);
+                    var pyObj = new
+                    {
+                        ok = info.Ok,
+                        mid = info.MachineId,
+                        status = info.Status,
+                        tier = info.Tier,
+                        name = info.Name,
+                        expiry = info.Expiry,
+                        cached_at = DateTime.UtcNow.ToString("o")
+                    };
+                    File.WriteAllText(_pyCacheFilePath, JsonSerializer.Serialize(pyObj, new JsonSerializerOptions { WriteIndented = true }));
+                }
+                catch { }
             }
-            catch { }
         }
         catch { }
     }

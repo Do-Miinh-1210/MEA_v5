@@ -103,24 +103,32 @@ public class SupabaseLicenseServiceTests
     [Fact]
     public void SupabaseLicenseService_CacheSerialization_SavesAndLoadsCorrectly()
     {
-        var service = new SupabaseLicenseService();
-        var testInfo = new LicenseInfo
+        string tempCache = Path.GetTempFileName();
+        try
         {
-            Ok = true,
-            MachineId = "TEST-1234-5678",
-            Status = "active",
-            Tier = "pro",
-            Name = "Giáo viên Toán",
-            Expiry = "Vĩnh viễn",
-            Note = "Unit test cache"
-        };
+            var service = new SupabaseLicenseService(customCachePath: tempCache);
+            var testInfo = new LicenseInfo
+            {
+                Ok = true,
+                MachineId = "TEST-1234-5678",
+                Status = "active",
+                Tier = "pro",
+                Name = "Giáo viên Toán",
+                Expiry = "Vĩnh viễn",
+                Note = "Unit test cache"
+            };
 
-        service.SaveCache(testInfo);
-        var loaded = service.LoadCache();
+            service.SaveCache(testInfo);
+            var loaded = service.LoadCache();
 
-        Assert.NotNull(loaded);
-        Assert.Equal(testInfo.MachineId, loaded.MachineId);
-        Assert.Equal(testInfo.Name, loaded.Name);
+            Assert.NotNull(loaded);
+            Assert.Equal(testInfo.MachineId, loaded.MachineId);
+            Assert.Equal(testInfo.Name, loaded.Name);
+        }
+        finally
+        {
+            if (File.Exists(tempCache)) File.Delete(tempCache);
+        }
     }
 
     [Fact]
