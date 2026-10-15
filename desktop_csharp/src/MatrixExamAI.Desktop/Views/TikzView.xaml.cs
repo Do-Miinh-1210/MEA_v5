@@ -53,7 +53,11 @@ namespace MatrixExamAI.Desktop.Views
             TxtTikzCode.Text = string.Empty;
             Loaded += (s, e) =>
             {
-                InitializeLayout();
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    InitializeLayout();
+                }), System.Windows.Threading.DispatcherPriority.Loaded);
+
                 if (string.IsNullOrWhiteSpace(TxtFigurePrompt.Text))
                 {
                     TxtTikzCode.Text = string.Empty;
@@ -82,9 +86,12 @@ namespace MatrixExamAI.Desktop.Views
                         _lastPreviewWidth = ColPreview.Width;
                     }
                     ColCode.MinWidth = 0;
+                    ColCode.MaxWidth = 0;
                     ColCode.Width = new GridLength(0);
+                    ColSplitter.MaxWidth = 0;
                     ColSplitter.Width = new GridLength(0);
                     ColPreview.MinWidth = 0;
+                    ColPreview.MaxWidth = double.PositiveInfinity;
                     ColPreview.Width = new GridLength(1, GridUnitType.Star);
 
                     CardCode.Visibility = Visibility.Collapsed;
@@ -105,9 +112,12 @@ namespace MatrixExamAI.Desktop.Views
                         _lastPreviewWidth = ColPreview.Width;
                     }
                     ColPreview.MinWidth = 0;
+                    ColPreview.MaxWidth = 0;
                     ColPreview.Width = new GridLength(0);
+                    ColSplitter.MaxWidth = 0;
                     ColSplitter.Width = new GridLength(0);
                     ColCode.MinWidth = 0;
+                    ColCode.MaxWidth = double.PositiveInfinity;
                     ColCode.Width = new GridLength(1, GridUnitType.Star);
 
                     CardPreview.Visibility = Visibility.Collapsed;
@@ -123,6 +133,12 @@ namespace MatrixExamAI.Desktop.Views
 
                 case TikzLayoutMode.Split:
                 default:
+                    ColCode.MinWidth = 300;
+                    ColCode.MaxWidth = double.PositiveInfinity;
+                    ColSplitter.MaxWidth = double.PositiveInfinity;
+                    ColPreview.MinWidth = 300;
+                    ColPreview.MaxWidth = double.PositiveInfinity;
+
                     Grid.SetColumn(CardCode, 0);
                     Grid.SetColumnSpan(CardCode, 1);
                     Grid.SetColumn(SplitterTikz, 1);
@@ -130,8 +146,6 @@ namespace MatrixExamAI.Desktop.Views
                     Grid.SetColumn(CardPreview, 2);
                     Grid.SetColumnSpan(CardPreview, 1);
 
-                    ColCode.MinWidth = 300;
-                    ColPreview.MinWidth = 300;
                     ColCode.Width = _lastCodeWidth.Value > 0 ? _lastCodeWidth : new GridLength(3.2, GridUnitType.Star);
                     ColSplitter.Width = new GridLength(8);
                     ColPreview.Width = _lastPreviewWidth.Value > 0 ? _lastPreviewWidth : new GridLength(6.8, GridUnitType.Star);
@@ -143,6 +157,8 @@ namespace MatrixExamAI.Desktop.Views
                     BtnExpandPreviewFromCode.Visibility = Visibility.Collapsed;
                     break;
             }
+            GridSplitContainer.InvalidateMeasure();
+            GridSplitContainer.UpdateLayout();
             UpdateModeButtonStyles();
         }
 
@@ -743,6 +759,7 @@ namespace MatrixExamAI.Desktop.Views
                         _currentGeneratedImagePath = dlg.LoadedPngPath;
                         PanelPreviewPlaceholder.Visibility = Visibility.Collapsed;
                         TxtDiagramStats.Text = $"Đã nạp sẵn từ kho: {bi.PixelWidth}x{bi.PixelHeight} px — '{dlg.LoadedTitle}'";
+                        BtnZoomFit_Click(this, new RoutedEventArgs());
                         PlayNewImageInsertAnimation();
                     }
                     catch
@@ -791,9 +808,11 @@ namespace MatrixExamAI.Desktop.Views
 
         private void SetZoom(double zoom)
         {
-            _currentZoom = Math.Clamp(zoom, 0.05, 10.0);
+            _currentZoom = Math.Clamp(zoom, 0.1, 5.0);
             if (ImgScaleTransform != null)
             {
+                ImgScaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+                ImgScaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, null);
                 ImgScaleTransform.ScaleX = _currentZoom;
                 ImgScaleTransform.ScaleY = _currentZoom;
             }
@@ -829,7 +848,7 @@ namespace MatrixExamAI.Desktop.Views
                 double availW = Math.Max(50, ScrollDiagramContainer.ActualWidth - 32);
                 double availH = Math.Max(50, ScrollDiagramContainer.ActualHeight - 32);
                 double fit = Math.Min(availW / imgW, availH / imgH) * 0.95;
-                if (fit > 0.05 && fit < 10.0) SetZoom(fit);
+                if (fit >= 0.1 && fit <= 5.0) SetZoom(fit);
                 else SetZoom(1.0);
             }
             else
@@ -944,6 +963,17 @@ namespace MatrixExamAI.Desktop.Views
 
                 var scaleAnimY = scaleAnimX.Clone();
 
+                scaleAnimX.Completed += (s, e) =>
+                {
+                    if (ImgScaleTransform != null)
+                    {
+                        ImgScaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+                        ImgScaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, null);
+                        ImgScaleTransform.ScaleX = _currentZoom;
+                        ImgScaleTransform.ScaleY = _currentZoom;
+                    }
+                };
+
                 ImgScaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, scaleAnimX);
                 ImgScaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, scaleAnimY);
 
@@ -1046,7 +1076,7 @@ namespace MatrixExamAI.Desktop.Views
                         ImgDiagramPreview.Source = bi;
                         PanelPreviewPlaceholder.Visibility = Visibility.Collapsed;
                         TxtDiagramStats.Text = $"Đã biên dịch: {bi.PixelWidth}x{bi.PixelHeight} px ({dpi} DPI) | {elapsed:F1}s ({compileResult.CompilationTimeMs}ms)";
-
+                        BtnZoomFit_Click(this, new RoutedEventArgs());
                         PlayNewImageInsertAnimation();
 
                         InfoTikzNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;

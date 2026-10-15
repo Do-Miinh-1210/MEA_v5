@@ -6,6 +6,24 @@
         WindowStartupLocation="CenterOwner" Background="{DynamicResource ApplicationBackgroundBrush}"
         TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
         TextElement.FontFamily="Segoe UI" TextElement.FontSize="12">
+    <Window.Resources>
+        <Style TargetType="TabItem">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Padding" Value="14,6" />
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="GroupBox">
+            <Setter Property="BorderBrush" Value="{DynamicResource ControlElevationBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -32,7 +50,7 @@
         </Border>
 
         <!-- Main Body -->
-        <TabControl Grid.Row="1" Margin="12,8,12,4" Background="{DynamicResource ApplicationBackgroundBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1">
+        <TabControl Grid.Row="1" Margin="12,8,12,4" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1">
             <!-- Tab 1: Tự nhập dữ liệu -->
             <TabItem Header="  Tự nhập dữ liệu  " FontWeight="SemiBold">
                 <Grid Margin="10">
@@ -47,8 +65,8 @@
                     <GroupBox Grid.Row="0" Header="Thông tin chung" Padding="8,6" Margin="0,0,0,6" Foreground="{DynamicResource TextFillColorPrimaryBrush}">
                         <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal" Margin="0,2,14,2">
-                                <TextBlock Text="Môn:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                <ComboBox x:Name="CmbSubject" Width="100" Height="26" SelectedIndex="0">
+                                <TextBlock Text="Môn:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" FontWeight="SemiBold" />
+                                <ComboBox x:Name="CmbSubject" Width="100" Height="26" SelectedIndex="0" Foreground="{DynamicResource TextFillColorPrimaryBrush}">
                                     <ComboBoxItem Content="Toán" />
                                     <ComboBoxItem Content="Vật lý" />
                                     <ComboBoxItem Content="Hóa học" />
@@ -63,8 +81,8 @@
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Margin="0,2,14,2">
-                                <TextBlock Text="Lớp:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                <ComboBox x:Name="CmbGrade" Width="60" Height="26" SelectedIndex="6">
+                                <TextBlock Text="Lớp:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" FontWeight="SemiBold" />
+                                <ComboBox x:Name="CmbGrade" Width="60" Height="26" SelectedIndex="6" Foreground="{DynamicResource TextFillColorPrimaryBrush}">
                                     <ComboBoxItem Content="6" />
                                     <ComboBoxItem Content="7" />
                                     <ComboBoxItem Content="8" />
@@ -76,8 +94,8 @@
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Margin="0,2,14,2">
-                                <TextBlock Text="Kỳ:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                <ComboBox x:Name="CmbSemester" Width="100" Height="26" SelectedIndex="2">
+                                <TextBlock Text="Kỳ:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" FontWeight="SemiBold" />
+                                <ComboBox x:Name="CmbSemester" Width="100" Height="26" SelectedIndex="2" Foreground="{DynamicResource TextFillColorPrimaryBrush}">
                                     <ComboBoxItem Content="Giữa kì I" />
                                     <ComboBoxItem Content="Cuối kì I" />
                                     <ComboBoxItem Content="Giữa kì II" />
@@ -86,15 +104,15 @@
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Margin="0,2,14,2">
-                                <TextBlock Text="Năm:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                <TextBlock Text="Năm:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" FontWeight="SemiBold" />
                                 <TextBox x:Name="TxtYear" Width="90" Height="26" Text="2025-2026" VerticalContentAlignment="Center"
                                          Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                                          Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
-                                <TextBlock Text="Thời gian:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                <ComboBox x:Name="CmbDuration" Width="90" Height="26" SelectedIndex="3">
+                                <TextBlock Text="Thời gian:" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" FontWeight="SemiBold" />
+                                <ComboBox x:Name="CmbDuration" Width="90" Height="26" SelectedIndex="3" Foreground="{DynamicResource TextFillColorPrimaryBrush}">
                                     <ComboBoxItem Content="15 phút" />
                                     <ComboBoxItem Content="45 phút" />
                                     <ComboBoxItem Content="60 phút" />
@@ -125,9 +143,10 @@
 
                     <!-- DataGrid danh sách cấu hình hàng -->
                     <DataGrid Grid.Row="3" x:Name="DgQuickRows" AutoGenerateColumns="False" CanUserAddRows="False"
-                              HeadersVisibility="Column" GridLinesVisibility="Horizontal" RowHeight="32"
+                              HeadersVisibility="Column" GridLinesVisibility="All" RowHeight="32"
                               Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
                               HorizontalGridLinesBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
+                              VerticalGridLinesBrush="{DynamicResource DividerStrokeColorDefaultBrush}"
                               BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1"
                               CellEditEnding="DgQuickRows_CellEditEnding">
                         <DataGrid.RowStyle>
@@ -145,13 +164,33 @@
                             </Style>
                         </DataGrid.ColumnHeaderStyle>
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="STT" Binding="{Binding Stt}" Width="45" IsReadOnly="True" />
-                            <DataGridTextColumn Header="Chủ đề / Nội dung" Binding="{Binding Topic}" Width="2*" />
+                            <DataGridTextColumn Header="STT" Binding="{Binding Stt}" Width="45" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Chủ đề / Nội dung" Binding="{Binding Topic}" Width="2*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                        <Setter Property="Padding" Value="4,0" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
                             <DataGridTemplateColumn Header="Loại câu" Width="1.5*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <ComboBox SelectedValue="{Binding QuestionType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                  SelectedValuePath="Tag" Height="24" SelectionChanged="RowData_Changed">
+                                                  SelectedValuePath="Tag" Height="24" SelectionChanged="RowData_Changed"
+                                                  Foreground="{DynamicResource TextFillColorPrimaryBrush}">
                                             <ComboBoxItem Content="TN — Trắc nghiệm" Tag="TN" />
                                             <ComboBoxItem Content="DS — Đúng / Sai" Tag="DS" />
                                             <ComboBoxItem Content="TLN — Trả lời ngắn" Tag="TLN" />
@@ -160,11 +199,13 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
+
                             <DataGridTemplateColumn Header="Mức độ" Width="1.5*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <ComboBox SelectedValue="{Binding Level, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                  SelectedValuePath="Tag" Height="24" SelectionChanged="RowData_Changed">
+                                                  SelectedValuePath="Tag" Height="24" SelectionChanged="RowData_Changed"
+                                                  Foreground="{DynamicResource TextFillColorPrimaryBrush}">
                                             <ComboBoxItem Content="NB — Nhận biết" Tag="NB" />
                                             <ComboBoxItem Content="TH — Thông hiểu" Tag="TH" />
                                             <ComboBoxItem Content="VD — Vận dụng" Tag="VD" />
@@ -173,9 +214,37 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Header="Số câu" Binding="{Binding Count, UpdateSourceTrigger=PropertyChanged}" Width="65" />
-                            <DataGridTextColumn Header="Điểm/câu" Binding="{Binding PointsPerQuestion, UpdateSourceTrigger=PropertyChanged}" Width="75" />
-                            <DataGridTextColumn Header="Yêu cầu cần đạt" Binding="{Binding Requirement}" Width="2*" />
+
+                            <DataGridTextColumn Header="Số câu" Binding="{Binding Count, UpdateSourceTrigger=PropertyChanged}" Width="65">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Điểm/câu" Binding="{Binding PointsPerQuestion, UpdateSourceTrigger=PropertyChanged}" Width="75">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Yêu cầu cần đạt" Binding="{Binding Requirement}" Width="2*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                                        <Setter Property="Padding" Value="4,0" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
                             <DataGridTemplateColumn Header="Xóa" Width="50">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
