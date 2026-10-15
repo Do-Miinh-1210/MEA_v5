@@ -1,6 +1,6 @@
-; Inno Setup Script — MatrixExamAI Pro v5.2.0.1 (.NET 10 WPF + Word Add-in)
+; Inno Setup Script — MatrixExamAI Pro v5.2.0.2 (.NET 10 WPF + Word Add-in)
 #define MyAppName "MatrixExamAI Pro"
-#define MyAppVersion "5.2.0.1"
+#define MyAppVersion "5.2.0.2"
 #define MyAppPublisher "Do Minh Math"
 #define MyAppURL "https://github.com/Do-Miinh-1210/MEA_v5"
 #define MyAppExeName "MatrixExamAI.Desktop.exe"

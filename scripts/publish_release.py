@@ -27,9 +27,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.2.0.1"
-TITLE = "MatrixExamAI Pro v5.2.0.1 (TikZ Full Fill, Word Preview Contrast & Single Insert Button)"
-BODY = "Bản phát hành lớn MatrixExamAI Pro v5.2.0.1: Nâng cấp phân hệ TikZ xem trước toàn màn hình không bị thụt lề; sửa lỗi khóa zoom 1000%; gộp nút Ghi đè/Nối tiếp thành 1 nút chuyển đổi tinh gọn; mở rộng toàn diện combobox chống cắt chữ ở giao diện tối và màn hình DPI cao."
+TAG = "v5.2.0.2"
+TITLE = "MatrixExamAI Pro v5.2.0.2 (Topic Bar WrapPanel & No Text Clipping)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.2.0.2: Khắc phục triệt để lỗi đè chữ và cắt dọc ở ô Chuyên đề trọng tâm trong phân hệ Ma trận đề thi; chuyển thanh công cụ sang WrapPanel tự động co giãn không tràn viền trên mọi độ phân giải."
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)
