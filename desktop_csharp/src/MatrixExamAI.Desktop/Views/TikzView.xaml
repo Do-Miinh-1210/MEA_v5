@@ -322,9 +322,9 @@
                                 <!-- Zoom Bar -->
                                 <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" CornerRadius="4" Height="24" Padding="2,0" Margin="0,0,6,2" VerticalAlignment="Center">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <ui:Button x:Name="BtnZoomOut" Appearance="Transparent" Content="-" Width="20" Height="20" Padding="0" FontSize="12" Click="BtnZoomOut_Click" ToolTip="Thu nhỏ (Ctrl + Cuộn chuột xuống)" />
+                                        <ui:Button x:Name="BtnZoomOut" Appearance="Transparent" Content="-" Width="20" Height="20" Padding="0" FontSize="12" Click="BtnZoomOut_Click" ToolTip="Thu nhỏ (Lăn chuột xuống hoặc phím -)" />
                                         <ui:Button x:Name="BtnZoomReset" Appearance="Transparent" Content="100%" Height="20" Padding="3,0" FontSize="9.5" Click="BtnZoomReset_Click" ToolTip="Kích thước gốc 100%" />
-                                        <ui:Button x:Name="BtnZoomIn" Appearance="Transparent" Content="+" Width="20" Height="20" Padding="0" FontSize="12" Click="BtnZoomIn_Click" ToolTip="Phóng to (Ctrl + Cuộn chuột lên)" />
+                                        <ui:Button x:Name="BtnZoomIn" Appearance="Transparent" Content="+" Width="20" Height="20" Padding="0" FontSize="12" Click="BtnZoomIn_Click" ToolTip="Phóng to (Lăn chuột lên hoặc phím +)" />
                                         <ui:Button x:Name="BtnZoomFit" Appearance="Transparent" Content="Fit" Height="20" Padding="3,0" FontSize="9.5" Click="BtnZoomFit_Click" ToolTip="Vừa vặn khung nhìn" />
                                     </StackPanel>
                                 </Border>
@@ -372,7 +372,7 @@
                             BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1.5" 
                             CornerRadius="6" ClipToBounds="True"
                             MouseEnter="BorderDiagramWrapper_MouseEnter" MouseLeave="BorderDiagramWrapper_MouseLeave"
-                            ToolTip="Nhấp đúp chuột để mở cửa sổ xem hình chi tiết | Kéo chuột để di chuyển | Ctrl + Cuộn chuột để thu phóng">
+                            ToolTip="Nhấp đúp chuột để mở cửa sổ xem hình chi tiết | Kéo chuột để di chuyển | Lăn bánh xe chuột để thu phóng">
                         <ScrollViewer x:Name="ScrollDiagramContainer" 
                                       HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
                                       PreviewMouseWheel="ScrollDiagramContainer_PreviewMouseWheel">
@@ -392,7 +392,7 @@
                                     <ui:SymbolIcon Symbol="Shapes24" FontSize="36" Foreground="#CBD5E1" HorizontalAlignment="Center" Margin="0,0,0,6" />
                                     <TextBlock Text="Hình vẽ sau khi AI sinh mã hoặc bấm 'Biên dịch hình' sẽ hiển thị tại đây" 
                                                FontSize="11" Foreground="#94A3B8" HorizontalAlignment="Center" />
-                                    <TextBlock Text="Hỗ trợ Pan/Zoom chuột (Ctrl + Cuộn), xuất 600 DPI, vector EMF &amp; SVG" 
+                                    <TextBlock Text="Hỗ trợ Pan/Zoom chuột (Lăn chuột để thu phóng), xuất 600 DPI, vector EMF &amp; SVG" 
                                                FontSize="10" Foreground="#CBD5E1" HorizontalAlignment="Center" Margin="0,2,0,0" />
                                 </StackPanel>
                             </Grid>

@@ -736,7 +736,7 @@ namespace MatrixExamAI.Desktop.Views
 
         private void SetZoom(double zoom)
         {
-            _currentZoom = Math.Clamp(zoom, 0.2, 5.0);
+            _currentZoom = Math.Clamp(zoom, 0.05, 10.0);
             if (ImgScaleTransform != null)
             {
                 ImgScaleTransform.ScaleX = _currentZoom;
@@ -769,10 +769,12 @@ namespace MatrixExamAI.Desktop.Views
             }
             if (ImgDiagramPreview.Source is BitmapSource bs && bs.PixelWidth > 0 && bs.PixelHeight > 0 && ScrollDiagramContainer != null)
             {
-                double wRatio = (ScrollDiagramContainer.ActualWidth - 32) / bs.PixelWidth;
-                double hRatio = (ScrollDiagramContainer.ActualHeight - 32) / bs.PixelHeight;
-                double fit = Math.Min(wRatio, hRatio);
-                if (fit > 0.05 && fit < 10) SetZoom(fit);
+                double imgW = bs.Width > 0 ? bs.Width : bs.PixelWidth;
+                double imgH = bs.Height > 0 ? bs.Height : bs.PixelHeight;
+                double availW = Math.Max(50, ScrollDiagramContainer.ActualWidth - 32);
+                double availH = Math.Max(50, ScrollDiagramContainer.ActualHeight - 32);
+                double fit = Math.Min(availW / imgW, availH / imgH) * 0.95;
+                if (fit > 0.05 && fit < 10.0) SetZoom(fit);
                 else SetZoom(1.0);
             }
             else
@@ -783,12 +785,9 @@ namespace MatrixExamAI.Desktop.Views
 
         private void ScrollDiagramContainer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-            {
-                double factor = e.Delta > 0 ? 1.15 : 0.85;
-                SetZoom(_currentZoom * factor);
-                e.Handled = true;
-            }
+            double factor = e.Delta > 0 ? 1.15 : 0.85;
+            SetZoom(_currentZoom * factor);
+            e.Handled = true;
         }
 
         private void Canvas_MouseDown(object sender, MouseButtonEventArgs e)

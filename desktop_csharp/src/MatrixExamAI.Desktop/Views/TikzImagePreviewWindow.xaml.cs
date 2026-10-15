@@ -42,12 +42,18 @@ namespace MatrixExamAI.Desktop.Views
                 }
             }
 
-            Loaded += (s, e) => BtnZoomFit_Click(this, new RoutedEventArgs());
+            Loaded += (s, e) =>
+            {
+                Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Loaded, new Action(() =>
+                {
+                    BtnZoomFit_Click(this, new RoutedEventArgs());
+                }));
+            };
         }
 
         private void SetZoom(double zoom)
         {
-            _currentZoom = Math.Clamp(zoom, 0.1, 10.0);
+            _currentZoom = Math.Clamp(zoom, 0.05, 15.0);
             if (ImgScaleTransform != null)
             {
                 ImgScaleTransform.ScaleX = _currentZoom;
@@ -76,12 +82,23 @@ namespace MatrixExamAI.Desktop.Views
         private void BtnZoomFit_Click(object sender, RoutedEventArgs e)
         {
             ResetTranslate();
-            if (ImgFullPreview.Source is BitmapSource bs && bs.PixelWidth > 0 && bs.PixelHeight > 0 && ScrollViewerContainer != null)
+            if (ImgFullPreview.Source is BitmapSource bs && ScrollViewerContainer != null)
             {
-                double availW = Math.Max(100, ScrollViewerContainer.ActualWidth - 40);
-                double availH = Math.Max(100, ScrollViewerContainer.ActualHeight - 40);
-                double fit = Math.Min(availW / bs.PixelWidth, availH / bs.PixelHeight);
-                if (fit > 0.05 && fit < 10) SetZoom(fit);
+                // bs.Width and bs.Height are in DIPs (Device Independent Pixels: pixels * 96 / DPI)
+                double imgW = bs.Width > 0 ? bs.Width : bs.PixelWidth;
+                double imgH = bs.Height > 0 ? bs.Height : bs.PixelHeight;
+
+                // Account for BorderImageCard padding (16*2=32) and card border (2)
+                double cardW = imgW + 34;
+                double cardH = imgH + 34;
+
+                double availW = Math.Max(100, ScrollViewerContainer.ActualWidth - 48);
+                double availH = Math.Max(100, ScrollViewerContainer.ActualHeight - 48);
+
+                double fit = Math.Min(availW / cardW, availH / cardH);
+                fit = Math.Min(fit * 0.95, 3.0); // Fit 95% of viewport comfortably
+
+                if (fit > 0.05 && fit < 15.0) SetZoom(fit);
                 else SetZoom(1.0);
             }
             else
@@ -99,7 +116,7 @@ namespace MatrixExamAI.Desktop.Views
             }
         }
 
-        private void ScrollViewerContainer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             double factor = e.Delta > 0 ? 1.15 : 0.85;
             SetZoom(_currentZoom * factor);
@@ -110,6 +127,12 @@ namespace MatrixExamAI.Desktop.Views
         {
             if (e.ChangedButton == MouseButton.Left)
             {
+                if (e.ClickCount == 2)
+                {
+                    BtnZoomFit_Click(sender, e);
+                    e.Handled = true;
+                    return;
+                }
                 _isDragging = true;
                 _lastMousePos = e.GetPosition(ScrollViewerContainer);
                 CanvasContainer.CaptureMouse();

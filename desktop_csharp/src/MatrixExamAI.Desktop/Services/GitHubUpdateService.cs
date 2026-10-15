@@ -34,8 +34,8 @@ public class GitHubUpdateService
 {
     public static GitHubUpdateService Instance { get; } = new();
 
-    public string CurrentVersion { get; set; } = "5.1.3.4";
-    public string DisplayVersion => "5.1.3.4";
+    public string CurrentVersion { get; set; } = "5.1.3.5";
+    public string DisplayVersion => "5.1.3.5";
     public string GitHubRepo { get; set; } = "Do-Miinh-1210/MEA_v5";
     public DateTime? LastCheckedTime { get; private set; }
 
@@ -134,22 +134,70 @@ public class GitHubUpdateService
     public async Task<UpdateInfo?> CheckForUpdateAsync(CancellationToken ct = default)
     {
         RecordCheckTime();
+        string repo = Environment.GetEnvironmentVariable("MEA_GITHUB_REPO") ?? GitHubRepo;
+
         try
         {
-            string repo = Environment.GetEnvironmentVariable("MEA_GITHUB_REPO") ?? GitHubRepo;
             string url = $"https://api.github.com/repos/{repo}/releases/latest";
 
             using var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
 
             using var response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, ct).ConfigureAwait(false);
-            if (!response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
+            {
+                string json = await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
+                var info = ParseReleaseJson(json);
+                if (info != null) return info;
+            }
+
+            // Fallback khi unauthenticated GitHub API gặp lỗi 403 Rate Limit: dùng Web redirect
+            return await CheckForUpdateViaWebRedirectAsync(repo, ct).ConfigureAwait(false);
+        }
+        catch
+        {
+            try
+            {
+                return await CheckForUpdateViaWebRedirectAsync(repo, ct).ConfigureAwait(false);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+    }
+
+    public async Task<UpdateInfo?> CheckForUpdateViaWebRedirectAsync(string repo, CancellationToken ct = default)
+    {
+        try
+        {
+            string webUrl = $"https://github.com/{repo}/releases/latest";
+            using var req = new HttpRequestMessage(HttpMethod.Get, webUrl);
+            using var resp = await _httpClient.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, ct).ConfigureAwait(false);
+
+            var finalUri = resp.RequestMessage?.RequestUri?.ToString() ?? "";
+            var match = Regex.Match(finalUri, @"/releases/tag/(v?([0-9A-Za-z._-]+))$");
+            if (!match.Success) return null;
+
+            string tagName = match.Groups[1].Value;
+            string version = match.Groups[2].Value;
+
+            if (!IsNewerVersion(version, CurrentVersion))
             {
                 return null;
             }
 
-            string json = await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
-            return ParseReleaseJson(json);
+            string patchUrl = $"https://github.com/{repo}/releases/download/{tagName}/MatrixExamAI_Patch.zip";
+            return new UpdateInfo(
+                Version: version,
+                TagName: tagName,
+                ReleaseNotes: $"Bản phát hành MatrixExamAI Pro {tagName}.",
+                DownloadUrl: patchUrl,
+                FileSize: 564844,
+                AssetName: "MatrixExamAI_Patch.zip",
+                PublishedAt: DateTimeOffset.UtcNow,
+                IsPatch: true
+            );
         }
         catch
         {
