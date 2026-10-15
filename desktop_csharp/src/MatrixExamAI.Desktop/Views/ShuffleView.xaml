@@ -72,7 +72,8 @@
                             <ui:SymbolIcon Symbol="Target24" FontSize="14" Foreground="#0284C7" Margin="0,0,4,0" />
                             <TextBlock Text="Đang làm việc với đề:" FontWeight="SemiBold" FontSize="11" />
                         </StackPanel>
-                        <ComboBox x:Name="CmbLoadedExams" Grid.Column="1" Height="28" FontSize="11"
+                        <ComboBox x:Name="CmbLoadedExams" Grid.Column="1" Height="30" FontSize="11"
+                                  Padding="8,2,20,2" VerticalContentAlignment="Center"
                                   SelectionChanged="CmbLoadedExams_SelectionChanged" />
                     </Grid>
 
@@ -110,24 +111,27 @@
                     <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,14,4">
                             <TextBlock Text="Số lượng mã đề:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" />
-                            <ComboBox x:Name="CmbExamCodesCount" Width="90" Height="28" SelectedIndex="0" FontSize="11"
+                            <ComboBox x:Name="CmbExamCodesCount" Width="96" Height="30" SelectedIndex="0" FontSize="11"
+                                      Padding="8,2,20,2" VerticalContentAlignment="Center"
                                       SelectionChanged="CmbExamCodesCount_SelectionChanged">
-                                <ComboBoxItem Content="4 mã" />
-                                <ComboBoxItem Content="8 mã" />
-                                <ComboBoxItem Content="12 mã" />
-                                <ComboBoxItem Content="24 mã" />
+                                <ComboBoxItem Content="4 mã" Padding="6,3" />
+                                <ComboBoxItem Content="8 mã" Padding="6,3" />
+                                <ComboBoxItem Content="12 mã" Padding="6,3" />
+                                <ComboBoxItem Content="24 mã" Padding="6,3" />
                             </ComboBox>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,14,4">
                             <TextBlock Text="Mã bắt đầu:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" />
-                            <ui:TextBox x:Name="TxtStartCode" Text="101" Width="55" Height="28" FontSize="11" HorizontalContentAlignment="Center"
+                            <ui:TextBox x:Name="TxtStartCode" Text="101" Width="55" Height="30" FontSize="11" HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center"
                                         TextChanged="TxtStartCode_TextChanged" />
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,4">
                             <TextBlock Text="Hoặc danh sách mã đề tùy ý:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" />
-                            <ui:TextBox x:Name="TxtCustomCodes" Width="150" Height="28" FontSize="11" PlaceholderText="101, 102, 103, 104" />
+                            <ui:TextBox x:Name="TxtCustomCodes" Width="150" Height="30" FontSize="11" PlaceholderText="101, 102, 103, 104"
+                                        VerticalContentAlignment="Center" />
                             <TextBlock Text="(VD: 101, 102, 103, 104)" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="6,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                     </WrapPanel>

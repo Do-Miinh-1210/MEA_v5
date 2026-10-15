@@ -14,8 +14,19 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <!-- Hidden proxy cho test harness & phím tắt tương thích ngược -->
+        <Grid Visibility="Collapsed">
+            <ui:Card Grid.Column="0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <ui:Button x:Name="BtnLoadSample" ToolTip="Nạp cấu trúc đề thi mẫu 22 câu chuẩn BGD" Click="BtnLoadSample_Click" />
+                    </StackPanel>
+                </ScrollViewer>
+            </ui:Card>
+        </Grid>
+
         <!-- Tiêu đề Phân hệ -->
-        <Grid Grid.Row="0" Margin="0,0,0,4">
+        <Grid Grid.Row="0" Margin="0,0,0,6">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -24,11 +35,11 @@
             <StackPanel Grid.Column="0">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <ui:SymbolIcon Symbol="Sparkle24" FontSize="20" Foreground="#D97706" Margin="0,0,8,0" />
-                    <TextBlock Text="Soạn đề theo Ma trận Chuẩn BGD — Cấu trúc Định dạng mới" 
+                    <TextBlock Text="Soạn đề theo Ma trận Chuẩn BGD — Bảng Ma trận &amp; Bản đặc tả" 
                                FontSize="16" FontWeight="Bold" 
                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                 </StackPanel>
-                <TextBlock Text="Cấu trúc đề 3 phần chuẩn THPT: Trắc nghiệm 4 phương án (12 câu), Đúng/Sai (4 câu), Trả lời ngắn (6 câu)" 
+                <TextBlock Text="Bảng Ma trận đề thi 4 mức độ nhận thức (NB, TH, VD, VDC) &amp; Bản đặc tả chi tiết từng câu chuẩn Bộ GD&amp;ĐT 2025" 
                            FontSize="11" Margin="28,2,0,0"
                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
             </StackPanel>
@@ -36,220 +47,416 @@
             <!-- Bộ đếm tổng quan -->
             <Border Grid.Column="1" Background="{DynamicResource ControlFillColorSecondaryBrush}" 
                     BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="1"
-                    CornerRadius="6" Padding="10,4" VerticalAlignment="Center">
+                    CornerRadius="6" Padding="12,5" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <ui:SymbolIcon Symbol="DocumentCheckmark24" FontSize="16" Foreground="#D97706" Margin="0,0,6,0" />
+                    <ui:SymbolIcon Symbol="DocumentCheckmark24" FontSize="16" Foreground="#D97706" Margin="0,0,8,0" />
                     <StackPanel>
-                        <TextBlock Text="Tổng thang điểm" FontSize="9.5" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
-                        <TextBlock Text="22 câu • 10.0 điểm" FontSize="12" FontWeight="SemiBold" 
+                        <TextBlock Text="Cấu trúc chuẩn Bộ GD&amp;ĐT" FontSize="9.5" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                        <TextBlock x:Name="TxtSummaryHeader" Text="22 câu • 10.0 điểm" FontSize="12.5" FontWeight="Bold" 
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                     </StackPanel>
                 </StackPanel>
             </Border>
         </Grid>
 
-        <!-- Thanh cấu hình Ma trận & Nút hành động (WrapPanel chống tràn tuyệt đối) -->
-        <ui:Card Grid.Row="1" Margin="0,0,0,4" Padding="8,5">
+        <!-- Thanh cấu hình Ma trận & Nút hành động (WrapPanel không bao giờ che chữ) -->
+        <ui:Card Grid.Row="1" Margin="0,0,0,6" Padding="8,6">
             <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,4">
                     <TextBlock Text="Môn học:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="CmbSubject" Width="125" Height="32" SelectedIndex="0" FontSize="11.5" 
-                              Padding="8,0,24,0" VerticalContentAlignment="Center">
-                        <ComboBoxItem Content="Toán học" Padding="8,4" />
-                        <ComboBoxItem Content="Vật lí" Padding="8,4" />
-                        <ComboBoxItem Content="Hóa học" Padding="8,4" />
-                        <ComboBoxItem Content="Sinh học" Padding="8,4" />
-                        <ComboBoxItem Content="Lịch sử" Padding="8,4" />
+                    <ComboBox x:Name="CmbSubject" Width="120" Height="30" SelectedIndex="0" FontSize="11" 
+                              Padding="6,2,20,2" VerticalContentAlignment="Center">
+                        <ComboBoxItem Content="Toán học" Padding="6,3" />
+                        <ComboBoxItem Content="Vật lí" Padding="6,3" />
+                        <ComboBoxItem Content="Hóa học" Padding="6,3" />
+                        <ComboBoxItem Content="Sinh học" Padding="6,3" />
+                        <ComboBoxItem Content="Lịch sử" Padding="6,3" />
+                        <ComboBoxItem Content="Địa lí" Padding="6,3" />
+                        <ComboBoxItem Content="Tin học" Padding="6,3" />
+                        <ComboBoxItem Content="Công nghệ" Padding="6,3" />
                     </ComboBox>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,4">
                     <TextBlock Text="Khối lớp:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="CmbGrade" Width="105" Height="32" SelectedIndex="2" FontSize="11.5" 
-                              Padding="8,0,24,0" VerticalContentAlignment="Center">
-                        <ComboBoxItem Content="Lớp 10" Padding="8,4" />
-                        <ComboBoxItem Content="Lớp 11" Padding="8,4" />
-                        <ComboBoxItem Content="Lớp 12" Padding="8,4" />
+                    <ComboBox x:Name="CmbGrade" Width="95" Height="30" SelectedIndex="2" FontSize="11" 
+                              Padding="6,2,20,2" VerticalContentAlignment="Center">
+                        <ComboBoxItem Content="Lớp 10" Padding="6,3" />
+                        <ComboBoxItem Content="Lớp 11" Padding="6,3" />
+                        <ComboBoxItem Content="Lớp 12" Padding="6,3" />
                     </ComboBox>
                 </StackPanel>
 
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,4">
                     <TextBlock Text="Thời gian:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="CmbDuration" Width="110" Height="32" SelectedIndex="1" FontSize="11.5" 
-                              Padding="8,0,24,0" VerticalContentAlignment="Center">
-                        <ComboBoxItem Content="45 phút" Padding="8,4" />
-                        <ComboBoxItem Content="90 phút" Padding="8,4" />
-                        <ComboBoxItem Content="120 phút" Padding="8,4" />
+                    <ComboBox x:Name="CmbDuration" Width="105" Height="30" SelectedIndex="1" FontSize="11" 
+                              Padding="6,2,20,2" VerticalContentAlignment="Center">
+                        <ComboBoxItem Content="45 phút" Padding="6,3" />
+                        <ComboBoxItem Content="90 phút" Padding="6,3" />
+                        <ComboBoxItem Content="120 phút" Padding="6,3" />
                     </ComboBox>
                 </StackPanel>
 
-                <!-- Các nút nạp ma trận & soạn đề -->
-                <ui:Button x:Name="BtnImportMatrixFile" Appearance="Secondary" 
-                           Icon="{ui:SymbolIcon FolderOpen24}"
-                           Content="Nạp tệp ma trận" Padding="10,5" Margin="0,0,6,4" FontSize="11"
-                           Click="BtnImportMatrixFile_Click"
-                           ToolTip="Mở tệp ma trận đặc tả từ máy tính (.docx, .xlsx, .pdf, .txt, .json)" />
+                <!-- Các nút hành động chính -->
                 <ui:Button x:Name="BtnLoadMatrixOutline" Appearance="Secondary" 
                            Icon="{ui:SymbolIcon Table24}"
-                           Content="Nạp khung ma trận" Padding="10,5" Margin="0,0,6,4" FontSize="11"
+                           Content="Khởi tạo khung ma trận BGD" Padding="10,0" Height="30" Margin="0,0,6,4" FontSize="11" FontWeight="SemiBold"
                            Click="BtnLoadMatrixOutline_Click"
-                           ToolTip="Nạp khung dàn ý 22 câu theo ma trận chuẩn BGD vào trình soạn thảo để tự soạn" />
-                <ui:Button x:Name="BtnLoadSample" Appearance="Secondary" 
-                           Icon="{ui:SymbolIcon DocumentBulletList24}"
-                           Content="Nạp đề mẫu chuẩn" Padding="10,5" Margin="0,0,6,4" FontSize="11"
-                           Click="BtnLoadSample_Click"
-                           ToolTip="Nạp cấu trúc đề thi mẫu 22 câu chuẩn BGD" />
+                           ToolTip="Khởi tạo bảng ma trận và bản đặc tả 22 câu chuẩn BGD" />
+                <ui:Button x:Name="BtnImportMatrixFile" Appearance="Secondary" 
+                           Icon="{ui:SymbolIcon FolderOpen24}"
+                           Content="Nạp tệp ma trận" Padding="10,0" Height="30" Margin="0,0,6,4" FontSize="11"
+                           Click="BtnImportMatrixFile_Click"
+                           ToolTip="Mở tệp ma trận đặc tả từ máy tính (.docx, .xlsx, .pdf, .txt, .json)" />
                 <ui:Button x:Name="BtnAiGenerateExam" Appearance="Primary" 
                            Icon="{ui:SymbolIcon Sparkle24}"
-                           Content="AI Soạn đề tự động" Padding="12,5" Margin="0,0,6,4" FontSize="11"
+                           Content="AI Soạn đề theo ma trận" Padding="12,0" Height="30" Margin="0,0,6,4" FontSize="11" FontWeight="Bold"
                            Click="BtnAiGenerateExam_Click"
                            ToolTip="AI Gemini tự động sinh đề thi theo ma trận (F5 hoặc Ctrl + Enter)" />
                 <ui:Button x:Name="BtnSendToConvert" Appearance="Secondary" 
                            Icon="{ui:SymbolIcon ArrowForward24}"
-                           Content="Đưa sang Soạn đề" Padding="10,5" Margin="0,0,6,4" FontSize="11"
+                           Content="Đưa sang Soạn đề" Padding="10,0" Height="30" Margin="0,0,6,4" FontSize="11"
                            Click="BtnSendToConvert_Click"
-                           ToolTip="Chuyển toàn bộ nội dung đề theo ma trận sang phân hệ Soạn đề &amp; Chuyển đổi" />
+                           ToolTip="Chuyển toàn bộ nội dung đề sang phân hệ Soạn đề &amp; Chuyển đổi" />
                 <ui:Button x:Name="BtnExportDocx" Appearance="Success" 
                            Icon="{ui:SymbolIcon DocumentArrowRight24}"
-                           Content="Xuất file Word (.docx)" Padding="12,5" Margin="0,0,0,4" FontSize="11"
+                           Content="Xuất file Word (.docx)" Padding="12,0" Height="30" Margin="0,0,0,4" FontSize="11" FontWeight="Bold"
                            Click="BtnExportDocx_Click"
                            ToolTip="Xuất ma trận và đề thi ra tài liệu Word chuẩn A4 (Ctrl + S)" />
             </WrapPanel>
         </ui:Card>
 
-        <!-- Khung Split View: Bảng ma trận tỷ lệ vs Trình xem nội dung đề -->
-        <Grid Grid.Row="2" VerticalAlignment="Stretch">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="340" MinWidth="260" />
-                <ColumnDefinition Width="8" />
-                <ColumnDefinition Width="*" MinWidth="300" />
-            </Grid.ColumnDefinitions>
-
-            <!-- Cột trái: Thống kê & Phân bổ câu hỏi theo 3 phần -->
-            <ui:Card Grid.Column="0" Padding="10" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
-                <ScrollViewer VerticalScrollBarVisibility="Auto" Focusable="False" Padding="0,0,4,0">
-                    <StackPanel>
-                        <TextBlock Text="Phân bổ cấu trúc đề thi" FontWeight="SemiBold" FontSize="13" Margin="0,0,0,12" />
-
-                        <!-- Phần I Card -->
-                        <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" CornerRadius="8" Padding="12" Margin="0,0,0,10">
-                            <StackPanel>
-                                <Grid>
-                                    <TextBlock Text="Phần I. Trắc nghiệm 4 lựa chọn" FontWeight="Bold" FontSize="12" Foreground="#0284C7" />
-                                    <TextBlock Text="3.0 điểm" FontWeight="SemiBold" FontSize="11" HorizontalAlignment="Right" Foreground="#0284C7" />
-                                </Grid>
-                                <TextBlock Text="12 câu hỏi (Mỗi câu 0.25đ, chọn 1 trong 4 đáp án A, B, C, D)" FontSize="11" Margin="0,4,0,8" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                <Grid>
-                                    <TextBlock Text="Nhận biết: 6 | Thông hiểu: 4 | Vận dụng: 2" FontSize="11" FontStyle="Italic" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Phần II Card -->
-                        <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" CornerRadius="8" Padding="12" Margin="0,0,0,10">
-                            <StackPanel>
-                                <Grid>
-                                    <TextBlock Text="Phần II. Trắc nghiệm Đúng / Sai" FontWeight="Bold" FontSize="12" Foreground="#8B5CF6" />
-                                    <TextBlock Text="4.0 điểm" FontWeight="SemiBold" FontSize="11" HorizontalAlignment="Right" Foreground="#8B5CF6" />
-                                </Grid>
-                                <TextBlock Text="4 câu hỏi (Mỗi câu gồm 4 lệnh hỏi a, b, c, d với thang điểm lũy tiến 0.1 - 0.25 - 0.5 - 1.0đ)" FontSize="11" Margin="0,4,0,8" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                <Grid>
-                                    <TextBlock Text="Thông hiểu: 2 | Vận dụng: 2" FontSize="11" FontStyle="Italic" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Phần III Card -->
-                        <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" CornerRadius="8" Padding="12" Margin="0,0,0,10">
-                            <StackPanel>
-                                <Grid>
-                                    <TextBlock Text="Phần III. Trắc nghiệm Trả lời ngắn" FontWeight="Bold" FontSize="12" Foreground="#10B981" />
-                                    <TextBlock Text="3.0 điểm" FontWeight="SemiBold" FontSize="11" HorizontalAlignment="Right" Foreground="#10B981" />
-                                </Grid>
-                                <TextBlock Text="6 câu hỏi (Mỗi câu 0.5đ, học sinh điền số thực hoặc phân số tối giản)" FontSize="11" Margin="0,4,0,8" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                <Grid>
-                                    <TextBlock Text="Vận dụng: 4 | Vận dụng cao: 2" FontSize="11" FontStyle="Italic" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- 4 Mức độ nhận thức chuẩn BGD 2025 -->
-                        <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" CornerRadius="8" Padding="12" Margin="0,0,0,10">
-                            <StackPanel>
-                                <TextBlock Text="4 Mức độ nhận thức chuẩn BGD 2025" FontWeight="Bold" FontSize="12" Foreground="#D97706" />
-                                <TextBlock Text="Tỉ lệ: Nhận biết 40% • Thông hiểu 30% • Vận dụng 20% • Vận dụng cao 10%" FontSize="10.5" Margin="0,4,0,6" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                <Grid Margin="0,2,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Border Grid.Column="0" Background="#0284C7" CornerRadius="4" Padding="4,2" Margin="0,0,2,0">
-                                        <TextBlock Text="NB (6c)" FontSize="10" Foreground="White" HorizontalAlignment="Center" FontWeight="SemiBold"/>
-                                    </Border>
-                                    <Border Grid.Column="1" Background="#8B5CF6" CornerRadius="4" Padding="4,2" Margin="2,0,2,0">
-                                        <TextBlock Text="TH (6c)" FontSize="10" Foreground="White" HorizontalAlignment="Center" FontWeight="SemiBold"/>
-                                    </Border>
-                                    <Border Grid.Column="2" Background="#10B981" CornerRadius="4" Padding="4,2" Margin="2,0,2,0">
-                                        <TextBlock Text="VD (8c)" FontSize="10" Foreground="White" HorizontalAlignment="Center" FontWeight="SemiBold"/>
-                                    </Border>
-                                    <Border Grid.Column="3" Background="#EC4899" CornerRadius="4" Padding="4,2" Margin="2,0,0,0">
-                                        <TextBlock Text="VDC (2c)" FontSize="10" Foreground="White" HorizontalAlignment="Center" FontWeight="SemiBold"/>
-                                    </Border>
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Tùy chọn chuyên đề -->
-                        <TextBlock Text="Chuyên đề trọng tâm:" FontWeight="SemiBold" FontSize="12" Margin="0,4,0,6" />
-                        <TextBox x:Name="TxtExamTopic" Text="Khảo sát hàm số, Nguyên hàm - Tích phân, Hình học Oxyz" 
-                                 FontFamily="Segoe UI" FontSize="11.5" TextWrapping="Wrap" Margin="0,0,0,10" />
-
-                        <CheckBox x:Name="ChkIncludeAnswers" IsChecked="True" Content="Kèm bảng đáp án &amp; Lời giải chi tiết" Margin="0,0,0,6" />
-                        <CheckBox x:Name="ChkBraceMathMatrix" IsChecked="True" Content="Tự động kẹp công thức ${...}$" Margin="0,0,0,6" />
-                    </StackPanel>
-                </ScrollViewer>
-            </ui:Card>
-
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="Transparent" />
-
-            <!-- Cột phải: Soạn thảo / Kết quả đề thi -->
-            <ui:Card Grid.Column="2" Padding="10" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
-                <Grid VerticalAlignment="Stretch">
+        <!-- Toàn bộ không gian hiển thị: Bảng ma trận kẻ khung + Bản đặc tả + Soạn thảo Word -->
+        <TabControl Grid.Row="2" x:Name="TabMatrixMain" Background="White" BorderBrush="#CBD5E1" BorderThickness="1">
+            <!-- TAB 1: BẢNG MA TRẬN ĐỀ THI KẺ KHUNG -->
+            <TabItem Header="Bảng 1: Ma trận đề thi" FontWeight="SemiBold" FontSize="11.5">
+                <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0" Margin="0,0,0,6">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <ui:SymbolIcon Symbol="DocumentBulletList24" Foreground="#D97706" Margin="0,0,6,0" />
-                            <TextBlock Text="Nội dung Đề thi Hoàn chỉnh (Định dạng chuẩn Word)" FontWeight="SemiBold" FontSize="13" />
-                        </StackPanel>
-                        <TextBlock x:Name="TxtExamStats" Text="Đề thi: 22 câu hỏi" FontSize="11" HorizontalAlignment="Right" 
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
-                    </Grid>
+                    <!-- Thanh công cụ Bảng Ma trận -->
+                    <Border Grid.Row="0" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,8">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <ui:SymbolIcon Symbol="Table24" Foreground="#0284C7" FontSize="16" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                <TextBlock Text="BẢNG MA TRẬN ĐỀ KIỂM TRA ĐỊNH KỲ — CHUẨN BỘ GIÁO DỤC &amp; ĐÀO TẠO" FontWeight="Bold" FontSize="12" Foreground="#0F2D52" VerticalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <ui:Button x:Name="BtnAddTopic" Appearance="Secondary" Icon="{ui:SymbolIcon Add24}" Content="Thêm chủ đề" Height="26" Padding="8,0" FontSize="10.5" Margin="0,0,4,0" Click="BtnAddTopic_Click" ToolTip="Thêm dòng chủ đề mới vào bảng ma trận" />
+                                <ui:Button x:Name="BtnDeleteTopic" Appearance="Secondary" Icon="{ui:SymbolIcon Delete24}" Content="Xóa chủ đề" Height="26" Padding="8,0" FontSize="10.5" Margin="0,0,4,0" Click="BtnDeleteTopic_Click" ToolTip="Xóa dòng chủ đề đang chọn khỏi bảng ma trận" />
+                                <ui:Button x:Name="BtnResetMatrix" Appearance="Secondary" Icon="{ui:SymbolIcon ArrowReset24}" Content="Đặt lại chuẩn BGD" Height="26" Padding="8,0" FontSize="10.5" Click="BtnResetMatrix_Click" ToolTip="Khôi phục bảng ma trận về cấu trúc chuẩn Bộ GD&amp;ĐT" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
 
+                    <!-- DataGrid Bảng Ma Trận Kẻ Khung -->
+                    <DataGrid x:Name="DgMatrixTopics" Grid.Row="1"
+                              AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                              GridLinesVisibility="All" HeadersVisibility="Column"
+                              BorderBrush="#94A3B8" BorderThickness="1" Background="White"
+                              HorizontalGridLinesBrush="#E2E8F0" VerticalGridLinesBrush="#E2E8F0"
+                              RowHeight="34" FontSize="11" SelectionMode="Single">
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#0F2D52" />
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                <Setter Property="Padding" Value="6,8" />
+                                <Setter Property="BorderBrush" Value="#334155" />
+                                <Setter Property="BorderThickness" Value="0,0,1,1" />
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="STT" Binding="{Binding Stt}" Width="45" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Chủ đề / Đơn vị kiến thức" Binding="{Binding Topic}" Width="240">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                        <Setter Property="Padding" Value="4,0" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Yêu cầu cần đạt tóm tắt" Binding="{Binding Requirements}" Width="*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="TextWrapping" Value="Wrap" />
+                                        <Setter Property="Padding" Value="4,0" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="TN (NB)" Binding="{Binding TnNb}" Width="60">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="#0284C7" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="TN (TH)" Binding="{Binding TnTh}" Width="60">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="#0284C7" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="TN (VD)" Binding="{Binding TnVd}" Width="60">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="#0284C7" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Đ/S (TH)" Binding="{Binding DsTh}" Width="65">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="#8B5CF6" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Đ/S (VD)" Binding="{Binding DsVd}" Width="65">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="#8B5CF6" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="TLN (TH)" Binding="{Binding TlnTh}" Width="65">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="#10B981" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="TLN (VD)" Binding="{Binding TlnVd}" Width="65">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="Foreground" Value="#10B981" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Tổng câu" Binding="{Binding TotalQuestions}" Width="75" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                        <Setter Property="Foreground" Value="#0F2D52" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Điểm" Binding="{Binding Points, StringFormat={}{0:F1}}" Width="65">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                        <Setter Property="Foreground" Value="#D97706" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- Footer Thống kê Bảng Ma trận -->
+                    <Border Grid.Row="2" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1,0,1,1" Padding="12,8">
+                        <TextBlock x:Name="TxtMatrixFooterSummary" 
+                                   Text="Tổng cộng: 22 câu hỏi (Phần I: 12 câu, Phần II: 4 câu, Phần III: 6 câu) | Tổng điểm: 10.0 điểm | Tỉ lệ: Nhận biết 40% (6 câu) • Thông hiểu 30% (6 câu) • Vận dụng 20% (8 câu) • Vận dụng cao 10% (2 câu)"
+                                   FontWeight="SemiBold" FontSize="11" Foreground="#334155" HorizontalAlignment="Center" />
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- TAB 2: BẢN ĐẶC TẢ MA TRẬN ĐỀ THI -->
+            <TabItem Header="Bảng 2: Bản đặc tả chi tiết từng câu" FontWeight="SemiBold" FontSize="11.5">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,8">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ui:SymbolIcon Symbol="DocumentBulletList24" Foreground="#7C3AED" FontSize="16" Margin="0,0,6,0" VerticalAlignment="Center" />
+                            <TextBlock Text="BẢN ĐẶC TẢ MA TRẬN ĐỀ KIỂM TRA ĐỊNH KỲ — CHI TIẾT TỪNG CÂU HỎI &amp; YÊU CẦU CẦN ĐẠT" FontWeight="Bold" FontSize="12" Foreground="#0F2D52" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- DataGrid Bản Đặc Tả Kẻ Khung -->
+                    <DataGrid x:Name="DgMatrixSpecs" Grid.Row="1"
+                              AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                              GridLinesVisibility="All" HeadersVisibility="Column"
+                              BorderBrush="#94A3B8" BorderThickness="1" Background="White"
+                              HorizontalGridLinesBrush="#E2E8F0" VerticalGridLinesBrush="#E2E8F0"
+                              RowHeight="36" FontSize="11" SelectionMode="Single">
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <Setter Property="Background" Value="#1E293B" />
+                                <Setter Property="Foreground" Value="White" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                <Setter Property="Padding" Value="6,8" />
+                                <Setter Property="BorderBrush" Value="#475569" />
+                                <Setter Property="BorderThickness" Value="0,0,1,1" />
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="STT" Binding="{Binding Stt}" Width="45" IsReadOnly="True">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Đơn vị kiến thức / Kỹ năng" Binding="{Binding Topic}" Width="220">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                        <Setter Property="Padding" Value="4,0" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Mức độ nhận thức" Binding="{Binding CognitiveLevel}" Width="120">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="FontWeight" Value="SemiBold" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Dạng câu hỏi" Binding="{Binding QuestionType}" Width="100">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Số câu &amp; Vị trí" Binding="{Binding QuestionCodes}" Width="130">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="HorizontalAlignment" Value="Center" />
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="FontWeight" Value="Bold" />
+                                        <Setter Property="Foreground" Value="#0284C7" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+
+                            <DataGridTextColumn Header="Yêu cầu cần đạt chi tiết" Binding="{Binding RequiredOutcome}" Width="*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="VerticalAlignment" Value="Center" />
+                                        <Setter Property="TextWrapping" Value="Wrap" />
+                                        <Setter Property="Padding" Value="6,2" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Border Grid.Row="2" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1,0,1,1" Padding="12,8">
+                        <TextBlock Text="Đặc tả đầy đủ 22 câu hỏi theo quy định thông tư chuẩn Bộ GD&amp;ĐT (Phần I: 12 câu, Phần II: 4 câu, Phần III: 6 câu)"
+                                   FontWeight="SemiBold" FontSize="11" Foreground="#475569" HorizontalAlignment="Center" />
+                    </Border>
+                </Grid>
+            </TabItem>
+
+            <!-- TAB 3: SOẠN THẢO & NỘI DUNG ĐỀ THI WORD -->
+            <TabItem Header="Nội dung Đề thi (Định dạng Word)" FontWeight="SemiBold" FontSize="11.5">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Top Bar của khung soạn thảo -->
+                    <Border Grid.Row="0" Background="#F1F5F9" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="Chuyên đề trọng tâm:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" />
+                                <TextBox x:Name="TxtExamTopic" Width="360" Height="26" VerticalContentAlignment="Center" FontSize="11"
+                                         Text="Khảo sát hàm số, Nguyên hàm - Tích phân, Hình học Oxyz" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock x:Name="TxtExamStats" Text="Sẵn sàng soạn đề" FontSize="11" 
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,10,0" />
+                                <CheckBox x:Name="ChkIncludeAnswers" IsChecked="True" Content="Kèm đáp án &amp; lời giải" FontSize="11" Margin="0,0,8,0" VerticalAlignment="Center" />
+                                <CheckBox x:Name="ChkBraceMathMatrix" IsChecked="True" Content="Kẹp công thức ${...}$" FontSize="11" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Khung Soạn thảo văn bản Word -->
                     <ui:TextBox x:Name="TxtExamContent" Grid.Row="1"
-                                VerticalAlignment="Stretch" MinHeight="180"
-                                AcceptsReturn="True" TextWrapping="Wrap"
+                                VerticalAlignment="Stretch" AcceptsReturn="True" TextWrapping="Wrap"
                                 VerticalContentAlignment="Top"
                                 FontFamily="Consolas, 'Segoe UI', Arial" FontSize="12.5"
-                                PlaceholderText="Bấm 'Nạp đề mẫu chuẩn' hoặc 'AI Soạn đề tự động' để tạo đề thi theo ma trận..." />
+                                PlaceholderText="Bấm 'Khởi tạo khung ma trận BGD' hoặc 'AI Soạn đề theo ma trận' để nạp nội dung đề thi..." />
 
                     <ProgressBar x:Name="ProgExam" Grid.Row="2" Height="4" Margin="0,6,0,0" 
                                  Visibility="Collapsed" IsIndeterminate="True" />
                 </Grid>
-            </ui:Card>
-        </Grid>
+            </TabItem>
+        </TabControl>
 
         <!-- Băng thông báo InfoBar -->
-        <ui:InfoBar x:Name="InfoExamNotification" Grid.Row="3" Margin="0,12,0,0"
+        <ui:InfoBar x:Name="InfoExamNotification" Grid.Row="3" Margin="0,8,0,0"
                     IsOpen="False" Severity="Success"
                     Title="Hoàn tất" 
                     Message="Đề thi theo ma trận đã sẵn sàng xuất ra tệp Word (.docx)." />

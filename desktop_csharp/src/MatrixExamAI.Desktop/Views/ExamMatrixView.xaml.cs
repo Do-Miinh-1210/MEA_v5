@@ -20,14 +20,82 @@ namespace MatrixExamAI.Desktop.Views
         {
             InitializeComponent();
             _currentMatrixData = MatrixWordExporter.CreateStandardHighSchoolMatrix("TOÁN HỌC", "12");
+            RefreshMatrixGrids();
             TxtExamContent.Text = string.Empty;
-            TxtExamStats.Text = "Sẵn sàng: Bấm 'Nạp khung ma trận' hoặc 'Nạp tệp ma trận' để bắt đầu soạn đề";
+            TxtExamStats.Text = "Sẵn sàng: Bấm 'Khởi tạo khung ma trận BGD' hoặc 'Nạp tệp ma trận'";
             InfoExamNotification.IsOpen = false;
+        }
+
+        private void RefreshMatrixGrids()
+        {
+            if (_currentMatrixData == null) return;
+            DgMatrixTopics.ItemsSource = null;
+            DgMatrixTopics.ItemsSource = _currentMatrixData.Rows;
+            DgMatrixSpecs.ItemsSource = null;
+            DgMatrixSpecs.ItemsSource = _currentMatrixData.Specs;
+
+            int totalQ = _currentMatrixData.Rows?.Sum(r => r.TotalQuestions) ?? 0;
+            double totalPts = _currentMatrixData.Rows?.Sum(r => r.Points) ?? 0;
+            if (TxtSummaryHeader != null)
+                TxtSummaryHeader.Text = $"{totalQ} câu • {totalPts:F1} điểm";
+            if (TxtMatrixFooterSummary != null)
+                TxtMatrixFooterSummary.Text = $"Tổng cộng: {totalQ} câu hỏi (Phần I: 12 câu, Phần II: 4 câu, Phần III: 6 câu) | Tổng điểm: {totalPts:F1} điểm | Tỉ lệ: Nhận biết 40% (6 câu) • Thông hiểu 30% (6 câu) • Vận dụng 20% (8 câu) • Vận dụng cao 10% (2 câu)";
+        }
+
+        private void BtnAddTopic_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentMatrixData == null) return;
+            int nextStt = _currentMatrixData.Rows.Count + 1;
+            _currentMatrixData.Rows.Add(new MatrixTopicRow
+            {
+                Stt = nextStt,
+                Topic = $"Chủ đề mới {nextStt}",
+                Requirements = "Nhận biết kiến thức trọng tâm; thông hiểu và vận dụng giải quyết bài toán.",
+                TnNb = 1, TnTh = 1, TnVd = 0,
+                Points = 1.0
+            });
+            RefreshMatrixGrids();
+        }
+
+        private void BtnDeleteTopic_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentMatrixData == null || _currentMatrixData.Rows.Count <= 1) return;
+            if (DgMatrixTopics.SelectedItem is MatrixTopicRow selected)
+            {
+                _currentMatrixData.Rows.Remove(selected);
+            }
+            else
+            {
+                _currentMatrixData.Rows.RemoveAt(_currentMatrixData.Rows.Count - 1);
+            }
+            for (int i = 0; i < _currentMatrixData.Rows.Count; i++)
+            {
+                _currentMatrixData.Rows[i].Stt = i + 1;
+            }
+            RefreshMatrixGrids();
+        }
+
+        private void BtnResetMatrix_Click(object sender, RoutedEventArgs e)
+        {
+            string subject = (CmbSubject.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Toán học";
+            string gradeStr = (CmbGrade.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Lớp 12";
+            string durationStr = (CmbDuration.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "90 phút";
+            int.TryParse(System.Text.RegularExpressions.Regex.Replace(durationStr, @"\D", ""), out int duration);
+            if (duration <= 0) duration = 90;
+
+            _currentMatrixData = MatrixWordExporter.CreateStandardHighSchoolMatrix(subject, gradeStr);
+            _currentMatrixData.DurationMinutes = duration;
+            RefreshMatrixGrids();
         }
 
         private void LoadDefaultSample()
         {
             TxtExamContent.Text = string.Empty;
+        }
+
+        private void BtnLoadSample_Click(object sender, RoutedEventArgs e)
+        {
+            BtnLoadMatrixOutline_Click(sender, e);
         }
 
         private void BtnImportMatrixFile_Click(object sender, RoutedEventArgs e)
@@ -105,12 +173,14 @@ namespace MatrixExamAI.Desktop.Views
 
             _currentMatrixData = MatrixWordExporter.CreateStandardHighSchoolMatrix(subject, gradeStr);
             _currentMatrixData.DurationMinutes = duration;
+            RefreshMatrixGrids();
 
             TxtExamContent.Text = BuildMatrixOutlineTemplate(subject, gradeStr, duration);
             TxtExamStats.Text = $"Khung ma trận 22 câu: {subject.ToUpper()} - {gradeStr} (Sẵn sàng soạn đề)";
+            TabMatrixMain.SelectedIndex = 0;
             InfoExamNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
-            InfoExamNotification.Title = "Đã nạp khung ma trận thành công";
-            InfoExamNotification.Message = "Đã nạp cấu trúc 22 câu (Phần I: 12 câu, Phần II: 4 câu, Phần III: 6 câu) vào trình soạn thảo.";
+            InfoExamNotification.Title = "Đã khởi tạo bảng ma trận & bản đặc tả thành công";
+            InfoExamNotification.Message = "Bảng ma trận và bản đặc tả 22 câu chuẩn BGD đã được kẻ khung chi tiết.";
             InfoExamNotification.IsOpen = true;
         }
 
@@ -210,20 +280,6 @@ namespace MatrixExamAI.Desktop.Views
                 sb.AppendLine();
             }
             return sb.ToString();
-        }
-
-        private void BtnLoadSample_Click(object sender, RoutedEventArgs e)
-        {
-            string subject = (CmbSubject.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Toán học";
-            string grade = (CmbGrade.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Lớp 12";
-            _currentMatrixData = MatrixWordExporter.CreateStandardHighSchoolMatrix(subject, grade);
-
-            TxtExamContent.Text = BuildSampleExam22Questions(subject, grade);
-            TxtExamStats.Text = "Đề thi mẫu: 22 câu hỏi chuẩn cấu trúc BGD (12 TN, 4 Đ/S, 6 TLN)";
-            InfoExamNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
-            InfoExamNotification.Title = "Đã nạp đề mẫu chuẩn BGD 2025";
-            InfoExamNotification.Message = "Cấu trúc đề 3 phần (4 mức độ NB, TH, VD, VDC) kèm bảng đáp án đã sẵn sàng.";
-            InfoExamNotification.IsOpen = true;
         }
 
         public void GenerateExamWithAi() => BtnAiGenerateExam_Click(this, new RoutedEventArgs());
