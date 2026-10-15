@@ -30,6 +30,7 @@ namespace MatrixExamAI.Desktop.Views
 
             LoadCurrentConfig();
             LoadLicenseInfo();
+            UpdateLastCheckDisplay();
             SupabaseLicenseService.Instance.LicenseChanged += (s, info) => Dispatcher.Invoke(() => UpdateLicenseUi(info));
         }
 
@@ -479,7 +480,7 @@ namespace MatrixExamAI.Desktop.Views
                     else
                     {
                         MessageBox.Show(
-                            $"Bạn đang sử dụng phiên bản mới nhất: v{GitHubUpdateService.Instance.CurrentVersion}.\nKhông có bản cập nhật mới trên GitHub Releases.",
+                            $"Bạn đang sử dụng phiên bản mới nhất: v{GitHubUpdateService.Instance.CurrentVersion}.\nKhông có bản cập nhật mới trên máy chủ.",
                             "Kiểm tra cập nhật",
                             MessageBoxButton.OK,
                             MessageBoxImage.Information
@@ -499,6 +500,15 @@ namespace MatrixExamAI.Desktop.Views
             finally
             {
                 BtnCheckUpdateSettings.IsEnabled = true;
+                UpdateLastCheckDisplay();
+            }
+        }
+
+        private void UpdateLastCheckDisplay()
+        {
+            if (TxtLastCheckUpdate != null)
+            {
+                TxtLastCheckUpdate.Text = GitHubUpdateService.Instance.GetLastCheckedDisplayText();
             }
         }
 
@@ -523,7 +533,7 @@ namespace MatrixExamAI.Desktop.Views
             }
             catch { }
 
-            string src = info.Offline ? "Cục bộ" : (info.FromCache ? "Cache" : "Supabase Cloud");
+            string src = info.Offline ? "Cục bộ" : (info.FromCache ? "Bộ nhớ đệm" : "Trực tuyến");
             TxtSettingsLicenseOwner.Text = $"Chủ sở hữu: {info.Name} • Hạn dùng: {info.Expiry} • Trạng thái: {src}";
         }
 
@@ -558,7 +568,7 @@ namespace MatrixExamAI.Desktop.Views
             BtnCheckLicenseSettings.IsEnabled = false;
             InfoSettingsNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Informational;
             InfoSettingsNotification.Title = "Đang kiểm tra";
-            InfoSettingsNotification.Message = "Đang đồng bộ trạng thái bản quyền với máy chủ Supabase Cloud...";
+            InfoSettingsNotification.Message = "Đang đồng bộ trạng thái bản quyền với máy chủ trực tuyến...";
             InfoSettingsNotification.IsOpen = true;
 
             try

@@ -25,6 +25,7 @@ public class GitHubUpdateServiceTests
     [InlineData("5.1.3.2", "5.1.3.1", true)]
     [InlineData("5.1.3.2", "5.1.3", true)]
     [InlineData("5.1.3.3", "5.1.3.2", true)]
+    [InlineData("5.1.3.4", "5.1.3.3", true)]
     public void IsNewerVersion_ShouldCorrectlyCompareSemver(string remote, string local, bool expected)
     {
         bool result = GitHubUpdateService.IsNewerVersion(remote, local);
@@ -186,5 +187,16 @@ public class GitHubUpdateServiceTests
         var service = new GitHubUpdateService();
         var process = service.LaunchInstaller(@"C:\non_existent_folder_xyz\installer.exe");
         process.Should().BeNull();
+    }
+
+    [Fact]
+    public void GetLastCheckedDisplayText_WhenRecorded_ReturnsFormattedDate()
+    {
+        var service = new GitHubUpdateService();
+        var testTime = new DateTime(2026, 10, 15, 14, 30, 0);
+        service.RecordCheckTime(testTime);
+
+        string display = service.GetLastCheckedDisplayText();
+        display.Should().Be("Lần cập nhật gần nhất: 15/10/2026 14:30:00");
     }
 }

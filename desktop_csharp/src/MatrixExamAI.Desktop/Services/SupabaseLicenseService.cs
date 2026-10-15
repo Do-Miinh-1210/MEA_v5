@@ -134,7 +134,7 @@ public class SupabaseLicenseService
                         IssuedAt = row.TryGetProperty("issued_at", out var pIs) ? (pIs.GetString() ?? "") : "",
                         LastCheck = DateTime.UtcNow.ToString("o"),
                         AdminApiKey = row.TryGetProperty("admin_api_key", out var pAk) ? (pAk.GetString() ?? "") : "",
-                        Message = "Đã xác thực bản quyền trực tuyến từ Supabase Cloud",
+                        Message = "Đã xác thực bản quyền trực tuyến thành công",
                         FromCache = false,
                         Offline = false
                     };
@@ -218,7 +218,7 @@ public class SupabaseLicenseService
                     Expiry = "Vĩnh viễn",
                     IssuedAt = DateTime.UtcNow.ToString("o"),
                     LastCheck = DateTime.UtcNow.ToString("o"),
-                    Message = $"Kích hoạt thành công gói {tier.ToUpper()} trên Supabase Cloud!",
+                    Message = $"Kích hoạt thành công gói {tier.ToUpper()}!",
                     FromCache = false,
                     Offline = false
                 };

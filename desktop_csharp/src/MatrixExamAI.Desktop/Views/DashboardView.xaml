@@ -20,7 +20,7 @@
                         <TextBlock Text="Chào mừng Thầy Đỗ Minh 👋" 
                                    FontSize="24" FontWeight="Bold" 
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <TextBlock Text="Hệ thống biên soạn đề thi thông minh MatrixExamAI Pro (.NET 10 Native C# Engine)" 
+                        <TextBlock Text="Hệ thống biên soạn đề thi thông minh MatrixExamAI Pro" 
                                    FontSize="13" Margin="0,4,0,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
@@ -55,7 +55,7 @@
                         </Grid>
                         <TextBlock Text="0.3s" FontSize="26" FontWeight="Bold" 
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <TextBlock Text="⚡ Nhanh hơn Python 12x" FontSize="11" FontWeight="SemiBold" 
+                        <TextBlock Text="⚡ Tối ưu hiệu năng cao" FontSize="11" FontWeight="SemiBold" 
                                    Foreground="#10B981" Margin="0,4,0,0" />
                     </StackPanel>
                 </ui:Card>
@@ -103,7 +103,7 @@
                         </Grid>
                         <TextBlock Text="120 FPS" FontSize="26" FontWeight="Bold" 
                                    Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                        <TextBlock Text="DirectX GPU Acceleration" FontSize="11" TextTrimming="CharacterEllipsis"
+                        <TextBlock Text="Tăng tốc phần cứng GPU" FontSize="11" TextTrimming="CharacterEllipsis"
                                    Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,4,0,0" />
                     </StackPanel>
                 </ui:Card>
@@ -122,7 +122,7 @@
                         <Grid Margin="0,0,0,8">
                             <StackPanel Orientation="Horizontal">
                                 <ui:SymbolIcon Symbol="DocumentPdf24" Foreground="#3B82F6" Margin="0,0,8,0" />
-                                <TextBlock Text="Chuyển đổi PDF sang Word Native" FontWeight="SemiBold" FontSize="15" />
+                                <TextBlock Text="Chuyển đổi PDF sang Word" FontWeight="SemiBold" FontSize="15" />
                             </StackPanel>
                             <Border Background="#1A0D9488" CornerRadius="4" Padding="6,2" HorizontalAlignment="Right">
                                 <TextBlock Text="Auto Table Grid" FontSize="10" Foreground="#0D9488" FontWeight="SemiBold" />
@@ -165,12 +165,12 @@
                     </Grid.ColumnDefinitions>
                     <ui:SymbolIcon Symbol="CheckmarkCircle24" Foreground="#10B981" FontSize="24" Margin="0,0,12,0" VerticalAlignment="Center" />
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="Môi trường C# .NET 10 đã kết nối thành công" FontWeight="SemiBold" FontSize="13" />
-                        <TextBlock Text="Thư viện lõi MatrixExamAI.Shared và tiện ích Microsoft Word Add-in sẵn sàng hoạt động song song." 
+                        <TextBlock Text="Hệ thống đã kết nối và sẵn sàng làm việc" FontWeight="SemiBold" FontSize="13" />
+                        <TextBlock Text="Hệ thống xử lý lõi và tiện ích Microsoft Word Add-in sẵn sàng hoạt động song song." 
                                    FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
                     </StackPanel>
                     <Border Grid.Column="2" Background="#1A10B981" CornerRadius="4" Padding="8,4" VerticalAlignment="Center">
-                        <TextBlock Text="Ready &amp; Stable" Foreground="#10B981" FontSize="11" FontWeight="Bold" />
+                        <TextBlock Text="Sẵn sàng hoạt động" Foreground="#10B981" FontSize="11" FontWeight="Bold" />
                     </Border>
                 </Grid>
             </ui:Card>

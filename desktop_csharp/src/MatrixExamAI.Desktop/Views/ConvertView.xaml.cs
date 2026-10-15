@@ -1253,7 +1253,7 @@ Hãy tạo 5 câu TN, 2 câu DS, 2 câu TLN cho môn {subject} lớp {grade}. B�
                     await bankService.InsertQuestionAsync(q);
                     added++;
                 }
-                MessageBox.Show($"Đã lưu thành công {added} câu hỏi vào Ngân hàng câu hỏi SQLite cục bộ!", "Thêm NHCH Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Đã lưu thành công {added} câu hỏi vào Ngân hàng câu hỏi cục bộ!", "Thêm NHCH Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
@@ -1477,49 +1477,17 @@ Bắt đầu ngay câu đầu tiên. Không thêm lời mở đầu hay markdown
             string subject = _parsedQuestions.FirstOrDefault(q => !string.IsNullOrWhiteSpace(q.Subject))?.Subject ?? "Toán";
             int grade = _parsedQuestions.FirstOrDefault(q => q.Grade > 0)?.Grade ?? 12;
 
-            // 1. Tiêu đề đề thi 2 cột giả lập Word THPT
-            var headerGrid = new Grid { Margin = new Thickness(0, 0, 0, 14) };
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-
-            var leftHeader = new StackPanel { HorizontalAlignment = HorizontalAlignment.Left };
-            leftHeader.Children.Add(new TextBlock { Text = "SỞ GIÁO DỤC VÀ ĐÀO TẠO", FontWeight = FontWeights.Bold, FontFamily = new FontFamily("Times New Roman"), FontSize = Math.Max(10, CurrentWordFontSize - 1) });
-            leftHeader.Children.Add(new TextBlock { Text = "TRƯỜNG THPT ........................", FontWeight = FontWeights.Bold, FontFamily = new FontFamily("Times New Roman"), FontSize = Math.Max(10, CurrentWordFontSize - 1) });
-            leftHeader.Children.Add(new TextBlock { Text = $"(Đề thi gồm {_parsedQuestions.Count:D2} câu)", FontStyle = FontStyles.Italic, FontFamily = new FontFamily("Times New Roman"), FontSize = Math.Max(9, CurrentWordFontSize - 2) });
-
-            var rightHeader = new StackPanel { HorizontalAlignment = HorizontalAlignment.Right };
-            rightHeader.Children.Add(new TextBlock { Text = "ĐỀ KIỂM TRA CHÍNH THỨC", FontWeight = FontWeights.Bold, FontFamily = new FontFamily("Times New Roman"), FontSize = CurrentWordFontSize, TextAlignment = TextAlignment.Center });
-            rightHeader.Children.Add(new TextBlock { Text = $"Môn: {subject.ToUpperInvariant()} - Khối {grade}", FontWeight = FontWeights.Bold, FontFamily = new FontFamily("Times New Roman"), FontSize = Math.Max(10, CurrentWordFontSize - 1), TextAlignment = TextAlignment.Center });
-            rightHeader.Children.Add(new TextBlock { Text = "Thời gian: 90 phút (không kể phát đề)", FontStyle = FontStyles.Italic, FontFamily = new FontFamily("Times New Roman"), FontSize = Math.Max(9, CurrentWordFontSize - 2), TextAlignment = TextAlignment.Center });
-
-            Grid.SetColumn(leftHeader, 0);
-            Grid.SetColumn(rightHeader, 1);
-            headerGrid.Children.Add(leftHeader);
-            headerGrid.Children.Add(rightHeader);
-            PanelDocContent.Children.Add(headerGrid);
-
-            // Dòng thông tin thí sinh
-            var candidatePanel = new DockPanel { Margin = new Thickness(0, 0, 0, 10) };
-            var examCodeText = new TextBlock
-            {
-                Text = "Mã đề: 101",
-                FontWeight = FontWeights.Bold,
-                FontFamily = new FontFamily("Times New Roman"),
-                FontSize = Math.Max(10, CurrentWordFontSize - 1),
-                HorizontalAlignment = HorizontalAlignment.Right
-            };
-            var candText = new TextBlock
-            {
-                Text = "Họ và tên thí sinh: ................................................................   Số báo danh: ................",
-                FontFamily = new FontFamily("Times New Roman"),
-                FontSize = Math.Max(10, CurrentWordFontSize - 1)
-            };
-            DockPanel.SetDock(examCodeText, Dock.Right);
-            candidatePanel.Children.Add(examCodeText);
-            candidatePanel.Children.Add(candText);
-            PanelDocContent.Children.Add(candidatePanel);
-
-            PanelDocContent.Children.Add(new Separator { Margin = new Thickness(0, 0, 0, 12), Background = Brushes.LightGray });
+            // Cập nhật thông tin vào khung tiêu đề chuẩn Word A4 có sẵn trên trang
+            if (TxtPreviewQuestionCount != null)
+                TxtPreviewQuestionCount.Text = $"(Đề thi gồm {_parsedQuestions.Count:D2} câu)";
+            if (TxtPreviewSubjectTitle != null)
+                TxtPreviewSubjectTitle.Text = $"ĐỀ THI MÔN {subject.ToUpperInvariant()} - LỚP {grade}";
+            if (TxtPreviewSubject != null)
+                TxtPreviewSubject.Text = $"Môn thi: {subject.ToUpperInvariant()}";
+            if (TxtPreviewGradeYear != null)
+                TxtPreviewGradeYear.Text = $"Lớp: {grade}  Năm học: 2025-2026";
+            if (TxtPreviewExamCode != null)
+                TxtPreviewExamCode.Text = "Mã đề: 101";
 
             var tnQuestions = _parsedQuestions.Where(q => q.QuestionType == "MultipleChoice4").ToList();
             var dsQuestions = _parsedQuestions.Where(q => q.QuestionType == "TrueFalse4").ToList();

@@ -34,9 +34,10 @@ public class GitHubUpdateService
 {
     public static GitHubUpdateService Instance { get; } = new();
 
-    public string CurrentVersion { get; set; } = "5.1.3.3";
-    public string DisplayVersion => "5.1.3.3";
+    public string CurrentVersion { get; set; } = "5.1.3.4";
+    public string DisplayVersion => "5.1.3.4";
     public string GitHubRepo { get; set; } = "Do-Miinh-1210/MEA_v5";
+    public DateTime? LastCheckedTime { get; private set; }
 
     private readonly HttpClient _httpClient;
 
@@ -48,6 +49,38 @@ public class GitHubUpdateService
         {
             _httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("MatrixExamAI-Desktop", CurrentVersion));
         }
+
+        try
+        {
+            string appData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MatrixExamAI");
+            string cacheFile = Path.Combine(appData, "last_update_check.txt");
+            if (File.Exists(cacheFile) && DateTime.TryParse(File.ReadAllText(cacheFile).Trim(), out var dt))
+            {
+                LastCheckedTime = dt;
+            }
+        }
+        catch { }
+    }
+
+    public string GetLastCheckedDisplayText()
+    {
+        if (LastCheckedTime.HasValue)
+        {
+            return $"Lần cập nhật gần nhất: {LastCheckedTime.Value:dd/MM/yyyy HH:mm:ss}";
+        }
+        return "Lần cập nhật gần nhất: Chưa kiểm tra";
+    }
+
+    public void RecordCheckTime(DateTime? time = null)
+    {
+        LastCheckedTime = time ?? DateTime.Now;
+        try
+        {
+            string appData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MatrixExamAI");
+            Directory.CreateDirectory(appData);
+            File.WriteAllText(Path.Combine(appData, "last_update_check.txt"), LastCheckedTime.Value.ToString("o"));
+        }
+        catch { }
     }
 
     public static bool IsNewerVersion(string remote, string local)
@@ -100,6 +133,7 @@ public class GitHubUpdateService
 
     public async Task<UpdateInfo?> CheckForUpdateAsync(CancellationToken ct = default)
     {
+        RecordCheckTime();
         try
         {
             string repo = Environment.GetEnvironmentVariable("MEA_GITHUB_REPO") ?? GitHubRepo;

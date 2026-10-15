@@ -61,7 +61,7 @@ namespace MatrixExamAI.Desktop.Views
             ProgExam.Visibility = Visibility.Visible;
             InfoExamNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Informational;
             InfoExamNotification.Title = "Đang soạn đề thi theo ma trận";
-            InfoExamNotification.Message = $"Đang truy xuất ngân hàng câu hỏi SQLite và khởi tạo đề thi 22 câu ({subject} - {gradeStr})...";
+            InfoExamNotification.Message = $"Đang truy xuất ngân hàng câu hỏi và khởi tạo đề thi 22 câu ({subject} - {gradeStr})...";
             InfoExamNotification.IsOpen = true;
 
             try

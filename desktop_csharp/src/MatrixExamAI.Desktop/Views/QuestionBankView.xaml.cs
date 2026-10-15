@@ -482,7 +482,7 @@ namespace MatrixExamAI.Desktop.Views
                 TxtEmptyBankHint.Visibility = Visibility.Visible;
                 TxtBankCount.Text = "Tổng số: 0 câu hỏi";
                 InfoBankNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Warning;
-                InfoBankNotification.Title = "Thông báo kết nối SQLite";
+                InfoBankNotification.Title = "Thông báo kết nối dữ liệu";
                 InfoBankNotification.Message = $"Không thể tải ngân hàng câu hỏi: {ex.Message}";
                 InfoBankNotification.IsOpen = true;
             }
@@ -522,7 +522,7 @@ namespace MatrixExamAI.Desktop.Views
             TxtEmptyBankHint.Visibility = _loadedQuestions.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
 
             InfoBankNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
-            InfoBankNotification.Title = "Ngân hàng câu hỏi SQLite";
+            InfoBankNotification.Title = "Ngân hàng câu hỏi";
             InfoBankNotification.Message = $"Đã tải {_loadedQuestions.Count} câu hỏi từ cơ sở dữ liệu ({Path.GetFileName(_activeDbPath)}).";
             InfoBankNotification.IsOpen = true;
         }
@@ -538,7 +538,7 @@ namespace MatrixExamAI.Desktop.Views
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi tìm kiếm SQLite: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Lỗi tìm kiếm: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -588,7 +588,7 @@ namespace MatrixExamAI.Desktop.Views
                 await RefreshQuestionsFromDatabaseAsync();
 
                 MessageBox.Show(
-                    $"Đã nạp thành công {imported} câu hỏi mới vào cơ sở dữ liệu SQLite cục bộ:\n{_activeDbPath}",
+                    $"Đã nạp thành công {imported} câu hỏi mới vào cơ sở dữ liệu cục bộ:\n{_activeDbPath}",
                     "Nạp Ngân Hàng Thành Công",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
@@ -601,7 +601,7 @@ namespace MatrixExamAI.Desktop.Views
 
         private async void BtnAddQuestion_Click(object sender, RoutedEventArgs e)
         {
-            // Bổ sung câu hỏi mới trực tiếp vào SQLite
+            // Bổ sung câu hỏi mới trực tiếp vào cơ sở dữ liệu
             try
             {
                 var newQ = new QuestionItem
@@ -622,7 +622,7 @@ namespace MatrixExamAI.Desktop.Views
                 await RefreshQuestionsFromDatabaseAsync();
 
                 MessageBox.Show(
-                    $"Đã thêm câu hỏi mới thành công vào cơ sở dữ liệu SQLite ({newQ.QuestionCode})!",
+                    $"Đã thêm câu hỏi mới thành công vào cơ sở dữ liệu ({newQ.QuestionCode})!",
                     "Thêm Câu Hỏi Thành Công",
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);

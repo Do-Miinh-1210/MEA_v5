@@ -50,7 +50,7 @@ public partial class ActivationDialog : FluentWindow
             TxtBadgeStatus.Foreground = new SolidColorBrush(Color.FromRgb(16, 185, 129));
         }
 
-        string source = info.Offline ? "Cục bộ (Độc lập)" : (info.FromCache ? "Bộ nhớ đệm (Cache)" : "Supabase Cloud Trực tiếp");
+        string source = info.Offline ? "Cục bộ (Độc lập)" : (info.FromCache ? "Bộ nhớ đệm (Cache)" : "Trực tuyến (Cloud)");
         TxtLicenseDetail.Text = $"Chủ sở hữu: {info.Name} • Hạn dùng: {info.Expiry} • Nguồn: {source}";
     }
 
@@ -100,7 +100,7 @@ public partial class ActivationDialog : FluentWindow
     private async void BtnRefreshStatus_Click(object sender, RoutedEventArgs e)
     {
         BtnRefreshStatus.IsEnabled = false;
-        ShowNotification(InfoBarSeverity.Informational, "Đang kiểm tra...", "Đang kết nối tới Supabase Cloud để đối soát bản quyền...");
+        ShowNotification(InfoBarSeverity.Informational, "Đang kiểm tra...", "Đang kết nối máy chủ để đối soát bản quyền...");
 
         try
         {
@@ -113,7 +113,7 @@ public partial class ActivationDialog : FluentWindow
             }
             else
             {
-                ShowNotification(InfoBarSeverity.Warning, "Chưa kích hoạt", "Máy tính này chưa được cấp phép kích hoạt trên Supabase Cloud. Hãy đăng ký hoặc nhập mã bản quyền.");
+                ShowNotification(InfoBarSeverity.Warning, "Chưa kích hoạt", "Máy tính này chưa được cấp phép kích hoạt trên hệ thống máy chủ. Hãy đăng ký hoặc nhập mã bản quyền.");
             }
         }
         catch (Exception ex)
@@ -138,7 +138,7 @@ public partial class ActivationDialog : FluentWindow
         }
 
         BtnActivateOnline.IsEnabled = false;
-        ShowNotification(InfoBarSeverity.Informational, "Đang kích hoạt...", "Đang gửi yêu cầu kích hoạt bản quyền lên Supabase Cloud...");
+        ShowNotification(InfoBarSeverity.Informational, "Đang kích hoạt...", "Đang gửi yêu cầu kích hoạt bản quyền lên máy chủ...");
 
         try
         {

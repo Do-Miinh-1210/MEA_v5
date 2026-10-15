@@ -107,8 +107,8 @@ namespace MatrixExamAI.Desktop.Views
 
             // 1. Khung tiêu đề đề thi 2 cột chuẩn THPT (kế thừa m:\LOP\KT15P-1)
             var headerGrid = new Grid { Margin = new Thickness(0, 0, 0, 12) };
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(2, GridUnitType.Star) });
-            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(3, GridUnitType.Star) });
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
 
             string schoolText = string.IsNullOrWhiteSpace(_examOptions.SchoolName) ? "SỞ/PHÒNG GD&ĐT" : _examOptions.SchoolName.ToUpper();
             int totalQ = _questions.Count > 0 ? _questions.Count : 20;
@@ -185,16 +185,47 @@ namespace MatrixExamAI.Desktop.Views
 
             PanelDocContent.Children.Add(headerGrid);
 
-            // 2. Dòng thông tin thí sinh phẳng không viền hộp
-            var candidateText = new TextBlock
+            // 2. Dòng thông tin thí sinh phẳng không viền hộp dàn đều 100%
+            var candidateGrid = new Grid { Margin = new Thickness(0, 4, 0, 12) };
+            candidateGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            candidateGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            candidateGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+
+            var nameText = new TextBlock
             {
-                Text = $"Họ và tên: …………………………………………..   Số báo danh: ………………   Mã đề: {_examOptions.ExamCode}",
+                Text = "Họ và tên thí sinh: ................................................................",
                 FontFamily = new FontFamily("Times New Roman"),
                 FontSize = 11,
                 Foreground = DarkBrush,
-                Margin = new Thickness(0, 4, 0, 10)
+                VerticalAlignment = VerticalAlignment.Center
             };
-            PanelDocContent.Children.Add(candidateText);
+            var sbdText = new TextBlock
+            {
+                Text = "Số báo danh: .............................",
+                FontFamily = new FontFamily("Times New Roman"),
+                FontSize = 11,
+                Foreground = DarkBrush,
+                Margin = new Thickness(16, 0, 16, 0),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            var codeText = new TextBlock
+            {
+                Text = $"Mã đề: {_examOptions.ExamCode}",
+                FontWeight = FontWeights.Bold,
+                FontFamily = new FontFamily("Times New Roman"),
+                FontSize = 11,
+                Foreground = DarkBrush,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            Grid.SetColumn(nameText, 0);
+            Grid.SetColumn(sbdText, 1);
+            Grid.SetColumn(codeText, 2);
+            candidateGrid.Children.Add(nameText);
+            candidateGrid.Children.Add(sbdText);
+            candidateGrid.Children.Add(codeText);
+            PanelDocContent.Children.Add(candidateGrid);
+            PanelDocContent.Children.Add(new Separator { Margin = new Thickness(0, 0, 0, 14), Background = new SolidColorBrush(Color.FromRgb(0xCB, 0xD5, 0xE1)) });
 
             // 3. Bảng điền đáp án nhanh cho học sinh (Table 1 trong m:\LOP\KT15P-1)
             var tnQuestions = _questions.Where(q => q.QuestionType == "MultipleChoice4").ToList();

@@ -6,7 +6,7 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:views="clr-namespace:MatrixExamAI.Desktop.Views"
         mc:Ignorable="d"
-        Title="MatrixExamAI Pro v5.1.3.3" 
+        Title="MatrixExamAI Pro v5.1.3.4" 
         Icon="Assets/app.ico"
         Height="720" Width="1280"
         MinHeight="680" MinWidth="1024"
@@ -22,13 +22,13 @@
         </Grid.RowDefinitions>
 
         <!-- 1. Fluent TitleBar -->
-        <ui:TitleBar Grid.Row="0" Title="MatrixExamAI Pro v5.1.3.3 • Trợ lý Soạn đề &amp; Chuyển đổi Tài liệu AI (.NET 10)">
+        <ui:TitleBar Grid.Row="0" Title="MatrixExamAI Pro v5.1.3.4 • Trợ lý Soạn đề &amp; Chuyển đổi Tài liệu AI">
             <ui:TitleBar.Header>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
                     <Image Source="Assets/logo.png" Width="24" Height="24" Margin="0,0,8,0" RenderOptions.BitmapScalingMode="HighQuality" />
                     <TextBlock Text="MatrixExamAI Pro" FontWeight="Bold" FontSize="12" VerticalAlignment="Center" />
                     <Border Background="#1A0D9488" CornerRadius="4" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
-                        <TextBlock Text=".NET 10 Fluent" FontSize="10" Foreground="#0D9488" FontWeight="SemiBold" />
+                        <TextBlock Text="Bản quyền PRO" FontSize="10" Foreground="#0D9488" FontWeight="SemiBold" />
                     </Border>
                 </StackPanel>
             </ui:TitleBar.Header>
@@ -36,7 +36,7 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
                     <ui:Button x:Name="BtnCheckUpdate" Appearance="Transparent" 
                                Icon="{ui:SymbolIcon ArrowDownload24}" 
-                               ToolTip="Kiểm tra bản cập nhật mới (GitHub Releases)"
+                               ToolTip="Kiểm tra bản cập nhật mới"
                                Click="BtnCheckUpdate_Click" Margin="0,0,4,0" />
                     <ui:Button x:Name="BtnToggleTheme" Appearance="Transparent" 
                                Icon="{ui:SymbolIcon DarkTheme24}" 
@@ -69,7 +69,7 @@
                     <ui:NavigationViewItem x:Name="NavItemMatrix" Content="Soạn đề theo Ma trận" Tag="matrix" Icon="{ui:SymbolIcon Sparkle24}" Click="NavItem_Click" ToolTip="Soạn đề theo ma trận BGD (Ctrl + 3)" />
                     <ui:NavigationViewItem x:Name="NavItemTikz" Content="AI Vẽ hình toán TikZ" Tag="tikz" Icon="{ui:SymbolIcon Shapes24}" Click="NavItem_Click" ToolTip="Vẽ hình TikZ &amp; Đồ thị (Ctrl + 4)" />
                     <ui:NavigationViewItem x:Name="NavItemShuffle" Content="Trộn đề &amp; Phiếu OMR" Tag="shuffle" Icon="{ui:SymbolIcon ArrowShuffle24}" Click="NavItem_Click" ToolTip="Trộn mã đề thi (Ctrl + 5)" />
-                    <ui:NavigationViewItem x:Name="NavItemBank" Content="Ngân hàng câu hỏi" Tag="bank" Icon="{ui:SymbolIcon Archive24}" Click="NavItem_Click" ToolTip="Ngân hàng câu hỏi SQLite (Ctrl + 6)" />
+                    <ui:NavigationViewItem x:Name="NavItemBank" Content="Ngân hàng câu hỏi" Tag="bank" Icon="{ui:SymbolIcon Archive24}" Click="NavItem_Click" ToolTip="Ngân hàng câu hỏi (Ctrl + 6)" />
                     <ui:NavigationViewItem x:Name="NavItemQc" Content="Thẩm định đề thi (QC)" Tag="qc" Icon="{ui:SymbolIcon CheckmarkSquare24}" Click="NavItem_Click" ToolTip="Thẩm định chất lượng đề (Ctrl + 7)" />
                 </ui:NavigationView.MenuItems>
 
@@ -80,7 +80,39 @@
 
             <!-- Cột 1: Vùng hiển thị nội dung trực tiếp (Content Control tự thích ứng) -->
             <Border Grid.Column="1" Background="{DynamicResource ApplicationBackgroundBrush}">
-                <ContentControl x:Name="MainContentFrame" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Banner Thông báo Bản cập nhật mới -->
+                    <Border x:Name="BorderUpdateNotice" Grid.Row="0" Margin="16,8,16,4" Visibility="Collapsed"
+                            Background="#0F0284C7" BorderBrush="#330284C7" BorderThickness="1" CornerRadius="6" Padding="12,8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <ui:SymbolIcon Symbol="ArrowDownload24" Foreground="#0284C7" FontSize="18" Margin="0,0,10,0" VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                <TextBlock x:Name="TxtUpdateNoticeTitle" Text="Đã có bản cập nhật mới!" FontWeight="SemiBold" FontSize="12.5" Foreground="#0284C7" />
+                                <TextBlock x:Name="TxtUpdateNoticeMessage" Text="Phiên bản mới đã sẵn sàng tải về." FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
+                            </StackPanel>
+                            <ui:Button x:Name="BtnUpdateNoticeAction" Grid.Column="2" Appearance="Primary"
+                                       Icon="{ui:SymbolIcon ArrowDownload24}" Content="Cập nhật ngay"
+                                       Height="28" Padding="12,0" FontSize="11" Click="BtnUpdateNoticeAction_Click" Margin="0,0,8,0"
+                                       ToolTip="Cập nhật lên phiên bản mới nhất" />
+                            <ui:Button x:Name="BtnCloseUpdateNotice" Grid.Column="3" Appearance="Transparent"
+                                       Icon="{ui:SymbolIcon Dismiss24}" Height="28" Width="28" Padding="0" Click="BtnCloseUpdateNotice_Click" 
+                                       ToolTip="Đóng thông báo cập nhật" />
+                        </Grid>
+                    </Border>
+
+                    <ContentControl Grid.Row="1" x:Name="MainContentFrame" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+                </Grid>
             </Border>
         </Grid>
 
@@ -92,7 +124,7 @@
             <Grid>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Ellipse Width="8" Height="8" Fill="#10B981" Margin="0,0,6,0" />
-                    <TextBlock Text="Engine: C# .NET 10 Desktop (DirectX GPU)" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text="Trạng thái: Hoạt động ổn định (Tối ưu phần cứng)" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     <TextBlock Text=" | " FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="6,0" />
                     <TextBlock Text="Mô hình AI: gemini-3.8-flash / 9Router" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     <TextBlock Text=" | " FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="6,0" />
@@ -103,7 +135,7 @@
                     <TextBlock Text="RAM: ~42MB" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     <TextBlock Text=" | " FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="6,0" />
                     <TextBlock x:Name="TxtStatusBarLicense" Text="Bản quyền: Thầy Đỗ Minh (PRO)" FontSize="11" FontWeight="SemiBold" 
-                               Foreground="#0284C7" Cursor="Hand" ToolTip="Nhấn để mở cửa sổ Kích hoạt bản quyền Supabase Cloud" 
+                               Foreground="#0284C7" Cursor="Hand" ToolTip="Nhấn để mở cửa sổ Kích hoạt bản quyền trực tuyến" 
                                MouseLeftButtonDown="TxtStatusBarLicense_MouseLeftButtonDown" />
                 </StackPanel>
             </Grid>

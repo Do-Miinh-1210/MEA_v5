@@ -19,7 +19,7 @@
             <StackPanel>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <ui:SymbolIcon Symbol="Archive24" FontSize="20" Foreground="#059669" Margin="0,0,8,0" />
-                    <TextBlock Text="Ngân hàng Câu hỏi &amp; Thư viện Đề thi SQLite Native" 
+                    <TextBlock Text="Ngân hàng Câu hỏi &amp; Thư viện Đề thi" 
                                FontSize="16" FontWeight="Bold" 
                                Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                 </StackPanel>
@@ -41,10 +41,10 @@
                     <ComboBoxItem Content="Vận dụng" Padding="6,2" />
                     <ComboBoxItem Content="Vận dụng cao" Padding="6,2" />
                 </ComboBox>
-                <ui:Button x:Name="BtnSearch" Appearance="Secondary" Icon="{ui:SymbolIcon Search24}" Content="Tìm kiếm" Height="28" Padding="8,0" Margin="0,0,4,2" FontSize="11" Click="BtnSearch_Click" ToolTip="Tìm kiếm câu hỏi trong SQLite database (F5 hoặc Enter)" />
-                <ui:Button x:Name="BtnRefreshBank" Appearance="Secondary" Icon="{ui:SymbolIcon ArrowSync24}" Content="Làm mới" Height="28" Padding="8,0" Margin="0,0,4,2" FontSize="11" Click="BtnRefreshBank_Click" ToolTip="Tải lại toàn bộ câu hỏi từ SQLite Database (F5)" />
-                <ui:Button x:Name="BtnImportConvert" Appearance="Secondary" Icon="{ui:SymbolIcon ArrowDownload24}" Content="Nạp từ ConvertView" Height="28" Padding="8,0" Margin="0,0,4,2" FontSize="11" Click="BtnImportConvert_Click" ToolTip="Nhập nhanh các câu hỏi vừa nhận diện từ ConvertView vào Ngân hàng SQLite" />
-                <ui:Button x:Name="BtnAddQuestion" Appearance="Primary" Icon="{ui:SymbolIcon Add24}" Content="Thêm mới" Height="28" Padding="8,0" Margin="0,0,4,2" FontSize="11" Click="BtnAddQuestion_Click" ToolTip="Thêm câu hỏi mới vào ngân hàng câu hỏi SQLite" />
+                <ui:Button x:Name="BtnSearch" Appearance="Secondary" Icon="{ui:SymbolIcon Search24}" Content="Tìm kiếm" Height="28" Padding="8,0" Margin="0,0,4,2" FontSize="11" Click="BtnSearch_Click" ToolTip="Tìm kiếm câu hỏi (F5 hoặc Enter)" />
+                <ui:Button x:Name="BtnRefreshBank" Appearance="Secondary" Icon="{ui:SymbolIcon ArrowSync24}" Content="Làm mới" Height="28" Padding="8,0" Margin="0,0,4,2" FontSize="11" Click="BtnRefreshBank_Click" ToolTip="Tải lại toàn bộ câu hỏi (F5)" />
+                <ui:Button x:Name="BtnImportConvert" Appearance="Secondary" Icon="{ui:SymbolIcon ArrowDownload24}" Content="Nạp từ ConvertView" Height="28" Padding="8,0" Margin="0,0,4,2" FontSize="11" Click="BtnImportConvert_Click" ToolTip="Nhập nhanh các câu hỏi vừa nhận diện từ ConvertView vào Ngân hàng" />
+                <ui:Button x:Name="BtnAddQuestion" Appearance="Primary" Icon="{ui:SymbolIcon Add24}" Content="Thêm mới" Height="28" Padding="8,0" Margin="0,0,4,2" FontSize="11" Click="BtnAddQuestion_Click" ToolTip="Thêm câu hỏi mới vào ngân hàng câu hỏi" />
                 <ui:Button x:Name="BtnDeleteQuestion" Appearance="Danger" Icon="{ui:SymbolIcon Delete24}" Content="Xóa câu" Height="28" Padding="8,0" Margin="0,0,4,2" FontSize="11" Click="BtnDeleteQuestion_Click" ToolTip="Xóa câu hỏi đang chọn khỏi ngân hàng" />
                 <ui:Button x:Name="BtnClearAll" Appearance="Transparent" Icon="{ui:SymbolIcon Broom24}" Content="Xóa sạch" Height="28" Padding="8,0" Margin="0,0,4,2" FontSize="11" Click="BtnClearAll_Click" ToolTip="Xóa sạch toàn bộ câu hỏi mẫu/dữ liệu trong ngân hàng" />
                 <ui:Button x:Name="BtnExportSelected" Appearance="Success" Icon="{ui:SymbolIcon DocumentArrowRight24}" Content="Xuất đề Word" Height="28" Padding="8,0" Margin="0,0,0,2" FontSize="11" Click="BtnExportSelected_Click" ToolTip="Xuất danh sách câu hỏi đã chọn ra tệp Word (Ctrl + S)" />
@@ -60,7 +60,7 @@
                 </Grid.RowDefinitions>
 
                 <Grid Grid.Row="0" Margin="0,0,0,10">
-                    <TextBlock Text="Danh sách câu hỏi trong Ngân hàng dữ liệu (SQLite)" FontWeight="SemiBold" FontSize="13" />
+                    <TextBlock Text="Danh sách câu hỏi trong Ngân hàng dữ liệu" FontWeight="SemiBold" FontSize="13" />
                     <TextBlock x:Name="TxtBankCount" Text="Tổng số: 0 câu hỏi" FontSize="11" HorizontalAlignment="Right" 
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                 </Grid>
@@ -91,6 +91,6 @@
         <ui:InfoBar x:Name="InfoBankNotification" Grid.Row="3" Margin="0,12,0,0"
                     IsOpen="False" Severity="Success"
                     Title="Ngân hàng câu hỏi" 
-                    Message="Đã nạp cơ sở dữ liệu SQLite thành công." />
+                    Message="Đã nạp cơ sở dữ liệu thành công." />
     </Grid>
 </UserControl>

@@ -30,6 +30,7 @@ namespace MatrixExamAI.Desktop
         public string CurrentNavigationTag { get; private set; } = "dashboard";
 
         public Action<System.Windows.Controls.Primitives.ButtonBase>? ButtonClickInterceptor { get; set; }
+        private UpdateInfo? _pendingUpdateInfo;
 
         public MainWindow()
         {
@@ -51,10 +52,13 @@ namespace MatrixExamAI.Desktop
             // Tự động thu gọn thanh menu khi màn hình hẹp (Split Screen / Snap)
             SizeChanged += MainWindow_SizeChanged;
 
-            // Đồng bộ trạng thái Bản quyền Supabase Cloud
+            // Đồng bộ trạng thái Bản quyền trực tuyến
             UpdateStatusBarLicense(SupabaseLicenseService.Instance.GetCurrentLicense());
             SupabaseLicenseService.Instance.LicenseChanged += (s, info) => Dispatcher.Invoke(() => UpdateStatusBarLicense(info));
             _ = Task.Run(async () => await SupabaseLicenseService.Instance.CheckLicenseAsync(forceOnline: false));
+
+            // Kiểm tra cập nhật tự động khi khởi động
+            _ = Task.Run(async () => await CheckForUpdateSilentlyOnStartupAsync());
 
             // Mặc định khởi tạo: mở trang Tổng quan Dashboard
             NavigateTo("dashboard");
@@ -174,6 +178,46 @@ namespace MatrixExamAI.Desktop
             await CheckForUpdateAndPromptAsync(showPromptIfLatest: true);
         }
 
+        private async System.Threading.Tasks.Task CheckForUpdateSilentlyOnStartupAsync()
+        {
+            try
+            {
+                var info = await GitHubUpdateService.Instance.CheckForUpdateAsync();
+                if (info != null)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        _pendingUpdateInfo = info;
+                        TxtUpdateNoticeTitle.Text = $"Đã có bản cập nhật mới: v{info.Version}";
+                        TxtUpdateNoticeMessage.Text = $"Phiên bản {info.Version} ({info.AssetName}) đã sẵn sàng tải về. Nhấn nút bên cạnh để cập nhật ngay.";
+                        BorderUpdateNotice.Visibility = Visibility.Visible;
+                    });
+                }
+            }
+            catch
+            {
+                // Khởi động không gây gián đoạn nếu mất kết nối mạng
+            }
+        }
+
+        private void BtnCloseUpdateNotice_Click(object sender, RoutedEventArgs e)
+        {
+            BorderUpdateNotice.Visibility = Visibility.Collapsed;
+        }
+
+        private void BtnUpdateNoticeAction_Click(object sender, RoutedEventArgs e)
+        {
+            if (_pendingUpdateInfo != null)
+            {
+                var dialog = new UpdateDialog(_pendingUpdateInfo) { Owner = this };
+                dialog.ShowDialog();
+            }
+            else
+            {
+                _ = CheckForUpdateAndPromptAsync(showPromptIfLatest: true);
+            }
+        }
+
         public async System.Threading.Tasks.Task CheckForUpdateAndPromptAsync(bool showPromptIfLatest)
         {
             try
@@ -181,13 +225,18 @@ namespace MatrixExamAI.Desktop
                 var info = await GitHubUpdateService.Instance.CheckForUpdateAsync();
                 if (info != null)
                 {
+                    _pendingUpdateInfo = info;
+                    TxtUpdateNoticeTitle.Text = $"Đã có bản cập nhật mới: v{info.Version}";
+                    TxtUpdateNoticeMessage.Text = $"Phiên bản {info.Version} ({info.AssetName}) đã sẵn sàng tải về. Nhấn nút bên cạnh để cập nhật ngay.";
+                    BorderUpdateNotice.Visibility = Visibility.Visible;
+
                     var dialog = new UpdateDialog(info) { Owner = this };
                     dialog.ShowDialog();
                 }
                 else if (showPromptIfLatest)
                 {
                     System.Windows.MessageBox.Show(
-                        $"Bạn đang sử dụng phiên bản mới nhất: v{GitHubUpdateService.Instance.CurrentVersion}.\nKhông có bản cập nhật mới trên GitHub Releases.",
+                        $"Bạn đang sử dụng phiên bản mới nhất: v{GitHubUpdateService.Instance.CurrentVersion}.\nKhông có bản cập nhật mới trên máy chủ.",
                         "Kiểm tra cập nhật",
                         System.Windows.MessageBoxButton.OK,
                         MessageBoxImage.Information

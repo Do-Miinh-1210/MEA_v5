@@ -453,16 +453,16 @@ namespace MatrixExamAI.Desktop.Tests
                 var btnExportSelected = GetControl<Wpf.Ui.Controls.Button>(view, "BtnExportSelected");
 
                 btnSearch.ToolTip.Should().NotBeNull();
-                btnSearch.ToolTip.ToString().Should().Be("Tìm kiếm câu hỏi trong SQLite database (F5 hoặc Enter)");
+                btnSearch.ToolTip.ToString().Should().Be("Tìm kiếm câu hỏi (F5 hoặc Enter)");
 
                 btnRefreshBank.ToolTip.Should().NotBeNull();
-                btnRefreshBank.ToolTip.ToString().Should().Be("Tải lại toàn bộ câu hỏi từ SQLite Database (F5)");
+                btnRefreshBank.ToolTip.ToString().Should().Be("Tải lại toàn bộ câu hỏi (F5)");
 
                 btnImportConvert.ToolTip.Should().NotBeNull();
-                btnImportConvert.ToolTip.ToString().Should().Be("Nhập nhanh các câu hỏi vừa nhận diện từ ConvertView vào Ngân hàng SQLite");
+                btnImportConvert.ToolTip.ToString().Should().Be("Nhập nhanh các câu hỏi vừa nhận diện từ ConvertView vào Ngân hàng");
 
                 btnAddQuestion.ToolTip.Should().NotBeNull();
-                btnAddQuestion.ToolTip.ToString().Should().Be("Thêm câu hỏi mới vào ngân hàng câu hỏi SQLite");
+                btnAddQuestion.ToolTip.ToString().Should().Be("Thêm câu hỏi mới vào ngân hàng câu hỏi");
 
                 btnExportSelected.ToolTip.Should().NotBeNull();
                 btnExportSelected.ToolTip.ToString().Should().Be("Xuất danh sách câu hỏi đã chọn ra tệp Word (Ctrl + S)");

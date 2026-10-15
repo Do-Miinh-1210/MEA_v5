@@ -84,7 +84,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Background="{DynamicResource ApplicationBackgroundBrush}">
                     <Border Margin="24,20,24,36" Background="#FFFFFF" TextElement.Foreground="#0F172A" 
                             CornerRadius="2" BorderThickness="1" BorderBrush="#D1D5DB"
-                            Padding="60,48,48,48" Width="760" MinHeight="1075" 
+                            Padding="48,44,48,44" Width="760" MinHeight="1075" 
                             HorizontalAlignment="Center" VerticalAlignment="Top">
                         <Border.Effect>
                             <DropShadowEffect BlurRadius="20" Direction="270" Opacity="0.24" ShadowDepth="5" Color="#000000" />
