@@ -211,7 +211,56 @@
                 </StackPanel>
             </ui:CardExpander>
 
-            <!-- Section 5: Thông tin Ứng dụng & Bản quyền -->
+            <!-- Section 5: Bản quyền & Kích hoạt Supabase Cloud -->
+            <ui:CardExpander Header="Bản quyền &amp; Kích hoạt Supabase Cloud" 
+                             Icon="{ui:SymbolIcon Key24}"
+                             IsExpanded="True" Margin="0,0,0,16">
+                <StackPanel Margin="0,8,0,0">
+                    <!-- Hàng 1: Trạng thái bản quyền & Chủ sở hữu -->
+                    <Grid Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Trạng thái giấy phép:" FontWeight="Medium" VerticalAlignment="Center" />
+                                <Border x:Name="BadgeSettingsLicense" Background="#1A10B981" CornerRadius="4" Padding="6,2" Margin="8,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock x:Name="TxtSettingsLicenseBadge" Text="ĐÃ KÍCH HOẠT PRO" Foreground="#10B981" FontSize="10" FontWeight="Bold" />
+                                </Border>
+                            </StackPanel>
+                            <TextBlock x:Name="TxtSettingsLicenseOwner" Text="Chủ sở hữu: Thầy Đỗ Minh (Đỗ Miinh Math) • Hạn dùng: Vĩnh viễn" 
+                                       FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,4,0,0" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <ui:Button x:Name="BtnCheckLicenseSettings" Appearance="Secondary" Icon="{ui:SymbolIcon ArrowSync24}" 
+                                       Content="Kiểm tra Cloud" Padding="12,6" Margin="0,0,8,0" Click="BtnCheckLicenseSettings_Click" 
+                                       ToolTip="Đồng bộ và kiểm tra trạng thái giấy phép từ Supabase REST API" />
+                            <ui:Button x:Name="BtnOpenActivationDialog" Appearance="Primary" Icon="{ui:SymbolIcon Key24}" 
+                                       Content="Hộp thoại Kích hoạt" Padding="14,6" Click="BtnOpenActivationDialog_Click" 
+                                       ToolTip="Mở cửa sổ nhập mã bản quyền hoặc quét VietQR kích hoạt" />
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Hàng 2: Mã máy phần cứng (Machine ID) -->
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="Mã định danh máy tính (Machine ID):" FontWeight="Medium" />
+                            <TextBlock x:Name="TxtSettingsMachineId" Text="6A12-48D4-2666" FontFamily="Consolas, monospace" FontSize="13" FontWeight="Bold" 
+                                       Foreground="#0284C7" Margin="0,2,0,0" />
+                        </StackPanel>
+                        <ui:Button x:Name="BtnCopyMachineIdSettings" Grid.Column="1" Appearance="Secondary" Icon="{ui:SymbolIcon Copy24}" 
+                                   Content="Sao chép" Padding="10,4" Click="BtnCopyMachineIdSettings_Click" ToolTip="Sao chép mã máy tính để gửi cho Admin" />
+                    </Grid>
+                </StackPanel>
+            </ui:CardExpander>
+
+            <!-- Section 6: Thông tin Ứng dụng & Tác giả -->
             <ui:CardExpander Header="Thông tin Phần mềm &amp; Tác giả" 
                              Icon="{ui:SymbolIcon Info24}"
                              IsExpanded="True" Margin="0,0,0,16">

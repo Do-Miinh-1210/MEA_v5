@@ -29,6 +29,8 @@ namespace MatrixExamAI.Desktop.Views
             _configPath = Path.Combine(appData, "config.json");
 
             LoadCurrentConfig();
+            LoadLicenseInfo();
+            SupabaseLicenseService.Instance.LicenseChanged += (s, info) => Dispatcher.Invoke(() => UpdateLicenseUi(info));
         }
 
         private void LoadCurrentConfig()
@@ -497,6 +499,86 @@ namespace MatrixExamAI.Desktop.Views
             finally
             {
                 BtnCheckUpdateSettings.IsEnabled = true;
+            }
+        }
+
+        private void LoadLicenseInfo()
+        {
+            try
+            {
+                TxtSettingsMachineId.Text = HardwareInfoService.GetMachineId();
+                UpdateLicenseUi(SupabaseLicenseService.Instance.GetCurrentLicense());
+            }
+            catch { }
+        }
+
+        private void UpdateLicenseUi(LicenseInfo info)
+        {
+            TxtSettingsLicenseBadge.Text = info.BadgeText;
+            try
+            {
+                var brush = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(info.BadgeColor));
+                BadgeSettingsLicense.Background = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(30, brush.Color.R, brush.Color.G, brush.Color.B));
+                TxtSettingsLicenseBadge.Foreground = brush;
+            }
+            catch { }
+
+            string src = info.Offline ? "Cục bộ" : (info.FromCache ? "Cache" : "Supabase Cloud");
+            TxtSettingsLicenseOwner.Text = $"Chủ sở hữu: {info.Name} • Hạn dùng: {info.Expiry} • Trạng thái: {src}";
+        }
+
+        private void BtnCopyMachineIdSettings_Click(object sender, RoutedEventArgs e)
+        {
+            string mid = HardwareInfoService.GetMachineId();
+            try
+            {
+                SafeClipboard.SetText(mid);
+            }
+            catch
+            {
+                Clipboard.SetText(mid);
+            }
+
+            InfoSettingsNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
+            InfoSettingsNotification.Title = "Đã sao chép";
+            InfoSettingsNotification.Message = $"Mã máy ({mid}) đã được lưu vào bộ nhớ đệm.";
+            InfoSettingsNotification.IsOpen = true;
+        }
+
+        private void BtnOpenActivationDialog_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new ActivationDialog();
+            var parentWin = Window.GetWindow(this);
+            if (parentWin != null) dlg.Owner = parentWin;
+            dlg.ShowDialog();
+        }
+
+        private async void BtnCheckLicenseSettings_Click(object sender, RoutedEventArgs e)
+        {
+            BtnCheckLicenseSettings.IsEnabled = false;
+            InfoSettingsNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Informational;
+            InfoSettingsNotification.Title = "Đang kiểm tra";
+            InfoSettingsNotification.Message = "Đang đồng bộ trạng thái bản quyền với máy chủ Supabase Cloud...";
+            InfoSettingsNotification.IsOpen = true;
+
+            try
+            {
+                var res = await SupabaseLicenseService.Instance.CheckLicenseAsync(forceOnline: true);
+                UpdateLicenseUi(res);
+
+                InfoSettingsNotification.Severity = res.IsActive ? Wpf.Ui.Controls.InfoBarSeverity.Success : Wpf.Ui.Controls.InfoBarSeverity.Warning;
+                InfoSettingsNotification.Title = res.IsActive ? "Bản quyền Hợp lệ" : "Chưa kích hoạt";
+                InfoSettingsNotification.Message = res.Message;
+            }
+            catch (Exception ex)
+            {
+                InfoSettingsNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Error;
+                InfoSettingsNotification.Title = "Lỗi kết nối";
+                InfoSettingsNotification.Message = ex.Message;
+            }
+            finally
+            {
+                BtnCheckLicenseSettings.IsEnabled = true;
             }
         }
     }

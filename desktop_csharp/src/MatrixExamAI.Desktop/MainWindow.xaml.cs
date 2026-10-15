@@ -51,6 +51,11 @@ namespace MatrixExamAI.Desktop
             // Tự động thu gọn thanh menu khi màn hình hẹp (Split Screen / Snap)
             SizeChanged += MainWindow_SizeChanged;
 
+            // Đồng bộ trạng thái Bản quyền Supabase Cloud
+            UpdateStatusBarLicense(SupabaseLicenseService.Instance.GetCurrentLicense());
+            SupabaseLicenseService.Instance.LicenseChanged += (s, info) => Dispatcher.Invoke(() => UpdateStatusBarLicense(info));
+            _ = Task.Run(async () => await SupabaseLicenseService.Instance.CheckLicenseAsync(forceOnline: false));
+
             // Mặc định khởi tạo: mở trang Tổng quan Dashboard
             NavigateTo("dashboard");
         }
@@ -426,6 +431,26 @@ namespace MatrixExamAI.Desktop
             {
                 e.Handled = true;
             }
+        }
+
+        private void UpdateStatusBarLicense(LicenseInfo info)
+        {
+            if (TxtStatusBarLicense == null) return;
+            string owner = string.IsNullOrWhiteSpace(info.Name) ? "Giáo viên MEA" : info.Name;
+            if (owner.Length > 24) owner = owner[..22] + "...";
+            TxtStatusBarLicense.Text = $"Bản quyền: {owner} ({info.DisplayTier})";
+            try
+            {
+                var brush = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(info.BadgeColor));
+                TxtStatusBarLicense.Foreground = brush;
+            }
+            catch { }
+        }
+
+        private void TxtStatusBarLicense_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var dlg = new ActivationDialog { Owner = this };
+            dlg.ShowDialog();
         }
     }
 }
