@@ -478,30 +478,31 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
 
-                    <!-- Top Bar của khung soạn thảo -->
-                    <Border Grid.Row="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="10,6" Margin="0,0,0,8">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock Text="Chuyên đề trọng tâm:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                <TextBox x:Name="TxtExamTopic" Width="360" Height="26" VerticalContentAlignment="Center" FontSize="11"
-                                         Background="{DynamicResource ControlFillColorSecondaryBrush}"
-                                         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                                         BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-                                         Text="Khảo sát hàm số, Nguyên hàm - Tích phân, Hình học Oxyz" />
+                    <!-- Top Bar của khung soạn thảo (WrapPanel chống che chữ trên mọi độ phân giải) -->
+                    <Border Grid.Row="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{DynamicResource ControlElevationBorderBrush}" BorderThickness="1" CornerRadius="4" Padding="8,5" Margin="0,0,0,8">
+                        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,2,14,2">
+                                <TextBlock Text="Chuyên đề trọng tâm:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                <ui:TextBox x:Name="TxtExamTopic" Width="280" MinWidth="200" Height="30" Padding="8,3" VerticalContentAlignment="Center" FontSize="11"
+                                            Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                            Text="Khảo sát hàm số, Nguyên hàm - Tích phân, Hình học Oxyz" />
                             </StackPanel>
 
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                <TextBlock x:Name="TxtExamStats" Text="Sẵn sàng soạn đề" FontSize="11" 
-                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" Margin="0,0,10,0" />
-                                <CheckBox x:Name="ChkIncludeAnswers" IsChecked="True" Content="Kèm đáp án &amp; lời giải" FontSize="11" Margin="0,0,8,0" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,2,14,2">
+                                <ui:SymbolIcon Symbol="Info16" FontSize="13" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,0,4,0" VerticalAlignment="Center" />
+                                <TextBlock x:Name="TxtExamStats" Text="Sẵn sàng: Khởi tạo khung hoặc Nạp tệp ma trận" FontSize="11" 
+                                           Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center"
+                                           TextTrimming="CharacterEllipsis" MaxWidth="320"
+                                           ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" />
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,2,0,2">
+                                <CheckBox x:Name="ChkIncludeAnswers" IsChecked="True" Content="Kèm đáp án &amp; lời giải" FontSize="11" Margin="0,0,10,0" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                                 <CheckBox x:Name="ChkBraceMathMatrix" IsChecked="True" Content="Kẹp công thức ${...}$" FontSize="11" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
                             </StackPanel>
-                        </Grid>
+                        </WrapPanel>
                     </Border>
 
                     <!-- Khung Soạn thảo văn bản Word -->

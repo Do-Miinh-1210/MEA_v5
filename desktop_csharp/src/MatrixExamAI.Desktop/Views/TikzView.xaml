@@ -89,7 +89,7 @@
 
                     <!-- Ô NHẬP ĐỀ BÀI HOẶC MÔ TẢ HÌNH VẼ TRỰC TIẾP (Thu nhỏ gọn gàng) -->
                     <Grid Grid.Column="1" VerticalAlignment="Center">
-                        <ui:TextBox x:Name="TxtFigurePrompt" Height="26" FontSize="10.5" Padding="8,2"
+                        <ui:TextBox x:Name="TxtFigurePrompt" Height="28" FontSize="10.5" Padding="8,3"
                                     MaxWidth="280" HorizontalAlignment="Left"
                                     VerticalContentAlignment="Center"
                                     PlaceholderText="Nhập đề bài / mô tả hình..."

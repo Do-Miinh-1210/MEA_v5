@@ -25,7 +25,7 @@ namespace MatrixExamAI.Desktop.Views
             _currentMatrixData = MatrixWordExporter.CreateStandardHighSchoolMatrix("TOÁN HỌC", "12");
             RefreshMatrixGrids();
             TxtExamContent.Text = string.Empty;
-            TxtExamStats.Text = "Sẵn sàng: Bấm 'Khởi tạo khung ma trận BGD' hoặc 'Nạp tệp ma trận'";
+            TxtExamStats.Text = "Sẵn sàng: Khởi tạo khung hoặc Nạp tệp ma trận";
             InfoExamNotification.IsOpen = false;
         }
 
