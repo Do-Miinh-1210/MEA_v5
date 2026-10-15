@@ -395,6 +395,7 @@ public class GitHubUpdateService
         if not errorlevel 1 goto WAIT_PROC
 
         xcopy /s /e /y "%PATCH%\*" "%TARGET%\" >nul 2>&1
+        icacls "%TARGET%" /grant *S-1-5-32-545:(OI)(CI)M /t /q >nul 2>&1
         rmdir /s /q "%PATCH%" 2>nul
         if exist "{zipPath}" del /f /q "{zipPath}" 2>nul
 

@@ -54,6 +54,7 @@ Source: "word_addon\*.ps1"; DestDir: "{app}\word_addon"; Flags: ignoreversion; T
 Source: "word_addon\*.reg"; DestDir: "{app}\word_addon"; Flags: ignoreversion; Tasks: wordaddin
 
 [Dirs]
+Name: "{app}"; Permissions: users-full
 Name: "{app}\logs"; Permissions: users-full
 Name: "{app}\storage"; Permissions: users-full
 Name: "{app}\word_addon"; Permissions: users-full; Tasks: wordaddin
