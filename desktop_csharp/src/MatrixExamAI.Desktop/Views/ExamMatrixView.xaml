@@ -103,12 +103,13 @@
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,4">
                     <TextBlock Text="Mẫu cấu trúc:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="CmbMatrixPreset" Width="180" Height="30" SelectedIndex="0" FontSize="11" 
+                    <ComboBox x:Name="CmbMatrixPreset" Width="220" Height="30" SelectedIndex="0" FontSize="11" 
                               Padding="6,2,2,2" VerticalContentAlignment="Center"
                               SelectionChanged="CmbMatrixPreset_SelectionChanged"
                               ToolTip="Chọn mẫu ma trận chuẩn">
                         <ComboBoxItem Content="Toán 12 (BGD 22 câu)" Tag="TOAN_12" Padding="6,3" />
                         <ComboBoxItem Content="Tin học 11 (KNTT 28 câu)" Tag="TIN_11" Padding="6,3" />
+                        <ComboBoxItem Content="Mẫu Word (MaTran_Mau_BGD.docx)" Tag="DOCX_BGD" Padding="6,3" />
                     </ComboBox>
                 </StackPanel>
 

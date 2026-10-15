@@ -295,6 +295,29 @@ b) [Sai] Ý b
             result.MatrixData.Rows.Should().NotBeEmpty();
         }
 
+        [Fact]
+        public void MatrixDocumentParserService_ParseUserAddedDocxTemplate_ShouldSucceed()
+        {
+            string docxPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, @"..\..\..\..\..\data\matrix_templates\MaTran_Mau_BGD.docx"));
+            if (!File.Exists(docxPath))
+            {
+                // Fallback to absolute workspace path if relative structure differs in test runner
+                docxPath = @"M:\IT\Phần mềm biên soạn tài liệu\MEA_v5.0\data\matrix_templates\MaTran_Mau_BGD.docx";
+            }
+
+            File.Exists(docxPath).Should().BeTrue($"Target template file must exist at {docxPath}");
+
+            var result = MatrixDocumentParserService.ParseFile(docxPath);
+            result.Success.Should().BeTrue($"Parsing should succeed. Message: {result.Message}");
+            result.MatrixData.Should().NotBeNull();
+            result.MatrixData.Rows.Should().NotBeEmpty("Parsed matrix rows should not be empty");
+
+            // Verify compatibility
+            int totalQ = result.MatrixData.Rows.Sum(r => r.TotalQuestions);
+            totalQ.Should().BeGreaterThan(0, "Parsed matrix must have questions");
+            result.MatrixData.Specs.Should().NotBeNull();
+        }
+
         #endregion
 
         #region Helpers

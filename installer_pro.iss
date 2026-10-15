@@ -48,6 +48,7 @@ Name: "wordaddin"; Description: "Tích hợp Add-in vào Microsoft Word (Ribbon 
 [Files]
 Source: "desktop_csharp\publish\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "assets\*"; DestDir: "{app}\assets"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "data\matrix_templates\*"; DestDir: "{app}\data\matrix_templates"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "word_addon\src\MatrixExamAI.WordAddIn\bin\Debug\net48\*"; DestDir: "{app}\word_addon"; Flags: ignoreversion recursesubdirs createallsubdirs; Tasks: wordaddin
 Source: "word_addon\*.ps1"; DestDir: "{app}\word_addon"; Flags: ignoreversion; Tasks: wordaddin
 Source: "word_addon\*.reg"; DestDir: "{app}\word_addon"; Flags: ignoreversion; Tasks: wordaddin

@@ -21,11 +21,80 @@ namespace MatrixExamAI.Desktop.Views
         {
             InitializeComponent();
             _isViewLoaded = true;
+            PopulateMatrixPresetsFromFolder();
             _currentMatrixData = MatrixWordExporter.CreateStandardHighSchoolMatrix("TOÁN HỌC", "12");
             RefreshMatrixGrids();
             TxtExamContent.Text = string.Empty;
             TxtExamStats.Text = "Sẵn sàng: Bấm 'Khởi tạo khung ma trận BGD' hoặc 'Nạp tệp ma trận'";
             InfoExamNotification.IsOpen = false;
+        }
+
+        public static string GetMatrixTemplateDirectory()
+        {
+            string[] candidates = new[]
+            {
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "matrix_templates"),
+                Path.Combine(Directory.GetCurrentDirectory(), "data", "matrix_templates"),
+                Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, @"..\..\..\..\..\data\matrix_templates")),
+                @"M:\IT\Phần mềm biên soạn tài liệu\MEA_v5.0\data\matrix_templates"
+            };
+
+            foreach (var dir in candidates)
+            {
+                if (Directory.Exists(dir)) return dir;
+            }
+            return string.Empty;
+        }
+
+        private void PopulateMatrixPresetsFromFolder()
+        {
+            string templateDir = GetMatrixTemplateDirectory();
+            if (string.IsNullOrEmpty(templateDir) || !Directory.Exists(templateDir)) return;
+
+            var files = Directory.GetFiles(templateDir, "*.*")
+                .Where(f => f.EndsWith(".docx", StringComparison.OrdinalIgnoreCase) || f.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                .OrderBy(f => Path.GetFileName(f));
+
+            foreach (var file in files)
+            {
+                string fileName = Path.GetFileName(file);
+                if (fileName.Equals("MaTran_Mau_BGD.docx", StringComparison.OrdinalIgnoreCase)) continue;
+
+                CmbMatrixPreset.Items.Add(new ComboBoxItem
+                {
+                    Content = $"Mẫu: {fileName}",
+                    Tag = $"FILE:{file}",
+                    Padding = new Thickness(6, 3, 6, 3)
+                });
+            }
+        }
+
+        private void LoadMatrixTemplateFile(string filePath)
+        {
+            if (!File.Exists(filePath)) return;
+            var parseResult = MatrixDocumentParserService.ParseFile(filePath);
+            if (parseResult.Success && parseResult.MatrixData != null)
+            {
+                _currentMatrixData = parseResult.MatrixData;
+                SelectComboBoxItem(CmbSubject, _currentMatrixData.Subject);
+                SelectComboBoxItem(CmbGrade, _currentMatrixData.Grade);
+                SelectComboBoxItem(CmbDuration, $"{_currentMatrixData.DurationMinutes} phút");
+                RefreshMatrixGrids();
+                TxtExamContent.Text = !string.IsNullOrWhiteSpace(parseResult.ExtractedText) && parseResult.ExtractedText.Contains("Câu 1")
+                    ? parseResult.ExtractedText
+                    : BuildMatrixOutlineTemplate(_currentMatrixData.Subject, _currentMatrixData.Grade, _currentMatrixData.DurationMinutes);
+                int totalQ = _currentMatrixData.Rows?.Sum(r => r.TotalQuestions) ?? 0;
+                string fileName = Path.GetFileName(filePath);
+                TxtExamStats.Text = $"Đã nạp '{fileName}': {_currentMatrixData.Subject} {_currentMatrixData.Grade} ({totalQ} câu)";
+                InfoExamNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
+                InfoExamNotification.Title = $"Đã nạp thành công: {fileName}";
+                InfoExamNotification.Message = parseResult.Message;
+                InfoExamNotification.IsOpen = true;
+            }
+            else
+            {
+                MessageBox.Show($"Không thể nạp tệp ma trận: {parseResult.Message}", "Lỗi nạp tệp", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void RefreshMatrixGrids()
@@ -104,6 +173,24 @@ namespace MatrixExamAI.Desktop.Views
                     InfoExamNotification.Title = "Đã nạp mẫu ma trận Toán 12";
                     InfoExamNotification.Message = "Ma trận và bản đặc tả 22 câu chuẩn BGD đã sẵn sàng.";
                     InfoExamNotification.IsOpen = true;
+                }
+                else if (tag == "DOCX_BGD")
+                {
+                    string templateDir = GetMatrixTemplateDirectory();
+                    string targetFile = !string.IsNullOrEmpty(templateDir) ? Path.Combine(templateDir, "MaTran_Mau_BGD.docx") : "";
+                    if (File.Exists(targetFile))
+                    {
+                        LoadMatrixTemplateFile(targetFile);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không tìm thấy tệp MaTran_Mau_BGD.docx trong thư mục matrix_templates.", "Chưa tìm thấy tệp", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                else if (tag.StartsWith("FILE:", StringComparison.OrdinalIgnoreCase))
+                {
+                    string path = tag.Substring(5);
+                    LoadMatrixTemplateFile(path);
                 }
             }
         }
@@ -188,10 +275,12 @@ namespace MatrixExamAI.Desktop.Views
 
         private void BtnImportMatrixFile_Click(object sender, RoutedEventArgs e)
         {
+            string templateDir = GetMatrixTemplateDirectory();
             var dlg = new OpenFileDialog
             {
                 Title = "Nạp tệp ma trận đề thi",
-                Filter = "Tệp văn bản & tài liệu (*.docx;*.txt;*.json;*.pdf)|*.docx;*.txt;*.json;*.pdf|Tệp Word (*.docx)|*.docx|Tệp văn bản (*.txt)|*.txt|Tệp JSON (*.json)|*.json|Tất cả tệp (*.*)|*.*"
+                Filter = "Tệp văn bản & tài liệu (*.docx;*.txt;*.json;*.pdf)|*.docx;*.txt;*.json;*.pdf|Tệp Word (*.docx)|*.docx|Tệp văn bản (*.txt)|*.txt|Tệp JSON (*.json)|*.json|Tất cả tệp (*.*)|*.*",
+                InitialDirectory = !string.IsNullOrEmpty(templateDir) && Directory.Exists(templateDir) ? templateDir : Environment.CurrentDirectory
             };
 
             if (dlg.ShowDialog() == true)
