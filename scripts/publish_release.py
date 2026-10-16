@@ -27,9 +27,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.2"
-TITLE = "MatrixExamAI Pro v5.3.0.2 (Dark Theme Tab/Text Fix & Interactive Smart Prompt)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.2: Sửa triệt để lỗi mất chữ và vệt trắng tab trong giao diện tối (QuickGenDialog), ra mắt phân hệ Smart Prompt tương tác đầy đủ hỗ trợ phân tích đề tự nhiên và soạn nhanh câu hỏi AI."
+TAG = "v5.3.0.3"
+TITLE = "MatrixExamAI Pro v5.3.0.3 (TikZ Card Gallery View & Overwrite Code Feature)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.3: Ra mắt chế độ xem thẻ ảnh (Gallery View) cho kho hình TikZ, bổ sung chức năng cập nhật / lưu đè mã TikZ và ảnh trực tiếp, hoàn thiện độ tương phản và giao diện Dark/Light theme không bị mất chữ."
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)
