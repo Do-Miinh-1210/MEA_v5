@@ -27,6 +27,7 @@ jobs:
       - name: Publish MatrixExamAI Desktop (.NET 10)
         run: |
           dotnet publish desktop_csharp\src\MatrixExamAI.Desktop\MatrixExamAI.Desktop.csproj -c Release -r win-x64 --self-contained false -o desktop_csharp\publish
+          Compress-Archive -Path "desktop_csharp\publish\MatrixExamAI.Desktop.dll", "desktop_csharp\publish\MatrixExamAI.Desktop.exe", "desktop_csharp\publish\MatrixExamAI.Shared.dll", "desktop_csharp\publish\MatrixExamAI.Desktop.deps.json", "desktop_csharp\publish\MatrixExamAI.Desktop.runtimeconfig.json" -DestinationPath "dist\installer\MatrixExamAI_Patch.zip" -Force
 
       - name: Build Inno Setup Installer
         run: |
@@ -36,7 +37,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: dist/installer/MatrixExamAI_Pro_Setup.exe
+          files: |
+            dist/installer/MatrixExamAI_Pro_Setup.exe
+            dist/installer/MatrixExamAI_Patch.zip
           name: "MatrixExamAI Pro ${{ github.ref_name }}"
           draft: false
           prerelease: false
