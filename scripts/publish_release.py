@@ -27,9 +27,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.5"
-TITLE = "MatrixExamAI Pro v5.3.0.5 (Hotfix UI ComboBox & Layout Spacing Optimization)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.5: Sửa triệt để lỗi giao diện ComboBox dropdown (loại bỏ xung đột ToggleSwitch style gây đè núm tròn lên số/chữ); khắc phục lỗi cắt nhãn trên nút bấm; rà soát và chuẩn hóa dãn cách, padding, margin cho toàn bộ danh sách, dropdown và nhãn trên toàn bộ ứng dụng."
+TAG = "v5.3.0.6"
+TITLE = "MatrixExamAI Pro v5.3.0.6 (Vietnamese LaTeX Error Diagnostics & Auto-Healing Backslashes)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.6: Tự động dịch 100% lỗi biên dịch LaTeX sang tiếng Việt kèm hướng dẫn khắc phục chi tiết ngay trên giao diện; khắc phục triệt để lỗi nhân đôi dấu gạch chéo ngược (\\) trong công cụ tạo hình TikZ và bộ tiền xử lý AutoFix; tự động làm sạch cú pháp trước khi gửi sang pdflatex."
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)

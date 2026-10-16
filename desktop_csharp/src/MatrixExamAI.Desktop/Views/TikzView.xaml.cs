@@ -14,6 +14,7 @@ using MatrixExamAI.Desktop.Services;
 using MatrixExamAI.Shared.AI;
 using MatrixExamAI.Shared.Models;
 using MatrixExamAI.Shared.Tikz;
+using MatrixExamAI.Shared.Validation;
 
 namespace MatrixExamAI.Desktop.Views
 {
@@ -1228,6 +1229,14 @@ namespace MatrixExamAI.Desktop.Views
 
             try
             {
+                // Tự động tiền xử lý vá lỗi backslash nhân đôi hoặc preamble rác
+                string sanitizedCode = TikzPreflightValidator.AutoFix(code);
+                if (sanitizedCode != code && !string.IsNullOrWhiteSpace(sanitizedCode))
+                {
+                    code = sanitizedCode;
+                    SafeDispatch(() => TxtTikzCode.Text = sanitizedCode);
+                }
+
                 var compileReq = new TikzCompileRequest
                 {
                     TikzCode = code,

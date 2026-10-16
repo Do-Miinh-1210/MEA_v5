@@ -71,6 +71,9 @@ namespace MatrixExamAI.Shared.Validation
 
             string fixedCode = code;
 
+            // 0. Chuẩn hóa lỗi nhân đôi dấu gạch chéo ngược (\\draw -> \draw, \\begin -> \begin...)
+            fixedCode = Regex.Replace(fixedCode, @"\\\\([a-zA-Z]+|\{|\})", @"\$1");
+
             // 1. Loại bỏ \documentclass và preamble nếu người dùng vô tình dán cả tài liệu
             if (fixedCode.Contains("\\documentclass"))
             {

@@ -218,6 +218,67 @@ namespace MatrixExamAI.Desktop.Tests
             fixedCode.Should().Contain("\\draw (0,0) circle (2cm);");
         }
 
+        [Fact]
+        public void AutoFix_DoubleBackslashCommands_ShouldNormalizeToSingleBackslash()
+        {
+            string faultyCode = @"\\begin{tikzpicture}[scale=0.95, thick, blue]
+  \\draw[thick,brown!70!black] (-4,-0.2) rectangle (4,0);
+  \\node[blue!80,font=\\small] at (0,-0.7) {Mặt nước};
+  \\draw[<->,thick] (-2.8,3.7) -- (2.8,3.7) node[midway,above,font=\\small] {$L = 120\\text{ m}$};
+\\end{tikzpicture}";
+
+            string fixedCode = TikzPreflightValidator.AutoFix(faultyCode);
+
+            fixedCode.Should().NotContain(@"\\begin");
+            fixedCode.Should().NotContain(@"\\draw");
+            fixedCode.Should().NotContain(@"\\node");
+            fixedCode.Should().NotContain(@"\\text");
+            fixedCode.Should().NotContain(@"\\end");
+            fixedCode.Should().Contain(@"\begin{tikzpicture}");
+            fixedCode.Should().Contain(@"\draw[thick,brown!70!black]");
+            fixedCode.Should().Contain(@"\node[blue!80,font=\small]");
+            fixedCode.Should().Contain(@"\text{ m}");
+        }
+
+        [Fact]
+        public void LatexErrorLogParser_ThereIsNoLineHereToEnd_ShouldProvideVietnameseAndFixSuggestion()
+        {
+            string sampleLog = @"! LaTeX Error: There's no line here to end.
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+l.19   \draw[<->,thick] (3.3,0) -- (3.3,3.5) node [midway,right,font=\small] {$h = 35\\text{ m}$};";
+
+            var error = LatexErrorLogParser.ParseLog(sampleLog);
+
+            error.Should().NotBeNull();
+            error!.ErrorLine.Should().Be(19);
+            error.ErrorDescription.Should().Be("LaTeX Error: There's no line here to end.");
+            error.VietnameseDescription.Should().Contain("Lỗi ngắt dòng sai vị trí");
+            error.FixSuggestion.Should().Contain("nhân đôi dấu gạch chéo");
+            error.ToString().Should().Contain("[Dòng 19]");
+            error.ToString().Should().Contain("Lỗi ngắt dòng");
+            error.ToString().Should().Contain("Cách khắc phục");
+        }
+
+        [Fact]
+        public void TikzShapeBuilder_RealBridgeParabola_ShouldProduceCleanSingleBackslashCode()
+        {
+            string code = MatrixExamAI.Desktop.Views.TikzShapeBuilderDialog.GenerateTikzCodeForShape(
+                "real_bridge_parabola", "4", "3", "2", "A,B,C,D", true);
+
+            code.Should().NotBeNullOrWhiteSpace();
+            code.Should().NotContain(@"\\begin");
+            code.Should().NotContain(@"\\draw");
+            code.Should().NotContain(@"\\node");
+            code.Should().NotContain(@"\\text");
+            code.Should().NotContain(@"\\end");
+            code.Should().Contain(@"\begin{tikzpicture}");
+            code.Should().Contain(@"\draw");
+            code.Should().Contain(@"\node");
+            code.Should().Contain(@"\end{tikzpicture}");
+        }
+
         #endregion
     }
 }

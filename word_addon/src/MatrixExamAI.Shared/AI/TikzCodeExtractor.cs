@@ -26,6 +26,9 @@ namespace MatrixExamAI.Shared.AI
 
             string text = rawText!.Trim();
 
+            // Chuẩn hóa lỗi nhân đôi dấu gạch chéo ngược (\\draw -> \draw, \\begin -> \begin...)
+            text = Regex.Replace(text, @"\\\\([a-zA-Z]+|\{|\})", @"\$1");
+
             // 1. Trích xuất giữa \begin{document} và \end{document}
             var docMatch = DocumentRegex.Match(text);
             if (docMatch.Success)

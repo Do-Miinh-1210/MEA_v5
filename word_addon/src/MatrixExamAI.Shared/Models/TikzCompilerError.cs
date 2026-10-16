@@ -25,13 +25,28 @@ namespace MatrixExamAI.Shared.Models
         /// </summary>
         public string? RawLogExcerpt { get; set; }
 
+        /// <summary>
+        /// Mô tả chi tiết nguyên nhân lỗi dịch sang tiếng Việt dễ hiểu cho giáo viên.
+        /// </summary>
+        public string? VietnameseDescription { get; set; }
+
+        /// <summary>
+        /// Hướng dẫn cụ thể cách khắc phục lỗi bằng tiếng Việt.
+        /// </summary>
+        public string? FixSuggestion { get; set; }
+
         public override string ToString()
         {
-            if (ErrorLine > 0)
-            {
-                return $"[Dòng {ErrorLine}] {ErrorDescription}";
-            }
-            return ErrorDescription;
+            var desc = !string.IsNullOrWhiteSpace(VietnameseDescription)
+                ? VietnameseDescription
+                : ErrorDescription;
+
+            var linePrefix = ErrorLine > 0 ? $"[Dòng {ErrorLine}] " : string.Empty;
+            var suggestion = !string.IsNullOrWhiteSpace(FixSuggestion)
+                ? $" → Cách khắc phục: {FixSuggestion}"
+                : string.Empty;
+
+            return $"{linePrefix}{desc}.{suggestion}";
         }
     }
 }
