@@ -672,6 +672,17 @@ Câu 1. Tìm giá trị lớn nhất của hàm số y = -x^2 + 4x + 1.
                     Assert.NotNull(btnLoad);
                     Assert.NotNull(btnCopy);
                     Assert.NotNull(btnDelete);
+
+                    var listCards = GetControl<ListBox>(dlg, "ListCardsFigures");
+                    var rbCards = GetControl<RadioButton>(dlg, "RbViewCards");
+                    var rbList = GetControl<RadioButton>(dlg, "RbViewList");
+                    var btnUpdate = GetControl<FrameworkElement>(dlg, "BtnUpdateCode");
+
+                    Assert.NotNull(listCards);
+                    Assert.NotNull(rbCards);
+                    Assert.NotNull(rbList);
+                    Assert.NotNull(btnUpdate);
+                    Assert.True(rbCards.IsChecked);
                 }
                 catch (Exception ex)
                 {
@@ -684,6 +695,60 @@ Câu 1. Tìm giá trị lớn nhất của hàm số y = -x^2 + 4x + 1.
             thread.Join();
 
             Assert.Null(threadEx);
+        }
+
+        [Fact]
+        public void FigureBankService_CanUpdateAndOverwriteFigure()
+        {
+            string tempDir = Path.Combine(Path.GetTempPath(), "MEA_FigureBank_UpdateTest_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(tempDir);
+
+            try
+            {
+                FigureBankService.SetCustomDirectory(tempDir);
+
+                string originalTikz = @"\begin{tikzpicture}\draw (0,0) -- (1,1);\end{tikzpicture}";
+                var fig = FigureBankService.SaveFigure(
+                    tikzCode: originalTikz,
+                    title: "Hình gốc",
+                    description: "Mô tả gốc",
+                    tags: new List<string> { "2D" }
+                );
+
+                Assert.Equal("001", fig.Id);
+                Assert.Equal("Hình gốc", fig.Title);
+                Assert.Equal(originalTikz, FigureBankService.GetTikzCode(fig));
+
+                // Cập nhật mã và tiêu đề mới (Lưu đè)
+                string updatedTikz = @"\begin{tikzpicture}\draw[thick, red] (0,0) rectangle (3,3);\end{tikzpicture}";
+                byte[] mockPng = new byte[] { 0x89, 0x50, 0x4E, 0x47, 0x01, 0x02 };
+                bool success = FigureBankService.UpdateFigure(
+                    id: "001",
+                    newCode: updatedTikz,
+                    newTitle: "Hình chữ nhật đỏ (Đã cập nhật)",
+                    pngBytes: mockPng
+                );
+
+                Assert.True(success);
+
+                var allFigs = FigureBankService.ListFigures();
+                Assert.Single(allFigs);
+                var updatedEntry = allFigs[0];
+
+                Assert.Equal("001", updatedEntry.Id);
+                Assert.Equal("Hình chữ nhật đỏ (Đã cập nhật)", updatedEntry.Title);
+                Assert.Equal(updatedTikz.Length, updatedEntry.CharCount);
+                Assert.True(updatedEntry.HasPng);
+                Assert.Equal(updatedTikz, FigureBankService.GetTikzCode(updatedEntry));
+            }
+            finally
+            {
+                FigureBankService.SetCustomDirectory(null);
+                if (Directory.Exists(tempDir))
+                {
+                    try { Directory.Delete(tempDir, true); } catch { }
+                }
+            }
         }
 
         [Fact]

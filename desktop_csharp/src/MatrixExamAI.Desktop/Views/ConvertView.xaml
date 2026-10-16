@@ -132,7 +132,8 @@
                                    Icon="{ui:SymbolIcon DocumentArrowRight24}"
                                    Content="Xuất file Word" Height="28" Padding="10,0" FontWeight="SemiBold" FontSize="11"
                                    Click="BtnExportWord_Click" ToolTip="Xuất tài liệu Word chuẩn A4 (Ctrl + S)" />
-                        <ui:Button x:Name="BtnOpenInWord" Background="#1D4ED8" Foreground="White" 
+                        <ui:Button x:Name="BtnOpenInWord" Style="{DynamicResource AccentVibrantButtonStyle}"
+                                   Background="#1D4ED8" Foreground="White" 
                                    Icon="{ui:SymbolIcon Open24}" Visibility="Collapsed"
                                    Content="Mở Word" Height="28" Padding="10,0" Margin="0,0,4,0" FontWeight="SemiBold" FontSize="11"
                                    Click="BtnOpenInWord_Click" ToolTip="Mở ngay tài liệu đề thi chuẩn hóa trong Microsoft Word (Ctrl + Shift + O)" />
@@ -354,7 +355,8 @@
                         </Grid.ColumnDefinitions>
                         <WrapPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                             <!-- Nút Mở nguồn khi nguồn bị thu gọn (giống TikzView) -->
-                            <ui:Button x:Name="BtnExpandSource" Background="#0D9488" Foreground="White" FontWeight="Bold"
+                            <ui:Button x:Name="BtnExpandSource" Style="{DynamicResource AccentVibrantButtonStyle}"
+                                       Background="#0D9488" Foreground="White" FontWeight="Bold"
                                        Icon="{ui:SymbolIcon ArrowRight24}"
                                        Content="Mở nguồn" Height="24" Padding="8,0" FontSize="10" Margin="0,0,6,2"
                                        Visibility="Collapsed"

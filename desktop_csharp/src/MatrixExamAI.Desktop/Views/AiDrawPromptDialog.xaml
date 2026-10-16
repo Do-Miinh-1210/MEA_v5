@@ -155,24 +155,28 @@
 
         <!-- 4. Thanh nút hành động cố định ở đáy (Có nút Tạm dừng / Dừng lại) -->
         <DockPanel Grid.Row="4" LastChildFill="False">
-            <ui:Button x:Name="BtnClose" DockPanel.Dock="Left" Icon="{ui:SymbolIcon Dismiss24}" Content="Đóng" 
+            <ui:Button x:Name="BtnClose" DockPanel.Dock="Left" Style="{DynamicResource AccentVibrantButtonStyle}"
+                       Icon="{ui:SymbolIcon Dismiss24}" Content="Đóng" 
                        Background="#64748B" Foreground="White" FontWeight="SemiBold"
                        Height="32" Padding="16,0" FontSize="11" Click="BtnClose_Click" />
 
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                 <!-- Nút Tạm dừng / Dừng lại (Hiển thị nổi bật màu đỏ khi đang chạy AI) -->
-                <ui:Button x:Name="BtnStopAi" Icon="{ui:SymbolIcon Stop24}" Content="Tạm dừng / Dừng lại" 
+                <ui:Button x:Name="BtnStopAi" Style="{DynamicResource AccentVibrantButtonStyle}"
+                           Icon="{ui:SymbolIcon Stop24}" Content="Tạm dừng / Dừng lại" 
                            Background="#DC2626" Foreground="White" FontWeight="Bold"
                            Height="32" Padding="14,0" FontSize="11" Margin="0,0,8,0"
                            Visibility="Collapsed" Click="BtnStopAi_Click"
                            ToolTip="Dừng ngay lập tức tác vụ AI đang thực thi (hoặc nhấn phím Esc)" />
 
-                <ui:Button x:Name="BtnDescribeOnly" Icon="{ui:SymbolIcon DocumentBulletList24}" Content="Chỉ tạo mô tả (2 bước)" 
+                <ui:Button x:Name="BtnDescribeOnly" Style="{DynamicResource AccentVibrantButtonStyle}"
+                           Icon="{ui:SymbolIcon DocumentBulletList24}" Content="Chỉ tạo mô tả (2 bước)" 
                            Background="#475569" Foreground="White" FontWeight="SemiBold"
                            Height="32" Padding="14,0" FontSize="11" Margin="0,0,8,0"
                            Click="BtnDescribeOnly_Click" />
 
-                <ui:Button x:Name="BtnAutoDraw" Icon="{ui:SymbolIcon Sparkle24}" Content="Phân tích &amp; Tự động vẽ TikZ" 
+                <ui:Button x:Name="BtnAutoDraw" Style="{DynamicResource AccentVibrantButtonStyle}"
+                           Icon="{ui:SymbolIcon Sparkle24}" Content="Phân tích &amp; Tự động vẽ TikZ" 
                            Background="#059669" Foreground="White" FontWeight="Bold"
                            Height="32" Padding="18,0" FontSize="11.5"
                            Click="BtnAutoDraw_Click" />

@@ -375,6 +375,120 @@ namespace MatrixExamAI.Desktop.Tests.Views
             });
         }
 
+        [Fact]
+        public void TikzShapeBuilderDialog_InstantiatesOnSta_HasGenerousHeightAndCompileButton()
+        {
+            RunOnSta(() =>
+            {
+                var dlg = new TikzShapeBuilderDialog();
+                dlg.Should().NotBeNull();
+
+                var txtParam1 = dlg.FindName("TxtParam1") as Wpf.Ui.Controls.TextBox;
+                txtParam1.Should().NotBeNull();
+                txtParam1!.Height.Should().BeGreaterOrEqualTo(32, "Input box must not truncate text vertically");
+                txtParam1.VerticalContentAlignment.Should().Be(VerticalAlignment.Center);
+
+                var txtParam2 = dlg.FindName("TxtParam2") as Wpf.Ui.Controls.TextBox;
+                txtParam2.Should().NotBeNull();
+                txtParam2!.Height.Should().BeGreaterOrEqualTo(32);
+
+                var btnInsertAndCompile = dlg.FindName("BtnInsertAndCompile") as Wpf.Ui.Controls.Button;
+                btnInsertAndCompile.Should().NotBeNull();
+                btnInsertAndCompile!.Content.ToString().Should().Contain("Biên dịch");
+
+                var btnInsert = dlg.FindName("BtnInsert") as Wpf.Ui.Controls.Button;
+                btnInsert.Should().NotBeNull();
+
+                dlg.AutoCompileRequested.Should().BeFalse();
+
+                dlg.Close();
+            });
+        }
+
+        [Fact]
+        public void TikzView_TemplateCategories_AreSeparatedFromPersonalBank_AndButtonsHaveAccentStyle()
+        {
+            RunOnSta(() =>
+            {
+                var view = new TikzView();
+                view.Should().NotBeNull();
+
+                var cmbCategory = GetControl<ComboBox>(view, "CmbTemplateCategory");
+                cmbCategory.Should().NotBeNull();
+                var items = cmbCategory.ItemsSource as System.Collections.IEnumerable;
+                items.Should().NotBeNull();
+
+                var list = items!.Cast<TikzTemplateCategory>().ToList();
+                list.Count.Should().Be(5, "Category dropdown must strictly contain the 5 pedagogical curriculum categories");
+                list.Should().NotContain(c => c.Id == "user_figures", "Personal figure bank must be separated from template category dropdown");
+
+                var btnCompile = GetControl<Wpf.Ui.Controls.Button>(view, "BtnCompile");
+                btnCompile.Should().NotBeNull();
+                btnCompile.Style.Should().NotBeNull("Buttons must use AccentVibrantButtonStyle to prevent hover white-out");
+            });
+        }
+
+        [Fact]
+        public void TikzView_And_ShapeBuilderDialog_Support_BothLightAndDarkThemes_WithoutCrashing()
+        {
+            RunOnSta(() =>
+            {
+                // Verify TikzView instantiates cleanly on STA thread
+                var view = new TikzView();
+                view.Should().NotBeNull();
+
+                var btnCompile = GetControl<Wpf.Ui.Controls.Button>(view, "BtnCompile");
+                btnCompile.Should().NotBeNull();
+                btnCompile.Style.Should().NotBeNull("Compile button must have vibrant style");
+
+                // Verify TikzShapeBuilderDialog instantiates cleanly on STA thread
+                var dlg = new TikzShapeBuilderDialog();
+                dlg.Should().NotBeNull();
+                var btnInsertAndCompile = dlg.FindName("BtnInsertAndCompile") as Wpf.Ui.Controls.Button;
+                btnInsertAndCompile.Should().NotBeNull();
+                btnInsertAndCompile!.Style.Should().NotBeNull();
+
+                dlg.Close();
+            });
+        }
+
+        [Fact]
+        public void TikzView_TemplateFilter_HasSingleUnifiedSelector_AndCategoryIsCollapsed()
+        {
+            RunOnSta(() =>
+            {
+                var view = new TikzView();
+                view.Should().NotBeNull();
+
+                var cmbCategory = GetControl<ComboBox>(view, "CmbTemplateCategory");
+                cmbCategory.Should().NotBeNull();
+                cmbCategory.Visibility.Should().Be(Visibility.Collapsed, "Redundant category dropdown must be collapsed to prevent duplicate filtering");
+
+                var cmbItem = GetControl<ComboBox>(view, "CmbTemplateItem");
+                cmbItem.Should().NotBeNull();
+                cmbItem.Visibility.Should().Be(Visibility.Visible);
+                cmbItem.Width.Should().BeGreaterOrEqualTo(260);
+
+                var cmbDiagram = GetControl<ComboBox>(view, "CmbDiagramType");
+                cmbDiagram.Should().NotBeNull();
+
+                // Changing DiagramType must automatically filter templates in CmbTemplateItem
+                cmbDiagram.SelectedIndex = 3; // HinhKhongGian
+                var solidItems = cmbItem.ItemsSource as System.Collections.IEnumerable;
+                solidItems.Should().NotBeNull();
+                var solidList = solidItems!.Cast<TikzTemplate>().ToList();
+                solidList.Should().NotBeEmpty();
+                solidList.Should().OnlyContain(t => t.CategoryId == "solid_3d");
+
+                cmbDiagram.SelectedIndex = 2; // DoThi
+                var graphItems = cmbItem.ItemsSource as System.Collections.IEnumerable;
+                graphItems.Should().NotBeNull();
+                var graphList = graphItems!.Cast<TikzTemplate>().ToList();
+                graphList.Should().NotBeEmpty();
+                graphList.Should().OnlyContain(t => t.CategoryId == "graphs");
+            });
+        }
+
         #endregion
     }
 }

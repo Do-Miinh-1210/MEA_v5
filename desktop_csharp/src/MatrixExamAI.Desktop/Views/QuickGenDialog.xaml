@@ -50,19 +50,6 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
         </Style>
-
-        <!-- Style ComboBox & ComboBoxItem chống cắt chữ, giữ màu sắc chuẩn Dark/Light -->
-        <Style TargetType="ComboBox">
-            <Setter Property="MinHeight" Value="28" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="Padding" Value="6,2" />
-            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-        </Style>
-        <Style TargetType="ComboBoxItem">
-            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
-            <Setter Property="Padding" Value="8,4" />
-        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>

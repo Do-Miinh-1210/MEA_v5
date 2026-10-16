@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using MatrixExamAI.Desktop.Services;
 
@@ -31,19 +32,45 @@ namespace MatrixExamAI.Desktop.Views
             public string CreatedAtDisplay => !string.IsNullOrEmpty(Entry.CreatedAt) && Entry.CreatedAt.Length >= 10
                 ? Entry.CreatedAt[..10]
                 : Entry.CreatedAt;
+
+            public ImageSource? ThumbnailSource { get; set; }
+            public bool HasThumbnail => ThumbnailSource != null;
         }
 
+        public string LoadedFigureId { get; private set; } = string.Empty;
         public string LoadedTikzCode { get; private set; } = string.Empty;
         public string LoadedTitle { get; private set; } = string.Empty;
         public string? LoadedPngPath { get; private set; }
 
         private List<FigureItemViewModel> _allFigures = new();
         private FigureEntry? _selectedEntry;
+        private bool _isSyncingSelection = false;
 
         public FigureBankDialog()
         {
             InitializeComponent();
             Loaded += (s, e) => RefreshFigureList();
+        }
+
+        private static BitmapImage? LoadThumbnail(string? path)
+        {
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return null;
+            try
+            {
+                using var stream = File.OpenRead(path);
+                var bi = new BitmapImage();
+                bi.BeginInit();
+                bi.DecodePixelWidth = 200;
+                bi.CacheOption = BitmapCacheOption.OnLoad;
+                bi.StreamSource = stream;
+                bi.EndInit();
+                bi.Freeze();
+                return bi;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private void RefreshFigureList()
@@ -54,13 +81,21 @@ namespace MatrixExamAI.Desktop.Views
                 string source = (CmbSourceFilter.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "all";
 
                 var entries = FigureBankService.ListFigures(query, source);
-                _allFigures = entries.Select(e => new FigureItemViewModel { Entry = e }).ToList();
+                string bankDir = FigureBankService.GetFiguresDirectory();
 
+                _allFigures = entries.Select(e => new FigureItemViewModel
+                {
+                    Entry = e,
+                    ThumbnailSource = LoadThumbnail(e.GetPngPath(bankDir))
+                }).ToList();
+
+                ListCardsFigures.ItemsSource = _allFigures;
                 GridFigures.ItemsSource = _allFigures;
                 TxtTotalCount.Text = $"{entries.Count} hình vẽ";
 
                 if (_allFigures.Count > 0)
                 {
+                    ListCardsFigures.SelectedIndex = 0;
                     GridFigures.SelectedIndex = 0;
                 }
                 else
@@ -124,11 +159,47 @@ namespace MatrixExamAI.Desktop.Views
             }
         }
 
+        private void ListCardsFigures_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isSyncingSelection) return;
+            if (ListCardsFigures.SelectedItem is FigureItemViewModel vm)
+            {
+                _isSyncingSelection = true;
+                GridFigures.SelectedItem = vm;
+                _isSyncingSelection = false;
+                DisplayPreview(vm.Entry);
+            }
+        }
+
+        private void ListCardsFigures_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            BtnLoadFigure_Click(sender, e);
+        }
+
         private void GridFigures_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (_isSyncingSelection) return;
             if (GridFigures.SelectedItem is FigureItemViewModel vm)
             {
+                _isSyncingSelection = true;
+                ListCardsFigures.SelectedItem = vm;
+                _isSyncingSelection = false;
                 DisplayPreview(vm.Entry);
+            }
+        }
+
+        private void ViewMode_Changed(object sender, RoutedEventArgs e)
+        {
+            if (CardViewContainer == null || ListViewContainer == null) return;
+            if (RbViewCards?.IsChecked == true)
+            {
+                CardViewContainer.Visibility = Visibility.Visible;
+                ListViewContainer.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                CardViewContainer.Visibility = Visibility.Collapsed;
+                ListViewContainer.Visibility = Visibility.Visible;
             }
         }
 
@@ -165,6 +236,7 @@ namespace MatrixExamAI.Desktop.Views
                 return;
             }
 
+            LoadedFigureId = _selectedEntry.Id;
             LoadedTikzCode = code;
             LoadedTitle = _selectedEntry.Title;
 
@@ -177,6 +249,56 @@ namespace MatrixExamAI.Desktop.Views
 
             DialogResult = true;
             Close();
+        }
+
+        private void BtnUpdateCode_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedEntry == null)
+            {
+                MessageBox.Show("Vui lòng chọn hình cần cập nhật trong danh sách.", "Chưa chọn hình", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            string newCode = TxtTikzCodePreview.Text.Trim();
+            if (string.IsNullOrWhiteSpace(newCode))
+            {
+                MessageBox.Show("Mã TikZ không được để trống.", "Mã rỗng", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var confirm = MessageBox.Show(
+                $"Bạn có chắc chắn muốn LƯU ĐÈ (Cập nhật) mã TikZ cho hình '[{_selectedEntry.Id}] {_selectedEntry.Title}'?\nMã nguồn tệp figure_{_selectedEntry.Id}.tex sẽ được ghi đè bằng mã mới này.",
+                "Xác nhận lưu đè mã TikZ",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (confirm != MessageBoxResult.Yes) return;
+
+            bool updated = FigureBankService.UpdateFigure(_selectedEntry.Id, newCode);
+            if (updated)
+            {
+                MessageBox.Show($"Đã lưu đè thành công mã TikZ cho hình '[{_selectedEntry.Id}] {_selectedEntry.Title}'.", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                string currentId = _selectedEntry.Id;
+                RefreshFigureList();
+                SelectFigureById(currentId);
+            }
+            else
+            {
+                MessageBox.Show("Không thể cập nhật hình trong kho.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void SelectFigureById(string id)
+        {
+            var item = _allFigures.FirstOrDefault(f => f.Id == id);
+            if (item != null)
+            {
+                _isSyncingSelection = true;
+                ListCardsFigures.SelectedItem = item;
+                GridFigures.SelectedItem = item;
+                _isSyncingSelection = false;
+                DisplayPreview(item.Entry);
+            }
         }
 
         private void BtnCopyCode_Click(object sender, RoutedEventArgs e)

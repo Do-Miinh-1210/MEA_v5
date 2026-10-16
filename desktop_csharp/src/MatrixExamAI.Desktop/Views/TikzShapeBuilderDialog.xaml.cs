@@ -9,6 +9,7 @@ namespace MatrixExamAI.Desktop.Views
     public partial class TikzShapeBuilderDialog : Window
     {
         public string GeneratedTikzCode { get; private set; } = string.Empty;
+        public bool AutoCompileRequested { get; private set; }
         private string _currentShapeTag = "tri_right";
         private bool _isInitializing = true;
 
@@ -1099,6 +1100,15 @@ namespace MatrixExamAI.Desktop.Views
 
         private void BtnInsert_Click(object sender, RoutedEventArgs e)
         {
+            AutoCompileRequested = false;
+            GeneratedTikzCode = TxtResultCode.Text.Trim();
+            DialogResult = true;
+            Close();
+        }
+
+        private void BtnInsertAndCompile_Click(object sender, RoutedEventArgs e)
+        {
+            AutoCompileRequested = true;
             GeneratedTikzCode = TxtResultCode.Text.Trim();
             DialogResult = true;
             Close();
@@ -1106,6 +1116,7 @@ namespace MatrixExamAI.Desktop.Views
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
+            AutoCompileRequested = false;
             DialogResult = false;
             Close();
         }

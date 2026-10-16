@@ -338,6 +338,55 @@ namespace MatrixExamAI.Desktop.Services
             }
         }
 
+        public static bool UpdateFigure(
+            string id,
+            string newCode,
+            string? newTitle = null,
+            string? newDesc = null,
+            List<string>? newTags = null,
+            string? pngSourcePath = null,
+            byte[]? pngBytes = null)
+        {
+            if (string.IsNullOrWhiteSpace(id)) return false;
+            if (string.IsNullOrWhiteSpace(newCode)) return false;
+
+            lock (_lock)
+            {
+                var entries = LoadIndex();
+                var target = entries.FirstOrDefault(e => e.Id == id);
+                if (target == null) return false;
+
+                string bankDir = GetFiguresDirectory();
+                string texPath = target.GetTexPath(bankDir);
+                File.WriteAllText(texPath, newCode, Encoding.UTF8);
+
+                if (!string.IsNullOrEmpty(pngSourcePath) && File.Exists(pngSourcePath))
+                {
+                    string pngName = $"figure_{id}.png";
+                    string destPng = Path.Combine(bankDir, pngName);
+                    File.Copy(pngSourcePath, destPng, true);
+                    target.PngFilename = pngName;
+                }
+                else if (pngBytes != null && pngBytes.Length > 0)
+                {
+                    string pngName = $"figure_{id}.png";
+                    string destPng = Path.Combine(bankDir, pngName);
+                    File.WriteAllBytes(destPng, pngBytes);
+                    target.PngFilename = pngName;
+                }
+
+                target.CharCount = newCode.Length;
+                target.TikzHash = ComputeHash(newCode);
+
+                if (!string.IsNullOrWhiteSpace(newTitle)) target.Title = newTitle.Trim();
+                if (newDesc != null) target.Description = newDesc.Trim();
+                if (newTags != null) target.Tags = newTags;
+
+                SaveIndex(entries);
+                return true;
+            }
+        }
+
         private static string ComputeHash(string input)
         {
             using var sha = SHA256.Create();

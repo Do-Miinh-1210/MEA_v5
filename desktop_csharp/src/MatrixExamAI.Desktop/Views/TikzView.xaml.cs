@@ -22,6 +22,7 @@ namespace MatrixExamAI.Desktop.Views
         private readonly TikzCompilerService _compilerService = new TikzCompilerService();
         private byte[]? _attachedImageBytes;
         private string? _currentGeneratedImagePath;
+        private string? _currentLoadedFigureBankId;
         private string _lastFigurePrompt = string.Empty;
         private System.Threading.CancellationTokenSource? _activeTikzCts;
         private System.Windows.Threading.DispatcherTimer? _compileTimer;
@@ -229,19 +230,17 @@ namespace MatrixExamAI.Desktop.Views
                 // 1. Quét tự động nạp từ thư mục data/tikz_kb nếu có
                 TikzTemplateLibrary.AutoScanAndLoad();
 
-                // 2. Nạp kho 208 hình cá nhân của người dùng từ FigureBankService
+                // 2. Nạp kho 208 hình cá nhân của người dùng từ FigureBankService để sẵn sàng cho FigureBankDialog
                 LoadUserFiguresIntoLibrary();
 
+                // Danh mục nhóm chuyên đề chuẩn THPT
                 var cats = new List<TikzTemplateCategory>(TikzTemplateLibrary.Categories);
-                if (TikzTemplateLibrary.UserFiguresCategory.Templates.Count > 0)
-                {
-                    cats.Add(TikzTemplateLibrary.UserFiguresCategory);
-                }
 
                 CmbTemplateCategory.ItemsSource = cats;
                 CmbTemplateCategory.DisplayMemberPath = "Name";
-                CmbTemplateCategory.SelectedIndex = -1;
-                CmbTemplateItem.ItemsSource = null;
+                
+                // Nạp danh sách mẫu theo Thể loại đang chọn (Mặc định: Đồ thị hàm số)
+                FilterTemplatesByDiagramType("DoThi");
                 CmbTemplateItem.SelectedIndex = -1;
                 TxtTikzCode.Text = string.Empty;
             }
@@ -276,6 +275,64 @@ namespace MatrixExamAI.Desktop.Views
                     {
                         TikzTemplateLibrary.LoadUserFigures(figures);
                     }
+                }
+            }
+            catch { }
+        }
+
+        private void CmbDiagramType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_suppressTemplateAutoFill) return;
+            if (CmbDiagramType.SelectedItem is ComboBoxItem item && item.Tag is string tag)
+            {
+                FilterTemplatesByDiagramType(tag);
+            }
+        }
+
+        private void FilterTemplatesByDiagramType(string tag)
+        {
+            try
+            {
+                string targetCatId;
+                switch (tag)
+                {
+                    case "BBT":
+                    case "BXD":
+                        targetCatId = "tables";
+                        break;
+                    case "DoThi":
+                        targetCatId = "graphs";
+                        break;
+                    case "HinhKhongGian":
+                        targetCatId = "solid_3d";
+                        break;
+                    case "Custom":
+                    default:
+                        targetCatId = "plane_2d";
+                        break;
+                }
+
+                var cat = TikzTemplateLibrary.Categories.FirstOrDefault(c => c.Id == targetCatId);
+                if (cat != null)
+                {
+                    if (CmbTemplateCategory != null)
+                    {
+                        CmbTemplateCategory.SelectedItem = cat;
+                    }
+
+                    IEnumerable<TikzTemplate> templates = cat.Templates;
+                    if (tag == "BXD")
+                    {
+                        templates = templates.Where(t => t.Tags.Any(x => x.Contains("bxd", StringComparison.OrdinalIgnoreCase) || x.Contains("xét dấu", StringComparison.OrdinalIgnoreCase)));
+                    }
+                    else if (tag == "BBT")
+                    {
+                        templates = templates.Where(t => !t.Tags.Any(x => x.Contains("bxd", StringComparison.OrdinalIgnoreCase) || x.Contains("xét dấu", StringComparison.OrdinalIgnoreCase)));
+                    }
+
+                    CmbTemplateItem.ItemsSource = templates.ToList();
+                    CmbTemplateItem.DisplayMemberPath = "Title";
+                    CmbTemplateItem.SelectedIndex = -1;
                 }
             }
             catch { }
@@ -737,11 +794,55 @@ namespace MatrixExamAI.Desktop.Views
                 return;
             }
 
+            bool hasImage = !string.IsNullOrEmpty(_currentGeneratedImagePath) && File.Exists(_currentGeneratedImagePath);
+
+            // Nếu hình này được nạp từ kho trước đó, hỏi người dùng có muốn lưu đè không
+            if (!string.IsNullOrEmpty(_currentLoadedFigureBankId))
+            {
+                var askOverwrite = MessageBox.Show(
+                    $"Hình vẽ này được nạp từ kho với mã [#{_currentLoadedFigureBankId}].\n\n" +
+                    "Bạn có muốn LƯU ĐÈ (Cập nhật) mã và ảnh mới vào hình này không?\n\n" +
+                    $"• Chọn [Yes] để LƯU ĐÈ vào hình [#{_currentLoadedFigureBankId}].\n" +
+                    "• Chọn [No] để LƯU THÀNH HÌNH MỚI.\n" +
+                    "• Chọn [Cancel] để HỦY BỎ.",
+                    "Lựa chọn lưu trữ hình TikZ",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Question);
+
+                if (askOverwrite == MessageBoxResult.Cancel) return;
+
+                if (askOverwrite == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        string title = !string.IsNullOrWhiteSpace(TxtFigurePrompt.Text) ? TxtFigurePrompt.Text.Trim() : null!;
+                        bool updated = FigureBankService.UpdateFigure(
+                            id: _currentLoadedFigureBankId,
+                            newCode: code,
+                            newTitle: title,
+                            pngSourcePath: hasImage ? _currentGeneratedImagePath : null
+                        );
+
+                        if (updated)
+                        {
+                            InfoTikzNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
+                            InfoTikzNotification.Title = "Đã lưu đè thành công";
+                            InfoTikzNotification.Message = $"Đã cập nhật mã và ảnh mới cho hình [#{_currentLoadedFigureBankId}] vào kho.";
+                            InfoTikzNotification.IsOpen = true;
+                            return;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Lỗi lưu đè: {ex.Message}", "Lỗi lưu kho", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                }
+            }
+
             string defaultTitle = !string.IsNullOrWhiteSpace(TxtFigurePrompt.Text)
                 ? TxtFigurePrompt.Text.Trim()
                 : $"Hình TikZ {DateTime.Now:yyyy-MM-dd HH:mm}";
-
-            bool hasImage = !string.IsNullOrEmpty(_currentGeneratedImagePath) && File.Exists(_currentGeneratedImagePath);
 
             var dlg = new SaveFigureDialog(defaultTitle, hasImage: hasImage)
             {
@@ -760,6 +861,8 @@ namespace MatrixExamAI.Desktop.Views
                         source: "manual",
                         pngSourcePath: dlg.ResultSavePng && hasImage ? _currentGeneratedImagePath : null
                     );
+
+                    _currentLoadedFigureBankId = entry.Id;
 
                     InfoTikzNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
                     InfoTikzNotification.Title = "Đã lưu vào kho hình";
@@ -782,6 +885,7 @@ namespace MatrixExamAI.Desktop.Views
 
             if (dlg.ShowDialog() == true && !string.IsNullOrWhiteSpace(dlg.LoadedTikzCode))
             {
+                _currentLoadedFigureBankId = dlg.LoadedFigureId;
                 TxtTikzCode.Text = dlg.LoadedTikzCode;
                 TxtFigurePrompt.Text = dlg.LoadedTitle;
 
@@ -1037,6 +1141,39 @@ namespace MatrixExamAI.Desktop.Views
             }
         }
 
+        private void BtnColor_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is string colorCode)
+            {
+                InsertSnippetIntoTikzEditor(colorCode);
+            }
+        }
+
+        private void BtnFill_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is string fillCode)
+            {
+                InsertSnippetIntoTikzEditor(fillCode);
+            }
+        }
+
+        private void InsertSnippetIntoTikzEditor(string snippet)
+        {
+            if (TxtTikzCode == null) return;
+            int caretIndex = TxtTikzCode.SelectionStart;
+            if (caretIndex >= 0 && caretIndex <= TxtTikzCode.Text.Length)
+            {
+                TxtTikzCode.Text = TxtTikzCode.Text.Insert(caretIndex, snippet);
+                TxtTikzCode.SelectionStart = caretIndex + snippet.Length;
+            }
+            else
+            {
+                TxtTikzCode.Text += snippet;
+                TxtTikzCode.SelectionStart = TxtTikzCode.Text.Length;
+            }
+            TxtTikzCode.Focus();
+        }
+
         private void BtnShapeBuilder_Click(object sender, RoutedEventArgs e)
         {
             var dlg = new TikzShapeBuilderDialog
@@ -1046,7 +1183,10 @@ namespace MatrixExamAI.Desktop.Views
             if (dlg.ShowDialog() == true && !string.IsNullOrWhiteSpace(dlg.GeneratedTikzCode))
             {
                 TxtTikzCode.Text = dlg.GeneratedTikzCode;
-                BtnCompile_Click(this, new RoutedEventArgs());
+                if (dlg.AutoCompileRequested)
+                {
+                    BtnCompile_Click(this, new RoutedEventArgs());
+                }
             }
         }
 
@@ -1313,26 +1453,86 @@ namespace MatrixExamAI.Desktop.Views
             var win = new Window
             {
                 Title = title,
-                Width = 460,
-                Height = 175,
+                Width = 480,
+                SizeToContent = SizeToContent.Height,
                 WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                ResizeMode = ResizeMode.NoResize
+                ResizeMode = ResizeMode.NoResize,
+                WindowStyle = WindowStyle.SingleBorderWindow
             };
-            var sp = new StackPanel { Margin = new Thickness(14) };
-            var txtPrompt = new TextBlock { Text = promptText, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 8), FontSize = 11 };
-            var tb = new TextBox { Height = 28, FontSize = 11, Padding = new Thickness(4) };
-            var btnPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 12, 0, 0) };
-            var btnOk = new Button { Content = "Đồng ý", Width = 75, Height = 26, Margin = new Thickness(0, 0, 6, 0), IsDefault = true };
-            var btnCancel = new Button { Content = "Hủy", Width = 75, Height = 26, IsCancel = true };
+
+            win.SetResourceReference(Window.BackgroundProperty, "ApplicationBackgroundBrush");
+            win.SetResourceReference(System.Windows.Documents.TextElement.ForegroundProperty, "TextFillColorPrimaryBrush");
+
+            var sp = new StackPanel { Margin = new Thickness(16, 14, 16, 16) };
+            
+            var txtPrompt = new TextBlock
+            {
+                Text = promptText,
+                TextWrapping = TextWrapping.Wrap,
+                Margin = new Thickness(0, 0, 0, 10),
+                FontSize = 11.5,
+                LineHeight = 17
+            };
+            txtPrompt.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
+
+            var tb = new Wpf.Ui.Controls.TextBox
+            {
+                MinHeight = 32,
+                FontSize = 11.5,
+                Padding = new Thickness(8, 4, 8, 4),
+                VerticalContentAlignment = VerticalAlignment.Center,
+                PlaceholderText = "Nhập yêu cầu chỉnh sửa..."
+            };
+
+            var btnPanel = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Margin = new Thickness(0, 14, 0, 0)
+            };
+
+            var btnOk = new Button
+            {
+                Content = "Đồng ý",
+                MinWidth = 85,
+                Height = 30,
+                Margin = new Thickness(0, 0, 8, 0),
+                IsDefault = true,
+                Background = new SolidColorBrush(Color.FromRgb(37, 99, 235)),
+                Foreground = Brushes.White,
+                FontWeight = FontWeights.SemiBold,
+                FontSize = 11,
+                BorderThickness = new Thickness(0),
+                Cursor = System.Windows.Input.Cursors.Hand
+            };
+
+            var btnCancel = new Button
+            {
+                Content = "Hủy",
+                MinWidth = 80,
+                Height = 30,
+                IsCancel = true,
+                Background = new SolidColorBrush(Color.FromArgb(35, 128, 128, 128)),
+                Foreground = (Brush)Application.Current.TryFindResource("TextFillColorPrimaryBrush") ?? Brushes.White,
+                FontSize = 11,
+                BorderThickness = new Thickness(1),
+                Cursor = System.Windows.Input.Cursors.Hand
+            };
+            btnCancel.SetResourceReference(Button.BorderBrushProperty, "ControlStrokeColorDefaultBrush");
+
             btnOk.Click += (s, e) => { win.DialogResult = true; win.Close(); };
             btnCancel.Click += (s, e) => { win.DialogResult = false; win.Close(); };
+
             btnPanel.Children.Add(btnOk);
             btnPanel.Children.Add(btnCancel);
+
             sp.Children.Add(txtPrompt);
             sp.Children.Add(tb);
             sp.Children.Add(btnPanel);
+
             win.Content = sp;
             tb.Focus();
+
             return win.ShowDialog() == true ? tb.Text.Trim() : null;
         }
 

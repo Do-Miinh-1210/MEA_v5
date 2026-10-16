@@ -40,27 +40,28 @@
             </DockPanel>
         </Border>
 
-        <!-- 2. Thanh tìm kiếm và bộ lọc nguồn -->
+        <!-- 2. Thanh tìm kiếm, bộ lọc nguồn và chế độ xem -->
         <ui:Card Grid.Row="1" Margin="0,0,0,8" Padding="10,6">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <!-- Search Input -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <ui:SymbolIcon Symbol="Search24" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
-                    <ui:TextBox x:Name="TxtSearchQuery" Width="320" Height="26" FontSize="11" Padding="6,2"
+                    <ui:TextBox x:Name="TxtSearchQuery" Width="290" Height="26" FontSize="11" Padding="6,2"
                                 PlaceholderText="Tìm theo tên, thẻ tags (VD: 3D, chop, do_thi, tkz-tab)..."
                                 TextChanged="TxtSearchQuery_TextChanged" />
                 </StackPanel>
 
                 <!-- Filter Nguồn -->
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,14,0">
                     <TextBlock Text="Nguồn:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="CmbSourceFilter" Width="140" Height="26" SelectedIndex="0" FontSize="10.5"
+                    <ComboBox x:Name="CmbSourceFilter" Width="135" Height="26" SelectedIndex="0" FontSize="10.5"
                               SelectionChanged="CmbSourceFilter_SelectionChanged">
                         <ComboBoxItem Content="Tất cả nguồn" Tag="all" />
                         <ComboBoxItem Content="🤖 AI tạo" Tag="ai" />
@@ -70,34 +71,140 @@
                         <ComboBoxItem Content="💾 Tự lưu render" Tag="rendered" />
                     </ComboBox>
                 </StackPanel>
+
+                <!-- Chuyển đổi hiển thị: Thẻ ảnh vs Danh sách -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Dạng xem:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <RadioButton x:Name="RbViewCards" Content="Thẻ ảnh" IsChecked="True" FontSize="10.5" FontWeight="SemiBold"
+                                 Checked="ViewMode_Changed" Margin="0,0,8,0" VerticalAlignment="Center" />
+                    <RadioButton x:Name="RbViewList" Content="Danh sách" FontSize="10.5" FontWeight="SemiBold"
+                                 Checked="ViewMode_Changed" VerticalAlignment="Center" />
+                </StackPanel>
             </Grid>
         </ui:Card>
 
-        <!-- 3. Khu vực Split View: Danh sách hình (Trái) & Xem trước (Phải) -->
+        <!-- 3. Khu vực Split View: Thẻ ảnh/Danh sách hình (Trái) & Xem trước (Phải) -->
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*" MinWidth="320" />
+                <ColumnDefinition Width="3.5*" MinWidth="340" />
                 <ColumnDefinition Width="8" />
-                <ColumnDefinition Width="4*" MinWidth="350" />
+                <ColumnDefinition Width="3.5*" MinWidth="350" />
             </Grid.ColumnDefinitions>
 
-            <!-- Cột trái: Bảng danh sách hình vẽ -->
-            <ui:Card Grid.Column="0" Padding="4">
-                <DataGrid x:Name="GridFigures" AutoGenerateColumns="False" IsReadOnly="True"
-                          SelectionMode="Single" SelectionUnit="FullRow"
-                          GridLinesVisibility="Horizontal" HeadersVisibility="Column"
-                          BorderThickness="0" Background="Transparent"
-                          SelectionChanged="GridFigures_SelectionChanged"
-                          MouseDoubleClick="GridFigures_MouseDoubleClick">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="45" />
-                        <DataGridTextColumn Header="Tên hình vẽ" Binding="{Binding Title}" Width="*" />
-                        <DataGridTextColumn Header="Nguồn" Binding="{Binding Source}" Width="75" />
-                        <DataGridTextColumn Header="Tags" Binding="{Binding TagsDisplay}" Width="100" />
-                        <DataGridTextColumn Header="Ngày tạo" Binding="{Binding CreatedAtDisplay}" Width="80" />
-                    </DataGrid.Columns>
-                </DataGrid>
-            </ui:Card>
+            <!-- Cột trái: Thẻ ảnh (Gallery) hoặc Danh sách (Table) -->
+            <Grid Grid.Column="0">
+                <!-- Chế độ 1: Thẻ ảnh (Cards Gallery View) -->
+                <ui:Card x:Name="CardViewContainer" Padding="4">
+                    <ListBox x:Name="ListCardsFigures"
+                             BorderThickness="0" Background="Transparent"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             SelectionMode="Single"
+                             SelectionChanged="ListCardsFigures_SelectionChanged"
+                             MouseDoubleClick="ListCardsFigures_MouseDoubleClick">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="4" />
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border x:Name="CardBorder" CornerRadius="8"
+                                                    BorderThickness="1.5" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                                    Padding="0" Cursor="Hand" SnapsToDevicePixels="True">
+                                                <ContentPresenter />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="CardBorder" Property="BorderBrush" Value="#0EA5E9" />
+                                                    <Setter TargetName="CardBorder" Property="Background" Value="{DynamicResource CardBackgroundFillColorSecondaryBrush}" />
+                                                </Trigger>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="CardBorder" Property="BorderBrush" Value="#0891B2" />
+                                                    <Setter TargetName="CardBorder" Property="BorderThickness" Value="2" />
+                                                    <Setter TargetName="CardBorder" Property="Background" Value="{DynamicResource CardBackgroundFillColorSecondaryBrush}" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Width="138" Height="165" CornerRadius="8" ClipToBounds="True">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="105" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Khung ảnh thu nhỏ nền sáng tương phản cao -->
+                                        <Border Grid.Row="0" Background="#F8FAFC" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}">
+                                            <Grid>
+                                                <!-- Placeholder khi chưa có ảnh render -->
+                                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <ui:SymbolIcon Symbol="Image24" FontSize="28" Foreground="#CBD5E1" HorizontalAlignment="Center" />
+                                                    <TextBlock Text="TikZ" FontSize="9" FontWeight="Bold" Foreground="#94A3B8" HorizontalAlignment="Center" Margin="0,2,0,0" />
+                                                </StackPanel>
+                                                <!-- Ảnh thu nhỏ render thực tế -->
+                                                <Image Source="{Binding ThumbnailSource}" Stretch="Uniform" Margin="4"
+                                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Thông tin tên hình và ID -->
+                                        <Grid Grid.Row="1" Margin="6,4,6,4">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="*" />
+                                            </Grid.RowDefinitions>
+                                            <DockPanel Grid.Row="0" LastChildFill="False">
+                                                <Border Background="#0891B2" CornerRadius="4" Padding="5,1" DockPanel.Dock="Left">
+                                                    <TextBlock Text="{Binding Id, StringFormat='#{0}'}" FontSize="9.5" FontWeight="Bold" Foreground="White" />
+                                                </Border>
+                                                <TextBlock Text="{Binding Source}" FontSize="9" Foreground="{DynamicResource TextFillColorTertiaryBrush}"
+                                                           DockPanel.Dock="Right" VerticalAlignment="Center" />
+                                            </DockPanel>
+                                            <TextBlock Grid.Row="1" Text="{Binding Title}" FontSize="10.5" FontWeight="SemiBold"
+                                                       TextTrimming="CharacterEllipsis" TextWrapping="Wrap" MaxHeight="32"
+                                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,3,0,0"
+                                                       VerticalAlignment="Center" />
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ui:Card>
+
+                <!-- Chế độ 2: Bảng danh sách truyền thống -->
+                <ui:Card x:Name="ListViewContainer" Padding="4" Visibility="Collapsed">
+                    <DataGrid x:Name="GridFigures" AutoGenerateColumns="False" IsReadOnly="True"
+                              SelectionMode="Single" SelectionUnit="FullRow"
+                              GridLinesVisibility="Horizontal" HeadersVisibility="Column"
+                              BorderThickness="0" Background="Transparent"
+                              SelectionChanged="GridFigures_SelectionChanged"
+                              MouseDoubleClick="GridFigures_MouseDoubleClick">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="45" />
+                            <DataGridTextColumn Header="Tên hình vẽ" Binding="{Binding Title}" Width="*" />
+                            <DataGridTextColumn Header="Nguồn" Binding="{Binding Source}" Width="75" />
+                            <DataGridTextColumn Header="Tags" Binding="{Binding TagsDisplay}" Width="100" />
+                            <DataGridTextColumn Header="Ngày tạo" Binding="{Binding CreatedAtDisplay}" Width="80" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ui:Card>
+            </Grid>
 
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="Transparent" />
 
@@ -113,7 +220,7 @@
                     <DockPanel Grid.Row="0" Margin="0,0,0,6" LastChildFill="False">
                         <StackPanel DockPanel.Dock="Left" VerticalAlignment="Center">
                             <TextBlock x:Name="TxtSelectedTitle" Text="Chưa chọn hình vẽ" FontWeight="Bold" FontSize="12" />
-                            <TextBlock x:Name="TxtSelectedMeta" Text="Nhấp chọn một hình bên danh sách để xem trước" FontSize="10" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <TextBlock x:Name="TxtSelectedMeta" Text="Nhấp chọn một thẻ ảnh để xem trước" FontSize="10" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         </StackPanel>
 
                         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
@@ -145,9 +252,36 @@
                         </TabItem>
 
                         <TabItem Header="📋 Mã LaTeX TikZ">
-                            <ui:TextBox x:Name="TxtTikzCodePreview" AcceptsReturn="True" TextWrapping="Wrap"
-                                        IsReadOnly="True" VerticalContentAlignment="Top"
-                                        FontFamily="Consolas, 'Cascadia Code', monospace" FontSize="10.5" />
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <!-- Toolbar Cập nhật / Lưu đè mã TikZ -->
+                                <Border Grid.Row="0" Margin="0,0,0,6" Padding="6,4"
+                                        Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                                        BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                                        BorderThickness="1" CornerRadius="4">
+                                    <DockPanel LastChildFill="False">
+                                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                                            <ui:SymbolIcon Symbol="Edit24" FontSize="14" Foreground="#0891B2" Margin="0,0,6,0" VerticalAlignment="Center" />
+                                            <TextBlock Text="Có thể chỉnh sửa mã bên dưới rồi bấm Lưu đè để cập nhật vào kho" FontSize="10"
+                                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                        <ui:Button x:Name="BtnUpdateCode" DockPanel.Dock="Right" Style="{DynamicResource AccentVibrantButtonStyle}"
+                                                   Icon="{ui:SymbolIcon Save24}" Content="Lưu đè mã TikZ"
+                                                   Background="#0891B2" Foreground="White" FontWeight="Bold"
+                                                   Height="24" Padding="10,0" FontSize="10.5"
+                                                   Click="BtnUpdateCode_Click"
+                                                   ToolTip="Ghi đè mã TikZ mới này vào kho cho hình đang chọn" />
+                                    </DockPanel>
+                                </Border>
+
+                                <ui:TextBox Grid.Row="1" x:Name="TxtTikzCodePreview" AcceptsReturn="True" TextWrapping="Wrap"
+                                            IsReadOnly="False" VerticalContentAlignment="Top"
+                                            FontFamily="Consolas, 'Cascadia Code', monospace" FontSize="10.5" />
+                            </Grid>
                         </TabItem>
                     </TabControl>
                 </Grid>
@@ -157,24 +291,28 @@
         <!-- 4. Thanh nút hành động cố định ở đáy -->
         <DockPanel Grid.Row="3" Margin="0,10,0,0" LastChildFill="False">
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                <ui:Button x:Name="BtnLoadFigure" Icon="{ui:SymbolIcon ArrowDownload24}" Content="Nạp vào trình soạn thảo"
+                <ui:Button x:Name="BtnLoadFigure" Style="{DynamicResource AccentVibrantButtonStyle}"
+                           Icon="{ui:SymbolIcon ArrowDownload24}" Content="Nạp vào trình soạn thảo"
                            Background="#10B981" Foreground="White" FontWeight="Bold"
                            Height="30" Padding="16,0" FontSize="11" Margin="0,0,6,0"
                            Click="BtnLoadFigure_Click" ToolTip="Nạp mã TikZ và ảnh sẵn có vào phân hệ vẽ hình (Enter hoặc Double-click)" />
 
-                <ui:Button x:Name="BtnCopyCode" Icon="{ui:SymbolIcon Copy24}" Content="Sao chép mã"
+                <ui:Button x:Name="BtnCopyCode" Style="{DynamicResource AccentVibrantButtonStyle}"
+                           Icon="{ui:SymbolIcon Copy24}" Content="Sao chép mã"
                            Background="#3B82F6" Foreground="White" FontWeight="SemiBold"
                            Height="30" Padding="12,0" FontSize="10.5" Margin="0,0,6,0"
                            Click="BtnCopyCode_Click" ToolTip="Sao chép mã TikZ vào Clipboard (Ctrl+C)" />
 
-                <ui:Button x:Name="BtnDeleteFigure" Icon="{ui:SymbolIcon Delete24}" Content="Xóa hình"
+                <ui:Button x:Name="BtnDeleteFigure" Style="{DynamicResource AccentVibrantButtonStyle}"
+                           Icon="{ui:SymbolIcon Delete24}" Content="Xóa hình"
                            Background="#EF4444" Foreground="White" FontWeight="SemiBold"
                            Height="30" Padding="10,0" FontSize="10.5"
                            Click="BtnDeleteFigure_Click" ToolTip="Xóa vĩnh viễn hình vẽ này khỏi kho" />
             </StackPanel>
 
             <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-                <ui:Button x:Name="BtnClose" Icon="{ui:SymbolIcon Dismiss24}" Content="Đóng"
+                <ui:Button x:Name="BtnClose" Style="{DynamicResource AccentVibrantButtonStyle}"
+                           Icon="{ui:SymbolIcon Dismiss24}" Content="Đóng"
                            Background="#64748B" Foreground="White" FontWeight="SemiBold"
                            Height="30" Padding="16,0" FontSize="11"
                            Click="BtnClose_Click" ToolTip="Đóng kho hình (Esc)" />

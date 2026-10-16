@@ -93,32 +93,32 @@
                     <Border Grid.Row="0" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}" 
                             BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" BorderThickness="0,0,0,1" Padding="12,6">
                         <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <ui:Button x:Name="BtnQuickGen" Margin="0,0,6,0" Height="28" Padding="10,0"
-                                       Background="#D97706" Foreground="White" BorderThickness="0" CornerRadius="4"
+                            <ui:Button x:Name="BtnQuickGen" Style="{DynamicResource AccentVibrantButtonStyle}" Margin="0,0,6,0" Height="28" Padding="10,0"
+                                       Background="#D97706" Foreground="White"
                                        Icon="{ui:SymbolIcon Flash24}" Content="Tạo đề nhanh" FontSize="11" FontWeight="SemiBold"
                                        Click="BtnQuickGen_Click" ToolTip="Khởi tạo nhanh cấu trúc đề thi chuẩn BGD 2025" />
-                            <ui:Button x:Name="BtnAiMatrix" Margin="0,0,6,0" Height="28" Padding="10,0"
-                                       Background="#7C3AED" Foreground="White" BorderThickness="0" CornerRadius="4"
+                            <ui:Button x:Name="BtnAiMatrix" Style="{DynamicResource AccentVibrantButtonStyle}" Margin="0,0,6,0" Height="28" Padding="10,0"
+                                       Background="#7C3AED" Foreground="White"
                                        Icon="{ui:SymbolIcon Bot24}" Content="Tạo ma trận AI" FontSize="11" FontWeight="SemiBold"
                                        Click="BtnAiMatrix_Click" ToolTip="Mở phân hệ ma trận và sinh khung đề bằng AI" />
-                            <ui:Button x:Name="BtnSmartPrompt" Margin="0,0,6,0" Height="28" Padding="10,0"
-                                       Background="#8B5CF6" Foreground="White" BorderThickness="0" CornerRadius="4"
+                            <ui:Button x:Name="BtnSmartPrompt" Style="{DynamicResource AccentVibrantButtonStyle}" Margin="0,0,6,0" Height="28" Padding="10,0"
+                                       Background="#8B5CF6" Foreground="White"
                                        Icon="{ui:SymbolIcon Chat24}" Content="Smart Prompt" FontSize="11" FontWeight="SemiBold"
                                        Click="BtnSmartPrompt_Click" ToolTip="Nạp các prompt AI chuẩn hóa đề thi" />
-                            <ui:Button x:Name="BtnChooseSource" Margin="0,0,6,0" Height="28" Padding="10,0"
-                                       Background="#0284C7" Foreground="White" BorderThickness="0" CornerRadius="4"
+                            <ui:Button x:Name="BtnChooseSource" Style="{DynamicResource AccentVibrantButtonStyle}" Margin="0,0,6,0" Height="28" Padding="10,0"
+                                       Background="#0284C7" Foreground="White"
                                        Icon="{ui:SymbolIcon Target24}" Content="Nguồn tạo đề" FontSize="11" FontWeight="SemiBold"
                                        Click="BtnChooseSource_Click" ToolTip="Chọn tệp nguồn từ máy tính để phân tích và tạo đề" />
-                            <ui:Button x:Name="BtnAiGen" Margin="0,0,6,0" Height="28" Padding="12,0"
-                                       Background="#059669" Foreground="White" BorderThickness="0" CornerRadius="4"
+                            <ui:Button x:Name="BtnAiGen" Style="{DynamicResource AccentVibrantButtonStyle}" Margin="0,0,6,0" Height="28" Padding="12,0"
+                                       Background="#059669" Foreground="White"
                                        Icon="{ui:SymbolIcon Sparkle24}" Content="Tạo đề bằng AI" FontSize="11" FontWeight="Bold"
                                        Click="BtnAiGen_Click" ToolTip="Kích hoạt trợ lý AI xử lý hoặc sinh đề tức thì" />
-                            <ui:Button x:Name="BtnQuickShuffle" Margin="0,0,6,0" Height="28" Padding="10,0"
-                                       Background="#0284C7" Foreground="White" BorderThickness="0" CornerRadius="4"
+                            <ui:Button x:Name="BtnQuickShuffle" Style="{DynamicResource AccentVibrantButtonStyle}" Margin="0,0,6,0" Height="28" Padding="10,0"
+                                       Background="#0284C7" Foreground="White"
                                        Icon="{ui:SymbolIcon ArrowShuffle24}" Content="Trộn đề thi" FontSize="11" FontWeight="SemiBold"
                                        Click="BtnQuickShuffle_Click" ToolTip="Chuyển ngay sang phân hệ trộn đề hoán vị" />
-                            <ui:Button x:Name="BtnGuide" Margin="0,0,6,0" Height="28" Padding="10,0"
-                                       Background="#475569" Foreground="White" BorderThickness="0" CornerRadius="4"
+                            <ui:Button x:Name="BtnGuide" Style="{DynamicResource AccentVibrantButtonStyle}" Margin="0,0,6,0" Height="28" Padding="10,0"
+                                       Background="#475569" Foreground="White"
                                        Icon="{ui:SymbolIcon BookOpen24}" Content="Hướng dẫn" FontSize="11" FontWeight="SemiBold"
                                        Click="BtnGuide_Click" ToolTip="Xem hướng dẫn sử dụng chi tiết (Ctrl + H)" />
                         </WrapPanel>
