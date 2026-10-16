@@ -33,13 +33,13 @@
         <ui:Card Grid.Row="1" Margin="0,0,0,4" Padding="8,5">
             <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <ui:TextBox x:Name="TxtSearch" PlaceholderText="Tìm kiếm câu hỏi theo từ khóa, chuyên đề..." Width="220" MinWidth="160" Height="28" Margin="0,0,6,2" FontSize="11" VerticalContentAlignment="Center" />
-                <ComboBox x:Name="CmbLevelFilter" Width="130" Height="28" SelectedIndex="0" Margin="0,0,6,2" FontSize="11" 
-                          Padding="6,0,20,0" VerticalContentAlignment="Center">
-                    <ComboBoxItem Content="Tất cả mức độ" Padding="6,2" />
-                    <ComboBoxItem Content="Nhận biết" Padding="6,2" />
-                    <ComboBoxItem Content="Thông hiểu" Padding="6,2" />
-                    <ComboBoxItem Content="Vận dụng" Padding="6,2" />
-                    <ComboBoxItem Content="Vận dụng cao" Padding="6,2" />
+                <ComboBox x:Name="CmbLevelFilter" Width="140" Height="28" SelectedIndex="0" Margin="0,0,10,2" FontSize="11" 
+                          VerticalContentAlignment="Center">
+                    <ComboBoxItem Content="Tất cả mức độ" />
+                    <ComboBoxItem Content="Nhận biết" />
+                    <ComboBoxItem Content="Thông hiểu" />
+                    <ComboBoxItem Content="Vận dụng" />
+                    <ComboBoxItem Content="Vận dụng cao" />
                 </ComboBox>
                 <ui:Button x:Name="BtnSearch" Appearance="Secondary" Icon="{ui:SymbolIcon Search24}" Content="Tìm kiếm" Height="28" Padding="8,0" Margin="0,0,4,2" FontSize="11" Click="BtnSearch_Click" ToolTip="Tìm kiếm câu hỏi (F5 hoặc Enter)" />
                 <ui:Button x:Name="BtnRefreshBank" Appearance="Secondary" Icon="{ui:SymbolIcon ArrowSync24}" Content="Làm mới" Height="28" Padding="8,0" Margin="0,0,4,2" FontSize="11" Click="BtnRefreshBank_Click" ToolTip="Tải lại toàn bộ câu hỏi (F5)" />

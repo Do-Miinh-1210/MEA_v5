@@ -62,54 +62,54 @@
         <!-- Thanh cấu hình Ma trận & Nút hành động (WrapPanel không bao giờ che chữ) -->
         <ui:Card Grid.Row="1" Margin="0,0,0,6" Padding="8,6">
             <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,4">
-                    <TextBlock Text="Môn học:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,18,4">
+                    <TextBlock Text="Môn học:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="CmbSubject" Width="120" Height="30" SelectedIndex="0" FontSize="11" 
-                              Padding="6,2,20,2" VerticalContentAlignment="Center">
-                        <ComboBoxItem Content="Toán học" Padding="6,3" />
-                        <ComboBoxItem Content="Vật lí" Padding="6,3" />
-                        <ComboBoxItem Content="Hóa học" Padding="6,3" />
-                        <ComboBoxItem Content="Sinh học" Padding="6,3" />
-                        <ComboBoxItem Content="Lịch sử" Padding="6,3" />
-                        <ComboBoxItem Content="Địa lí" Padding="6,3" />
-                        <ComboBoxItem Content="Tin học" Padding="6,3" />
-                        <ComboBoxItem Content="Công nghệ" Padding="6,3" />
+                    <ComboBox x:Name="CmbSubject" Width="125" Height="30" SelectedIndex="0" FontSize="11" 
+                              VerticalContentAlignment="Center">
+                        <ComboBoxItem Content="Toán học" />
+                        <ComboBoxItem Content="Vật lí" />
+                        <ComboBoxItem Content="Hóa học" />
+                        <ComboBoxItem Content="Sinh học" />
+                        <ComboBoxItem Content="Lịch sử" />
+                        <ComboBoxItem Content="Địa lí" />
+                        <ComboBoxItem Content="Tin học" />
+                        <ComboBoxItem Content="Công nghệ" />
                     </ComboBox>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,4">
-                    <TextBlock Text="Khối lớp:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,18,4">
+                    <TextBlock Text="Khối lớp:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="CmbGrade" Width="95" Height="30" SelectedIndex="2" FontSize="11" 
-                              Padding="6,2,20,2" VerticalContentAlignment="Center">
-                        <ComboBoxItem Content="Lớp 10" Padding="6,3" />
-                        <ComboBoxItem Content="Lớp 11" Padding="6,3" />
-                        <ComboBoxItem Content="Lớp 12" Padding="6,3" />
+                    <ComboBox x:Name="CmbGrade" Width="100" Height="30" SelectedIndex="2" FontSize="11" 
+                              VerticalContentAlignment="Center">
+                        <ComboBoxItem Content="Lớp 10" />
+                        <ComboBoxItem Content="Lớp 11" />
+                        <ComboBoxItem Content="Lớp 12" />
                     </ComboBox>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,4">
-                    <TextBlock Text="Thời gian:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,18,4">
+                    <TextBlock Text="Thời gian:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="CmbDuration" Width="105" Height="30" SelectedIndex="1" FontSize="11" 
-                              Padding="6,2,20,2" VerticalContentAlignment="Center">
-                        <ComboBoxItem Content="45 phút" Padding="6,3" />
-                        <ComboBoxItem Content="90 phút" Padding="6,3" />
-                        <ComboBoxItem Content="120 phút" Padding="6,3" />
+                    <ComboBox x:Name="CmbDuration" Width="110" Height="30" SelectedIndex="1" FontSize="11" 
+                              VerticalContentAlignment="Center">
+                        <ComboBoxItem Content="45 phút" />
+                        <ComboBoxItem Content="90 phút" />
+                        <ComboBoxItem Content="120 phút" />
                     </ComboBox>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,4">
-                    <TextBlock Text="Mẫu cấu trúc:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,4">
+                    <TextBlock Text="Mẫu cấu trúc:" FontSize="11.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="CmbMatrixPreset" Width="220" Height="30" SelectedIndex="0" FontSize="11" 
-                              Padding="6,2,2,2" VerticalContentAlignment="Center"
+                    <ComboBox x:Name="CmbMatrixPreset" Width="230" Height="30" SelectedIndex="0" FontSize="11" 
+                              VerticalContentAlignment="Center"
                               SelectionChanged="CmbMatrixPreset_SelectionChanged"
                               ToolTip="Chọn mẫu ma trận chuẩn">
-                        <ComboBoxItem Content="Toán 12 (BGD 22 câu)" Tag="TOAN_12" Padding="6,3" />
-                        <ComboBoxItem Content="Tin học 11 (KNTT 28 câu)" Tag="TIN_11" Padding="6,3" />
-                        <ComboBoxItem Content="Mẫu Word (MaTran_Mau_BGD.docx)" Tag="DOCX_BGD" Padding="6,3" />
+                        <ComboBoxItem Content="Toán 12 (BGD 22 câu)" Tag="TOAN_12" />
+                        <ComboBoxItem Content="Tin học 11 (KNTT 28 câu)" Tag="TIN_11" />
+                        <ComboBoxItem Content="Mẫu Word (MaTran_Mau_BGD.docx)" Tag="DOCX_BGD" />
                     </ComboBox>
                 </StackPanel>
 

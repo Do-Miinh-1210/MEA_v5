@@ -73,7 +73,7 @@
                             <TextBlock Text="Đang làm việc với đề:" FontWeight="SemiBold" FontSize="11" />
                         </StackPanel>
                         <ComboBox x:Name="CmbLoadedExams" Grid.Column="1" Height="30" FontSize="11"
-                                  Padding="8,2,20,2" VerticalContentAlignment="Center"
+                                  VerticalContentAlignment="Center"
                                   SelectionChanged="CmbLoadedExams_SelectionChanged" />
                     </Grid>
 
@@ -109,15 +109,15 @@
 
                     <!-- Hàng 2: Số lượng mã đề, mã bắt đầu, danh sách mã -->
                     <WrapPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,8">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,14,4">
-                            <TextBlock Text="Số lượng mã đề:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" />
-                            <ComboBox x:Name="CmbExamCodesCount" Width="96" Height="30" SelectedIndex="0" FontSize="11"
-                                      Padding="8,2,20,2" VerticalContentAlignment="Center"
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,16,4">
+                            <TextBlock Text="Số lượng mã đề:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,8,0" />
+                            <ComboBox x:Name="CmbExamCodesCount" Width="105" Height="30" SelectedIndex="0" FontSize="11"
+                                      VerticalContentAlignment="Center"
                                       SelectionChanged="CmbExamCodesCount_SelectionChanged">
-                                <ComboBoxItem Content="4 mã" Padding="6,3" />
-                                <ComboBoxItem Content="8 mã" Padding="6,3" />
-                                <ComboBoxItem Content="12 mã" Padding="6,3" />
-                                <ComboBoxItem Content="24 mã" Padding="6,3" />
+                                <ComboBoxItem Content="4 mã" />
+                                <ComboBoxItem Content="8 mã" />
+                                <ComboBoxItem Content="12 mã" />
+                                <ComboBoxItem Content="24 mã" />
                             </ComboBox>
                         </StackPanel>
 

@@ -61,7 +61,8 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,14,0">
                     <TextBlock Text="Nguồn:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="CmbSourceFilter" Width="135" Height="26" SelectedIndex="0" FontSize="10.5"
+                    <ComboBox x:Name="CmbSourceFilter" Width="150" Height="28" SelectedIndex="0" FontSize="11"
+                              VerticalContentAlignment="Center"
                               SelectionChanged="CmbSourceFilter_SelectionChanged">
                         <ComboBoxItem Content="Tất cả nguồn" Tag="all" />
                         <ComboBoxItem Content="🤖 AI tạo" Tag="ai" />

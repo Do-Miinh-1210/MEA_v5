@@ -113,27 +113,27 @@
 
                     <!-- Chọn Thể loại & Mẫu (Ưu tiên đủ rộng, chống che chữ 100%) -->
                     <WrapPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="Thể loại:" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,4,0"
+                        <TextBlock Text="Thể loại:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <ComboBox x:Name="CmbDiagramType" Width="165" Height="28" SelectedIndex="2" FontSize="10.5"
-                                  Padding="6,0,2,0" VerticalContentAlignment="Center" Margin="0,0,8,0"
+                        <ComboBox x:Name="CmbDiagramType" Width="150" Height="28" SelectedIndex="2" FontSize="11"
+                                  VerticalContentAlignment="Center" Margin="0,0,14,0"
                                   ToolTip="Định hướng thể loại hình vẽ cho AI"
                                   SelectionChanged="CmbDiagramType_SelectionChanged">
-                            <ComboBoxItem Content="Bảng biến thiên" Tag="BBT" Padding="6,2" />
-                            <ComboBoxItem Content="Bảng xét dấu" Tag="BXD" Padding="6,2" />
-                            <ComboBoxItem Content="Đồ thị hàm số" Tag="DoThi" Padding="6,2" />
-                            <ComboBoxItem Content="Hình không gian" Tag="HinhKhongGian" Padding="6,2" />
-                            <ComboBoxItem Content="Hình học phẳng" Tag="Custom" Padding="6,2" />
+                            <ComboBoxItem Content="Bảng biến thiên" Tag="BBT" />
+                            <ComboBoxItem Content="Bảng xét dấu" Tag="BXD" />
+                            <ComboBoxItem Content="Đồ thị hàm số" Tag="DoThi" />
+                            <ComboBoxItem Content="Hình không gian" Tag="HinhKhongGian" />
+                            <ComboBoxItem Content="Hình học phẳng" Tag="Custom" />
                         </ComboBox>
 
-                        <TextBlock Text="Mẫu:" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,4,0"
+                        <TextBlock Text="Mẫu:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         <!-- CmbTemplateCategory ẩn hoàn toàn khỏi giao diện để tránh lọc 2 lần trùng lặp, bảo toàn test tự động -->
                         <ComboBox x:Name="CmbTemplateCategory" Visibility="Collapsed"
                                   DisplayMemberPath="Name"
                                   SelectionChanged="CmbTemplateCategory_SelectionChanged" />
-                        <ComboBox x:Name="CmbTemplateItem" Width="280" Height="28" FontSize="10.5"
-                                  Padding="6,0,2,0" VerticalContentAlignment="Center" Margin="0,0,8,0"
+                        <ComboBox x:Name="CmbTemplateItem" Width="280" Height="28" FontSize="11"
+                                  VerticalContentAlignment="Center" Margin="0,0,14,0"
                                   DisplayMemberPath="Title"
                                   ToolTip="Chọn mẫu hình học để nạp mã TikZ"
                                   SelectionChanged="CmbTemplateItem_SelectionChanged" />
@@ -389,11 +389,11 @@
                                 </Border>
 
                                 <!-- DPI Selector -->
-                                <ComboBox x:Name="CmbDpi" Width="90" Height="24" SelectedIndex="2" FontSize="9.5"
-                                          Padding="6,0,2,0" VerticalContentAlignment="Center" Margin="0,0,6,2" ToolTip="Độ phân giải xuất hình">
-                                    <ComboBoxItem Content="150 DPI" Tag="150" Padding="4,2" />
-                                    <ComboBoxItem Content="300 DPI" Tag="300" Padding="4,2" />
-                                    <ComboBoxItem Content="600 DPI" Tag="600" Padding="4,2" />
+                                <ComboBox x:Name="CmbDpi" Width="105" Height="26" SelectedIndex="2" FontSize="10"
+                                          VerticalContentAlignment="Center" Margin="0,0,8,2" ToolTip="Độ phân giải xuất hình">
+                                    <ComboBoxItem Content="150 DPI" Tag="150" />
+                                    <ComboBoxItem Content="300 DPI" Tag="300" />
+                                    <ComboBoxItem Content="600 DPI" Tag="600" />
                                 </ComboBox>
                             </WrapPanel>
 

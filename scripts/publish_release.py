@@ -27,9 +27,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.4"
-TITLE = "MatrixExamAI Pro v5.3.0.4 (Full TikZStudio Integration, Dynamic 2D/3D Shape Builder & Showcase Video)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.4: Kế thừa toàn diện phương thức và cấu trúc vẽ hình từ TikZStudio với hơn 60 mô hình chuẩn (2D, 3D hình chóp, lăng trụ, nón, trụ, cầu, mặt tròn xoay, bảng biến thiên, đồ thị, miền nghiệm thực tế); nâng cấp TikzShapeBuilderDialog với bảng màu trực quan và tùy chỉnh tham số không cần sửa code TikZ thô; sửa 100% kho hình mẫu TikZ; tích hợp video mô phỏng tính năng vẽ hình 2D-3D chi tiết."
+TAG = "v5.3.0.5"
+TITLE = "MatrixExamAI Pro v5.3.0.5 (Hotfix UI ComboBox & Layout Spacing Optimization)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.5: Sửa triệt để lỗi giao diện ComboBox dropdown (loại bỏ xung đột ToggleSwitch style gây đè núm tròn lên số/chữ); khắc phục lỗi cắt nhãn trên nút bấm; rà soát và chuẩn hóa dãn cách, padding, margin cho toàn bộ danh sách, dropdown và nhãn trên toàn bộ ứng dụng."
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)
