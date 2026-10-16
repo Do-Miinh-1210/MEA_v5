@@ -27,9 +27,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.0"
-TITLE = "MatrixExamAI Pro v5.3.0.0 (Hardened License & Anti-Reverse Engineering)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.0: Nâng cấp toàn diện bảo mật bản quyền, mã hóa AES-256 bound Machine ID, chữ ký toàn vẹn HMAC-SHA256 chống can thiệp cache, thuật toán xác thực License Key Checksum và ẩn giấu chuỗi bảo mật runtime."
+TAG = "v5.3.0.1"
+TITLE = "MatrixExamAI Pro v5.3.0.1 (Uncapped Vision Timeout & AI Drawing Optimization)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.1: Gỡ bỏ giới hạn thời gian (infinite timeout) cho phân hệ AI vẽ hình TikZ, nâng max_tokens lên 8192, tự động tối ưu hóa nén và resize ảnh bài toán, bổ sung cơ chế tự động fallback model khi suy luận sâu."
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)
