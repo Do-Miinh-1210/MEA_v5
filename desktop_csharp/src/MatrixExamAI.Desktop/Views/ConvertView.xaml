@@ -89,10 +89,10 @@
                         <Border Width="1" Height="18" Background="{DynamicResource CardStrokeColorDefaultBrush}" Margin="0,0,4,0" VerticalAlignment="Center" />
 
                         <!-- Bộ chọn Lớp & Môn & Khoảng trang PDF - Thu gọn vừa vặn với tên -->
-                        <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" CornerRadius="6" Height="34" Padding="8,2" Margin="0,0,6,0" VerticalAlignment="Center">
+                        <Border Background="{DynamicResource ControlFillColorSecondaryBrush}" CornerRadius="6" Height="38" Padding="8,3" Margin="0,0,6,0" VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <TextBlock Text="Lớp:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" />
-                                <ComboBox x:Name="CmbGrade" Width="82" Height="28" SelectedIndex="2" FontSize="11" Margin="0,0,12,0" 
+                                <ComboBox x:Name="CmbGrade" Width="88" Height="32" SelectedIndex="2" FontSize="11" Margin="0,0,12,0" 
                                           VerticalContentAlignment="Center">
                                     <ComboBoxItem Content="10" />
                                     <ComboBoxItem Content="11" />
@@ -104,7 +104,7 @@
                                     <ComboBoxItem Content="Khác" />
                                 </ComboBox>
                                 <TextBlock Text="Môn:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" />
-                                <ComboBox x:Name="CmbSubject" Width="110" Height="28" SelectedIndex="0" FontSize="11" Margin="0,0,12,0"
+                                <ComboBox x:Name="CmbSubject" Width="115" Height="32" SelectedIndex="0" FontSize="11" Margin="0,0,12,0"
                                           VerticalContentAlignment="Center">
                                     <ComboBoxItem Content="Toán" />
                                     <ComboBoxItem Content="Vật lí" />
@@ -115,9 +115,9 @@
                                     <ComboBoxItem Content="Tin học" />
                                 </ComboBox>
                                 <TextBlock Text="Trang:" FontSize="10.5" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                <ui:TextBox x:Name="TxtPageStart" Width="32" Height="24" Padding="2" FontSize="10.5" TextAlignment="Center" PlaceholderText="1" />
+                                <ui:TextBox x:Name="TxtPageStart" Width="32" Height="26" Padding="2" FontSize="10.5" TextAlignment="Center" PlaceholderText="1" />
                                 <TextBlock Text="-" FontSize="10.5" VerticalAlignment="Center" Margin="4,0" />
-                                <ui:TextBox x:Name="TxtPageEnd" Width="40" Height="24" Padding="2" FontSize="10.5" TextAlignment="Center" PlaceholderText="Hết" />
+                                <ui:TextBox x:Name="TxtPageEnd" Width="40" Height="26" Padding="2" FontSize="10.5" TextAlignment="Center" PlaceholderText="Hết" />
                             </StackPanel>
                         </Border>
                     </StackPanel>
@@ -210,13 +210,13 @@
 
                     <!-- Cụm phải: Bộ chọn chế độ xem trước dạng danh sách sổ xuống + Sao chép & Phóng to -->
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
-                        <ComboBox x:Name="CmbPreviewMode" Width="148" Height="26" SelectedIndex="0" FontSize="10.5" 
-                                  Padding="6,0,16,0" Margin="0,0,4,0" VerticalContentAlignment="Center"
+                        <ComboBox x:Name="CmbPreviewMode" Width="155" Height="32" SelectedIndex="0" FontSize="11" 
+                                  Padding="8,0,24,0" Margin="0,0,4,0" VerticalContentAlignment="Center"
                                   SelectionChanged="CmbPreviewMode_SelectionChanged"
                                   ToolTip="Chọn chế độ xem trước (Trang in Word, Bảng câu hỏi, Mã nguồn)">
-                            <ComboBoxItem x:Name="CbiPreviewWord" Content="Trang in Word" Padding="4,2" />
-                            <ComboBoxItem x:Name="CbiPreviewQuestions" Content="Bảng câu hỏi (0)" Padding="4,2" />
-                            <ComboBoxItem x:Name="CbiPreviewRaw" Content="Mã nguồn kẹp ${...}$" Padding="4,2" />
+                            <ComboBoxItem x:Name="CbiPreviewWord" Content="Trang in Word" Padding="6,3" />
+                            <ComboBoxItem x:Name="CbiPreviewQuestions" Content="Bảng câu hỏi (0)" Padding="6,3" />
+                            <ComboBoxItem x:Name="CbiPreviewRaw" Content="Mã nguồn kẹp ${...}$" Padding="6,3" />
                         </ComboBox>
 
                         <!-- Hidden proxy radio buttons để bảo đảm 100% tương thích kiểm thử và luồng xử lý -->
@@ -407,7 +407,7 @@
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,2,14,2">
                                             <TextBlock Text="Cỡ chữ:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                            <ComboBox x:Name="CmbWordFontSize" Width="100" Height="28" SelectedIndex="1" FontSize="11"
+                                            <ComboBox x:Name="CmbWordFontSize" Width="105" Height="32" SelectedIndex="1" FontSize="11"
                                                       VerticalContentAlignment="Center"
                                                       SelectionChanged="WordPreviewSetting_Changed"
                                                       ToolTip="Cỡ chữ văn bản chuẩn Word (11pt, 12pt, 13pt)">
@@ -420,7 +420,7 @@
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,2,14,2">
                                             <TextBlock Text="Dãn dòng:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                            <ComboBox x:Name="CmbWordLineSpacing" Width="95" Height="28" SelectedIndex="1" FontSize="11"
+                                            <ComboBox x:Name="CmbWordLineSpacing" Width="100" Height="32" SelectedIndex="1" FontSize="11"
                                                       VerticalContentAlignment="Center"
                                                       SelectionChanged="WordPreviewSetting_Changed"
                                                       ToolTip="Khoảng cách dòng chuẩn sư phạm (1.0, 1.15, 1.5)">
@@ -433,7 +433,7 @@
                                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,2,14,2">
                                             <TextBlock Text="Dàn đáp án:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
                                                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                            <ComboBox x:Name="CmbWordChoiceLayout" Width="125" Height="28" SelectedIndex="0" FontSize="11"
+                                            <ComboBox x:Name="CmbWordChoiceLayout" Width="130" Height="32" SelectedIndex="0" FontSize="11"
                                                       VerticalContentAlignment="Center"
                                                       SelectionChanged="WordPreviewSetting_Changed"
                                                       ToolTip="Cách phân bổ các phương án A, B, C, D trên dòng">
@@ -533,7 +533,7 @@
 
                                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                                             <TextBlock Text="Lọc dạng:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                                            <ComboBox x:Name="CmbQTypeFilter" Width="155" Height="28" SelectedIndex="0" FontSize="11" 
+                                            <ComboBox x:Name="CmbQTypeFilter" Width="160" Height="32" SelectedIndex="0" FontSize="11" 
                                                       Padding="8,0,24,0" VerticalContentAlignment="Center"
                                                       SelectionChanged="CmbQTypeFilter_SelectionChanged"
                                                       ToolTip="Lọc hiển thị danh sách theo dạng câu hỏi (TN, DS, TLN, TL)">

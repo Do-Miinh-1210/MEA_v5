@@ -174,7 +174,7 @@
                         <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal" Margin="0,2,16,2">
                                 <TextBlock Text="Môn:" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                <ComboBox x:Name="CmbQuestionSubject" Width="115" Height="28" SelectedIndex="0">
+                                <ComboBox x:Name="CmbQuestionSubject" Width="115" Height="32" VerticalContentAlignment="Center" SelectedIndex="0">
                                     <ComboBoxItem Content="Toán" />
                                     <ComboBoxItem Content="Vật lý" />
                                     <ComboBoxItem Content="Hóa học" />
@@ -190,7 +190,7 @@
 
                             <StackPanel Orientation="Horizontal" Margin="0,2,16,2">
                                 <TextBlock Text="Lớp:" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                <ComboBox x:Name="CmbQuestionGrade" Width="75" Height="28" SelectedIndex="6">
+                                <ComboBox x:Name="CmbQuestionGrade" Width="78" Height="32" VerticalContentAlignment="Center" SelectedIndex="6">
                                     <ComboBoxItem Content="6" />
                                     <ComboBoxItem Content="7" />
                                     <ComboBoxItem Content="8" />
@@ -203,7 +203,7 @@
 
                             <StackPanel Orientation="Horizontal" Margin="0,2,16,2">
                                 <TextBlock Text="Loại câu:" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                <ComboBox x:Name="CmbQuestionType" Width="150" Height="28" SelectedIndex="0">
+                                <ComboBox x:Name="CmbQuestionType" Width="155" Height="32" VerticalContentAlignment="Center" SelectedIndex="0">
                                     <ComboBoxItem Content="TN (Trắc nghiệm 4 lựa chọn)" Tag="TN" />
                                     <ComboBoxItem Content="DS (Đúng / Sai 4 ý)" Tag="DS" />
                                     <ComboBoxItem Content="TLN (Trả lời ngắn)" Tag="TLN" />
@@ -213,7 +213,7 @@
 
                             <StackPanel Orientation="Horizontal" Margin="0,2,0,2">
                                 <TextBlock Text="Mức độ:" VerticalAlignment="Center" Margin="0,0,8,0" FontWeight="SemiBold" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
-                                <ComboBox x:Name="CmbQuestionLevel" Width="130" Height="28" SelectedIndex="1">
+                                <ComboBox x:Name="CmbQuestionLevel" Width="135" Height="32" VerticalContentAlignment="Center" SelectedIndex="1">
                                     <ComboBoxItem Content="Nhận biết" />
                                     <ComboBoxItem Content="Thông hiểu" />
                                     <ComboBoxItem Content="Vận dụng" />

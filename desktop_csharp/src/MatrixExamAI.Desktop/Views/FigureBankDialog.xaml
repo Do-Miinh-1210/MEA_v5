@@ -52,7 +52,7 @@
                 <!-- Search Input -->
                 <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                     <ui:SymbolIcon Symbol="Search24" FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,0,6,0" VerticalAlignment="Center" />
-                    <ui:TextBox x:Name="TxtSearchQuery" Width="290" Height="26" FontSize="11" Padding="6,2"
+                    <ui:TextBox x:Name="TxtSearchQuery" Width="290" Height="32" FontSize="11" Padding="6,2"
                                 PlaceholderText="Tìm theo tên, thẻ tags (VD: 3D, chop, do_thi, tkz-tab)..."
                                 TextChanged="TxtSearchQuery_TextChanged" />
                 </StackPanel>
@@ -61,7 +61,7 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,14,0">
                     <TextBlock Text="Nguồn:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                    <ComboBox x:Name="CmbSourceFilter" Width="150" Height="28" SelectedIndex="0" FontSize="11"
+                    <ComboBox x:Name="CmbSourceFilter" Width="160" Height="32" SelectedIndex="0" FontSize="11"
                               VerticalContentAlignment="Center"
                               SelectionChanged="CmbSourceFilter_SelectionChanged">
                         <ComboBoxItem Content="Tất cả nguồn" Tag="all" />

@@ -57,6 +57,19 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            <!-- Global Style ComboBox chuẩn Fluent Design: Chống che chữ, căn giữa hoàn hảo, dãn cách mũi tên -->
+            <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+                <Setter Property="MinHeight" Value="32" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Padding" Value="10,0,26,0" />
+            </Style>
+
+            <Style TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
+                <Setter Property="MinHeight" Value="28" />
+                <Setter Property="Padding" Value="10,5" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

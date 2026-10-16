@@ -32,8 +32,8 @@
         <!-- Thanh tìm kiếm & Lọc (WrapPanel chống tràn thích ứng) -->
         <ui:Card Grid.Row="1" Margin="0,0,0,4" Padding="8,5">
             <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                <ui:TextBox x:Name="TxtSearch" PlaceholderText="Tìm kiếm câu hỏi theo từ khóa, chuyên đề..." Width="220" MinWidth="160" Height="28" Margin="0,0,6,2" FontSize="11" VerticalContentAlignment="Center" />
-                <ComboBox x:Name="CmbLevelFilter" Width="140" Height="28" SelectedIndex="0" Margin="0,0,10,2" FontSize="11" 
+                <ui:TextBox x:Name="TxtSearch" PlaceholderText="Tìm kiếm câu hỏi theo từ khóa, chuyên đề..." Width="220" MinWidth="160" Height="32" Margin="0,0,6,2" FontSize="11" VerticalContentAlignment="Center" />
+                <ComboBox x:Name="CmbLevelFilter" Width="148" Height="32" SelectedIndex="0" Margin="0,0,10,2" FontSize="11" 
                           VerticalContentAlignment="Center">
                     <ComboBoxItem Content="Tất cả mức độ" />
                     <ComboBoxItem Content="Nhận biết" />

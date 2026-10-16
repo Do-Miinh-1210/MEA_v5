@@ -115,7 +115,7 @@
                     <WrapPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock Text="Thể loại:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <ComboBox x:Name="CmbDiagramType" Width="150" Height="28" SelectedIndex="2" FontSize="11"
+                        <ComboBox x:Name="CmbDiagramType" Width="155" Height="34" SelectedIndex="2" FontSize="11"
                                   VerticalContentAlignment="Center" Margin="0,0,14,0"
                                   ToolTip="Định hướng thể loại hình vẽ cho AI"
                                   SelectionChanged="CmbDiagramType_SelectionChanged">
@@ -132,7 +132,7 @@
                         <ComboBox x:Name="CmbTemplateCategory" Visibility="Collapsed"
                                   DisplayMemberPath="Name"
                                   SelectionChanged="CmbTemplateCategory_SelectionChanged" />
-                        <ComboBox x:Name="CmbTemplateItem" Width="280" Height="28" FontSize="11"
+                        <ComboBox x:Name="CmbTemplateItem" Width="280" Height="34" FontSize="11"
                                   VerticalContentAlignment="Center" Margin="0,0,14,0"
                                   DisplayMemberPath="Title"
                                   ToolTip="Chọn mẫu hình học để nạp mã TikZ"
@@ -141,7 +141,7 @@
 
                     <!-- Ô NHẬP ĐỀ BÀI HOẶC MÔ TẢ HÌNH VẼ TRỰC TIẾP (Thu nhỏ gọn gàng) -->
                     <Grid Grid.Column="1" VerticalAlignment="Center">
-                        <ui:TextBox x:Name="TxtFigurePrompt" Height="28" FontSize="10.5" Padding="8,3"
+                        <ui:TextBox x:Name="TxtFigurePrompt" Height="34" FontSize="11" Padding="8,3"
                                     MaxWidth="280" HorizontalAlignment="Left"
                                     VerticalContentAlignment="Center"
                                     PlaceholderText="Nhập đề bài / mô tả hình..."
@@ -389,7 +389,7 @@
                                 </Border>
 
                                 <!-- DPI Selector -->
-                                <ComboBox x:Name="CmbDpi" Width="105" Height="26" SelectedIndex="2" FontSize="10"
+                                <ComboBox x:Name="CmbDpi" Width="110" Height="32" SelectedIndex="2" FontSize="10.5"
                                           VerticalContentAlignment="Center" Margin="0,0,8,2" ToolTip="Độ phân giải xuất hình">
                                     <ComboBoxItem Content="150 DPI" Tag="150" />
                                     <ComboBoxItem Content="300 DPI" Tag="300" />
