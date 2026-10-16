@@ -98,6 +98,23 @@ namespace MatrixExamAI.Desktop.Views
         public void TriggerOpenFile() => BtnOpenFile_Click(this, new RoutedEventArgs());
         public void TriggerAiPrompt() => BtnCopyPrompt_Click(this, new RoutedEventArgs());
 
+        public void InsertQuestionContent(string content)
+        {
+            if (string.IsNullOrWhiteSpace(content)) return;
+            string trimmed = content.Trim();
+            if (string.IsNullOrWhiteSpace(TxtInput.Text))
+            {
+                TxtInput.Text = trimmed;
+            }
+            else
+            {
+                TxtInput.Text = TxtInput.Text.TrimEnd() + "\n\n" + trimmed;
+            }
+            TxtInput.CaretIndex = TxtInput.Text.Length;
+            TxtInput.ScrollToEnd();
+            TxtInput.Focus();
+        }
+
         public void SetLayoutMode(ConvertLayoutMode mode)
         {
             _currentLayoutMode = mode;

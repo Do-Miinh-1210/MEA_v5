@@ -187,8 +187,30 @@ namespace MatrixExamAI.Desktop
 
         private void BtnSmartPrompt_Click(object sender, RoutedEventArgs e)
         {
-            NavigateTo("convert");
-            _convertView.TriggerAiPrompt();
+            var dlg = new SmartPromptDialog
+            {
+                Owner = this
+            };
+
+            if (dlg.ShowDialog() == true)
+            {
+                if (dlg.GeneratedMatrixConfig != null)
+                {
+                    NavigateTo("matrix");
+                    _examMatrixView.ApplyAiMatrixConfig(
+                        dlg.GeneratedMatrixConfig.Subject,
+                        dlg.GeneratedMatrixConfig.Grade,
+                        dlg.GeneratedMatrixConfig.Duration,
+                        dlg.GeneratedMatrixConfig.Semester,
+                        dlg.GeneratedMatrixConfig.ExtraRequirements
+                    );
+                }
+                else if (!string.IsNullOrWhiteSpace(dlg.GeneratedQuestionLatex))
+                {
+                    NavigateTo("convert");
+                    _convertView.InsertQuestionContent(dlg.GeneratedQuestionLatex);
+                }
+            }
         }
 
         private void BtnChooseSource_Click(object sender, RoutedEventArgs e)

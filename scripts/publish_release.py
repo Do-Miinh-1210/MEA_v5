@@ -27,9 +27,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.1"
-TITLE = "MatrixExamAI Pro v5.3.0.1 (Uncapped Vision Timeout & AI Drawing Optimization)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.1: Gỡ bỏ giới hạn thời gian (infinite timeout) cho phân hệ AI vẽ hình TikZ, nâng max_tokens lên 8192, tự động tối ưu hóa nén và resize ảnh bài toán, bổ sung cơ chế tự động fallback model khi suy luận sâu."
+TAG = "v5.3.0.2"
+TITLE = "MatrixExamAI Pro v5.3.0.2 (Dark Theme Tab/Text Fix & Interactive Smart Prompt)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.2: Sửa triệt để lỗi mất chữ và vệt trắng tab trong giao diện tối (QuickGenDialog), ra mắt phân hệ Smart Prompt tương tác đầy đủ hỗ trợ phân tích đề tự nhiên và soạn nhanh câu hỏi AI."
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)
