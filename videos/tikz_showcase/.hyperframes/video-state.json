@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "historyId": "6d28f744-0480-413b-9174-6ea97e1a4ad9",
+  "currentRevision": null,
+  "pendingChanges": false,
+  "files": {
+    "AGENTS.md": {
+      "hash": "1d4f0c8ca2507b94fd7c9df709fff01416adbd51a0f922b9d6ed2f40129147d5",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\1d\\1d4f0c8ca2507b94fd7c9df709fff01416adbd51a0f922b9d6ed2f40129147d5"
+    },
+    "CLAUDE.md": {
+      "hash": "1d4f0c8ca2507b94fd7c9df709fff01416adbd51a0f922b9d6ed2f40129147d5",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\1d\\1d4f0c8ca2507b94fd7c9df709fff01416adbd51a0f922b9d6ed2f40129147d5"
+    },
+    "assets/scene1.mp3": {
+      "hash": "1d635df0842723a569a093653a306af1194f17cb10aee4250b82e0510c36e7de",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\1d\\1d635df0842723a569a093653a306af1194f17cb10aee4250b82e0510c36e7de"
+    },
+    "assets/scene2.mp3": {
+      "hash": "525a43a38a671a8bec9361a7736a6bb085bed80603bc4172533d92703591e14a",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\52\\525a43a38a671a8bec9361a7736a6bb085bed80603bc4172533d92703591e14a"
+    },
+    "assets/scene3.mp3": {
+      "hash": "179fca5c4088180cd89476ea156e84e4e4076d7075756b257a4eedd15641a356",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\17\\179fca5c4088180cd89476ea156e84e4e4076d7075756b257a4eedd15641a356"
+    },
+    "assets/scene4.mp3": {
+      "hash": "d43ad6bfb00c384e642a101f2278f4b9e48a66b0f784054e0244adf9bc176ed2",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\d4\\d43ad6bfb00c384e642a101f2278f4b9e48a66b0f784054e0244adf9bc176ed2"
+    },
+    "assets/scene5.mp3": {
+      "hash": "598bae53f07e5107846129e4c4e7c62ceba2e1fca5e28c6c6841b203c4797d46",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\59\\598bae53f07e5107846129e4c4e7c62ceba2e1fca5e28c6c6841b203c4797d46"
+    },
+    "assets/scene6.mp3": {
+      "hash": "e18cc7eb630a5dee8715d696c1e8fec27b0e8737d979481e16b2142eb67836e8",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\e1\\e18cc7eb630a5dee8715d696c1e8fec27b0e8737d979481e16b2142eb67836e8"
+    },
+    "assets/soundtrack.mp3": {
+      "hash": "d49da661eb9631aae6f045552c20d3d2a3af64d6d9068bf832b066beb8d1a338",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\d4\\d49da661eb9631aae6f045552c20d3d2a3af64d6d9068bf832b066beb8d1a338"
+    },
+    "hyperframes.json": {
+      "hash": "53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\53\\53dbce1e19aa713cbb12ee0bc4d206143b45ab15e6ffbfcaa8f69572d4d24d50"
+    },
+    "index.html": {
+      "hash": "353d05cafb7e176d3b0b5f72aa6a1de15dd739408927cbc5b308352c1673390c",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\35\\353d05cafb7e176d3b0b5f72aa6a1de15dd739408927cbc5b308352c1673390c"
+    },
+    "meta.json": {
+      "hash": "a91499f4230248d8006ec41355896db9e9f69fdd61a5df124abddc006ac3047c",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\a9\\a91499f4230248d8006ec41355896db9e9f69fdd61a5df124abddc006ac3047c"
+    },
+    "package.json": {
+      "hash": "a7fe8db5c46fb9f01c4a5ace731797af440799abe692200e1853707337387ed0",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\a7\\a7fe8db5c46fb9f01c4a5ace731797af440799abe692200e1853707337387ed0"
+    },
+    "scenes.json": {
+      "hash": "2a7e5d55986d891182432bbadf377555a06c6ff76c648c937554a01d62f9b27e",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\2a\\2a7e5d55986d891182432bbadf377555a06c6ff76c648c937554a01d62f9b27e"
+    },
+    "assets/bgm.wav": {
+      "hash": "7a464bb3c43a698c3fa1c30600b99ca796dd2eeb3e4e994a411761bd524fc5b9",
+      "content": "C:\\Users\\domin\\.cache\\hyperframes\\history\\6d28f744-0480-413b-9174-6ea97e1a4ad9\\blobs\\7a\\7a464bb3c43a698c3fa1c30600b99ca796dd2eeb3e4e994a411761bd524fc5b9"
+    }
+  },
+  "revisions": {},
+  "checks": {
+    "latest": null,
+    "revisions": {},
+    "unversioned": []
+  },
+  "snapshots": {
+    "latest": null,
+    "revisions": {},
+    "unversioned": []
+  },
+  "renders": {
+    "latest": {
+      "id": "2eb8ac7a-ea9d-4848-b4b6-7556f6ba1546",
+      "completedAt": 1792186399189,
+      "output": "M:\\IT\\Phần mềm biên soạn tài liệu\\MEA_v5.0\\videos\\tikz_showcase\\tikz_showcase.mp4",
+      "status": "completed",
+      "revision": null
+    },
+    "retainedRevisions": []
+  },
+  "pendingArtifactCleanup": []
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "scene1",
+    "start": 0,
+    "duration": 7,
+    "text": "Chào mừng quý thầy cô đến với phân hệ Vẽ hình Toán học TikZ Pro trên MatrixExamAI phiên bản mới nhất."
+  },
+  {
+    "id": "scene2",
+    "start": 7,
+    "duration": 8,
+    "text": "Hỗ trợ vẽ hình phẳng 2D chuẩn xác tuyệt đối: tam giác, hình thang, đường tròn, ngũ giác đều, tự động tính tọa độ và góc vuông."
+  },
+  {
+    "id": "scene3",
+    "start": 15,
+    "duration": 9,
+    "text": "Không gian 3D trực quan: dựng các khối chóp, lăng trụ, hình hộp chữ nhật với nét đứt khuất và nét liền chuẩn toán học THPT."
+  },
+  {
+    "id": "scene4",
+    "start": 24,
+    "duration": 8,
+    "text": "Mặt tròn xoay đa dạng: hình trụ, hình nón, khối cầu, và bài toán tối ưu khối trụ nội tiếp nón cực kỳ tiện lợi."
+  },
+  {
+    "id": "scene5",
+    "start": 32,
+    "duration": 8,
+    "text": "Kho bài toán thực tế phong phú: cầu treo parabol, ngọn hải đăng lượng giác, bóng rổ, cùng bảng biến thiên tkz-tab tự động."
+  },
+  {
+    "id": "scene6",
+    "start": 40,
+    "duration": 8,
+    "text": "Chỉ cần nhập số liệu mong muốn, chọn bảng màu, bấm F5 là có ngay hình vẽ sắc nét 600 DPI dán thẳng sang Microsoft Word."
+  }
+]

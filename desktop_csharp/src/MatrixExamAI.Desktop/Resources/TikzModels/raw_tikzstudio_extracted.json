@@ -1,0 +1,4173 @@
+{
+  "tab_hinh_khong_gian.pyc": {
+    "filename": "tab_hinh_khong_gian.pyc",
+    "consts": [],
+    "strings": [
+      {
+        "idx": 0,
+        "val": "Tab tạo hình không gian TikZ với thông số và tên điểm có thể chỉnh sửa."
+      },
+      {
+        "idx": 8,
+        "val": "Hình tứ diện"
+      },
+      {
+        "idx": 9,
+        "val": "\\begin{tikzpicture}[declare function={goc=-45; a=5; b=0.45*a; h=7;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (C)\n\t(goc:b) coordinate (B)--+(0,h) coordinate (S);\n\t\\draw[dashed] (A)--(C);\n\t\\draw (S)--(B) (S)--(A)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/240,C/-60,B/-90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 10,
+        "val": "goc=-45; a=5; b=0.45*a; h=7;"
+      },
+      {
+        "idx": 15,
+        "val": "Hình chóp tam giác vuông góc tại A"
+      },
+      {
+        "idx": 16,
+        "val": "Hình chóp có S.ABC có SA vuông góc ABC"
+      },
+      {
+        "idx": 17,
+        "val": "\\begin{tikzpicture}[declare function={goc=-45; a=5; b=0.45*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)--+(0,h) coordinate (S)\n\t(a,0) coordinate (C)\n\t(goc:b) coordinate (B);\n\t\\draw \n\tpic[angle radius=3mm,draw] {right angle = S--A--C}\n\tpic[angle radius=3mm,draw] {right angle = S--A--B};\n\t\\draw[dashed] (A)--(C);\n\t\\draw (S)--(B) (S)--(A)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/240,C/-60,B/-90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 18,
+        "val": "goc=-45; a=5; b=0.45*a; h=5;"
+      },
+      {
+        "idx": 21,
+        "val": "Hình chóp có mặt (SAB) vuông góc (ABC)"
+      },
+      {
+        "idx": 22,
+        "val": "Hình chóp có mặt (SAB) vuông (ABC)"
+      },
+      {
+        "idx": 23,
+        "val": "\\begin{tikzpicture}[declare function={goc=-45; a=5; b=0.45*a; h=6;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (C)\n\t(goc:b) coordinate (B)\n\t($(A)!.66!(C)$) coordinate (H)--+(0,h) coordinate (S);\n\t\\draw \n\tpic[angle radius=3mm,draw] {right angle = S--A--B}\n\tpic[angle radius=3mm,draw] {right angle = S--H--C}\n\tpic[angle radius=3mm,draw] {right angle = S--C--B};\n\t\\draw[dashed] (A)--(C) (S)--(H);\n\t\\draw (S)--(B) (S)--(A)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/240,C/-60,B/-90,H/-90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 24,
+        "val": "goc=-45; a=5; b=0.45*a; h=6;"
+      },
+      {
+        "idx": 28,
+        "val": "Hình chóp tứ giác"
+      },
+      {
+        "idx": 29,
+        "val": "\\begin{tikzpicture}[declare function={gocx=75; goc=-40;a=5; b=0.25*a; c=0.7*a; h=6;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(gocx:h) coordinate (S);\n\t\\draw[dashed] (A)--(B);\n\t\\draw (S)--(A)--(D) (S)--(D)--(C)--(S)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/-180,B/0,C/-60,D/-100}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 30,
+        "val": "gocx=75; goc=-40;a=5; b=0.25*a; c=0.7*a; h=6;"
+      },
+      {
+        "idx": 34,
+        "val": "Hình chóp đáy hình bình hành"
+      },
+      {
+        "idx": 35,
+        "val": "Hình chóp S.ABCD đáy hình bình hành"
+      },
+      {
+        "idx": 36,
+        "val": "\\begin{tikzpicture}[declare function={gocx=80; goc=-150; a=5; b=a/2; h=6;}]\n\t\\path (0,0) coordinate (A)--+(gocx:h) coordinate (S)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t+(a,0) coordinate (C);\n\t\\draw[dashed] (S)--(A) (D)--(A)--(B);\n\t\\draw (S)--(D)--(C)--(S)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/150,B/0,C/-60,D/-180}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 37,
+        "val": "gocx=80; goc=-150; a=5; b=a/2; h=6;"
+      },
+      {
+        "idx": 40,
+        "val": "Hình chóp tứ giác đều"
+      },
+      {
+        "idx": 41,
+        "val": "Hình chóp S.ABCD đều"
+      },
+      {
+        "idx": 42,
+        "val": "\\begin{tikzpicture}[declare function={goc=-150; a=5; b=a/2; h=0.71*a;}]\n\t\\path (0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t+(a,0) coordinate (C)\n\t($(A)!.5!(C)$) coordinate (O)--+(0,h) coordinate (S);\n\t\\draw pic[angle radius=3mm,draw] {right angle = S--O--D};\n\t\\draw[dashed]  (S)--(A) (D)--(A)--(B) (S)--(O) (A)--(C) (D)--(B);\n\t\\draw (S)--(D)--(C)--(S)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/150,B/0,C/-60,D/-180,O/-90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 43,
+        "val": "goc=-150; a=5; b=a/2; h=0.71*a;"
+      },
+      {
+        "idx": 48,
+        "val": "Hình chóp đáy hình thang"
+      },
+      {
+        "idx": 49,
+        "val": "\\begin{tikzpicture}[declare function={goc=-60;gocx=90;a=5; b=0.4*a; c=0.4*a; h=6;}] \n\t\\path (0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t+(c,0) coordinate (C)\n\t(gocx:h) coordinate (S);\n\t\\draw pic[angle radius=3mm,draw] {right angle = S--A--B};\n\t\\draw[dashed] (A)--(B);\n\t\\draw (S)--(A)--(D) (S)--(D)--(C)--(S)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/-180,B/0,C/-60,D/-100}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 50,
+        "val": "goc=-60;gocx=90;a=5; b=0.4*a; c=0.4*a; h=6;"
+      },
+      {
+        "idx": 53,
+        "val": "Hình chóp S.ABCD có SAD vuông góc đáy"
+      },
+      {
+        "idx": 54,
+        "val": "Hình chóp S.ABCD có SAD vuong ABCD"
+      },
+      {
+        "idx": 55,
+        "val": "\\begin{tikzpicture}[declare function={goc=-150; a=5; b=a/2; h=6;}]\n\t\\path (0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t+(a,0) coordinate (C)\n\t($(A)!.3!(B)$) coordinate (H)--+(0,h) coordinate (S);\n\t\\draw \n\tpic[angle radius=3mm,draw] {right angle = S--H--B}\n\tpic[angle radius=3mm,draw] {right angle = S--B--C}\n\tpic[angle radius=3mm,draw] {right angle = S--A--D};\n\t\\draw[dashed] (S)--(A) (D)--(A)--(B) (S)--(H);\n\t\\draw (S)--(D)--(C)--(S)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/-50,B/0,C/-60,D/-180,H/-90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 56,
+        "val": "goc=-150; a=5; b=a/2; h=6;"
+      },
+      {
+        "idx": 60,
+        "val": "Hình chóp ngũ giác"
+      },
+      {
+        "idx": 61,
+        "val": "\\begin{tikzpicture}[declare function={gocx=75; goc=-40; a=5; d=0.4*a; b=0.25*a; c=0.7*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(-goc:d) coordinate (E)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(gocx:h) coordinate (S);\n\t\\draw[dashed] (A)--(E)--(B) (S)--(E);\n\t\\draw (A)--(D)--(C)--(B)--(S)--(A) (S)--(D) (S)--(C);\n\t\\foreach \\x/\\goc in {A/-180,E/-90, B/0,C/-60,D/-100, S/90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 62,
+        "val": "gocx=75; goc=-40; a=5; d=0.4*a; b=0.25*a; c=0.7*a; h=5;"
+      },
+      {
+        "idx": 66,
+        "val": "Hình chóp ngũ giác đều"
+      },
+      {
+        "idx": 67,
+        "val": "\\begin{tikzpicture}[declare function={gocx=90; goc=-34; a=5; d=0.5*a; b=0.3*a; c=0.5*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(-0.5*goc:c) coordinate (E)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(gocx:h)+(E)$) coordinate (S);\n\t\\draw[dashed] (A)--(E)--(B) (S)--(E);\n\t\\draw (A)--(D)--(C)--(B)--(S)--(A) (S)--(D) (S)--(C);\n\t\\foreach \\x/\\goc in {A/-180,E/-90, B/0,C/-60,D/-100, S/90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 68,
+        "val": "gocx=90; goc=-34; a=5; d=0.5*a; b=0.3*a; c=0.5*a; h=5;"
+      },
+      {
+        "idx": 71,
+        "val": "Hình chóp lục giác"
+      },
+      {
+        "idx": 72,
+        "val": "\\begin{tikzpicture}[declare function={gocx=75; goc=-50; a=5; d=0.4*a; b=0.3*a; h=6;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(A)+(B)-(C)$) coordinate(E)\n\t($(E)+(d,0)$) coordinate (F)\n\t(gocx:h) coordinate (S);\n\t\\draw[dashed] (A)--(E)--(F)--(B) (E)--(S) (F)--(S);\n\t\\draw (A)--(D)--(C)--(B)--(S)--(A) (D)--(S) (C)--(S) (B)--(S);\n\t\\foreach \\x/\\goc in {A/-180,E/-90,F/-140, B/0,C/-60,D/-100,S/90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 73,
+        "val": "gocx=75; goc=-50; a=5; d=0.4*a; b=0.3*a; h=6;"
+      },
+      {
+        "idx": 77,
+        "val": "Hình chóp lục giác đều"
+      },
+      {
+        "idx": 78,
+        "val": "Hình chóp lục giác  đều"
+      },
+      {
+        "idx": 79,
+        "val": "\\begin{tikzpicture}[declare function={gocx=90; goc=-34; a=5; d=0.4*a; b=0.3*a; c=0.27*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(goc:d) coordinate (D)--+(0:d) coordinate (C)\n\t(a,0) coordinate (B)--+(180+goc:d) coordinate (F)\n\t($(F)+(180:d)$)coordinate(E)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(A)!.5!(B)$) coordinate (O)--+(90:h) coordinate (S);\n\t\\draw \n\tpic[angle radius=2.5mm,draw] {right angle = S--O--B};\n\t\\draw[dashed] (D)--(F)--(S)--(E)--(C) (A)--(B) (A)--(E)--(F)--(B) (S)--(O);\n\t\\draw (A)--(D)--(C)--(B)--(S)--(A) (D)--(S) (C)--(S) (B)--(S);\n\t\\foreach \\x/\\goc in {A/-180,E/140,F/40, B/0,C/-60,D/-100,S/90, O/-90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 80,
+        "val": "gocx=90; goc=-34; a=5; d=0.4*a; b=0.3*a; c=0.27*a; h=5;"
+      },
+      {
+        "idx": 83,
+        "val": "Chóp cụt tam giác"
+      },
+      {
+        "idx": 84,
+        "val": "\\begin{tikzpicture}[declare function={goc=-45; a=5; b=0.45*a; h=7;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (C)\n\t(goc:b) coordinate (B)--+(0,h) coordinate (S)\n\t($(A)!.6!(S)$) coordinate (A')\n\t($(B)!.6!(S)$) coordinate (B')\n\t($(C)!.6!(S)$) coordinate (C');\n\t\\draw[dashed] (A)--(C);\n\t\\draw (A)--(B)--(C)--(C')--(B')--(A')--(C') (A)--(A') (B)--(B');\n\t\\foreach \\x/\\goc in {A/240,C/-60,B/-90,A'/180,C'/0,B'/-30}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 86,
+        "val": "Chóp cụt tứ giác"
+      },
+      {
+        "idx": 87,
+        "val": "\\begin{tikzpicture}[declare function={gocx= 60;goc=-150; a=5; b=a/2; h=6;}]\n\t\\path (0,0) coordinate (A)--+(gocx:h) coordinate (S)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t+(a,0) coordinate (C)\n\t($(A)!.5!(C)$) coordinate (O)\n\t($(A)!.4!(S)$) coordinate(A')\n\t($(B)!.4!(S)$) coordinate(B')\n\t($(C)!.4!(S)$) coordinate(C')\n\t($(D)!.4!(S)$) coordinate(D')\n\t($(A')!.5!(C')$) coordinate(O');\n\t\\draw[dashed] (A')--(A)--(C) (O)--(O') (D)--(A)--(B)--cycle;\n\t\\draw (A')--(C')--(C) (D)--(C)--(B)--(B')--(C')--(D')--(A')--(B')--(D')--cycle;\n\t\\foreach \\x/\\goc in {A/150,B/0,C/-60,D/-180,O/-90,A'/90,B'/90,C'/90,D'/90,O'/90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 88,
+        "val": "gocx= 60;goc=-150; a=5; b=a/2; h=6;"
+      },
+      {
+        "idx": 92,
+        "val": "Chóp cụt ngũ giác"
+      },
+      {
+        "idx": 93,
+        "val": "\\begin{tikzpicture}[declare function={gocx=75; goc=-40; a=5; d=0.4*a; b=0.25*a; c=0.7*a; h=7;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(-goc:d) coordinate (E)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(gocx:h) coordinate (S)\n\t($(A)!.4!(S)$) coordinate(A')\n\t($(B)!.4!(S)$) coordinate(B')\n\t($(C)!.4!(S)$) coordinate(C')\n\t($(D)!.4!(S)$) coordinate(D')\n\t($(E)!.4!(S)$) coordinate(E');\n\t\\draw[dashed] (A)--(E)--(B) (E')--(E);\n\t\\draw (D')--(D) (C')--(C) (B')--(E')--(A')--(D')--(C')--(B')--(B)--(C)--(D)--(A)--(A');\n\t\\foreach \\x/\\goc in {A/-180,E/-90, B/0,C/-60,D/-100,A'/90,E'/90, B'/90,C'/90,D'/90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 94,
+        "val": "gocx=75; goc=-40; a=5; d=0.4*a; b=0.25*a; c=0.7*a; h=7;"
+      },
+      {
+        "idx": 98,
+        "val": "Lăng trụ tam giác đứng"
+      },
+      {
+        "idx": 99,
+        "val": "\\begin{tikzpicture}[declare function={goc=-45; a=5; b=0.45*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (C)\n\t(goc:b) coordinate (B)\n\t(0,h) coordinate (A')\n\t(a,h) coordinate (C')\n\t($(B)+(0,h)$) coordinate (B');\n\t\\draw[dashed] (A)--(C);\n\t\\draw (A)--(B)--(C)--(C')--(A')--(B')--(B) (A)--(A') (B')--(C');\n\t\\foreach \\x/\\goc in {A/-180,B/-90,C/0,A'/-180,B'/-30,C'/0}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 101,
+        "val": "Lăng trụ tam giác xiên"
+      },
+      {
+        "idx": 102,
+        "val": "Lăng trụ tam giác xiêng"
+      },
+      {
+        "idx": 103,
+        "val": "\\begin{tikzpicture}[declare function={goc=-45; gocx=75; a=5; b=0.45*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (C)\n\t(goc:b) coordinate (B)\n\t(gocx:h) coordinate (A')\n\t($(gocx:h)+(C)$) coordinate (C')\n\t($(gocx:h)+(B)$) coordinate (B');\n\t\\draw[dashed] (A)--(C);\n\t\\draw (A)--(B)--(C)--(C')--(A')--(B')--(B) (A)--(A') (B')--(C');\n\t\\foreach \\x/\\goc in {A/-180,B/-90,C/0,A'/-180,B'/-30,C'/0}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 104,
+        "val": "goc=-45; gocx=75; a=5; b=0.45*a; h=5;"
+      },
+      {
+        "idx": 107,
+        "val": "Lăng trụ tứ giác đứng"
+      },
+      {
+        "idx": 108,
+        "val": "\\begin{tikzpicture}[declare function={goc=-40; a=5; d=0.5*a; b=0.25*a; c=0.7*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(0,h) coordinate (A')\n\t(a,h) coordinate (B')\n\t($(D)+(0,h)$) coordinate (D')\n\t($(C)+(0,h)$) coordinate (C');\n\t\\draw[dashed] (A)--(B) ;\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180, B/0,C/-60,D/-100,A'/-180, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 109,
+        "val": "goc=-40; a=5; d=0.5*a; b=0.25*a; c=0.7*a; h=5;"
+      },
+      {
+        "idx": 113,
+        "val": "Lăng trụ tứ giác xiên"
+      },
+      {
+        "idx": 114,
+        "val": "\\begin{tikzpicture}[declare function={goc=-40; gocx=75; a=5; d=0.5*a; b=0.25*a; c=0.7*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(gocx:h) coordinate (A')\n\t($(gocx:h)+(B)$) coordinate (B')\n\t($(gocx:h)+(D)$) coordinate (D')\n\t($(gocx:h)+(C)$) coordinate (C');\n\t\\draw[dashed] (A)--(B) ;\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180, B/0,C/-60,D/-100,A'/-180, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 115,
+        "val": "goc=-40; gocx=75; a=5; d=0.5*a; b=0.25*a; c=0.7*a; h=5;"
+      },
+      {
+        "idx": 118,
+        "val": "Hình hộp chữ nhật"
+      },
+      {
+        "idx": 119,
+        "val": "\\begin{tikzpicture}[declare function={goc=225; a=3; b=8; h=5;}]\n\t\\path\n\t(0,0) coordinate (A)\n\t(b,0) coordinate (B)\n\t(goc:a) coordinate (D)\n\t($(D)+(B)-(A)$) coordinate (C)\n\t(0,h) coordinate (A')\n\t(b,h) coordinate (B')\n\t($(D)+(0,h)$) coordinate (D')\n\t($(C)+(0,h)$) coordinate (C');\n\t\\draw[dashed] (D)--(A)--(B) (A)--(A');\n\t\\draw (D)--(C)--(B)--(B')--(A')--(D')--(C')--(C) (D)--(D') (B')--(C');\n\t\\foreach \\x/\\g in {A/135, B/0, C/0, D/180, A'/135, B'/-30, C'/-15, D'/180 }{\\draw[fill=black] (\\x) circle (1pt) node[shift={(\\g:7pt)},font=\\footnotesize]{$\\x$};}\\end{tikzpicture}"
+      },
+      {
+        "idx": 120,
+        "val": "goc=225; a=3; b=8; h=5;"
+      },
+      {
+        "idx": 123,
+        "val": "Hình hộp"
+      },
+      {
+        "idx": 124,
+        "val": "\\begin{tikzpicture}[declare function={goc=225; gocx=75; a=3; b=8; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(b,0) coordinate (B)\n\t(goc:a) coordinate (D)\n\t($(D)+(B)-(A)$) coordinate (C)\n\t(gocx:h) coordinate (A')\n\t($(gocx:h)+(B)$) coordinate (B')\n\t($(gocx:h)+(D)$) coordinate (D')\n\t($(gocx:h)+(C)$) coordinate (C'); \n\t\\draw[dashed] (D)--(A)--(B) (A)--(A');\n\t\\draw (D)--(C)--(B)--(B')--(A')--(D')--(C')--(C) (D)--(D') (B')--(C');\n\t\\foreach \\x/\\g in {A/135, B/0, C/0, D/180, A'/135, B'/-30, C'/-15, D'/180 }{\\draw[fill=black] (\\x) circle (1pt) node[shift={(\\g:7pt)},font=\\footnotesize]{$\\x$};}\\end{tikzpicture}"
+      },
+      {
+        "idx": 125,
+        "val": "goc=225; gocx=75; a=3; b=8; h=5;"
+      },
+      {
+        "idx": 128,
+        "val": "Lăng trụ ngũ giác đứng"
+      },
+      {
+        "idx": 129,
+        "val": "\\begin{tikzpicture}[declare function={goc=-40; a=5; d=0.5*a; b=0.25*a; c=0.7*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(-goc:d) coordinate (E)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(0,h) coordinate (A')\n\t($(E)+(0,h)$) coordinate (E')\n\t(a,h) coordinate (B')\n\t($(D)+(0,h)$) coordinate (D')\n\t($(C)+(0,h)$) coordinate (C');\n\t\\draw[dashed] (A)--(E)--(B) (E)--(E');\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(E')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180,E/-90, B/0,C/-60,D/-100,A'/-180,E'/90, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 130,
+        "val": "Lăng trụ ngũ giác xiên"
+      },
+      {
+        "idx": 131,
+        "val": "\\begin{tikzpicture}[declare function={goc=-40; gocx=75; a=5; d=0.5*a; b=0.25*a; c=0.7*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(-goc:d) coordinate (E)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(gocx:h) coordinate (A')\n\t($(gocx:h)+(E)$) coordinate (E')\n\t($(gocx:h)+(B)$) coordinate (B')\n\t($(gocx:h)+(D)$) coordinate (D')\n\t($(gocx:h)+(C)$) coordinate (C');\n\t\\draw[dashed] (A)--(E)--(B) (E)--(E');\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(E')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180,E/-90, B/0,C/-60,D/-100,A'/-180,E'/90, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 132,
+        "val": "Lăng trụ lục giác đứng"
+      },
+      {
+        "idx": 133,
+        "val": "\\begin{tikzpicture}[declare function={goc=-50; a=5; d=0.5*a; b=0.3*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(A)+(B)-(C)$) coordinate(E)\n\t($(E)+(d,0)$) coordinate (F)\n\t(0,h) coordinate (A')\n\t($(E)+(0,h)$) coordinate (E')\n\t($(F)+(0,h)$) coordinate (F')\n\t(a,h) coordinate (B')\n\t($(D)+(0,h)$) coordinate (D')\n\t($(C)+(0,h)$) coordinate (C');\n\t\\draw[dashed] (A)--(E)--(F)--(B) (E)--(E') (F)--(F');\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(E')--(F')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180,E/-90,F/-140, B/0,C/-60,D/-100,A'/-180,E'/90,F'/50, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 134,
+        "val": "goc=-50; a=5; d=0.5*a; b=0.3*a; h=5;"
+      },
+      {
+        "idx": 138,
+        "val": "Lăng trụ lục giác xiên"
+      },
+      {
+        "idx": 139,
+        "val": "\\begin{tikzpicture}[declare function={goc=-50; gocx=85; a=5; d=0.5*a; b=0.3*a;  h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(A)+(B)-(C)$) coordinate(E)\n\t($(E)+(d,0)$) coordinate (F)\n\t(gocx:h) coordinate (A')\n\t($(gocx:h)+(E)$) coordinate (E')\n\t($(gocx:h)+(F)$) coordinate (F')\n\t($(gocx:h)+(B)$) coordinate (B')\n\t($(gocx:h)+(D)$) coordinate (D')\n\t($(gocx:h)+(C)$) coordinate (C');\n\t\\draw[dashed] (A)--(E)--(F)--(B) (E)--(E') (F)--(F');\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(E')--(F')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180,E/-90,F/-140, B/0,C/-60,D/-100,A'/-180,E'/90,F'/50, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}"
+      },
+      {
+        "idx": 140,
+        "val": "goc=-50; gocx=85; a=5; d=0.5*a; b=0.3*a;  h=5;"
+      },
+      {
+        "idx": 144,
+        "val": "name"
+      },
+      {
+        "idx": 145,
+        "val": "return"
+      },
+      {
+        "idx": 149,
+        "val": "value"
+      },
+      {
+        "idx": 151,
+        "val": "code"
+      },
+      {
+        "idx": 152,
+        "val": "shape"
+      },
+      {
+        "idx": 153,
+        "val": "point_names"
+      },
+      {
+        "idx": 155,
+        "val": "values"
+      },
+      {
+        "idx": 157,
+        "val": "picture_code"
+      },
+      {
+        "idx": 160,
+        "val": "HinhKhongGianTab"
+      }
+    ],
+    "tuples": [
+      {
+        "idx": 2,
+        "val": [
+          "Path"
+        ]
+      },
+      {
+        "idx": 4,
+        "val": [
+          "Qt",
+          "QSize"
+        ]
+      },
+      {
+        "idx": 5,
+        "val": [
+          "QDoubleValidator",
+          "QPixmap"
+        ]
+      },
+      {
+        "idx": 6,
+        "val": [
+          "QApplication",
+          "QComboBox",
+          "QFileDialog",
+          "QFrame",
+          "QGridLayout",
+          "QHBoxLayout",
+          "QLabel",
+          "QLineEdit",
+          "QMessageBox",
+          "QPushButton",
+          "QScrollArea",
+          "QSplitter",
+          "QVBoxLayout",
+          "QWidget",
+          "QPlainTextEdit"
+        ]
+      },
+      {
+        "idx": 7,
+        "val": [
+          "CompileWorker",
+          "Parameter",
+          "QSS"
+        ]
+      },
+      {
+        "idx": 11,
+        "val": [
+          [
+            "goc",
+            "-45"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "b",
+            "0.45*a"
+          ],
+          [
+            "h",
+            "7"
+          ]
+        ]
+      },
+      {
+        "idx": 12,
+        "val": [
+          [
+            "goc",
+            -45.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            7.0
+          ]
+        ]
+      },
+      {
+        "idx": 13,
+        "val": [
+          "S",
+          "A",
+          "C",
+          "B"
+        ]
+      },
+      {
+        "idx": 14,
+        "val": [
+          "source_comment",
+          "tikz",
+          "declaration",
+          "declarations",
+          "parameters",
+          "points"
+        ]
+      },
+      {
+        "idx": 19,
+        "val": [
+          [
+            "goc",
+            "-45"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "b",
+            "0.45*a"
+          ],
+          [
+            "h",
+            "5"
+          ]
+        ]
+      },
+      {
+        "idx": 20,
+        "val": [
+          [
+            "goc",
+            -45.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            5.0
+          ]
+        ]
+      },
+      {
+        "idx": 25,
+        "val": [
+          [
+            "goc",
+            "-45"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "b",
+            "0.45*a"
+          ],
+          [
+            "h",
+            "6"
+          ]
+        ]
+      },
+      {
+        "idx": 26,
+        "val": [
+          [
+            "goc",
+            -45.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            6.0
+          ]
+        ]
+      },
+      {
+        "idx": 27,
+        "val": [
+          "S",
+          "A",
+          "C",
+          "B",
+          "H"
+        ]
+      },
+      {
+        "idx": 31,
+        "val": [
+          [
+            "gocx",
+            "75"
+          ],
+          [
+            "goc",
+            "-40"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "b",
+            "0.25*a"
+          ],
+          [
+            "c",
+            "0.7*a"
+          ],
+          [
+            "h",
+            "6"
+          ]
+        ]
+      },
+      {
+        "idx": 32,
+        "val": [
+          [
+            "gocx",
+            75.0
+          ],
+          [
+            "goc",
+            -40.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            6.0
+          ]
+        ]
+      },
+      {
+        "idx": 33,
+        "val": [
+          "S",
+          "A",
+          "B",
+          "C",
+          "D"
+        ]
+      },
+      {
+        "idx": 38,
+        "val": [
+          [
+            "gocx",
+            "80"
+          ],
+          [
+            "goc",
+            "-150"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "b",
+            "a/2"
+          ],
+          [
+            "h",
+            "6"
+          ]
+        ]
+      },
+      {
+        "idx": 39,
+        "val": [
+          [
+            "gocx",
+            80.0
+          ],
+          [
+            "goc",
+            -150.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            6.0
+          ]
+        ]
+      },
+      {
+        "idx": 44,
+        "val": [
+          [
+            "goc",
+            "-150"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "b",
+            "a/2"
+          ],
+          [
+            "h",
+            "0.71*a"
+          ]
+        ]
+      },
+      {
+        "idx": 45,
+        "val": [
+          "goc",
+          -150.0
+        ]
+      },
+      {
+        "idx": 46,
+        "val": [
+          "a",
+          5.0
+        ]
+      },
+      {
+        "idx": 47,
+        "val": [
+          "S",
+          "A",
+          "B",
+          "C",
+          "D",
+          "O"
+        ]
+      },
+      {
+        "idx": 51,
+        "val": [
+          [
+            "goc",
+            "-60"
+          ],
+          [
+            "gocx",
+            "90"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "b",
+            "0.4*a"
+          ],
+          [
+            "c",
+            "0.4*a"
+          ],
+          [
+            "h",
+            "6"
+          ]
+        ]
+      },
+      {
+        "idx": 52,
+        "val": [
+          [
+            "goc",
+            -60.0
+          ],
+          [
+            "gocx",
+            90.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            6.0
+          ]
+        ]
+      },
+      {
+        "idx": 57,
+        "val": [
+          [
+            "goc",
+            "-150"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "b",
+            "a/2"
+          ],
+          [
+            "h",
+            "6"
+          ]
+        ]
+      },
+      {
+        "idx": 58,
+        "val": [
+          [
+            "goc",
+            -150.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            6.0
+          ]
+        ]
+      },
+      {
+        "idx": 59,
+        "val": [
+          "S",
+          "A",
+          "B",
+          "C",
+          "D",
+          "H"
+        ]
+      },
+      {
+        "idx": 63,
+        "val": [
+          [
+            "gocx",
+            "75"
+          ],
+          [
+            "goc",
+            "-40"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "d",
+            "0.4*a"
+          ],
+          [
+            "b",
+            "0.25*a"
+          ],
+          [
+            "c",
+            "0.7*a"
+          ],
+          [
+            "h",
+            "5"
+          ]
+        ]
+      },
+      {
+        "idx": 64,
+        "val": [
+          [
+            "gocx",
+            75.0
+          ],
+          [
+            "goc",
+            -40.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            5.0
+          ]
+        ]
+      },
+      {
+        "idx": 65,
+        "val": [
+          "A",
+          "E",
+          "B",
+          "C",
+          "D",
+          "S"
+        ]
+      },
+      {
+        "idx": 69,
+        "val": [
+          [
+            "gocx",
+            "90"
+          ],
+          [
+            "goc",
+            "-34"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "d",
+            "0.5*a"
+          ],
+          [
+            "b",
+            "0.3*a"
+          ],
+          [
+            "c",
+            "0.5*a"
+          ],
+          [
+            "h",
+            "5"
+          ]
+        ]
+      },
+      {
+        "idx": 70,
+        "val": [
+          [
+            "gocx",
+            90.0
+          ],
+          [
+            "goc",
+            -34.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            5.0
+          ]
+        ]
+      },
+      {
+        "idx": 74,
+        "val": [
+          [
+            "gocx",
+            "75"
+          ],
+          [
+            "goc",
+            "-50"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "d",
+            "0.4*a"
+          ],
+          [
+            "b",
+            "0.3*a"
+          ],
+          [
+            "h",
+            "6"
+          ]
+        ]
+      },
+      {
+        "idx": 75,
+        "val": [
+          [
+            "gocx",
+            75.0
+          ],
+          [
+            "goc",
+            -50.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            6.0
+          ]
+        ]
+      },
+      {
+        "idx": 76,
+        "val": [
+          "A",
+          "E",
+          "F",
+          "B",
+          "C",
+          "D",
+          "S"
+        ]
+      },
+      {
+        "idx": 81,
+        "val": [
+          [
+            "gocx",
+            "90"
+          ],
+          [
+            "goc",
+            "-34"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "d",
+            "0.4*a"
+          ],
+          [
+            "b",
+            "0.3*a"
+          ],
+          [
+            "c",
+            "0.27*a"
+          ],
+          [
+            "h",
+            "5"
+          ]
+        ]
+      },
+      {
+        "idx": 82,
+        "val": [
+          "A",
+          "E",
+          "F",
+          "B",
+          "C",
+          "D",
+          "S",
+          "O"
+        ]
+      },
+      {
+        "idx": 85,
+        "val": [
+          "A",
+          "C",
+          "B",
+          "A'",
+          "C'",
+          "B'"
+        ]
+      },
+      {
+        "idx": 89,
+        "val": [
+          [
+            "gocx",
+            "60"
+          ],
+          [
+            "goc",
+            "-150"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "b",
+            "a/2"
+          ],
+          [
+            "h",
+            "6"
+          ]
+        ]
+      },
+      {
+        "idx": 90,
+        "val": [
+          [
+            "gocx",
+            60.0
+          ],
+          [
+            "goc",
+            -150.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            6.0
+          ]
+        ]
+      },
+      {
+        "idx": 91,
+        "val": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "O",
+          "A'",
+          "B'",
+          "C'",
+          "D'",
+          "O'"
+        ]
+      },
+      {
+        "idx": 95,
+        "val": [
+          [
+            "gocx",
+            "75"
+          ],
+          [
+            "goc",
+            "-40"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "d",
+            "0.4*a"
+          ],
+          [
+            "b",
+            "0.25*a"
+          ],
+          [
+            "c",
+            "0.7*a"
+          ],
+          [
+            "h",
+            "7"
+          ]
+        ]
+      },
+      {
+        "idx": 96,
+        "val": [
+          [
+            "gocx",
+            75.0
+          ],
+          [
+            "goc",
+            -40.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            7.0
+          ]
+        ]
+      },
+      {
+        "idx": 97,
+        "val": [
+          "A",
+          "E",
+          "B",
+          "C",
+          "D",
+          "A'",
+          "E'",
+          "B'",
+          "C'",
+          "D'"
+        ]
+      },
+      {
+        "idx": 100,
+        "val": [
+          "A",
+          "B",
+          "C",
+          "A'",
+          "B'",
+          "C'"
+        ]
+      },
+      {
+        "idx": 105,
+        "val": [
+          [
+            "goc",
+            "-45"
+          ],
+          [
+            "gocx",
+            "75"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "b",
+            "0.45*a"
+          ],
+          [
+            "h",
+            "5"
+          ]
+        ]
+      },
+      {
+        "idx": 106,
+        "val": [
+          [
+            "goc",
+            -45.0
+          ],
+          [
+            "gocx",
+            75.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            5.0
+          ]
+        ]
+      },
+      {
+        "idx": 110,
+        "val": [
+          [
+            "goc",
+            "-40"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "d",
+            "0.5*a"
+          ],
+          [
+            "b",
+            "0.25*a"
+          ],
+          [
+            "c",
+            "0.7*a"
+          ],
+          [
+            "h",
+            "5"
+          ]
+        ]
+      },
+      {
+        "idx": 111,
+        "val": [
+          [
+            "goc",
+            -40.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            5.0
+          ]
+        ]
+      },
+      {
+        "idx": 112,
+        "val": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "A'",
+          "B'",
+          "C'",
+          "D'"
+        ]
+      },
+      {
+        "idx": 116,
+        "val": [
+          [
+            "goc",
+            "-40"
+          ],
+          [
+            "gocx",
+            "75"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "d",
+            "0.5*a"
+          ],
+          [
+            "b",
+            "0.25*a"
+          ],
+          [
+            "c",
+            "0.7*a"
+          ],
+          [
+            "h",
+            "5"
+          ]
+        ]
+      },
+      {
+        "idx": 117,
+        "val": [
+          [
+            "goc",
+            -40.0
+          ],
+          [
+            "gocx",
+            75.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            5.0
+          ]
+        ]
+      },
+      {
+        "idx": 121,
+        "val": [
+          [
+            "goc",
+            "225"
+          ],
+          [
+            "a",
+            "3"
+          ],
+          [
+            "b",
+            "8"
+          ],
+          [
+            "h",
+            "5"
+          ]
+        ]
+      },
+      {
+        "idx": 122,
+        "val": [
+          [
+            "goc",
+            225.0
+          ],
+          [
+            "a",
+            3.0
+          ],
+          [
+            "b",
+            8.0
+          ],
+          [
+            "h",
+            5.0
+          ]
+        ]
+      },
+      {
+        "idx": 126,
+        "val": [
+          [
+            "goc",
+            "225"
+          ],
+          [
+            "gocx",
+            "75"
+          ],
+          [
+            "a",
+            "3"
+          ],
+          [
+            "b",
+            "8"
+          ],
+          [
+            "h",
+            "5"
+          ]
+        ]
+      },
+      {
+        "idx": 127,
+        "val": [
+          [
+            "goc",
+            225.0
+          ],
+          [
+            "gocx",
+            75.0
+          ],
+          [
+            "a",
+            3.0
+          ],
+          [
+            "b",
+            8.0
+          ],
+          [
+            "h",
+            5.0
+          ]
+        ]
+      },
+      {
+        "idx": 135,
+        "val": [
+          [
+            "goc",
+            "-50"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "d",
+            "0.5*a"
+          ],
+          [
+            "b",
+            "0.3*a"
+          ],
+          [
+            "h",
+            "5"
+          ]
+        ]
+      },
+      {
+        "idx": 136,
+        "val": [
+          [
+            "goc",
+            -50.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            5.0
+          ]
+        ]
+      },
+      {
+        "idx": 137,
+        "val": [
+          "A",
+          "E",
+          "F",
+          "B",
+          "C",
+          "D",
+          "A'",
+          "E'",
+          "F'",
+          "B'",
+          "C'",
+          "D'"
+        ]
+      },
+      {
+        "idx": 141,
+        "val": [
+          [
+            "goc",
+            "-50"
+          ],
+          [
+            "gocx",
+            "85"
+          ],
+          [
+            "a",
+            "5"
+          ],
+          [
+            "d",
+            "0.5*a"
+          ],
+          [
+            "b",
+            "0.3*a"
+          ],
+          [
+            "h",
+            "5"
+          ]
+        ]
+      },
+      {
+        "idx": 142,
+        "val": [
+          [
+            "goc",
+            -50.0
+          ],
+          [
+            "gocx",
+            85.0
+          ],
+          [
+            "a",
+            5.0
+          ],
+          [
+            "h",
+            5.0
+          ]
+        ]
+      },
+      {
+        "idx": 143,
+        "val": [
+          "Lăng trụ tứ giác đứng",
+          "Lăng trụ tứ giác xiên",
+          "Hình hộp chữ nhật",
+          "Hình hộp",
+          "Lăng trụ ngũ giác đứng",
+          "Lăng trụ ngũ giác xiên",
+          "Lăng trụ lục giác đứng",
+          "Lăng trụ lục giác xiên"
+        ]
+      },
+      {
+        "idx": 162,
+        "val": [
+          null
+        ]
+      }
+    ]
+  },
+  "tab_mat_tron_xoay.pyc": {
+    "filename": "tab_mat_tron_xoay.pyc",
+    "consts": [],
+    "strings": [
+      {
+        "idx": 0,
+        "val": "Tab vẽ các khối và mặt tròn xoay bằng TikZ/ tikz-3dplot."
+      },
+      {
+        "idx": 8,
+        "val": "r"
+      },
+      {
+        "idx": 9,
+        "val": "Bán kính đáy r"
+      },
+      {
+        "idx": 11,
+        "val": "h"
+      },
+      {
+        "idx": 12,
+        "val": "Chiều cao h"
+      },
+      {
+        "idx": 14,
+        "val": "theta"
+      },
+      {
+        "idx": 15,
+        "val": "Góc nhìn θ"
+      },
+      {
+        "idx": 19,
+        "val": "°"
+      },
+      {
+        "idx": 20,
+        "val": "R"
+      },
+      {
+        "idx": 21,
+        "val": "Bán kính R"
+      },
+      {
+        "idx": 23,
+        "val": "d"
+      },
+      {
+        "idx": 24,
+        "val": "Tọa độ mặt cắt d"
+      },
+      {
+        "idx": 28,
+        "val": "tgoc"
+      },
+      {
+        "idx": 29,
+        "val": "Góc điểm M"
+      },
+      {
+        "idx": 33,
+        "val": "Chiều cao d"
+      },
+      {
+        "idx": 36,
+        "val": "gqay"
+      },
+      {
+        "idx": 37,
+        "val": "Góc quay đáy"
+      },
+      {
+        "idx": 44,
+        "val": "Bán kính cầu R"
+      },
+      {
+        "idx": 45,
+        "val": "Tọa độ mặt phẳng d"
+      },
+      {
+        "idx": 47,
+        "val": "xA"
+      },
+      {
+        "idx": 48,
+        "val": "Hoành độ đầu a"
+      },
+      {
+        "idx": 50,
+        "val": "yA"
+      },
+      {
+        "idx": 51,
+        "val": "Bán kính đầu a"
+      },
+      {
+        "idx": 53,
+        "val": "xB"
+      },
+      {
+        "idx": 54,
+        "val": "Hoành độ cuối b"
+      },
+      {
+        "idx": 56,
+        "val": "yB"
+      },
+      {
+        "idx": 57,
+        "val": "Bán kính cuối b"
+      },
+      {
+        "idx": 58,
+        "val": "r0"
+      },
+      {
+        "idx": 59,
+        "val": "Bán kính đáy dưới"
+      },
+      {
+        "idx": 60,
+        "val": "r1"
+      },
+      {
+        "idx": 61,
+        "val": "Bán kính giữa"
+      },
+      {
+        "idx": 63,
+        "val": "r2"
+      },
+      {
+        "idx": 64,
+        "val": "Bán kính trên"
+      },
+      {
+        "idx": 66,
+        "val": "Chiều cao"
+      },
+      {
+        "idx": 68,
+        "val": "Bán kính đáy nón r"
+      },
+      {
+        "idx": 69,
+        "val": "rc"
+      },
+      {
+        "idx": 70,
+        "val": "Bán kính trụ rc"
+      },
+      {
+        "idx": 71,
+        "val": "Chiều cao nón h"
+      },
+      {
+        "idx": 72,
+        "val": "Bán kính r"
+      },
+      {
+        "idx": 73,
+        "val": "Chiều dài trụ d"
+      },
+      {
+        "idx": 75,
+        "val": "Nửa chiều cao trụ d"
+      },
+      {
+        "idx": 79,
+        "val": "Tọa độ đáy d"
+      },
+      {
+        "idx": 80,
+        "val": "Bán kính đường tròn tiếp xúc rc"
+      },
+      {
+        "idx": 81,
+        "val": "Chiều cao nón d"
+      },
+      {
+        "idx": 82,
+        "val": "rs"
+      },
+      {
+        "idx": 83,
+        "val": "Bán kính cầu rs"
+      },
+      {
+        "idx": 84,
+        "val": "Bán kính trụ r"
+      },
+      {
+        "idx": 85,
+        "val": "Chiều cao trụ h"
+      },
+      {
+        "idx": 86,
+        "val": "phi"
+      },
+      {
+        "idx": 87,
+        "val": "Góc phương vị φ"
+      },
+      {
+        "idx": 100,
+        "val": "code"
+      },
+      {
+        "idx": 101,
+        "val": "shape"
+      },
+      {
+        "idx": 102,
+        "val": "point_names"
+      },
+      {
+        "idx": 103,
+        "val": "return"
+      },
+      {
+        "idx": 106,
+        "val": "values"
+      },
+      {
+        "idx": 110,
+        "val": "MatTronXoayTab"
+      }
+    ],
+    "tuples": [
+      {
+        "idx": 2,
+        "val": [
+          "Path"
+        ]
+      },
+      {
+        "idx": 4,
+        "val": [
+          "Qt",
+          "QSize"
+        ]
+      },
+      {
+        "idx": 5,
+        "val": [
+          "QDoubleValidator",
+          "QPixmap"
+        ]
+      },
+      {
+        "idx": 6,
+        "val": [
+          "QApplication",
+          "QComboBox",
+          "QFileDialog",
+          "QFrame",
+          "QGridLayout",
+          "QHBoxLayout",
+          "QLabel",
+          "QLineEdit",
+          "QMessageBox",
+          "QPushButton",
+          "QScrollArea",
+          "QSplitter",
+          "QVBoxLayout",
+          "QWidget",
+          "QPlainTextEdit"
+        ]
+      },
+      {
+        "idx": 7,
+        "val": [
+          "CompileWorker",
+          "Parameter",
+          "QSS"
+        ]
+      },
+      {
+        "idx": 91,
+        "val": [
+          "Hình trụ",
+          "Hình cầu",
+          "Hình nón đỉnh trên",
+          "Hình nón đỉnh dưới",
+          "Mặt cầu và đường tròn giao tuyến",
+          "Mặt tròn xoay quanh Ox",
+          "Mặt tròn xoay quanh Oz",
+          "Hình trụ nội tiếp hình nón",
+          "Trụ và nón ghép",
+          "Hình trụ nội tiếp hình cầu",
+          "Hình trụ ngoại tiếp hình cầu",
+          "Hình nón nội tiếp hình cầu",
+          "Hình nón ngoại tiếp hình cầu",
+          "Hình trụ cắt bởi mặt phẳng"
+        ]
+      },
+      {
+        "idx": 92,
+        "val": [
+          "O",
+          "O'",
+          "A",
+          "B"
+        ]
+      },
+      {
+        "idx": 93,
+        "val": [
+          "O",
+          "M"
+        ]
+      },
+      {
+        "idx": 94,
+        "val": [
+          "S",
+          "O",
+          "M"
+        ]
+      },
+      {
+        "idx": 95,
+        "val": [
+          "O",
+          "H",
+          "M"
+        ]
+      },
+      {
+        "idx": 96,
+        "val": [
+          "Hình trụ",
+          "Hình cầu",
+          "Hình nón đỉnh trên",
+          "Mặt cầu và đường tròn giao tuyến"
+        ]
+      },
+      {
+        "idx": 112,
+        "val": [
+          null
+        ]
+      }
+    ]
+  },
+  "tab_hinh_phang.pyc": {
+    "filename": "tab_hinh_phang.pyc",
+    "consts": [],
+    "strings": [
+      {
+        "idx": 0,
+        "val": "Tab Hình phẳng TikZ độc lập, có thể import trực tiếp vào AppTong.py.\n\nImport:\n    from tab_hinh_phang import HinhPhangTab\n    self.tabs.addTab(HinhPhangTab(), \"Hình phẳng\")\n\nCần PyQt6 và MiKTeX/TeX Live có pdflatex, xelatex hoặc lualatex trong PATH.\nĐể kết xuất PNG xem trước, cần pdftoppm, mutool hoặc PyMuPDF.\n"
+      },
+      {
+        "idx": 12,
+        "val": "Parameter"
+      },
+      {
+        "idx": 13,
+        "val": "Tam giác"
+      },
+      {
+        "idx": 14,
+        "val": "a"
+      },
+      {
+        "idx": 15,
+        "val": "Cạnh a"
+      },
+      {
+        "idx": 17,
+        "val": "goc"
+      },
+      {
+        "idx": 18,
+        "val": "Góc (độ)"
+      },
+      {
+        "idx": 22,
+        "val": "°"
+      },
+      {
+        "idx": 23,
+        "val": "b"
+      },
+      {
+        "idx": 24,
+        "val": "Cạnh b"
+      },
+      {
+        "idx": 26,
+        "val": "Tam giác vuông 1"
+      },
+      {
+        "idx": 27,
+        "val": "r"
+      },
+      {
+        "idx": 28,
+        "val": "Bán kính r"
+      },
+      {
+        "idx": 31,
+        "val": "Tam giác vuông 2"
+      },
+      {
+        "idx": 32,
+        "val": "c"
+      },
+      {
+        "idx": 33,
+        "val": "Cạnh c"
+      },
+      {
+        "idx": 34,
+        "val": "Tam giác cân"
+      },
+      {
+        "idx": 35,
+        "val": "h"
+      },
+      {
+        "idx": 36,
+        "val": "Chiều cao h"
+      },
+      {
+        "idx": 38,
+        "val": "Nửa đáy a"
+      },
+      {
+        "idx": 40,
+        "val": "Tam giác vuông cân"
+      },
+      {
+        "idx": 41,
+        "val": "Cạnh r"
+      },
+      {
+        "idx": 42,
+        "val": "Tam giác đều"
+      },
+      {
+        "idx": 43,
+        "val": "Tam giác ngoại tiếp"
+      },
+      {
+        "idx": 44,
+        "val": "Cạnh đáy a"
+      },
+      {
+        "idx": 46,
+        "val": "Tam giác nội tiếp"
+      },
+      {
+        "idx": 47,
+        "val": "Tứ giác"
+      },
+      {
+        "idx": 48,
+        "val": "Hình thang"
+      },
+      {
+        "idx": 49,
+        "val": "Đáy a"
+      },
+      {
+        "idx": 50,
+        "val": "Đáy b"
+      },
+      {
+        "idx": 55,
+        "val": "Hình thang cân"
+      },
+      {
+        "idx": 58,
+        "val": "Hình thang vuông"
+      },
+      {
+        "idx": 60,
+        "val": "Hình bình hành"
+      },
+      {
+        "idx": 61,
+        "val": "Cạnh bên b"
+      },
+      {
+        "idx": 65,
+        "val": "Hình chữ nhật"
+      },
+      {
+        "idx": 66,
+        "val": "Chiều dài a"
+      },
+      {
+        "idx": 67,
+        "val": "Chiều rộng b"
+      },
+      {
+        "idx": 68,
+        "val": "Hình vuông"
+      },
+      {
+        "idx": 69,
+        "val": "Hình lục giác đều"
+      },
+      {
+        "idx": 70,
+        "val": "Góc bước"
+      },
+      {
+        "idx": 73,
+        "val": "Hình ngũ giác đều"
+      },
+      {
+        "idx": 75,
+        "val": "Đường chéo a"
+      },
+      {
+        "idx": 76,
+        "val": "Đường chéo b"
+      },
+      {
+        "idx": 84,
+        "val": "value"
+      },
+      {
+        "idx": 85,
+        "val": "return"
+      },
+      {
+        "idx": 87,
+        "val": "values"
+      },
+      {
+        "idx": 90,
+        "val": "labels"
+      },
+      {
+        "idx": 91,
+        "val": "shift"
+      },
+      {
+        "idx": 93,
+        "val": "shape"
+      },
+      {
+        "idx": 95,
+        "val": "code"
+      },
+      {
+        "idx": 96,
+        "val": "point_names"
+      },
+      {
+        "idx": 99,
+        "val": "picture_code"
+      },
+      {
+        "idx": 102,
+        "val": "CompileWorker"
+      },
+      {
+        "idx": 103,
+        "val": "\nQWidget#flatRoot { background:#f4f8f8; color:#19363c; font-family:'Segoe UI'; font-size:10pt; }\nQFrame#flatSidebar { background:#ffffff; border:0; }\nQFrame#flatPanel { background:#ffffff; border:1px solid #d9e6e6; border-radius:14px; }\nQLabel#flatSection { color:#0b6963; background:transparent; font-size:11pt; font-weight:700; }\nQLabel#flatMuted { color:#60777d; background:transparent; }\nQLabel#flatFieldLabel { color:#24464c; background:transparent; }\nQComboBox, QLineEdit { background:#ffffff; border:1px solid #cbdada; border-radius:8px; padding:8px 10px; }\nQComboBox:focus, QLineEdit:focus { border:1px solid #0f8a80; }\nQComboBox { color:#19363c; }\nQComboBox QAbstractItemView {\n    background:#ffffff;\n    color:#19363c;\n    border:1px solid #b9cece;\n    selection-background-color:#0b716b;\n    selection-color:#ffffff;\n    outline:0;\n}\nQComboBox QAbstractItemView::item {\n    color:#19363c;\n    background:#ffffff;\n    min-height:28px;\n    padding:6px 10px;\n}\nQComboBox QAbstractItemView::item:hover {\n    color:#123c3a;\n    background:#dcefeb;\n}\nQComboBox QAbstractItemView::item:selected {\n    color:#ffffff;\n    background:#0b716b;\n}\nQPushButton { background:#e6f1f0; color:#0a625d; border:0; border-radius:8px; padding:9px 12px; font-weight:700; }\nQPushButton:hover { background:#d2e8e5; }\nQPushButton#flatPrimary { background:#0b716b; color:#ffffff; }\nQPushButton#flatPrimary:hover { background:#075c57; }\nQPlainTextEdit { background:#fbfdfd; border:1px solid #dbe7e7; border-radius:10px; padding:10px; font-family:Consolas,'Cascadia Code',monospace; font-size:9pt; }\nQSplitter::handle { background:#e4eeee; width:5px; }\nQScrollArea#previewArea { background:#ffffff; border:0; border-radius:0; }\nQScrollArea#leftScroll { background:#ffffff; border:1px solid #d9e6e6; border-radius:14px; }\nQScrollBar:vertical { background:#edf4f4; width:12px; margin:3px; border-radius:6px; }\nQScrollBar::handle:vertical { background:#91bcb8; min-height:28px; border-radius:6px; }\nQScrollBar::handle:vertical:hover { background:#0b716b; }\nQScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height:0; }\nQScrollBar:horizontal { background:#edf4f4; height:12px; margin:3px; border-radius:6px; }\nQScrollBar::handle:horizontal { background:#91bcb8; min-width:28px; border-radius:6px; }\n"
+      },
+      {
+        "idx": 105,
+        "val": "HinhPhangTab"
+      },
+      {
+        "idx": 108,
+        "val": "__main__"
+      }
+    ],
+    "tuples": [
+      {
+        "idx": 3,
+        "val": [
+          "dataclass"
+        ]
+      },
+      {
+        "idx": 4,
+        "val": [
+          "Path"
+        ]
+      },
+      {
+        "idx": 5,
+        "val": [
+          "QThread",
+          "Qt",
+          "QSize",
+          "pyqtSignal"
+        ]
+      },
+      {
+        "idx": 6,
+        "val": [
+          "QDoubleValidator",
+          "QPixmap"
+        ]
+      },
+      {
+        "idx": 7,
+        "val": [
+          "QApplication",
+          "QComboBox",
+          "QFileDialog",
+          "QFrame",
+          "QGridLayout",
+          "QHBoxLayout",
+          "QLabel",
+          "QLineEdit",
+          "QMessageBox",
+          "QPushButton",
+          "QScrollArea",
+          "QSplitter",
+          "QVBoxLayout",
+          "QWidget",
+          "QPlainTextEdit"
+        ]
+      },
+      {
+        "idx": 10,
+        "val": [
+          "frozen"
+        ]
+      },
+      {
+        "idx": 77,
+        "val": [
+          "Hình ngôi sao",
+          "Hình thoi"
+        ]
+      },
+      {
+        "idx": 78,
+        "val": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      {
+        "idx": 79,
+        "val": [
+          "A",
+          "B",
+          "C",
+          "O"
+        ]
+      },
+      {
+        "idx": 80,
+        "val": [
+          "A",
+          "B",
+          "C",
+          "I",
+          "D",
+          "E",
+          "F"
+        ]
+      },
+      {
+        "idx": 81,
+        "val": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ]
+      },
+      {
+        "idx": 82,
+        "val": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F"
+        ]
+      },
+      {
+        "idx": 83,
+        "val": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E"
+        ]
+      },
+      {
+        "idx": 109,
+        "val": [
+          7
+        ]
+      },
+      {
+        "idx": 110,
+        "val": [
+          null
+        ]
+      }
+    ]
+  },
+  "tab_duong_conic.pyc": {
+    "filename": "tab_duong_conic.pyc",
+    "consts": [],
+    "strings": [
+      {
+        "idx": 0,
+        "val": "Tab tạo hình các đường conic bằng TikZ.\n\nImport vào AppTong.py:\n    from tab_duong_conic import DuongConicTab\n    self.tabs.addTab(DuongConicTab(), \"Đường conic\")\n"
+      },
+      {
+        "idx": 8,
+        "val": "a"
+      },
+      {
+        "idx": 9,
+        "val": "Bán trục lớn a"
+      },
+      {
+        "idx": 11,
+        "val": "b"
+      },
+      {
+        "idx": 12,
+        "val": "Bán trục nhỏ b"
+      },
+      {
+        "idx": 14,
+        "val": "Thông số a"
+      },
+      {
+        "idx": 16,
+        "val": "Thông số b"
+      },
+      {
+        "idx": 18,
+        "val": "goc"
+      },
+      {
+        "idx": 19,
+        "val": "Tham số điểm M"
+      },
+      {
+        "idx": 23,
+        "val": "p"
+      },
+      {
+        "idx": 24,
+        "val": "Thông số p"
+      },
+      {
+        "idx": 26,
+        "val": "xmax"
+      },
+      {
+        "idx": 27,
+        "val": "Giới hạn trục x"
+      },
+      {
+        "idx": 29,
+        "val": "ymax"
+      },
+      {
+        "idx": 30,
+        "val": "Giới hạn trục y"
+      },
+      {
+        "idx": 31,
+        "val": "Góc điểm M"
+      },
+      {
+        "idx": 35,
+        "val": "°"
+      },
+      {
+        "idx": 38,
+        "val": "lim"
+      },
+      {
+        "idx": 39,
+        "val": "Giới hạn đồ thị"
+      },
+      {
+        "idx": 42,
+        "val": "xt"
+      },
+      {
+        "idx": 43,
+        "val": "Hoành độ điểm M"
+      },
+      {
+        "idx": 46,
+        "val": "yt"
+      },
+      {
+        "idx": 47,
+        "val": "Tung độ điểm M"
+      },
+      {
+        "idx": 55,
+        "val": "code"
+      },
+      {
+        "idx": 56,
+        "val": "shape"
+      },
+      {
+        "idx": 57,
+        "val": "point_names"
+      },
+      {
+        "idx": 58,
+        "val": "return"
+      },
+      {
+        "idx": 65,
+        "val": "values"
+      },
+      {
+        "idx": 68,
+        "val": "DuongConicTab"
+      }
+    ],
+    "tuples": [
+      {
+        "idx": 2,
+        "val": [
+          "Path"
+        ]
+      },
+      {
+        "idx": 4,
+        "val": [
+          "Qt",
+          "QSize"
+        ]
+      },
+      {
+        "idx": 5,
+        "val": [
+          "QDoubleValidator",
+          "QPixmap"
+        ]
+      },
+      {
+        "idx": 6,
+        "val": [
+          "QApplication",
+          "QComboBox",
+          "QFileDialog",
+          "QFrame",
+          "QGridLayout",
+          "QHBoxLayout",
+          "QLabel",
+          "QLineEdit",
+          "QMessageBox",
+          "QPushButton",
+          "QScrollArea",
+          "QSplitter",
+          "QVBoxLayout",
+          "QWidget",
+          "QPlainTextEdit"
+        ]
+      },
+      {
+        "idx": 7,
+        "val": [
+          "CompileWorker",
+          "Parameter",
+          "QSS",
+          "make_standalone"
+        ]
+      },
+      {
+        "idx": 48,
+        "val": [
+          "Elip cơ bản",
+          "Hypebol cơ bản",
+          "Parabol đứng",
+          "Parabol ngang",
+          "Elip có tiêu điểm và điểm M",
+          "Hypebol có tiệm cận và tiêu điểm",
+          "Parabol đứng có tiêu điểm",
+          "Parabol ngang có tiêu điểm",
+          "Elip và tiếp tuyến",
+          "Hypebol và tiếp tuyến",
+          "Parabol và tiếp tuyến"
+        ]
+      },
+      {
+        "idx": 49,
+        "val": []
+      },
+      {
+        "idx": 50,
+        "val": [
+          "F_1",
+          "F_2",
+          "M"
+        ]
+      },
+      {
+        "idx": 51,
+        "val": [
+          "A_2",
+          "A_1",
+          "B_2",
+          "B_1",
+          "F_1",
+          "F_2"
+        ]
+      },
+      {
+        "idx": 52,
+        "val": [
+          "F",
+          "D",
+          "A",
+          "M"
+        ]
+      },
+      {
+        "idx": 53,
+        "val": [
+          "M"
+        ]
+      },
+      {
+        "idx": 70,
+        "val": [
+          false,
+          false,
+          false
+        ]
+      },
+      {
+        "idx": 71,
+        "val": [
+          null
+        ]
+      }
+    ]
+  },
+  "tab_duong_tron.pyc": {
+    "filename": "tab_duong_tron.pyc",
+    "consts": [],
+    "strings": [
+      {
+        "idx": 0,
+        "val": "Tab tạo hình đường tròn bằng TikZ, dùng cùng AppTong.py."
+      },
+      {
+        "idx": 8,
+        "val": "r"
+      },
+      {
+        "idx": 9,
+        "val": "Bán kính r"
+      },
+      {
+        "idx": 11,
+        "val": "goc"
+      },
+      {
+        "idx": 12,
+        "val": "Góc tiếp tuyến"
+      },
+      {
+        "idx": 16,
+        "val": "°"
+      },
+      {
+        "idx": 17,
+        "val": "Góc điểm C"
+      },
+      {
+        "idx": 21,
+        "val": "gocm"
+      },
+      {
+        "idx": 22,
+        "val": "Góc điểm A"
+      },
+      {
+        "idx": 24,
+        "val": "goch"
+      },
+      {
+        "idx": 28,
+        "val": "R"
+      },
+      {
+        "idx": 29,
+        "val": "Bán kính lớn R"
+      },
+      {
+        "idx": 30,
+        "val": "Bán kính nhỏ r"
+      },
+      {
+        "idx": 32,
+        "val": "d"
+      },
+      {
+        "idx": 33,
+        "val": "Khoảng cách tâm d"
+      },
+      {
+        "idx": 47,
+        "val": "r={r};"
+      },
+      {
+        "idx": 48,
+        "val": "r={r}; goc={goc};"
+      },
+      {
+        "idx": 49,
+        "val": "r={r}; gocm={gocm}; goch={goch};"
+      },
+      {
+        "idx": 50,
+        "val": "R={R}; r={r}; d={d}; goc=acos((R-r)/d); goch=acos((R+r)/d);"
+      },
+      {
+        "idx": 51,
+        "val": "R={R}; r={r}; d=R+r; goc=acos((R-r)/d); goch=acos((R+r)/d);"
+      },
+      {
+        "idx": 52,
+        "val": "R={R}; r={r}; d=R-r;"
+      },
+      {
+        "idx": 53,
+        "val": "\\path (0,0) coordinate (O) (45:r) coordinate (A);\n\\draw (O)--(A) node[above,pos=0.5,sloped]{$r$};\n\\draw let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)});\n\\foreach \\t/\\g in {A/45,O/-90}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+      },
+      {
+        "idx": 54,
+        "val": "\\path (180:r) coordinate (A) (0:r) coordinate (B)\n  ($(A)!0.5!(B)$) coordinate (O);\n\\draw (B)--(A);\n\\draw let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)});\n\\foreach \\t/\\g in {A/180,B/0,O/-90}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+      },
+      {
+        "idx": 55,
+        "val": "\\path (0,0) coordinate (O) (-45:r) coordinate (A)\n  ($(A)!1!-90:(O)$) coordinate (T) ($2*(A)-(T)$) coordinate (Th);\n\\path pic[draw,angle radius=5pt]{right angle=O--A--T};\n\\draw (O)--(A) (T)--(Th)\n  let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)});\n\\foreach \\t/\\g in {A/-90,O/90}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+      },
+      {
+        "idx": 56,
+        "val": "\\path (0,0) coordinate (O) (goc:r) coordinate (A) (-goc:r) coordinate (B);\n\\begin{scope}[overlay]\n  \\path ($(A)!1!-90:(O)$) coordinate (OA) ($(B)!1!-90:(O)$) coordinate (OB)\n    (intersection of A--OA and B--OB) coordinate (S);\n\\end{scope}\n\\path pic[draw,angle radius=5pt]{right angle=O--A--S}\n  pic[draw,angle radius=5pt]{right angle=O--B--S};\n\\draw (O)--(A)--(S)--(B)--cycle\n  let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)});\n\\foreach \\t/\\g in {A/goc,B/-goc,S/0,O/135}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+      },
+      {
+        "idx": 57,
+        "val": "\\path (0,0) coordinate (O) (180:r) coordinate (A) (0:r) coordinate (B);\n\\draw (B) arc (0:180:r)--cycle;\n\\foreach \\t/\\g in {A/180,B/0,O/-90}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+      },
+      {
+        "idx": 58,
+        "val": "\\path (0,0) coordinate (O) (180:r) coordinate (A)\n  (0:r) coordinate (B) (goc:r) coordinate (C);\n\\begin{scope}[overlay]\n  \\path ($(A)!1!-90:(O)$) coordinate (OA) ($(B)!1!-90:(O)$) coordinate (OB)\n    ($(C)!1!-90:(O)$) coordinate (OC)\n    (intersection of A--OA and C--OC) coordinate (M)\n    (intersection of B--OB and C--OC) coordinate (N);\n\\end{scope}\n\\draw (A)--(M)--(N)--(B)--cycle (B) arc (0:180:r);\n\\foreach \\t/\\g in {A/180,B/0,O/-90,M/180,N/0,C/goc}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+      },
+      {
+        "idx": 59,
+        "val": "\\path (0,0) coordinate (O) (120:r) coordinate (A) (45:r) coordinate (B)\n  (-30:r) coordinate (C) (210:r) coordinate (D);\n\\draw (A)--(B)--(C)--(D)--cycle (O) circle (r);\n\\foreach \\t/\\g in {A/120,B/45,C/-30,D/210,O/-90}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:9pt)},font=\\scriptsize]{$\\t$};\n}"
+      },
+      {
+        "idx": 60,
+        "val": "\\path (0,0) coordinate (O) (-90:r) coordinate (M) (75:r) coordinate (N)\n  (25:r) coordinate (P) (155:r) coordinate (Q);\n\\begin{scope}[overlay]\n  \\path ($(M)!1!-90:(O)$) coordinate (AB) ($(N)!1!-90:(O)$) coordinate (CD)\n    ($(P)!1!-90:(O)$) coordinate (BC) ($(Q)!1!-90:(O)$) coordinate (AD)\n    (intersection of AB--M and Q--AD) coordinate (A)\n    (intersection of AB--M and P--BC) coordinate (B)\n    (intersection of CD--N and Q--AD) coordinate (D)\n    (intersection of CD--N and P--BC) coordinate (C);\n\\end{scope}\n\\draw (A)--(B)--(C)--(D)--cycle (O) circle (r);\n\\foreach \\t/\\g in {A/-90,B/-90,C/0,D/180,O/-90}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:9pt)},font=\\scriptsize]{$\\t$};\n}"
+      },
+      {
+        "idx": 61,
+        "val": "\\path (0,0) coordinate (O) (gocm:r) coordinate (A)\n  ({180-goch}:r) coordinate (B) (goch:r) coordinate (C);\n\\begin{scope}[overlay]\n  \\path ($(A)!1!-90:(O)$) coordinate (OA)\n    (intersection of A--OA and B--C) coordinate (S);\n\\end{scope}\n\\path pic[draw,angle radius=5pt]{right angle=O--A--S};\n\\draw (O)--(A)--(S)--(B)\n  let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)});\n\\foreach \\t/\\g in {A/gocm,B/{180-goch},C/goch,S/0,O/135}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+      },
+      {
+        "idx": 62,
+        "val": "\\path (0,0) coordinate (O) (d,0) coordinate (O')\n  (goc:R) coordinate (A) (-goc:R) coordinate (B)\n  (goch:R) coordinate (C) (-goch:R) coordinate (D)\n  ($(d,0)+(goc:r)$) coordinate (A') ($(d,0)+(-goc:r)$) coordinate (B')\n  (intersection of A--A' and B--B') coordinate (S);\n\\foreach \\x/\\y/\\z in {O/A/S,O/B/S}{\n  \\path pic[draw,angle radius=5pt]{right angle=\\x--\\y--\\z};\n}\n\\draw (O) circle (R) (O') circle (r) (A)--(S)--(B)--(O)--cycle;\n\\foreach \\t/\\g in {A/goc,A'/goc,B/-goc,B'/-goc,O/180,O'/-90,S/0}{\n  \\path[draw,fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+      },
+      {
+        "idx": 63,
+        "val": "\\path (0,0) coordinate (O) (d,0) coordinate (O')\n  (goc:R) coordinate (A) (-goc:R) coordinate (B)\n  (goch:R) coordinate (C) (-goch:R) coordinate (D)\n  ($(d,0)+(goc:r)$) coordinate (A') ($(d,0)+(-goc:r)$) coordinate (B')\n  (intersection of A--A' and B--B') coordinate (S);\n\\draw (O) circle (R) (O') circle (r) (A)--(S)--(B);\n\\foreach \\t/\\g in {A/goc,A'/goc,B/-goc,B'/-goc,O/-90,O'/-90,S/0}{\n  \\path[draw,fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+      },
+      {
+        "idx": 64,
+        "val": "\\path (0,0) coordinate (O) (d,0) coordinate (O') (0:R) coordinate (A);\n\\draw (O) circle (R) (O') circle (r);\n\\foreach \\t/\\g in {O/180,O'/-90,A/0}{\n  \\path[draw,fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+      },
+      {
+        "idx": 65,
+        "val": "value"
+      },
+      {
+        "idx": 66,
+        "val": "return"
+      },
+      {
+        "idx": 68,
+        "val": "code"
+      },
+      {
+        "idx": 69,
+        "val": "shape"
+      },
+      {
+        "idx": 70,
+        "val": "point_names"
+      },
+      {
+        "idx": 72,
+        "val": "values"
+      },
+      {
+        "idx": 75,
+        "val": "DuongTronTab"
+      }
+    ],
+    "tuples": [
+      {
+        "idx": 2,
+        "val": [
+          "Path"
+        ]
+      },
+      {
+        "idx": 4,
+        "val": [
+          "Qt",
+          "QSize"
+        ]
+      },
+      {
+        "idx": 5,
+        "val": [
+          "QDoubleValidator",
+          "QPixmap"
+        ]
+      },
+      {
+        "idx": 6,
+        "val": [
+          "QApplication",
+          "QComboBox",
+          "QFileDialog",
+          "QFrame",
+          "QGridLayout",
+          "QHBoxLayout",
+          "QLabel",
+          "QLineEdit",
+          "QMessageBox",
+          "QPushButton",
+          "QScrollArea",
+          "QSplitter",
+          "QVBoxLayout",
+          "QWidget",
+          "QPlainTextEdit"
+        ]
+      },
+      {
+        "idx": 7,
+        "val": [
+          "CompileWorker",
+          "Parameter",
+          "QSS",
+          "make_standalone"
+        ]
+      },
+      {
+        "idx": 38,
+        "val": [
+          "Đường tròn có tâm và bán kính",
+          "Đường tròn có đường kính",
+          "Đường tròn có tâm và tiếp tuyến",
+          "Đường tròn và hai tiếp tuyến",
+          "Nửa đường tròn",
+          "Nửa đường tròn và hai tiếp tuyến",
+          "Tứ giác nội tiếp đường tròn",
+          "Tứ giác ngoại tiếp đường tròn",
+          "Đường tròn có tiếp tuyến và cát tuyến",
+          "Hai đường tròn có tiếp tuyến chung",
+          "Hai đường tròn tiếp xúc ngoài",
+          "Hai đường tròn tiếp xúc trong"
+        ]
+      },
+      {
+        "idx": 39,
+        "val": [
+          "A",
+          "O"
+        ]
+      },
+      {
+        "idx": 40,
+        "val": [
+          "A",
+          "B",
+          "O"
+        ]
+      },
+      {
+        "idx": 41,
+        "val": [
+          "A",
+          "B",
+          "S",
+          "O"
+        ]
+      },
+      {
+        "idx": 42,
+        "val": [
+          "A",
+          "B",
+          "O",
+          "M",
+          "N",
+          "C"
+        ]
+      },
+      {
+        "idx": 43,
+        "val": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "O"
+        ]
+      },
+      {
+        "idx": 44,
+        "val": [
+          "A",
+          "B",
+          "C",
+          "S",
+          "O"
+        ]
+      },
+      {
+        "idx": 45,
+        "val": [
+          "A",
+          "A'",
+          "B",
+          "B'",
+          "O",
+          "O'",
+          "S"
+        ]
+      },
+      {
+        "idx": 46,
+        "val": [
+          "O",
+          "O'",
+          "A"
+        ]
+      },
+      {
+        "idx": 77,
+        "val": [
+          null
+        ]
+      }
+    ]
+  },
+  "tab_do_thi.pyc": {
+    "filename": "tab_do_thi.pyc",
+    "consts": [],
+    "strings": [
+      {
+        "idx": 0,
+        "val": "Tab vẽ đồ thị hàm số cơ bản bằng TikZ."
+      },
+      {
+        "idx": 19,
+        "val": "text"
+      },
+      {
+        "idx": 20,
+        "val": "str"
+      },
+      {
+        "idx": 21,
+        "val": "return"
+      },
+      {
+        "idx": 22,
+        "val": "Fraction"
+      },
+      {
+        "idx": 25,
+        "val": "value"
+      },
+      {
+        "idx": 27,
+        "val": "coefficients"
+      },
+      {
+        "idx": 28,
+        "val": "list[str]"
+      },
+      {
+        "idx": 30,
+        "val": "list[tuple[str, str]]"
+      },
+      {
+        "idx": 32,
+        "val": "default_position"
+      },
+      {
+        "idx": 34,
+        "val": "picture"
+      },
+      {
+        "idx": 37,
+        "val": "DoThiTab"
+      }
+    ],
+    "tuples": [
+      {
+        "idx": 2,
+        "val": [
+          "annotations"
+        ]
+      },
+      {
+        "idx": 4,
+        "val": [
+          "Fraction"
+        ]
+      },
+      {
+        "idx": 5,
+        "val": [
+          "Path"
+        ]
+      },
+      {
+        "idx": 6,
+        "val": [
+          "Qt"
+        ]
+      },
+      {
+        "idx": 7,
+        "val": [
+          "QPixmap"
+        ]
+      },
+      {
+        "idx": 8,
+        "val": [
+          "QApplication",
+          "QComboBox",
+          "QFileDialog",
+          "QFrame",
+          "QGridLayout",
+          "QHBoxLayout",
+          "QLabel",
+          "QLineEdit",
+          "QMessageBox",
+          "QPushButton",
+          "QScrollArea",
+          "QSplitter",
+          "QPlainTextEdit",
+          "QVBoxLayout",
+          "QWidget"
+        ]
+      },
+      {
+        "idx": 9,
+        "val": [
+          "CompileWorker",
+          "QSS"
+        ]
+      },
+      {
+        "idx": 10,
+        "val": [
+          "a",
+          "b",
+          "c"
+        ]
+      },
+      {
+        "idx": 11,
+        "val": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ]
+      },
+      {
+        "idx": 12,
+        "val": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e"
+        ]
+      },
+      {
+        "idx": 13,
+        "val": [
+          "Hàm bậc 2",
+          "Hàm bậc 3",
+          "Hàm bậc 4",
+          "Phân thức bậc 1 / bậc 1",
+          "Phân thức bậc 2 / bậc 1"
+        ]
+      },
+      {
+        "idx": 14,
+        "val": [
+          "1",
+          "0",
+          "-1"
+        ]
+      },
+      {
+        "idx": 15,
+        "val": [
+          "1",
+          "-3",
+          "0",
+          "2"
+        ]
+      },
+      {
+        "idx": 16,
+        "val": [
+          "1",
+          "0",
+          "-2",
+          "0",
+          "0"
+        ]
+      },
+      {
+        "idx": 17,
+        "val": [
+          "1",
+          "1",
+          "1",
+          "-1"
+        ]
+      },
+      {
+        "idx": 18,
+        "val": [
+          "1",
+          "0",
+          "-1",
+          "1",
+          "0"
+        ]
+      },
+      {
+        "idx": 38,
+        "val": [
+          "text",
+          "str",
+          "return",
+          "Fraction"
+        ]
+      },
+      {
+        "idx": 39,
+        "val": [
+          "text",
+          "str",
+          "return",
+          "str"
+        ]
+      },
+      {
+        "idx": 40,
+        "val": [
+          "value",
+          "Fraction",
+          "return",
+          "str"
+        ]
+      },
+      {
+        "idx": 41,
+        "val": [
+          "coefficients",
+          "list[str]",
+          "return",
+          "str"
+        ]
+      },
+      {
+        "idx": 42,
+        "val": [
+          "text",
+          "str",
+          "return",
+          "list[tuple[str, str]]"
+        ]
+      },
+      {
+        "idx": 43,
+        "val": [
+          "text",
+          "str",
+          "default_position",
+          "str",
+          "return",
+          "list[tuple[str, str]]"
+        ]
+      },
+      {
+        "idx": 44,
+        "val": [
+          "picture",
+          "str",
+          "return",
+          "str"
+        ]
+      }
+    ]
+  },
+  "tab_do_thi_khac.pyc": {
+    "filename": "tab_do_thi_khac.pyc",
+    "consts": [],
+    "strings": [
+      {
+        "idx": 0,
+        "val": "Tab vẽ đồ thị lượng giác, logarit và hàm mũ bằng TikZ."
+      },
+      {
+        "idx": 21,
+        "val": "expression"
+      },
+      {
+        "idx": 22,
+        "val": "str"
+      },
+      {
+        "idx": 23,
+        "val": "return"
+      },
+      {
+        "idx": 24,
+        "val": "float"
+      },
+      {
+        "idx": 26,
+        "val": "value"
+      },
+      {
+        "idx": 28,
+        "val": "tuple[Fraction, Fraction]"
+      },
+      {
+        "idx": 31,
+        "val": "Fraction"
+      },
+      {
+        "idx": 32,
+        "val": "with_pi"
+      },
+      {
+        "idx": 33,
+        "val": "bool"
+      },
+      {
+        "idx": 35,
+        "val": "k"
+      },
+      {
+        "idx": 36,
+        "val": "int"
+      },
+      {
+        "idx": 37,
+        "val": "a_text"
+      },
+      {
+        "idx": 38,
+        "val": "b_text"
+      },
+      {
+        "idx": 39,
+        "val": "x_value"
+      },
+      {
+        "idx": 41,
+        "val": "text"
+      },
+      {
+        "idx": 42,
+        "val": "label"
+      },
+      {
+        "idx": 43,
+        "val": "list[str]"
+      },
+      {
+        "idx": 45,
+        "val": "list[tuple[str, str, str]]"
+      },
+      {
+        "idx": 47,
+        "val": "tuple[str, str]"
+      },
+      {
+        "idx": 49,
+        "val": "list[tuple[str, str]]"
+      },
+      {
+        "idx": 52,
+        "val": "picture"
+      },
+      {
+        "idx": 55,
+        "val": "DoThiKhacTab"
+      }
+    ],
+    "tuples": [
+      {
+        "idx": 2,
+        "val": [
+          "annotations"
+        ]
+      },
+      {
+        "idx": 4,
+        "val": [
+          "Fraction"
+        ]
+      },
+      {
+        "idx": 5,
+        "val": [
+          "Path"
+        ]
+      },
+      {
+        "idx": 6,
+        "val": [
+          "Qt"
+        ]
+      },
+      {
+        "idx": 7,
+        "val": [
+          "QPixmap"
+        ]
+      },
+      {
+        "idx": 8,
+        "val": [
+          "QApplication",
+          "QComboBox",
+          "QFileDialog",
+          "QFrame",
+          "QGridLayout",
+          "QHBoxLayout",
+          "QLabel",
+          "QLineEdit",
+          "QMessageBox",
+          "QPushButton",
+          "QScrollArea",
+          "QSplitter",
+          "QPlainTextEdit",
+          "QVBoxLayout",
+          "QWidget"
+        ]
+      },
+      {
+        "idx": 9,
+        "val": [
+          "CompileWorker",
+          "QSS"
+        ]
+      },
+      {
+        "idx": 10,
+        "val": [
+          "sin(ax+b)",
+          "cos(ax+b)",
+          "tan(ax+b)",
+          "cot(ax+b)"
+        ]
+      },
+      {
+        "idx": 11,
+        "val": [
+          "ln(x)",
+          "ln(ax+b)",
+          "log_a(x)",
+          "log_a(ax+b)"
+        ]
+      },
+      {
+        "idx": 12,
+        "val": [
+          "e^x",
+          "a^x",
+          "e^(ax+b)",
+          "a^(ax+b)"
+        ]
+      },
+      {
+        "idx": 13,
+        "val": [
+          "Lượng giác",
+          "Logarit",
+          "Hàm mũ"
+        ]
+      },
+      {
+        "idx": 14,
+        "val": [
+          "a",
+          "Hệ số a",
+          "1"
+        ]
+      },
+      {
+        "idx": 15,
+        "val": [
+          "b",
+          "Độ dịch pha b (radian)",
+          "0"
+        ]
+      },
+      {
+        "idx": 16,
+        "val": [
+          "b",
+          "Hệ số b",
+          "0"
+        ]
+      },
+      {
+        "idx": 17,
+        "val": [
+          "q",
+          "Cơ số a",
+          "2"
+        ]
+      },
+      {
+        "idx": 18,
+        "val": [
+          [
+            "q",
+            "Cơ số logarit a",
+            "2"
+          ],
+          [
+            "a",
+            "Hệ số x",
+            "1"
+          ],
+          [
+            "b",
+            "Hệ số tự do b",
+            "0"
+          ]
+        ]
+      },
+      {
+        "idx": 19,
+        "val": [
+          [
+            "q",
+            "Cơ số a",
+            "2"
+          ],
+          [
+            "a",
+            "Hệ số a",
+            "1"
+          ],
+          [
+            "b",
+            "Hệ số b",
+            "0"
+          ]
+        ]
+      },
+      {
+        "idx": 20,
+        "val": [
+          "sin(ax+b)",
+          "cos(ax+b)",
+          "tan(ax+b)",
+          "cot(ax+b)",
+          "ln(x)",
+          "ln(ax+b)",
+          "log_a(x)",
+          "log_a(ax+b)",
+          "e^x",
+          "a^x",
+          "e^(ax+b)",
+          "a^(ax+b)"
+        ]
+      },
+      {
+        "idx": 56,
+        "val": [
+          "expression",
+          "str",
+          "return",
+          "float"
+        ]
+      },
+      {
+        "idx": 57,
+        "val": [
+          "value",
+          "float",
+          "return",
+          "str"
+        ]
+      },
+      {
+        "idx": 58,
+        "val": [
+          "expression",
+          "str",
+          "return",
+          "tuple[Fraction, Fraction]"
+        ]
+      },
+      {
+        "idx": 59,
+        "val": [
+          false
+        ]
+      },
+      {
+        "idx": 60,
+        "val": [
+          "value",
+          "Fraction",
+          "with_pi",
+          "bool",
+          "return",
+          "str"
+        ]
+      },
+      {
+        "idx": 61,
+        "val": [
+          "k",
+          "int",
+          "a_text",
+          "str",
+          "b_text",
+          "str",
+          "x_value",
+          "float",
+          "return",
+          "str"
+        ]
+      },
+      {
+        "idx": 62,
+        "val": [
+          "text",
+          "str",
+          "label",
+          "str",
+          "return",
+          "list[str]"
+        ]
+      },
+      {
+        "idx": 63,
+        "val": [
+          "text",
+          "str",
+          "label",
+          "str",
+          "return",
+          "list[tuple[str, str, str]]"
+        ]
+      },
+      {
+        "idx": 64,
+        "val": [
+          "value",
+          "str",
+          "return",
+          "tuple[str, str]"
+        ]
+      },
+      {
+        "idx": 65,
+        "val": [
+          "text",
+          "str",
+          "return",
+          "list[tuple[str, str]]"
+        ]
+      },
+      {
+        "idx": 66,
+        "val": [
+          "k",
+          "int",
+          "return",
+          "str"
+        ]
+      },
+      {
+        "idx": 67,
+        "val": [
+          "picture",
+          "str",
+          "return",
+          "str"
+        ]
+      }
+    ]
+  },
+  "tab_to_mien_do_thi.pyc": {
+    "filename": "tab_to_mien_do_thi.pyc",
+    "consts": [],
+    "strings": [
+      {
+        "idx": 0,
+        "val": "Tab tô miền giữa hai hoặc nhiều đồ thị hàm số bằng TikZ."
+      },
+      {
+        "idx": 9,
+        "val": "horizontal lines"
+      },
+      {
+        "idx": 10,
+        "val": "vertical lines"
+      },
+      {
+        "idx": 11,
+        "val": "north east lines"
+      },
+      {
+        "idx": 12,
+        "val": "north west lines"
+      },
+      {
+        "idx": 13,
+        "val": "grid"
+      },
+      {
+        "idx": 14,
+        "val": "crosshatch"
+      },
+      {
+        "idx": 15,
+        "val": "crosshatch dots"
+      },
+      {
+        "idx": 16,
+        "val": "dots"
+      },
+      {
+        "idx": 17,
+        "val": "fivepointed stars"
+      },
+      {
+        "idx": 18,
+        "val": "sixpointed stars"
+      },
+      {
+        "idx": 19,
+        "val": "bricks"
+      },
+      {
+        "idx": 20,
+        "val": "checkerboard"
+      },
+      {
+        "idx": 22,
+        "val": "teal!80!black"
+      },
+      {
+        "idx": 23,
+        "val": "teal!70"
+      },
+      {
+        "idx": 24,
+        "val": "blue!70"
+      },
+      {
+        "idx": 25,
+        "val": "red!70"
+      },
+      {
+        "idx": 26,
+        "val": "violet!70"
+      },
+      {
+        "idx": 27,
+        "val": "black!70"
+      },
+      {
+        "idx": 30,
+        "val": "expression"
+      },
+      {
+        "idx": 31,
+        "val": "str"
+      },
+      {
+        "idx": 32,
+        "val": "return"
+      },
+      {
+        "idx": 34,
+        "val": "value"
+      },
+      {
+        "idx": 35,
+        "val": "name"
+      },
+      {
+        "idx": 37,
+        "val": "float"
+      },
+      {
+        "idx": 39,
+        "val": "text"
+      },
+      {
+        "idx": 40,
+        "val": "mode"
+      },
+      {
+        "idx": 41,
+        "val": "list[str]"
+      },
+      {
+        "idx": 43,
+        "val": "xmin"
+      },
+      {
+        "idx": 44,
+        "val": "xmax"
+      },
+      {
+        "idx": 45,
+        "val": "tuple[float, float]"
+      },
+      {
+        "idx": 49,
+        "val": "axis"
+      },
+      {
+        "idx": 50,
+        "val": "list[tuple[float, str, str]]"
+      },
+      {
+        "idx": 52,
+        "val": ""
+      },
+      {
+        "idx": 53,
+        "val": "expressions"
+      },
+      {
+        "idx": 54,
+        "val": "ymin"
+      },
+      {
+        "idx": 55,
+        "val": "ymax"
+      },
+      {
+        "idx": 56,
+        "val": "intervals"
+      },
+      {
+        "idx": 57,
+        "val": "list[tuple[float, float, str, str]]"
+      },
+      {
+        "idx": 58,
+        "val": "samples"
+      },
+      {
+        "idx": 59,
+        "val": "int"
+      },
+      {
+        "idx": 60,
+        "val": "x_ticks"
+      },
+      {
+        "idx": 61,
+        "val": "y_ticks"
+      },
+      {
+        "idx": 63,
+        "val": "picture"
+      },
+      {
+        "idx": 66,
+        "val": "ToMienDoThiTab"
+      }
+    ],
+    "tuples": [
+      {
+        "idx": 2,
+        "val": [
+          "annotations"
+        ]
+      },
+      {
+        "idx": 4,
+        "val": [
+          "Path"
+        ]
+      },
+      {
+        "idx": 5,
+        "val": [
+          "Qt"
+        ]
+      },
+      {
+        "idx": 6,
+        "val": [
+          "QPixmap"
+        ]
+      },
+      {
+        "idx": 7,
+        "val": [
+          "QApplication",
+          "QComboBox",
+          "QFileDialog",
+          "QFrame",
+          "QGridLayout",
+          "QHBoxLayout",
+          "QHeaderView",
+          "QLabel",
+          "QLineEdit",
+          "QMessageBox",
+          "QPushButton",
+          "QPlainTextEdit",
+          "QScrollArea",
+          "QSplitter",
+          "QTableWidget",
+          "QTableWidgetItem",
+          "QVBoxLayout",
+          "QWidget"
+        ]
+      },
+      {
+        "idx": 8,
+        "val": [
+          "CompileWorker",
+          "QSS"
+        ]
+      },
+      {
+        "idx": 21,
+        "val": [
+          "Đường kẻ ngang (horizontal lines)",
+          "Đường kẻ dọc (vertical lines)",
+          "Chéo lên (north east lines)",
+          "Chéo xuống (north west lines)",
+          "Lưới ô vuông (grid)",
+          "Kẻ ô bàn cờ (crosshatch)",
+          "Lưới chấm (crosshatch dots)",
+          "Chấm bi (dots)",
+          "Sao 5 cánh (fivepointed stars)",
+          "Sao 6 cánh (sixpointed stars)",
+          "Gạch ốp tường (bricks)",
+          "Bàn cờ (checkerboard)"
+        ]
+      },
+      {
+        "idx": 28,
+        "val": [
+          "Teal đậm",
+          "Teal",
+          "Xanh dương",
+          "Đỏ",
+          "Tím",
+          "Đen"
+        ]
+      },
+      {
+        "idx": 67,
+        "val": [
+          "expression",
+          "str",
+          "return",
+          "str"
+        ]
+      },
+      {
+        "idx": 68,
+        "val": [
+          "value",
+          "str",
+          "name",
+          "str",
+          "return",
+          "str"
+        ]
+      },
+      {
+        "idx": 69,
+        "val": [
+          "expression",
+          "str",
+          "return",
+          "float"
+        ]
+      },
+      {
+        "idx": 70,
+        "val": [
+          "text",
+          "str",
+          "mode",
+          "str",
+          "return",
+          "list[str]"
+        ]
+      },
+      {
+        "idx": 71,
+        "val": [
+          "expression",
+          "str",
+          "xmin",
+          "float",
+          "xmax",
+          "float",
+          "return",
+          "tuple[float, float]"
+        ]
+      },
+      {
+        "idx": 72,
+        "val": [
+          "value",
+          "float",
+          "return",
+          "str"
+        ]
+      },
+      {
+        "idx": 73,
+        "val": [
+          "text",
+          "str",
+          "axis",
+          "str",
+          "return",
+          "list[tuple[float, str, str]]"
+        ]
+      },
+      {
+        "idx": 74,
+        "val": [
+          "",
+          ""
+        ]
+      },
+      {
+        "idx": 75,
+        "val": [
+          "expressions",
+          "list[str]",
+          "xmin",
+          "str",
+          "xmax",
+          "str",
+          "ymin",
+          "str",
+          "ymax",
+          "str",
+          "intervals",
+          "list[tuple[float, float, str, str]]",
+          "samples",
+          "int",
+          "x_ticks",
+          "str",
+          "y_ticks",
+          "str",
+          "return",
+          "str"
+        ]
+      },
+      {
+        "idx": 76,
+        "val": [
+          "picture",
+          "str",
+          "return",
+          "str"
+        ]
+      }
+    ]
+  },
+  "tab_bang_bien_thien.pyc": {
+    "filename": "tab_bang_bien_thien.pyc",
+    "consts": [],
+    "strings": [
+      {
+        "idx": 0,
+        "val": "Tab tạo bảng biến thiên bằng gói LaTeX tkz-tab."
+      },
+      {
+        "idx": 14,
+        "val": "x"
+      },
+      {
+        "idx": 15,
+        "val": "float"
+      },
+      {
+        "idx": 16,
+        "val": "return"
+      },
+      {
+        "idx": 17,
+        "val": "str"
+      },
+      {
+        "idx": 19,
+        "val": "value"
+      },
+      {
+        "idx": 20,
+        "val": "Fraction"
+      },
+      {
+        "idx": 25,
+        "val": "a"
+      },
+      {
+        "idx": 26,
+        "val": "b"
+      },
+      {
+        "idx": 27,
+        "val": "c"
+      },
+      {
+        "idx": 28,
+        "val": "list[tuple[float, str, Fraction | None]]"
+      },
+      {
+        "idx": 30,
+        "val": "d"
+      },
+      {
+        "idx": 32,
+        "val": "coefs"
+      },
+      {
+        "idx": 33,
+        "val": "list[Fraction]"
+      },
+      {
+        "idx": 35,
+        "val": "x_tex"
+      },
+      {
+        "idx": 37,
+        "val": "list[float]"
+      },
+      {
+        "idx": 39,
+        "val": "values"
+      },
+      {
+        "idx": 41,
+        "val": "tuple[float, ...]"
+      },
+      {
+        "idx": 43,
+        "val": "body"
+      },
+      {
+        "idx": 46,
+        "val": "BangBienThienTab"
+      }
+    ],
+    "tuples": [
+      {
+        "idx": 2,
+        "val": [
+          "annotations"
+        ]
+      },
+      {
+        "idx": 4,
+        "val": [
+          "Fraction"
+        ]
+      },
+      {
+        "idx": 5,
+        "val": [
+          "isqrt"
+        ]
+      },
+      {
+        "idx": 6,
+        "val": [
+          "Path"
+        ]
+      },
+      {
+        "idx": 7,
+        "val": [
+          "Qt"
+        ]
+      },
+      {
+        "idx": 8,
+        "val": [
+          "QPixmap"
+        ]
+      },
+      {
+        "idx": 9,
+        "val": [
+          "QComboBox",
+          "QFileDialog",
+          "QFrame",
+          "QGridLayout",
+          "QHBoxLayout",
+          "QLabel",
+          "QLineEdit",
+          "QMessageBox",
+          "QPushButton",
+          "QScrollArea",
+          "QSplitter",
+          "QTableWidget",
+          "QTableWidgetItem",
+          "QPlainTextEdit",
+          "QVBoxLayout",
+          "QWidget"
+        ]
+      },
+      {
+        "idx": 10,
+        "val": [
+          "CompileWorker",
+          "QSS"
+        ]
+      },
+      {
+        "idx": 11,
+        "val": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ]
+      },
+      {
+        "idx": 12,
+        "val": [
+          "a",
+          "b",
+          "c",
+          "d",
+          "e"
+        ]
+      },
+      {
+        "idx": 13,
+        "val": [
+          "Hàm bậc 3: ax³ + bx² + cx + d",
+          "Hàm bậc 4: ax⁴ + bx³ + cx² + dx + e",
+          "Phân thức bậc nhất / bậc nhất",
+          "Phân thức bậc hai / bậc nhất"
+        ]
+      },
+      {
+        "idx": 47,
+        "val": [
+          "x",
+          "float",
+          "return",
+          "str"
+        ]
+      },
+      {
+        "idx": 48,
+        "val": [
+          "value",
+          "str",
+          "return",
+          "Fraction"
+        ]
+      },
+      {
+        "idx": 49,
+        "val": [
+          "value",
+          "Fraction",
+          "return",
+          "str"
+        ]
+      },
+      {
+        "idx": 50,
+        "val": [
+          "a",
+          "Fraction",
+          "b",
+          "Fraction",
+          "c",
+          "Fraction",
+          "return",
+          "list[tuple[float, str, Fraction | None]]"
+        ]
+      },
+      {
+        "idx": 51,
+        "val": [
+          "a",
+          "Fraction",
+          "b",
+          "Fraction",
+          "c",
+          "Fraction",
+          "d",
+          "Fraction",
+          "return",
+          "list[tuple[float, str, Fraction | None]]"
+        ]
+      },
+      {
+        "idx": 52,
+        "val": [
+          "coefs",
+          "list[Fraction]",
+          "x",
+          "Fraction",
+          "return",
+          "Fraction"
+        ]
+      },
+      {
+        "idx": 53,
+        "val": [
+          "coefs",
+          "list[Fraction]",
+          "x_tex",
+          "str",
+          "return",
+          "str"
+        ]
+      },
+      {
+        "idx": 54,
+        "val": [
+          "a",
+          "float",
+          "b",
+          "float",
+          "c",
+          "float",
+          "d",
+          "float",
+          "return",
+          "list[float]"
+        ]
+      },
+      {
+        "idx": 55,
+        "val": [
+          "values",
+          "list[float]",
+          "return",
+          "list[float]"
+        ]
+      },
+      {
+        "idx": 56,
+        "val": [
+          "coefs",
+          "tuple[float, ...]",
+          "x",
+          "float",
+          "return",
+          "float"
+        ]
+      },
+      {
+        "idx": 57,
+        "val": [
+          "body",
+          "str",
+          "return",
+          "str"
+        ]
+      }
+    ]
+  }
+}

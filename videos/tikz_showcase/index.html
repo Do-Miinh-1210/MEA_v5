@@ -1,0 +1,766 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #070d18;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        color: #f1f5f9;
+      }
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        background: radial-gradient(circle at 50% 20%, #0d1e3a 0%, #060b14 80%);
+        overflow: hidden;
+      }
+
+      /* Animated Canvas Grid */
+      .bg-grid {
+        position: absolute;
+        inset: 0;
+        background-size: 60px 60px;
+        background-image: 
+          linear-gradient(to right, rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+        mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+      }
+
+      /* Glowing Orbs */
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(90px);
+        opacity: 0.25;
+        pointer-events: none;
+      }
+      .orb-1 { width: 600px; height: 600px; background: #0284c7; top: -100px; left: 100px; }
+      .orb-2 { width: 500px; height: 500px; background: #8b5cf6; bottom: -100px; right: 150px; }
+
+      /* Top Header Bar */
+      .top-bar {
+        position: absolute;
+        top: 36px;
+        left: 80px;
+        right: 80px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 20;
+      }
+      .app-brand {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .app-logo {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #0284c7, #2563eb);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 24px;
+        color: white;
+        box-shadow: 0 0 25px rgba(2, 132, 199, 0.6);
+      }
+      .app-name {
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        background: linear-gradient(to right, #ffffff, #93c5fd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .badge-version {
+        padding: 8px 18px;
+        border-radius: 20px;
+        background: rgba(14, 165, 233, 0.15);
+        border: 1px solid rgba(14, 165, 233, 0.4);
+        color: #38bdf8;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      /* Base Scene Container */
+      .scene {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 100px 120px 60px;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .scene-title-box {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+      .scene-tag {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 8px;
+        background: rgba(56, 189, 248, 0.12);
+        color: #38bdf8;
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        letter-spacing: 0.04em;
+      }
+      .scene-heading {
+        font-size: 52px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
+        background: linear-gradient(135deg, #ffffff 40%, #cbd5e1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .scene-desc {
+        font-size: 20px;
+        color: #94a3b8;
+        margin-top: 10px;
+        max-width: 900px;
+      }
+
+      /* Card Grid Layouts */
+      .grid-4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 28px;
+        width: 100%;
+        max-width: 1600px;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+        width: 100%;
+        max-width: 1500px;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 36px;
+        width: 100%;
+        max-width: 1400px;
+      }
+
+      .math-card {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(56, 189, 248, 0.2);
+        border-radius: 20px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(12px);
+      }
+      .math-card-header {
+        font-size: 19px;
+        font-weight: 700;
+        color: #38bdf8;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .svg-canvas {
+        width: 100%;
+        height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .math-badge {
+        margin-top: 14px;
+        padding: 4px 12px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.06);
+        color: #cbd5e1;
+        font-size: 13px;
+        font-family: monospace;
+      }
+
+      /* SVG Geometry Stroke Styles */
+      svg text {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        font-weight: 600;
+      }
+      .draw-line {
+        stroke-dasharray: 600;
+        stroke-dashoffset: 600;
+      }
+      .fill-fade {
+        opacity: 0;
+      }
+
+      /* Palette Row */
+      .palette-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 14px;
+      }
+      .color-dot {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+      }
+
+      /* Big Scene 1 Hero */
+      .hero-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        max-width: 1200px;
+      }
+      .hero-title {
+        font-size: 76px;
+        font-weight: 900;
+        line-height: 1.1;
+        letter-spacing: -0.04em;
+        background: linear-gradient(135deg, #ffffff 30%, #38bdf8 70%, #818cf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 24px;
+      }
+      .hero-pills {
+        display: flex;
+        gap: 18px;
+        margin-top: 36px;
+      }
+      .pill {
+        padding: 12px 28px;
+        border-radius: 30px;
+        font-size: 17px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(56, 189, 248, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="48"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- Background elements -->
+      <div class="bg-grid"></div>
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+
+      <!-- Top Branding Bar -->
+      <div class="top-bar">
+        <div class="app-brand">
+          <div class="app-logo">∑</div>
+          <span class="app-name">MatrixExamAI Pro — TikZ Engine</span>
+        </div>
+        <div class="badge-version">Phiên bản v5.3 • .NET 10 WPF</div>
+      </div>
+
+      <audio id="soundtrack" src="assets/soundtrack.mp3" data-start="0" data-duration="48" data-track-index="0"></audio>
+
+      <!-- ================= SCENE 1: INTRO (0s - 7s) ================= -->
+      <div class="scene clip" id="scene-1" data-start="0" data-duration="7">
+        <div class="hero-center">
+          <div class="scene-tag">HỆ THỐNG VẼ HÌNH TOÁN HỌC ĐỘT PHÁ</div>
+          <h1 class="hero-title">PHÂN HỆ VẼ HÌNH TIKZ PRO THIẾT KẾ ĐỘI HÌNH</h1>
+          <p class="scene-desc">Tự động dựng mô hình hình học phẳng 2D, không gian 3D, mặt tròn xoay và bài toán thực tế chuẩn Bộ Giáo dục &amp; Đào tạo — 100% không bắt buộc chờ đợi API AI.</p>
+          <div class="hero-pills">
+            <div class="pill" style="border-color: #38bdf8; color: #38bdf8;">✓ 226+ Mẫu hình chuẩn xác</div>
+            <div class="pill" style="border-color: #10b981; color: #10b981;">✓ Nhập tham số ra hình ngay</div>
+            <div class="pill" style="border-color: #f59e0b; color: #f59e0b;">✓ Xuất Word sắc nét 600 DPI</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SCENE 2: HÌNH HỌC PHẲNG 2D (7s - 15s) ================= -->
+      <div class="scene clip" id="scene-2" data-start="7" data-duration="8">
+        <div class="scene-title-box">
+          <div class="scene-tag">CHUYÊN ĐỀ 1</div>
+          <h2 class="scene-heading">Hình học phẳng 2D chuẩn xác tuyệt đối</h2>
+          <p class="scene-desc">Dựng tam giác vuông, hình thang cân, đường tròn tiếp tuyến và đa giác đều với góc vuông và tỷ lệ toán học hoàn hảo.</p>
+        </div>
+        <div class="grid-4">
+          <!-- Tam giác vuông -->
+          <div class="math-card">
+            <div class="math-card-header">📐 Tam giác vuông tại A</div>
+            <div class="svg-canvas">
+              <svg width="220" height="200" viewBox="-10 -10 220 200">
+                <path class="draw-line" id="s2-tri" d="M 30,160 L 190,160 L 30,30 Z" fill="rgba(2,132,199,0.15)" stroke="#0284c7" stroke-width="3" />
+                <path d="M 30,140 L 50,140 L 50,160" fill="none" stroke="#38bdf8" stroke-width="2" />
+                <path class="draw-line" id="s2-tri-ah" d="M 30,30 L 105,160" fill="none" stroke="#f59e0b" stroke-dasharray="4" stroke-width="2" />
+                <text x="12" y="172" fill="#e2e8f0" font-size="16">A</text>
+                <text x="195" y="172" fill="#e2e8f0" font-size="16">B</text>
+                <text x="18" y="25" fill="#e2e8f0" font-size="16">C</text>
+                <text x="105" y="182" fill="#f59e0b" font-size="14">H</text>
+              </svg>
+            </div>
+            <span class="math-badge">Cạnh a, b, góc vuông A</span>
+          </div>
+
+          <!-- Hình thang cân -->
+          <div class="math-card">
+            <div class="math-card-header">⏢ Hình thang cân</div>
+            <div class="svg-canvas">
+              <svg width="220" height="200" viewBox="-10 -10 220 200">
+                <path class="draw-line" id="s2-trap" d="M 20,160 L 190,160 L 150,50 L 60,50 Z" fill="rgba(16,185,129,0.15)" stroke="#10b981" stroke-width="3" />
+                <path d="M 60,50 L 60,160 M 150,50 L 150,160" fill="none" stroke="#64748b" stroke-dasharray="3" stroke-width="1.5" />
+                <text x="6" y="170" fill="#e2e8f0" font-size="16">A</text>
+                <text x="195" y="170" fill="#e2e8f0" font-size="16">B</text>
+                <text x="155" y="42" fill="#e2e8f0" font-size="16">C</text>
+                <text x="50" y="42" fill="#e2e8f0" font-size="16">D</text>
+              </svg>
+            </div>
+            <span class="math-badge">Đáy lớn a, đáy nhỏ b, cao h</span>
+          </div>
+
+          <!-- Đường tròn tiếp tuyến -->
+          <div class="math-card">
+            <div class="math-card-header">⭕ Đường tròn &amp; Tiếp tuyến</div>
+            <div class="svg-canvas">
+              <svg width="220" height="200" viewBox="-10 -10 220 200">
+                <circle cx="100" cy="100" r="70" fill="rgba(139,92,246,0.12)" stroke="#8b5cf6" stroke-width="3" />
+                <line x1="100" y1="100" x2="170" y2="100" stroke="#a78bfa" stroke-width="2" stroke-dasharray="4" />
+                <line x1="170" y1="20" x2="170" y2="180" stroke="#f43f5e" stroke-width="2.5" />
+                <circle cx="100" cy="100" r="3" fill="#ffffff" />
+                <circle cx="170" cy="100" r="4" fill="#f43f5e" />
+                <text x="82" y="95" fill="#e2e8f0" font-size="16">O</text>
+                <text x="180" y="105" fill="#f43f5e" font-size="16">M</text>
+                <text x="130" y="92" fill="#a78bfa" font-size="14">R</text>
+              </svg>
+            </div>
+            <span class="math-badge">Tâm O, bán kính R, tiếp tuyến d</span>
+          </div>
+
+          <!-- Đa giác đều -->
+          <div class="math-card">
+            <div class="math-card-header">⬡ Ngũ giác đều &amp; Ngôi sao</div>
+            <div class="svg-canvas">
+              <svg width="220" height="200" viewBox="0 0 220 200">
+                <polygon points="110,20 185,75 155,165 65,165 35,75" fill="rgba(245,158,11,0.12)" stroke="#f59e0b" stroke-width="3" />
+                <polygon points="110,20 155,165 35,75 185,75 65,165" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3" />
+                <circle cx="110" cy="100" r="3" fill="#ffffff" />
+                <text x="105" y="12" fill="#e2e8f0" font-size="15">A</text>
+                <text x="192" y="78" fill="#e2e8f0" font-size="15">B</text>
+                <text x="162" y="180" fill="#e2e8f0" font-size="15">C</text>
+                <text x="52" y="180" fill="#e2e8f0" font-size="15">D</text>
+                <text x="18" y="78" fill="#e2e8f0" font-size="15">E</text>
+              </svg>
+            </div>
+            <span class="math-badge">5 cạnh bằng nhau, góc 108°</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SCENE 3: HÌNH KHÔNG GIAN 3D (15s - 24s) ================= -->
+      <div class="scene clip" id="scene-3" data-start="15" data-duration="9">
+        <div class="scene-title-box">
+          <div class="scene-tag">CHUYÊN ĐỀ 2</div>
+          <h2 class="scene-heading">Không gian 3D trực quan — Nét đứt nét liền chuẩn</h2>
+          <p class="scene-desc">Tự động phân biệt đường nét khuất nét đứt, trục chiều cao SO, SA vuông góc đáy và phối cảnh trực giao chuẩn SGK.</p>
+        </div>
+        <div class="grid-3">
+          <!-- Chóp tứ giác đều S.ABCD -->
+          <div class="math-card">
+            <div class="math-card-header">🏛 Hình chóp đều S.ABCD</div>
+            <div class="svg-canvas">
+              <svg width="280" height="230" viewBox="-10 -10 280 230">
+                <!-- Đáy bình hành -->
+                <line x1="40" y1="170" x2="190" y2="170" stroke="#0284c7" stroke-width="2.5" />
+                <line x1="190" y1="170" x2="240" y2="120" stroke="#0284c7" stroke-width="2.5" />
+                <line x1="40" y1="170" x2="90" y2="120" stroke="#0284c7" stroke-width="2" stroke-dasharray="5" />
+                <line x1="90" y1="120" x2="240" y2="120" stroke="#0284c7" stroke-width="2" stroke-dasharray="5" />
+                <!-- Đường chéo đáy & Tâm O -->
+                <line x1="40" y1="170" x2="240" y2="120" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4" />
+                <line x1="190" y1="170" x2="90" y2="120" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4" />
+                <!-- Chiều cao SO -->
+                <line x1="140" y1="145" x2="140" y2="25" stroke="#f59e0b" stroke-width="2.5" stroke-dasharray="4" />
+                <!-- Các cạnh bên -->
+                <line x1="140" y1="25" x2="40" y2="170" stroke="#38bdf8" stroke-width="2.5" />
+                <line x1="140" y1="25" x2="190" y2="170" stroke="#38bdf8" stroke-width="2.5" />
+                <line x1="140" y1="25" x2="240" y2="120" stroke="#38bdf8" stroke-width="2.5" />
+                <line x1="140" y1="25" x2="90" y2="120" stroke="#38bdf8" stroke-width="2" stroke-dasharray="5" />
+                <!-- Đỉnh -->
+                <circle cx="140" cy="25" r="4" fill="#f59e0b" />
+                <text x="135" y="15" fill="#f59e0b" font-size="16">S</text>
+                <text x="25" y="180" fill="#e2e8f0" font-size="15">A</text>
+                <text x="195" y="180" fill="#e2e8f0" font-size="15">B</text>
+                <text x="245" y="125" fill="#e2e8f0" font-size="15">C</text>
+                <text x="80" y="115" fill="#e2e8f0" font-size="15">D</text>
+                <text x="145" y="155" fill="#f59e0b" font-size="14">O</text>
+              </svg>
+            </div>
+            <span class="math-badge">Tâm O, SO ⟂ (ABCD)</span>
+          </div>
+
+          <!-- Lăng trụ tam giác đứng -->
+          <div class="math-card">
+            <div class="math-card-header">🔷 Lăng trụ đứng ABC.A'B'C'</div>
+            <div class="svg-canvas">
+              <svg width="280" height="230" viewBox="-10 -10 280 230">
+                <!-- Đáy dưới ABC -->
+                <line x1="40" y1="180" x2="200" y2="180" stroke="#10b981" stroke-width="2.5" />
+                <line x1="40" y1="180" x2="110" y2="210" stroke="#10b981" stroke-width="2.5" />
+                <line x1="110" y1="210" x2="200" y2="180" stroke="#10b981" stroke-width="2.5" />
+                <!-- Đáy trên A'B'C' -->
+                <line x1="40" y1="60" x2="200" y2="60" stroke="#34d399" stroke-width="2.5" />
+                <line x1="40" y1="60" x2="110" y2="90" stroke="#34d399" stroke-width="2.5" />
+                <line x1="110" y1="90" x2="200" y2="60" stroke="#34d399" stroke-width="2.5" />
+                <!-- Cạnh bên -->
+                <line x1="40" y1="180" x2="40" y2="60" stroke="#10b981" stroke-width="2.5" />
+                <line x1="200" y1="180" x2="200" y2="60" stroke="#10b981" stroke-width="2.5" />
+                <line x1="110" y1="210" x2="110" y2="90" stroke="#10b981" stroke-width="2.5" />
+                <!-- Labels -->
+                <text x="24" y="185" fill="#e2e8f0" font-size="15">A</text>
+                <text x="105" y="225" fill="#e2e8f0" font-size="15">B</text>
+                <text x="205" y="185" fill="#e2e8f0" font-size="15">C</text>
+                <text x="24" y="55" fill="#34d399" font-size="15">A'</text>
+                <text x="105" y="80" fill="#34d399" font-size="15">B'</text>
+                <text x="205" y="55" fill="#34d399" font-size="15">C'</text>
+              </svg>
+            </div>
+            <span class="math-badge">Cạnh bên ⟂ hai đáy, 6 đỉnh</span>
+          </div>
+
+          <!-- Hình hộp chữ nhật -->
+          <div class="math-card">
+            <div class="math-card-header">📦 Hình hộp chữ nhật</div>
+            <div class="svg-canvas">
+              <svg width="280" height="230" viewBox="-10 -10 280 230">
+                <!-- Mặt trước -->
+                <rect x="40" y="80" width="140" height="110" fill="rgba(14,165,233,0.1)" stroke="#0284c7" stroke-width="2.5" />
+                <!-- Cạnh phối cảnh mặt sau -->
+                <line x1="40" y1="80" x2="90" y2="40" stroke="#0284c7" stroke-width="2" />
+                <line x1="180" y1="80" x2="230" y2="40" stroke="#0284c7" stroke-width="2" />
+                <line x1="180" y1="190" x2="230" y2="150" stroke="#0284c7" stroke-width="2" />
+                <line x1="90" y1="40" x2="230" y2="40" stroke="#0284c7" stroke-width="2" />
+                <line x1="230" y1="40" x2="230" y2="150" stroke="#0284c7" stroke-width="2" />
+                <!-- Cạnh khuất nét đứt -->
+                <line x1="40" y1="190" x2="90" y2="150" stroke="#64748b" stroke-width="1.8" stroke-dasharray="4" />
+                <line x1="90" y1="150" x2="230" y2="150" stroke="#64748b" stroke-width="1.8" stroke-dasharray="4" />
+                <line x1="90" y1="150" x2="90" y2="40" stroke="#64748b" stroke-width="1.8" stroke-dasharray="4" />
+                <text x="25" y="198" fill="#e2e8f0" font-size="15">A</text>
+                <text x="185" y="198" fill="#e2e8f0" font-size="15">B</text>
+                <text x="235" y="155" fill="#e2e8f0" font-size="15">C</text>
+                <text x="80" y="145" fill="#e2e8f0" font-size="15">D</text>
+              </svg>
+            </div>
+            <span class="math-badge">Kích thước a × b × c</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SCENE 4: MẶT TRÒN XOAY (24s - 32s) ================= -->
+      <div class="scene clip" id="scene-4" data-start="24" data-duration="8">
+        <div class="scene-title-box">
+          <div class="scene-tag">CHUYÊN ĐỀ 3</div>
+          <h2 class="scene-heading">Mặt tròn xoay &amp; Khối trụ, nón, cầu</h2>
+          <p class="scene-desc">Dựng các mô hình mặt tròn xoay quanh trục Ox/Oz, thiết diện đường tròn và bài toán tối ưu trụ nội tiếp nón.</p>
+        </div>
+        <div class="grid-3">
+          <!-- Hình trụ -->
+          <div class="math-card">
+            <div class="math-card-header">🥫 Hình trụ tròn xoay</div>
+            <div class="svg-canvas">
+              <svg width="260" height="230" viewBox="0 0 260 230">
+                <ellipse cx="130" cy="50" rx="75" ry="24" fill="rgba(14,165,233,0.2)" stroke="#0284c7" stroke-width="2.5" />
+                <path d="M 55,50 L 55,170 A 75 24 0 0 0 205,170 L 205,50" fill="none" stroke="#0284c7" stroke-width="2.5" />
+                <path d="M 55,170 A 75 24 0 0 1 205,170" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="4" />
+                <line x1="130" y1="50" x2="130" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4" />
+                <line x1="130" y1="170" x2="205" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3" />
+                <circle cx="130" cy="50" r="3.5" fill="#ffffff" />
+                <circle cx="130" cy="170" r="3.5" fill="#ffffff" />
+                <text x="135" y="45" fill="#e2e8f0" font-size="15">O'</text>
+                <text x="135" y="185" fill="#e2e8f0" font-size="15">O</text>
+                <text x="165" y="165" fill="#f59e0b" font-size="14">r</text>
+                <text x="215" y="115" fill="#0284c7" font-size="15">h</text>
+              </svg>
+            </div>
+            <span class="math-badge">Thể tích V = πr²h</span>
+          </div>
+
+          <!-- Hình nón -->
+          <div class="math-card">
+            <div class="math-card-header">🍦 Hình nón tròn xoay</div>
+            <div class="svg-canvas">
+              <svg width="260" height="230" viewBox="0 0 260 230">
+                <path d="M 50,170 A 80 25 0 0 0 210,170" fill="none" stroke="#ec4899" stroke-width="2.5" />
+                <path d="M 50,170 A 80 25 0 0 1 210,170" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="4" />
+                <line x1="130" y1="30" x2="50" y2="170" stroke="#ec4899" stroke-width="2.5" />
+                <line x1="130" y1="30" x2="210" y2="170" stroke="#ec4899" stroke-width="2.5" />
+                <line x1="130" y1="30" x2="130" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4" />
+                <line x1="130" y1="170" x2="210" y2="170" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3" />
+                <circle cx="130" cy="30" r="4" fill="#ec4899" />
+                <circle cx="130" cy="170" r="3.5" fill="#ffffff" />
+                <text x="125" y="20" fill="#ec4899" font-size="16">S</text>
+                <text x="135" y="185" fill="#e2e8f0" font-size="15">O</text>
+                <text x="165" y="165" fill="#f59e0b" font-size="14">r</text>
+                <text x="180" y="95" fill="#ec4899" font-size="15">l</text>
+              </svg>
+            </div>
+            <span class="math-badge">Đường sinh l = √(h² + r²)</span>
+          </div>
+
+          <!-- Trụ nội tiếp nón -->
+          <div class="math-card">
+            <div class="math-card-header">⚡ Bài toán Trụ nội tiếp nón</div>
+            <div class="svg-canvas">
+              <svg width="260" height="230" viewBox="0 0 260 230">
+                <!-- Nón ngoại -->
+                <path d="M 40,180 A 90 26 0 0 0 220,180" fill="none" stroke="#64748b" stroke-width="2" />
+                <path d="M 40,180 A 90 26 0 0 1 220,180" fill="none" stroke="#475569" stroke-width="1.5" stroke-dasharray="3" />
+                <line x1="130" y1="20" x2="40" y2="180" stroke="#64748b" stroke-width="2" />
+                <line x1="130" y1="20" x2="220" y2="180" stroke="#64748b" stroke-width="2" />
+                <!-- Trụ nội -->
+                <ellipse cx="130" cy="105" rx="48" ry="14" fill="rgba(16,185,129,0.25)" stroke="#10b981" stroke-width="2.2" />
+                <path d="M 82,105 L 82,180 A 48 14 0 0 0 178,180 L 178,105" fill="none" stroke="#10b981" stroke-width="2.2" />
+                <path d="M 82,180 A 48 14 0 0 1 178,180" fill="none" stroke="#059669" stroke-width="1.5" stroke-dasharray="3" />
+                <text x="125" y="14" fill="#94a3b8" font-size="14">S</text>
+                <text x="135" y="145" fill="#10b981" font-size="14" font-weight="bold">V_max</text>
+              </svg>
+            </div>
+            <span class="math-badge">Cực trị thể tích V_trụ max khi h' = h/3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SCENE 5: BÀI TOÁN THỰC TẾ & BẢNG BIẾN THIÊN (32s - 40s) ================= -->
+      <div class="scene clip" id="scene-5" data-start="32" data-duration="8">
+        <div class="scene-title-box">
+          <div class="scene-tag">CHUYÊN ĐỀ 4</div>
+          <h2 class="scene-heading">Bài toán thực tế THPT &amp; Bảng biến thiên</h2>
+          <p class="scene-desc">Dựng mô hình cầu treo parabol, ngọn hải đăng, bóng rổ cùng bảng biến thiên tkz-tab tự động tính toán điểm cực trị.</p>
+        </div>
+        <div class="grid-3">
+          <!-- Cầu treo dây văng parabol -->
+          <div class="math-card">
+            <div class="math-card-header">🌉 Cầu treo dây văng Parabol</div>
+            <div class="svg-canvas">
+              <svg width="280" height="220" viewBox="0 0 280 220">
+                <!-- Mặt nước -->
+                <rect x="10" y="170" width="260" height="35" fill="rgba(14,165,233,0.15)" rx="4" />
+                <line x1="10" y1="170" x2="270" y2="170" stroke="#0284c7" stroke-width="1.5" />
+                <!-- 2 Trụ tháp cầu -->
+                <rect x="50" y="30" width="14" height="140" fill="#334155" stroke="#64748b" stroke-width="1.5" />
+                <rect x="216" y="30" width="14" height="140" fill="#334155" stroke="#64748b" stroke-width="1.5" />
+                <!-- Mặt cầu nằm ngang -->
+                <line x1="20" y1="140" x2="260" y2="140" stroke="#e2e8f0" stroke-width="4" />
+                <!-- Dây cáp chính Parabol -->
+                <path d="M 57,40 Q 140,155 223,40" fill="none" stroke="#ef4444" stroke-width="3" />
+                <!-- Dây cáp đứng -->
+                <line x1="80" y1="140" x2="80" y2="68" stroke="#94a3b8" stroke-width="1.2" />
+                <line x1="100" y1="140" x2="100" y2="92" stroke="#94a3b8" stroke-width="1.2" />
+                <line x1="120" y1="140" x2="120" y2="110" stroke="#94a3b8" stroke-width="1.2" />
+                <line x1="140" y1="140" x2="140" y2="116" stroke="#94a3b8" stroke-width="1.2" />
+                <line x1="160" y1="140" x2="160" y2="110" stroke="#94a3b8" stroke-width="1.2" />
+                <line x1="180" y1="140" x2="180" y2="92" stroke="#94a3b8" stroke-width="1.2" />
+                <line x1="200" y1="140" x2="200" y2="68" stroke="#94a3b8" stroke-width="1.2" />
+                <text x="110" y="192" fill="#38bdf8" font-size="13">Mặt nước L = 120m</text>
+              </svg>
+            </div>
+            <span class="math-badge">Phương trình Parabol y = ax² + c</span>
+          </div>
+
+          <!-- Ngọn hải đăng -->
+          <div class="math-card">
+            <div class="math-card-header">🗼 Ngọn hải đăng &amp; Lượng giác</div>
+            <div class="svg-canvas">
+              <svg width="280" height="220" viewBox="0 0 280 220">
+                <line x1="20" y1="180" x2="260" y2="180" stroke="#0284c7" stroke-width="2" />
+                <!-- Tháp hải đăng -->
+                <polygon points="40,180 55,50 65,50 80,180" fill="#475569" stroke="#94a3b8" stroke-width="1.5" />
+                <circle cx="60" cy="45" r="7" fill="#fbbf24" />
+                <!-- Tia sáng góc quét -->
+                <line x1="60" y1="45" x2="160" y2="180" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4" />
+                <line x1="60" y1="45" x2="240" y2="180" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4" />
+                <!-- Thuyền -->
+                <polygon points="150,180 170,180 165,190 155,190" fill="#d97706" />
+                <polygon points="230,180 250,180 245,190 235,190" fill="#d97706" />
+                <text x="145" y="172" fill="#e2e8f0" font-size="13">Tàu A</text>
+                <text x="225" y="172" fill="#e2e8f0" font-size="13">Tàu B</text>
+                <text x="45" y="32" fill="#fbbf24" font-size="14">Hải đăng H</text>
+              </svg>
+            </div>
+            <span class="math-badge">Tính khoảng cách qua tan(α)</span>
+          </div>
+
+          <!-- Bảng biến thiên tkz-tab -->
+          <div class="math-card">
+            <div class="math-card-header">📋 Bảng biến thiên tkz-tab</div>
+            <div class="svg-canvas">
+              <svg width="280" height="220" viewBox="0 0 280 220">
+                <rect x="15" y="25" width="250" height="165" fill="rgba(15,23,42,0.9)" stroke="#38bdf8" stroke-width="1.5" rx="6" />
+                <line x1="65" y1="25" x2="65" y2="190" stroke="#38bdf8" stroke-width="1.5" />
+                <line x1="15" y1="65" x2="265" y2="65" stroke="#38bdf8" stroke-width="1.5" />
+                <line x1="15" y1="105" x2="265" y2="105" stroke="#38bdf8" stroke-width="1.5" />
+                <text x="35" y="50" fill="#e2e8f0" font-size="15" font-weight="bold">x</text>
+                <text x="35" y="90" fill="#e2e8f0" font-size="15" font-weight="bold">y'</text>
+                <text x="35" y="150" fill="#e2e8f0" font-size="15" font-weight="bold">y</text>
+                <!-- Tọa độ dòng x -->
+                <text x="80" y="50" fill="#94a3b8" font-size="13">-∞</text>
+                <text x="125" y="50" fill="#38bdf8" font-size="14">1</text>
+                <text x="180" y="50" fill="#38bdf8" font-size="14">3</text>
+                <text x="235" y="50" fill="#94a3b8" font-size="13">+∞</text>
+                <!-- Dấu y' -->
+                <text x="100" y="90" fill="#10b981" font-size="16">+</text>
+                <text x="125" y="90" fill="#e2e8f0" font-size="14">0</text>
+                <text x="150" y="90" fill="#ef4444" font-size="16">-</text>
+                <text x="180" y="90" fill="#e2e8f0" font-size="14">0</text>
+                <text x="205" y="90" fill="#10b981" font-size="16">+</text>
+                <!-- Mũi tên y -->
+                <path d="M 85,165 L 125,125" stroke="#10b981" stroke-width="2" marker-end="url(#arrow)" />
+                <path d="M 125,125 L 180,175" stroke="#ef4444" stroke-width="2" />
+                <path d="M 180,175 L 235,125" stroke="#10b981" stroke-width="2" />
+                <text x="120" y="120" fill="#f59e0b" font-size="14">4</text>
+                <text x="175" y="185" fill="#f59e0b" font-size="14">-2</text>
+              </svg>
+            </div>
+            <span class="math-badge">Cardano tính nghiệm cực trị tự động</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SCENE 6: CÔNG CỤ TẠO HÌNH & NHÚNG WORD (40s - 48s) ================= -->
+      <div class="scene clip" id="scene-6" data-start="40" data-duration="8">
+        <div class="scene-title-box">
+          <div class="scene-tag">CÔNG THÁI HỌC VƯỢT TRỘI</div>
+          <h2 class="scene-heading">Đổi tham số → Ra hình ngay • Nhúng Word 1-Click</h2>
+          <p class="scene-desc">Giao diện trực quan tùy biến màu sắc, hỗ trợ xuất hình ảnh 600 DPI và dán trực tiếp vào văn bản Microsoft Word.</p>
+        </div>
+        <div class="grid-2">
+          <!-- Hộp thoại tham số & Bảng màu -->
+          <div class="math-card" style="align-items: flex-start; padding: 32px;">
+            <div class="math-card-header">🎨 Bảng màu &amp; Tham số trực quan</div>
+            <p style="color: #94a3b8; font-size: 15px; margin-bottom: 20px;">Giáo viên chỉ cần nhập số liệu mong muốn, chọn màu sắc nét vẽ — mã TikZ tự động đồng bộ thời gian thực.</p>
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px 16px; border-radius: 8px;">
+                <span style="color: #e2e8f0; font-weight: 600;">Cạnh đáy a:</span>
+                <span style="color: #38bdf8; font-weight: bold; background: #0284c722; padding: 4px 14px; border-radius: 6px;">5 cm</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px 16px; border-radius: 8px;">
+                <span style="color: #e2e8f0; font-weight: 600;">Chiều cao h:</span>
+                <span style="color: #38bdf8; font-weight: bold; background: #0284c722; padding: 4px 14px; border-radius: 6px;">6 cm</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px 16px; border-radius: 8px;">
+                <span style="color: #e2e8f0; font-weight: 600;">Tên các đỉnh:</span>
+                <span style="color: #38bdf8; font-weight: bold; background: #0284c722; padding: 4px 14px; border-radius: 6px;">S, A, B, C, D</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+                <span style="color: #cbd5e1; font-weight: 600;">Bảng màu nét vẽ:</span>
+                <div class="palette-row">
+                  <div class="color-dot" style="background: #2563eb; transform: scale(1.2); box-shadow: 0 0 10px #2563eb;"></div>
+                  <div class="color-dot" style="background: #dc2626;"></div>
+                  <div class="color-dot" style="background: #16a34a;"></div>
+                  <div class="color-dot" style="background: #ea580c;"></div>
+                  <div class="color-dot" style="background: #9333ea;"></div>
+                  <div class="color-dot" style="background: #0f172a; border-color: #94a3b8;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kho thẻ ảnh & Xuất Word -->
+          <div class="math-card" style="align-items: flex-start; padding: 32px;">
+            <div class="math-card-header">📂 Kho thẻ ảnh 226+ hình &amp; Nhúng Word</div>
+            <p style="color: #94a3b8; font-size: 15px; margin-bottom: 20px;">Lưu đè, chỉnh sửa và quản lý trực quan dưới dạng thẻ hình thu nhỏ với phím tắt tiện lợi.</p>
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 16px;">
+              <div style="display: flex; align-items: center; gap: 14px; background: rgba(37,99,235,0.15); border: 1px solid #2563eb; padding: 14px 18px; border-radius: 10px;">
+                <div style="font-size: 24px;">⌨</div>
+                <div>
+                  <div style="font-weight: bold; color: #ffffff;">Phím tắt F5 / Ctrl+Enter</div>
+                  <div style="font-size: 13px; color: #93c5fd;">Biên dịch thời gian thực trong tích tắc</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 14px; background: rgba(16,185,129,0.15); border: 1px solid #10b981; padding: 14px 18px; border-radius: 10px;">
+                <div style="font-size: 24px;">📄</div>
+                <div>
+                  <div style="font-weight: bold; color: #ffffff;">Nút "Chèn Word" (Ctrl+Shift+W)</div>
+                  <div style="font-size: 13px; color: #a7f3d0;">Chèn ảnh độ nét cao 600 DPI thẳng vào vị trí con trỏ Word</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 14px; background: rgba(245,158,11,0.15); border: 1px solid #f59e0b; padding: 14px 18px; border-radius: 10px;">
+                <div style="font-size: 24px;">💾</div>
+                <div>
+                  <div style="font-weight: bold; color: #ffffff;">Lưu đè &amp; Cập nhật Kho thẻ ảnh</div>
+                  <div style="font-size: 13px; color: #fde68a;">Quản lý toàn bộ 226 hình vẽ, lọc nguồn và tìm kiếm tức thì</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- GSAP Master Timeline -->
+    <script>
+      const tl = gsap.timeline({ paused: true });
+
+      // Scene 1: 0s - 7s
+      tl.to("#scene-1", { opacity: 1, duration: 0.8, ease: "power2.out" }, 0)
+        .from("#scene-1 .hero-title", { y: 40, duration: 1, ease: "back.out(1.4)" }, 0.2)
+        .from("#scene-1 .pill", { opacity: 0, y: 20, stagger: 0.2, duration: 0.6 }, 1.2)
+        .to("#scene-1", { opacity: 0, duration: 0.6, ease: "power2.in" }, 6.4);
+
+      // Scene 2: 7s - 15s
+      tl.to("#scene-2", { opacity: 1, duration: 0.8, ease: "power2.out" }, 7.0)
+        .from("#scene-2 .math-card", { opacity: 0, y: 30, stagger: 0.15, duration: 0.8 }, 7.3)
+        .to("#s2-tri", { strokeDashoffset: 0, duration: 1.5, ease: "power1.inOut" }, 7.6)
+        .to("#s2-trap", { strokeDashoffset: 0, duration: 1.5, ease: "power1.inOut" }, 8.2)
+        .to("#scene-2", { opacity: 0, duration: 0.6, ease: "power2.in" }, 14.4);
+
+      // Scene 3: 15s - 24s
+      tl.to("#scene-3", { opacity: 1, duration: 0.8, ease: "power2.out" }, 15.0)
+        .from("#scene-3 .math-card", { opacity: 0, scale: 0.95, stagger: 0.2, duration: 0.8 }, 15.3)
+        .to("#scene-3", { opacity: 0, duration: 0.6, ease: "power2.in" }, 23.4);
+
+      // Scene 4: 24s - 32s
+      tl.to("#scene-4", { opacity: 1, duration: 0.8, ease: "power2.out" }, 24.0)
+        .from("#scene-4 .math-card", { opacity: 0, y: 30, stagger: 0.2, duration: 0.8 }, 24.3)
+        .to("#scene-4", { opacity: 0, duration: 0.6, ease: "power2.in" }, 31.4);
+
+      // Scene 5: 32s - 40s
+      tl.to("#scene-5", { opacity: 1, duration: 0.8, ease: "power2.out" }, 32.0)
+        .from("#scene-5 .math-card", { opacity: 0, y: 30, stagger: 0.2, duration: 0.8 }, 32.3)
+        .to("#scene-5", { opacity: 0, duration: 0.6, ease: "power2.in" }, 39.4);
+
+      // Scene 6: 40s - 48s
+      tl.to("#scene-6", { opacity: 1, duration: 0.8, ease: "power2.out" }, 40.0)
+        .from("#scene-6 .math-card", { opacity: 0, y: 30, stagger: 0.2, duration: 0.8 }, 40.3)
+        .to("#scene-6", { opacity: 0.95, duration: 1 }, 47.0);
+
+      window.__timelines = { main: tl };
+      tl.seek(0);
+    </script>
+  </body>
+</html>

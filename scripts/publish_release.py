@@ -27,9 +27,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.3"
-TITLE = "MatrixExamAI Pro v5.3.0.3 (TikZ Card Gallery View & Overwrite Code Feature)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.3: Ra mắt chế độ xem thẻ ảnh (Gallery View) cho kho hình TikZ, bổ sung chức năng cập nhật / lưu đè mã TikZ và ảnh trực tiếp, hoàn thiện độ tương phản và giao diện Dark/Light theme không bị mất chữ."
+TAG = "v5.3.0.4"
+TITLE = "MatrixExamAI Pro v5.3.0.4 (Full TikZStudio Integration, Dynamic 2D/3D Shape Builder & Showcase Video)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.4: Kế thừa toàn diện phương thức và cấu trúc vẽ hình từ TikZStudio với hơn 60 mô hình chuẩn (2D, 3D hình chóp, lăng trụ, nón, trụ, cầu, mặt tròn xoay, bảng biến thiên, đồ thị, miền nghiệm thực tế); nâng cấp TikzShapeBuilderDialog với bảng màu trực quan và tùy chỉnh tham số không cần sửa code TikZ thô; sửa 100% kho hình mẫu TikZ; tích hợp video mô phỏng tính năng vẽ hình 2D-3D chi tiết."
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)

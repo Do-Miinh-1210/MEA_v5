@@ -98,69 +98,120 @@
 
                     <TreeView x:Name="TreeShapeCategories" Grid.Row="1" BorderThickness="0" Background="Transparent"
                               SelectedItemChanged="TreeShapeCategories_SelectedItemChanged">
-                        <!-- 1. Hình phẳng -->
-                        <TreeViewItem Header="📐 Hình phẳng" IsExpanded="True" FontSize="11.5" FontWeight="SemiBold">
+                        <!-- 1. Hình phẳng (2D) -->
+                        <TreeViewItem Header="📐 Hình phẳng 2D" IsExpanded="True" FontSize="11.5" FontWeight="SemiBold">
                             <TreeViewItem Header="Tam giác thường" Tag="tri_general" FontWeight="Normal" />
-                            <TreeViewItem Header="Tam giác vuông" Tag="tri_right" FontWeight="Normal" />
+                            <TreeViewItem Header="Tam giác vuông tại A" Tag="tri_right" FontWeight="Normal" />
                             <TreeViewItem Header="Tam giác đều" Tag="tri_equi" FontWeight="Normal" />
                             <TreeViewItem Header="Tam giác cân" Tag="tri_iso" FontWeight="Normal" />
+                            <TreeViewItem Header="Tam giác vuông cân" Tag="tri_right_iso" FontWeight="Normal" />
+                            <TreeViewItem Header="Tam giác nội tiếp đường tròn" Tag="tri_incircle" FontWeight="Normal" />
+                            <TreeViewItem Header="Tam giác ngoại tiếp đường tròn" Tag="tri_circumcircle" FontWeight="Normal" />
                             <TreeViewItem Header="Hình vuông" Tag="square" FontWeight="Normal" />
                             <TreeViewItem Header="Hình chữ nhật" Tag="rect" FontWeight="Normal" />
                             <TreeViewItem Header="Hình bình hành" Tag="parallelogram" FontWeight="Normal" />
                             <TreeViewItem Header="Hình thang" Tag="trapezoid" FontWeight="Normal" />
-                            <TreeViewItem Header="Đường tròn" Tag="circle" FontWeight="Normal" />
-                            <TreeViewItem Header="Elip" Tag="ellipse" FontWeight="Normal" />
-                            <TreeViewItem Header="Đoạn thẳng" Tag="segment" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình thang vuông" Tag="trapezoid_right" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình thang cân" Tag="trapezoid_iso" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình thoi" Tag="rhombus" FontWeight="Normal" />
+                            <TreeViewItem Header="Ngũ giác đều" Tag="pentagon_regular" FontWeight="Normal" />
+                            <TreeViewItem Header="Lục giác đều" Tag="hexagon_regular" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình ngôi sao 5 cánh" Tag="star_5" FontWeight="Normal" />
+                            <TreeViewItem Header="Đoạn thẳng có mũi tên" Tag="segment" FontWeight="Normal" />
                         </TreeViewItem>
 
-                        <!-- 2. Hình không gian -->
-                        <TreeViewItem Header="📦 Hình không gian" IsExpanded="True" FontSize="11.5" FontWeight="SemiBold">
-                            <TreeViewItem Header="Hình chóp S.ABCD (đáy hình bình hành)" Tag="pyramid" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình chóp S.ABCD (SA ⟂ đáy)" Tag="pyramid_sa_quad" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình chóp tứ giác đều S.ABCD" Tag="pyramid_regular_quad" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình chóp tam giác S.ABC" Tag="pyramid_tri" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình chóp S.ABC (SA ⟂ đáy)" Tag="pyramid_sa_perp" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình chóp tam giác đều S.ABC" Tag="pyramid_regular_tri" FontWeight="Normal" />
+                        <!-- 2. Hình không gian (3D) -->
+                        <TreeViewItem Header="📦 Hình không gian 3D" IsExpanded="True" FontSize="11.5" FontWeight="SemiBold">
+                            <TreeViewItem Header="Chóp S.ABC (SA ⟂ đáy)" Tag="pyramid_sa_perp" FontWeight="Normal" />
+                            <TreeViewItem Header="Chóp S.ABC ((SAB) ⟂ đáy)" Tag="pyramid_sab_perp" FontWeight="Normal" />
+                            <TreeViewItem Header="Chóp tam giác đều S.ABC" Tag="pyramid_regular_tri" FontWeight="Normal" />
                             <TreeViewItem Header="Tứ diện đều ABCD" Tag="tetrahedron" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình chóp cụt tứ giác đều" Tag="pyramid_frustum" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình lập phương ABCD.A'B'C'D'" Tag="cube" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình lập phương (Đường chéo AC')" Tag="cube_diagonal" FontWeight="Normal" />
+                            <TreeViewItem Header="Chóp S.ABCD (đáy bình hành)" Tag="pyramid" FontWeight="Normal" />
+                            <TreeViewItem Header="Chóp tứ giác đều S.ABCD" Tag="pyramid_regular_quad" FontWeight="Normal" />
+                            <TreeViewItem Header="Chóp S.ABCD (SA ⟂ đáy)" Tag="pyramid_sa_quad" FontWeight="Normal" />
+                            <TreeViewItem Header="Chóp S.ABCD (đáy hình thang)" Tag="pyramid_trapezoid" FontWeight="Normal" />
+                            <TreeViewItem Header="Chóp S.ABCD ((SAD) ⟂ đáy)" Tag="pyramid_sad_perp" FontWeight="Normal" />
+                            <TreeViewItem Header="Chóp ngũ giác đều" Tag="pyramid_regular_penta" FontWeight="Normal" />
+                            <TreeViewItem Header="Chóp lục giác đều" Tag="pyramid_regular_hexa" FontWeight="Normal" />
+                            <TreeViewItem Header="Chóp cụt tứ giác đều" Tag="pyramid_frustum" FontWeight="Normal" />
+                            <TreeViewItem Header="Chóp cụt tam giác" Tag="pyramid_tri_frustum" FontWeight="Normal" />
+                            <TreeViewItem Header="Lăng trụ tam giác đứng" Tag="prism_triangular" FontWeight="Normal" />
+                            <TreeViewItem Header="Lăng trụ tam giác xiên" Tag="prism_tri_oblique" FontWeight="Normal" />
+                            <TreeViewItem Header="Lăng trụ tứ giác đứng" Tag="prism_quad" FontWeight="Normal" />
+                            <TreeViewItem Header="Lăng trụ tứ giác xiên" Tag="prism_quad_oblique" FontWeight="Normal" />
                             <TreeViewItem Header="Hình hộp chữ nhật" Tag="cuboid" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình lăng trụ đứng tam giác" Tag="prism_triangular" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình trụ tròn xoay" Tag="cylinder" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình trụ (Thiết diện qua trục)" Tag="cylinder_section" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình nón tròn xoay" Tag="cone" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình nón cụt" Tag="cone_frustum" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình cầu (Mặt cầu)" Tag="sphere" FontWeight="Normal" />
-                            <TreeViewItem Header="Mặt cầu ngoại tiếp hình lập phương" Tag="sphere_circum_cube" FontWeight="Normal" />
-                            <TreeViewItem Header="Mặt cầu nội tiếp hình lập phương" Tag="sphere_in_cube" FontWeight="Normal" />
-                            <TreeViewItem Header="Mặt cầu ngoại tiếp chóp tứ giác đều" Tag="sphere_circum_pyramid" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình lập phương ABCD.A'B'C'D'" Tag="cube" FontWeight="Normal" />
+                            <TreeViewItem Header="Lăng trụ ngũ giác đứng" Tag="prism_penta" FontWeight="Normal" />
+                            <TreeViewItem Header="Lăng trụ lục giác đứng" Tag="prism_hexa" FontWeight="Normal" />
                             <TreeViewItem Header="Khối bát diện đều" Tag="octahedron" FontWeight="Normal" />
                         </TreeViewItem>
 
-                        <!-- 3. Đồ thị hàm số -->
-                        <TreeViewItem Header="📈 Đồ thị hàm số" IsExpanded="True" FontSize="11.5" FontWeight="SemiBold">
+                        <!-- 3. Mặt tròn xoay & Khối tròn -->
+                        <TreeViewItem Header="🔄 Mặt tròn xoay &amp; Khối tròn" IsExpanded="False" FontSize="11.5" FontWeight="SemiBold">
+                            <TreeViewItem Header="Hình trụ tròn xoay" Tag="cylinder" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình trụ (Thiết diện qua trục)" Tag="cylinder_section" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình nón tròn xoay (đỉnh trên)" Tag="cone" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình nón (đỉnh dưới)" Tag="cone_down" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình nón cụt" Tag="cone_frustum" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình cầu (Mặt cầu)" Tag="sphere" FontWeight="Normal" />
+                            <TreeViewItem Header="Mặt cầu &amp; thiết diện giao tuyến" Tag="sphere_circle_section" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình trụ nội tiếp hình nón" Tag="cylinder_in_cone" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình trụ nội tiếp hình cầu" Tag="cylinder_in_sphere" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình nón nội tiếp hình cầu" Tag="cone_in_sphere" FontWeight="Normal" />
+                            <TreeViewItem Header="Mặt tròn xoay quanh trục Ox" Tag="solid_rev_ox" FontWeight="Normal" />
+                            <TreeViewItem Header="Mặt tròn xoay quanh trục Oz" Tag="solid_rev_oz" FontWeight="Normal" />
+                        </TreeViewItem>
+
+                        <!-- 4. Đường tròn & Conic -->
+                        <TreeViewItem Header="⭕ Đường tròn &amp; Conic" IsExpanded="False" FontSize="11.5" FontWeight="SemiBold">
+                            <TreeViewItem Header="Đường tròn (Tâm &amp; bán kính)" Tag="circle" FontWeight="Normal" />
+                            <TreeViewItem Header="Đường tròn (Đường kính AB)" Tag="circle_diameter" FontWeight="Normal" />
+                            <TreeViewItem Header="Đường tròn &amp; hai tiếp tuyến" Tag="circle_two_tangents" FontWeight="Normal" />
+                            <TreeViewItem Header="Tứ giác nội tiếp đường tròn" Tag="circle_inscribed_quad" FontWeight="Normal" />
+                            <TreeViewItem Header="Hai đường tròn tiếp xúc" Tag="circle_tangent_ext" FontWeight="Normal" />
+                            <TreeViewItem Header="Elip chính tắc" Tag="ellipse" FontWeight="Normal" />
+                            <TreeViewItem Header="Elip có hai tiêu điểm F1, F2" Tag="ellipse_foci" FontWeight="Normal" />
+                            <TreeViewItem Header="Hypebol chính tắc &amp; tiệm cận" Tag="hyperbola" FontWeight="Normal" />
+                            <TreeViewItem Header="Parabol đứng (y = ax²)" Tag="parabola_vert" FontWeight="Normal" />
+                            <TreeViewItem Header="Parabol ngang (x = ay²)" Tag="parabola_horiz" FontWeight="Normal" />
+                        </TreeViewItem>
+
+                        <!-- 5. Đồ thị hàm số & Miền tô -->
+                        <TreeViewItem Header="📈 Đồ thị hàm số &amp; Miền tô" IsExpanded="False" FontSize="11.5" FontWeight="SemiBold">
                             <TreeViewItem Header="Hàm bậc 2 (ax² + bx + c)" Tag="graph_quad" FontWeight="Normal" />
                             <TreeViewItem Header="Hàm bậc 3 (ax³ + bx² + cx + d)" Tag="graph_cubic" FontWeight="Normal" />
                             <TreeViewItem Header="Hàm bậc 4 trùng phương" Tag="graph_quartic" FontWeight="Normal" />
-                            <TreeViewItem Header="Hàm lượng giác (sin/cos)" Tag="graph_trig" FontWeight="Normal" />
                             <TreeViewItem Header="Hàm phân thức (ax+b)/(cx+d)" Tag="graph_rational" FontWeight="Normal" />
+                            <TreeViewItem Header="Hàm phân thức bậc 2 / bậc 1" Tag="graph_rational_21" FontWeight="Normal" />
+                            <TreeViewItem Header="Hàm lượng giác (sin/cos/tan)" Tag="graph_trig" FontWeight="Normal" />
+                            <TreeViewItem Header="Hàm logarit &amp; hàm số mũ" Tag="graph_log_exp" FontWeight="Normal" />
+                            <TreeViewItem Header="Tô miền diện tích tích phân" Tag="graph_area_integral" FontWeight="Normal" />
                         </TreeViewItem>
 
-                        <!-- 4. Biểu đồ -->
-                        <TreeViewItem Header="📊 Biểu đồ" IsExpanded="True" FontSize="11.5" FontWeight="SemiBold">
-                            <TreeViewItem Header="Biểu đồ cột" Tag="chart_bar" FontWeight="Normal" />
-                            <TreeViewItem Header="Biểu đồ tròn" Tag="chart_pie" FontWeight="Normal" />
-                            <TreeViewItem Header="Biểu đồ đường" Tag="chart_line" FontWeight="Normal" />
-                            <TreeViewItem Header="Biểu đồ miền" Tag="chart_area" FontWeight="Normal" />
-                        </TreeViewItem>
-
-                        <!-- 5. Bảng biến thiên tkz-tab -->
+                        <!-- 6. Bảng biến thiên tkz-tab -->
                         <TreeViewItem Header="📋 Bảng biến thiên (tkz-tab)" IsExpanded="False" FontSize="11.5" FontWeight="SemiBold">
                             <TreeViewItem Header="Bảng biến thiên bậc 3 (2 cực trị)" Tag="tab_cubic" FontWeight="Normal" />
                             <TreeViewItem Header="Bảng biến thiên bậc 4 trùng phương" Tag="tab_quartic" FontWeight="Normal" />
                             <TreeViewItem Header="Bảng biến thiên phân thức hữu tỉ" Tag="tab_rational" FontWeight="Normal" />
+                            <TreeViewItem Header="Bảng biến thiên phân thức bậc 2/1" Tag="tab_rational_21" FontWeight="Normal" />
                             <TreeViewItem Header="Bảng xét dấu tam thức bậc hai" Tag="tab_sign_quad" FontWeight="Normal" />
+                        </TreeViewItem>
+
+                        <!-- 7. Bài toán thực tế THPT -->
+                        <TreeViewItem Header="🌐 Bài toán thực tế THPT" IsExpanded="False" FontSize="11.5" FontWeight="SemiBold">
+                            <TreeViewItem Header="Cầu treo dây văng Parabol" Tag="real_bridge_parabola" FontWeight="Normal" />
+                            <TreeViewItem Header="Ngọn hải đăng &amp; góc quét tầm nhìn" Tag="real_lighthouse" FontWeight="Normal" />
+                            <TreeViewItem Header="Quỹ đạo ném bóng rổ Parabol" Tag="real_basketball" FontWeight="Normal" />
+                            <TreeViewItem Header="Lều trại du lịch chóp tam giác" Tag="real_tent_pyramid" FontWeight="Normal" />
+                            <TreeViewItem Header="Đồng hồ cát hai khối nón" Tag="real_hourglass" FontWeight="Normal" />
+                        </TreeViewItem>
+
+                        <!-- 8. Biểu đồ thống kê -->
+                        <TreeViewItem Header="📊 Biểu đồ thống kê" IsExpanded="False" FontSize="11.5" FontWeight="SemiBold">
+                            <TreeViewItem Header="Biểu đồ cột" Tag="chart_bar" FontWeight="Normal" />
+                            <TreeViewItem Header="Biểu đồ tròn" Tag="chart_pie" FontWeight="Normal" />
+                            <TreeViewItem Header="Biểu đồ đường" Tag="chart_line" FontWeight="Normal" />
+                            <TreeViewItem Header="Biểu đồ miền" Tag="chart_area" FontWeight="Normal" />
                         </TreeViewItem>
                     </TreeView>
                 </Grid>
@@ -193,45 +244,63 @@
                                 <!-- Hàng thông số 1 -->
                                 <Grid x:Name="GridParam1" Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="Auto" MinWidth="140" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="LblParam1" Text="Cạnh a / Đáy:" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                    <TextBlock x:Name="LblParam1" Text="Cạnh a / Đáy:" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,12,0" />
                                     <ui:TextBox x:Name="TxtParam1" Grid.Column="1" Height="34" MinHeight="34" Padding="10,4" VerticalContentAlignment="Center" FontSize="12" Text="4" TextChanged="Param_TextChanged" />
                                 </Grid>
 
                                 <!-- Hàng thông số 2 -->
                                 <Grid x:Name="GridParam2" Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="Auto" MinWidth="140" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="LblParam2" Text="Cạnh b / Chiều cao:" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                    <TextBlock x:Name="LblParam2" Text="Cạnh b / Chiều cao:" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,12,0" />
                                     <ui:TextBox x:Name="TxtParam2" Grid.Column="1" Height="34" MinHeight="34" Padding="10,4" VerticalContentAlignment="Center" FontSize="12" Text="3" TextChanged="Param_TextChanged" />
                                 </Grid>
 
                                 <!-- Hàng thông số 3 -->
                                 <Grid x:Name="GridParam3" Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="Auto" MinWidth="140" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="LblParam3" Text="Hệ số / Bán kính:" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                    <TextBlock x:Name="LblParam3" Text="Hệ số / Bán kính:" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,12,0" />
                                     <ui:TextBox x:Name="TxtParam3" Grid.Column="1" Height="34" MinHeight="34" Padding="10,4" VerticalContentAlignment="Center" FontSize="12" Text="2" TextChanged="Param_TextChanged" />
                                 </Grid>
 
                                 <!-- Hàng thông số 4 -->
                                 <Grid x:Name="GridParam4" Margin="0,0,0,10">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="150" />
+                                        <ColumnDefinition Width="Auto" MinWidth="140" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock x:Name="LblParam4" Text="Tên các đỉnh / Nhãn:" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                                    <TextBlock x:Name="LblParam4" Text="Tên các đỉnh / Nhãn:" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,12,0" />
                                     <ui:TextBox x:Name="TxtParam4" Grid.Column="1" Height="34" MinHeight="34" Padding="10,4" VerticalContentAlignment="Center" FontSize="12" Text="A, B, C, D" TextChanged="Param_TextChanged" />
                                 </Grid>
 
-                                <!-- Tùy chọn checkbox -->
-                                <CheckBox x:Name="ChkOption" Content="Hiển thị góc vuông / đường nét đứt phụ" FontSize="12" IsChecked="True" Checked="ChkOption_Changed" Unchecked="ChkOption_Changed" Margin="0,6,0,0" />
+                                <!-- Bảng màu nét vẽ trực quan -->
+                                <Grid Margin="0,4,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" MinWidth="140" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Bảng màu nét vẽ:" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,12,0" />
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Border x:Name="ColorBlue" Width="26" Height="26" CornerRadius="13" Background="#2563EB" Margin="0,0,8,0" Cursor="Hand" MouseDown="Color_MouseDown" Tag="blue" BorderBrush="White" BorderThickness="2" ToolTip="Xanh dương (blue)" />
+                                        <Border x:Name="ColorRed" Width="26" Height="26" CornerRadius="13" Background="#DC2626" Margin="0,0,8,0" Cursor="Hand" MouseDown="Color_MouseDown" Tag="red" BorderBrush="Transparent" BorderThickness="2" ToolTip="Đỏ (red)" />
+                                        <Border x:Name="ColorGreen" Width="26" Height="26" CornerRadius="13" Background="#16A34A" Margin="0,0,8,0" Cursor="Hand" MouseDown="Color_MouseDown" Tag="teal" BorderBrush="Transparent" BorderThickness="2" ToolTip="Xanh lá / Teal (teal)" />
+                                        <Border x:Name="ColorOrange" Width="26" Height="26" CornerRadius="13" Background="#EA580C" Margin="0,0,8,0" Cursor="Hand" MouseDown="Color_MouseDown" Tag="orange" BorderBrush="Transparent" BorderThickness="2" ToolTip="Cam (orange)" />
+                                        <Border x:Name="ColorPurple" Width="26" Height="26" CornerRadius="13" Background="#9333EA" Margin="0,0,8,0" Cursor="Hand" MouseDown="Color_MouseDown" Tag="purple" BorderBrush="Transparent" BorderThickness="2" ToolTip="Tím (purple)" />
+                                        <Border x:Name="ColorBlack" Width="26" Height="26" CornerRadius="13" Background="#0F172A" Margin="0,0,8,0" Cursor="Hand" MouseDown="Color_MouseDown" Tag="black" BorderBrush="#94A3B8" BorderThickness="1" ToolTip="Đen sách in (black)" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- Tùy chọn checkbox nét đứt và tô nền -->
+                                <CheckBox x:Name="ChkOption" Content="Hiển thị góc vuông / đường nét đứt phụ" FontSize="12" IsChecked="True" Checked="ChkOption_Changed" Unchecked="ChkOption_Changed" Margin="0,2,0,4" />
+                                <CheckBox x:Name="ChkFillOption" Content="Tô màu nền nhẹ cho hình vẽ (Fill 15%)" FontSize="12" IsChecked="False" Checked="ChkFillOption_Changed" Unchecked="ChkFillOption_Changed" Margin="0,2,0,0" />
                             </StackPanel>
                         </ScrollViewer>
 

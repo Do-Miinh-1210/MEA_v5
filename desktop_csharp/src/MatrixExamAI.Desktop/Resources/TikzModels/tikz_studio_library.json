@@ -1,0 +1,1354 @@
+{
+  "hinh_khong_gian": [
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình tứ diện",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-45; a=5; b=0.45*a; h=6;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (C)\n\t(goc:b) coordinate (B)\n\t($(A)!.66!(C)$) coordinate (H)--+(0,h) coordinate (S);\n\t\\draw \n\tpic[angle radius=3mm,draw] {right angle = S--A--B}\n\tpic[angle radius=3mm,draw] {right angle = S--H--C}\n\tpic[angle radius=3mm,draw] {right angle = S--C--B};\n\t\\draw[dashed] (A)--(C) (S)--(H);\n\t\\draw (S)--(B) (S)--(A)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/240,C/-60,B/-90,H/-90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-45; a=5; b=0.45*a; h=5;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-45.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "5.0"
+        }
+      ],
+      "points": [
+        "S",
+        "A",
+        "C",
+        "B"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp tam giác vuông góc tại A",
+      "tikz": "\\begin{tikzpicture}[declare function={gocx=75; goc=-40;a=5; b=0.25*a; c=0.7*a; h=6;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(gocx:h) coordinate (S);\n\t\\draw[dashed] (A)--(B);\n\t\\draw (S)--(A)--(D) (S)--(D)--(C)--(S)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/-180,B/0,C/-60,D/-100}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "gocx=75; goc=-40;a=5; b=0.25*a; c=0.7*a; h=6;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-45.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "6.0"
+        }
+      ],
+      "points": [
+        "S",
+        "A",
+        "C",
+        "B",
+        "H"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp có S.ABC có SA vuông góc ABC",
+      "tikz": "\\begin{tikzpicture}[declare function={gocx=75; goc=-40;a=5; b=0.25*a; c=0.7*a; h=6;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(gocx:h) coordinate (S);\n\t\\draw[dashed] (A)--(B);\n\t\\draw (S)--(A)--(D) (S)--(D)--(C)--(S)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/-180,B/0,C/-60,D/-100}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "gocx=75; goc=-40;a=5; b=0.25*a; c=0.7*a; h=6;",
+      "params": [
+        {
+          "name": "gocx",
+          "default": "75"
+        },
+        {
+          "name": "goc",
+          "default": "-40"
+        },
+        {
+          "name": "a",
+          "default": "5"
+        },
+        {
+          "name": "b",
+          "default": "0.25*a"
+        },
+        {
+          "name": "c",
+          "default": "0.7*a"
+        },
+        {
+          "name": "h",
+          "default": "6"
+        }
+      ],
+      "points": [
+        "S",
+        "A",
+        "C",
+        "B",
+        "H"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp có mặt (SAB) vuông góc (ABC)",
+      "tikz": "\\begin{tikzpicture}[declare function={gocx=80; goc=-150; a=5; b=a/2; h=6;}]\n\t\\path (0,0) coordinate (A)--+(gocx:h) coordinate (S)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t+(a,0) coordinate (C);\n\t\\draw[dashed] (S)--(A) (D)--(A)--(B);\n\t\\draw (S)--(D)--(C)--(S)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/150,B/0,C/-60,D/-180}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "gocx=75; goc=-40;a=5; b=0.25*a; c=0.7*a; h=6;",
+      "params": [
+        {
+          "name": "gocx",
+          "default": "75.0"
+        },
+        {
+          "name": "goc",
+          "default": "-40.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "6.0"
+        }
+      ],
+      "points": [
+        "S",
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp có mặt (SAB) vuông (ABC)",
+      "tikz": "\\begin{tikzpicture}[declare function={gocx=80; goc=-150; a=5; b=a/2; h=6;}]\n\t\\path (0,0) coordinate (A)--+(gocx:h) coordinate (S)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t+(a,0) coordinate (C);\n\t\\draw[dashed] (S)--(A) (D)--(A)--(B);\n\t\\draw (S)--(D)--(C)--(S)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/150,B/0,C/-60,D/-180}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "gocx=80; goc=-150; a=5; b=a/2; h=6;",
+      "params": [
+        {
+          "name": "gocx",
+          "default": "75.0"
+        },
+        {
+          "name": "goc",
+          "default": "-40.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "6.0"
+        }
+      ],
+      "points": [
+        "S",
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp tứ giác",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-150; a=5; b=a/2; h=0.71*a;}]\n\t\\path (0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t+(a,0) coordinate (C)\n\t($(A)!.5!(C)$) coordinate (O)--+(0,h) coordinate (S);\n\t\\draw pic[angle radius=3mm,draw] {right angle = S--O--D};\n\t\\draw[dashed]  (S)--(A) (D)--(A)--(B) (S)--(O) (A)--(C) (D)--(B);\n\t\\draw (S)--(D)--(C)--(S)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/150,B/0,C/-60,D/-180,O/-90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-150; a=5; b=a/2; h=0.71*a;",
+      "params": [
+        {
+          "name": "gocx",
+          "default": "80.0"
+        },
+        {
+          "name": "goc",
+          "default": "-150.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "6.0"
+        }
+      ],
+      "points": [
+        "S",
+        "A",
+        "B",
+        "C",
+        "D"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp đáy hình bình hành",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-60;gocx=90;a=5; b=0.4*a; c=0.4*a; h=6;}] \n\t\\path (0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t+(c,0) coordinate (C)\n\t(gocx:h) coordinate (S);\n\t\\draw pic[angle radius=3mm,draw] {right angle = S--A--B};\n\t\\draw[dashed] (A)--(B);\n\t\\draw (S)--(A)--(D) (S)--(D)--(C)--(S)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/-180,B/0,C/-60,D/-100}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-150; a=5; b=a/2; h=0.71*a;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-150"
+        },
+        {
+          "name": "a",
+          "default": "5"
+        },
+        {
+          "name": "b",
+          "default": "a/2"
+        },
+        {
+          "name": "h",
+          "default": "0.71*a"
+        }
+      ],
+      "points": [
+        "S",
+        "A",
+        "B",
+        "C",
+        "D",
+        "O"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp S.ABCD đáy hình bình hành",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-60;gocx=90;a=5; b=0.4*a; c=0.4*a; h=6;}] \n\t\\path (0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t+(c,0) coordinate (C)\n\t(gocx:h) coordinate (S);\n\t\\draw pic[angle radius=3mm,draw] {right angle = S--A--B};\n\t\\draw[dashed] (A)--(B);\n\t\\draw (S)--(A)--(D) (S)--(D)--(C)--(S)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/-180,B/0,C/-60,D/-100}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-60;gocx=90;a=5; b=0.4*a; c=0.4*a; h=6;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-150"
+        },
+        {
+          "name": "a",
+          "default": "5"
+        },
+        {
+          "name": "b",
+          "default": "a/2"
+        },
+        {
+          "name": "h",
+          "default": "0.71*a"
+        }
+      ],
+      "points": [
+        "S",
+        "A",
+        "B",
+        "C",
+        "D",
+        "O"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp tứ giác đều",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-150; a=5; b=a/2; h=6;}]\n\t\\path (0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t+(a,0) coordinate (C)\n\t($(A)!.3!(B)$) coordinate (H)--+(0,h) coordinate (S);\n\t\\draw \n\tpic[angle radius=3mm,draw] {right angle = S--H--B}\n\tpic[angle radius=3mm,draw] {right angle = S--B--C}\n\tpic[angle radius=3mm,draw] {right angle = S--A--D};\n\t\\draw[dashed] (S)--(A) (D)--(A)--(B) (S)--(H);\n\t\\draw (S)--(D)--(C)--(S)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/-50,B/0,C/-60,D/-180,H/-90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-60;gocx=90;a=5; b=0.4*a; c=0.4*a; h=6;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-60.0"
+        },
+        {
+          "name": "gocx",
+          "default": "90.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "6.0"
+        }
+      ],
+      "points": [
+        "S",
+        "A",
+        "B",
+        "C",
+        "D",
+        "O"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp S.ABCD đều",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-150; a=5; b=a/2; h=6;}]\n\t\\path (0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t+(a,0) coordinate (C)\n\t($(A)!.3!(B)$) coordinate (H)--+(0,h) coordinate (S);\n\t\\draw \n\tpic[angle radius=3mm,draw] {right angle = S--H--B}\n\tpic[angle radius=3mm,draw] {right angle = S--B--C}\n\tpic[angle radius=3mm,draw] {right angle = S--A--D};\n\t\\draw[dashed] (S)--(A) (D)--(A)--(B) (S)--(H);\n\t\\draw (S)--(D)--(C)--(S)--(B)--(C)--cycle;\n\t\\foreach \\x/\\goc in {S/90,A/-50,B/0,C/-60,D/-180,H/-90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-150; a=5; b=a/2; h=6;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-60.0"
+        },
+        {
+          "name": "gocx",
+          "default": "90.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "6.0"
+        }
+      ],
+      "points": [
+        "S",
+        "A",
+        "B",
+        "C",
+        "D",
+        "O"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp đáy hình thang",
+      "tikz": "\\begin{tikzpicture}[declare function={gocx=75; goc=-40; a=5; d=0.4*a; b=0.25*a; c=0.7*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(-goc:d) coordinate (E)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(gocx:h) coordinate (S);\n\t\\draw[dashed] (A)--(E)--(B) (S)--(E);\n\t\\draw (A)--(D)--(C)--(B)--(S)--(A) (S)--(D) (S)--(C);\n\t\\foreach \\x/\\goc in {A/-180,E/-90, B/0,C/-60,D/-100, S/90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "gocx=75; goc=-40; a=5; d=0.4*a; b=0.25*a; c=0.7*a; h=5;",
+      "params": [
+        {
+          "name": "gocx",
+          "default": "75"
+        },
+        {
+          "name": "goc",
+          "default": "-40"
+        },
+        {
+          "name": "a",
+          "default": "5"
+        },
+        {
+          "name": "d",
+          "default": "0.4*a"
+        },
+        {
+          "name": "b",
+          "default": "0.25*a"
+        },
+        {
+          "name": "c",
+          "default": "0.7*a"
+        },
+        {
+          "name": "h",
+          "default": "5"
+        }
+      ],
+      "points": [
+        "S",
+        "A",
+        "B",
+        "C",
+        "D",
+        "H"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp S.ABCD có SAD vuông góc đáy",
+      "tikz": "\\begin{tikzpicture}[declare function={gocx=90; goc=-34; a=5; d=0.5*a; b=0.3*a; c=0.5*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(-0.5*goc:c) coordinate (E)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(gocx:h)+(E)$) coordinate (S);\n\t\\draw[dashed] (A)--(E)--(B) (S)--(E);\n\t\\draw (A)--(D)--(C)--(B)--(S)--(A) (S)--(D) (S)--(C);\n\t\\foreach \\x/\\goc in {A/-180,E/-90, B/0,C/-60,D/-100, S/90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "gocx=90; goc=-34; a=5; d=0.5*a; b=0.3*a; c=0.5*a; h=5;",
+      "params": [
+        {
+          "name": "gocx",
+          "default": "75.0"
+        },
+        {
+          "name": "goc",
+          "default": "-40.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "5.0"
+        }
+      ],
+      "points": [
+        "A",
+        "E",
+        "B",
+        "C",
+        "D",
+        "S"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp S.ABCD có SAD vuong ABCD",
+      "tikz": "\\begin{tikzpicture}[declare function={gocx=90; goc=-34; a=5; d=0.5*a; b=0.3*a; c=0.5*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(-0.5*goc:c) coordinate (E)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(gocx:h)+(E)$) coordinate (S);\n\t\\draw[dashed] (A)--(E)--(B) (S)--(E);\n\t\\draw (A)--(D)--(C)--(B)--(S)--(A) (S)--(D) (S)--(C);\n\t\\foreach \\x/\\goc in {A/-180,E/-90, B/0,C/-60,D/-100, S/90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "gocx=90; goc=-34; a=5; d=0.5*a; b=0.3*a; c=0.5*a; h=5;",
+      "params": [
+        {
+          "name": "gocx",
+          "default": "90"
+        },
+        {
+          "name": "goc",
+          "default": "-34"
+        },
+        {
+          "name": "a",
+          "default": "5"
+        },
+        {
+          "name": "d",
+          "default": "0.5*a"
+        },
+        {
+          "name": "b",
+          "default": "0.3*a"
+        },
+        {
+          "name": "c",
+          "default": "0.5*a"
+        },
+        {
+          "name": "h",
+          "default": "5"
+        }
+      ],
+      "points": [
+        "A",
+        "E",
+        "B",
+        "C",
+        "D",
+        "S"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp ngũ giác",
+      "tikz": "\\begin{tikzpicture}[declare function={gocx=75; goc=-50; a=5; d=0.4*a; b=0.3*a; h=6;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(A)+(B)-(C)$) coordinate(E)\n\t($(E)+(d,0)$) coordinate (F)\n\t(gocx:h) coordinate (S);\n\t\\draw[dashed] (A)--(E)--(F)--(B) (E)--(S) (F)--(S);\n\t\\draw (A)--(D)--(C)--(B)--(S)--(A) (D)--(S) (C)--(S) (B)--(S);\n\t\\foreach \\x/\\goc in {A/-180,E/-90,F/-140, B/0,C/-60,D/-100,S/90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "gocx=75; goc=-50; a=5; d=0.4*a; b=0.3*a; h=6;",
+      "params": [
+        {
+          "name": "gocx",
+          "default": "75.0"
+        },
+        {
+          "name": "goc",
+          "default": "-50.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "6.0"
+        }
+      ],
+      "points": [
+        "A",
+        "E",
+        "B",
+        "C",
+        "D",
+        "S"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp ngũ giác đều",
+      "tikz": "\\begin{tikzpicture}[declare function={gocx=90; goc=-34; a=5; d=0.4*a; b=0.3*a; c=0.27*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(goc:d) coordinate (D)--+(0:d) coordinate (C)\n\t(a,0) coordinate (B)--+(180+goc:d) coordinate (F)\n\t($(F)+(180:d)$)coordinate(E)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(A)!.5!(B)$) coordinate (O)--+(90:h) coordinate (S);\n\t\\draw \n\tpic[angle radius=2.5mm,draw] {right angle = S--O--B};\n\t\\draw[dashed] (D)--(F)--(S)--(E)--(C) (A)--(B) (A)--(E)--(F)--(B) (S)--(O);\n\t\\draw (A)--(D)--(C)--(B)--(S)--(A) (D)--(S) (C)--(S) (B)--(S);\n\t\\foreach \\x/\\goc in {A/-180,E/140,F/40, B/0,C/-60,D/-100,S/90, O/-90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "gocx=90; goc=-34; a=5; d=0.4*a; b=0.3*a; c=0.27*a; h=5;",
+      "params": [
+        {
+          "name": "gocx",
+          "default": "90"
+        },
+        {
+          "name": "goc",
+          "default": "-34"
+        },
+        {
+          "name": "a",
+          "default": "5"
+        },
+        {
+          "name": "d",
+          "default": "0.4*a"
+        },
+        {
+          "name": "b",
+          "default": "0.3*a"
+        },
+        {
+          "name": "c",
+          "default": "0.27*a"
+        },
+        {
+          "name": "h",
+          "default": "5"
+        }
+      ],
+      "points": [
+        "A",
+        "E",
+        "F",
+        "B",
+        "C",
+        "D",
+        "S"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp lục giác",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-45; a=5; b=0.45*a; h=7;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (C)\n\t(goc:b) coordinate (B)--+(0,h) coordinate (S)\n\t($(A)!.6!(S)$) coordinate (A')\n\t($(B)!.6!(S)$) coordinate (B')\n\t($(C)!.6!(S)$) coordinate (C');\n\t\\draw[dashed] (A)--(C);\n\t\\draw (A)--(B)--(C)--(C')--(B')--(A')--(C') (A)--(A') (B)--(B');\n\t\\foreach \\x/\\goc in {A/240,C/-60,B/-90,A'/180,C'/0,B'/-30}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "gocx=90; goc=-34; a=5; d=0.4*a; b=0.3*a; c=0.27*a; h=5;",
+      "params": [
+        {
+          "name": "gocx",
+          "default": "90"
+        },
+        {
+          "name": "goc",
+          "default": "-34"
+        },
+        {
+          "name": "a",
+          "default": "5"
+        },
+        {
+          "name": "d",
+          "default": "0.4*a"
+        },
+        {
+          "name": "b",
+          "default": "0.3*a"
+        },
+        {
+          "name": "c",
+          "default": "0.27*a"
+        },
+        {
+          "name": "h",
+          "default": "5"
+        }
+      ],
+      "points": [
+        "A",
+        "C",
+        "B",
+        "A'",
+        "C'",
+        "B'"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp lục giác đều",
+      "tikz": "\\begin{tikzpicture}[declare function={gocx= 60;goc=-150; a=5; b=a/2; h=6;}]\n\t\\path (0,0) coordinate (A)--+(gocx:h) coordinate (S)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t+(a,0) coordinate (C)\n\t($(A)!.5!(C)$) coordinate (O)\n\t($(A)!.4!(S)$) coordinate(A')\n\t($(B)!.4!(S)$) coordinate(B')\n\t($(C)!.4!(S)$) coordinate(C')\n\t($(D)!.4!(S)$) coordinate(D')\n\t($(A')!.5!(C')$) coordinate(O');\n\t\\draw[dashed] (A')--(A)--(C) (O)--(O') (D)--(A)--(B)--cycle;\n\t\\draw (A')--(C')--(C) (D)--(C)--(B)--(B')--(C')--(D')--(A')--(B')--(D')--cycle;\n\t\\foreach \\x/\\goc in {A/150,B/0,C/-60,D/-180,O/-90,A'/90,B'/90,C'/90,D'/90,O'/90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "gocx= 60;goc=-150; a=5; b=a/2; h=6;",
+      "params": [
+        {
+          "name": "gocx",
+          "default": "60.0"
+        },
+        {
+          "name": "goc",
+          "default": "-150.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "6.0"
+        }
+      ],
+      "points": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "O",
+        "A'",
+        "B'",
+        "C'",
+        "D'",
+        "O'"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình chóp lục giác  đều",
+      "tikz": "\\begin{tikzpicture}[declare function={gocx=75; goc=-40; a=5; d=0.4*a; b=0.25*a; c=0.7*a; h=7;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(-goc:d) coordinate (E)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(gocx:h) coordinate (S)\n\t($(A)!.4!(S)$) coordinate(A')\n\t($(B)!.4!(S)$) coordinate(B')\n\t($(C)!.4!(S)$) coordinate(C')\n\t($(D)!.4!(S)$) coordinate(D')\n\t($(E)!.4!(S)$) coordinate(E');\n\t\\draw[dashed] (A)--(E)--(B) (E')--(E);\n\t\\draw (D')--(D) (C')--(C) (B')--(E')--(A')--(D')--(C')--(B')--(B)--(C)--(D)--(A)--(A');\n\t\\foreach \\x/\\goc in {A/-180,E/-90, B/0,C/-60,D/-100,A'/90,E'/90, B'/90,C'/90,D'/90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "gocx= 60;goc=-150; a=5; b=a/2; h=6;",
+      "params": [
+        {
+          "name": "gocx",
+          "default": "60.0"
+        },
+        {
+          "name": "goc",
+          "default": "-150.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "6.0"
+        }
+      ],
+      "points": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "O",
+        "A'",
+        "B'",
+        "C'",
+        "D'",
+        "O'"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Chóp cụt tam giác",
+      "tikz": "\\begin{tikzpicture}[declare function={gocx=75; goc=-40; a=5; d=0.4*a; b=0.25*a; c=0.7*a; h=7;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(-goc:d) coordinate (E)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(gocx:h) coordinate (S)\n\t($(A)!.4!(S)$) coordinate(A')\n\t($(B)!.4!(S)$) coordinate(B')\n\t($(C)!.4!(S)$) coordinate(C')\n\t($(D)!.4!(S)$) coordinate(D')\n\t($(E)!.4!(S)$) coordinate(E');\n\t\\draw[dashed] (A)--(E)--(B) (E')--(E);\n\t\\draw (D')--(D) (C')--(C) (B')--(E')--(A')--(D')--(C')--(B')--(B)--(C)--(D)--(A)--(A');\n\t\\foreach \\x/\\goc in {A/-180,E/-90, B/0,C/-60,D/-100,A'/90,E'/90, B'/90,C'/90,D'/90}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "gocx=75; goc=-40; a=5; d=0.4*a; b=0.25*a; c=0.7*a; h=7;",
+      "params": [
+        {
+          "name": "gocx",
+          "default": "75.0"
+        },
+        {
+          "name": "goc",
+          "default": "-40.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "7.0"
+        }
+      ],
+      "points": [
+        "A",
+        "E",
+        "B",
+        "C",
+        "D",
+        "A'",
+        "E'",
+        "B'",
+        "C'",
+        "D'"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Chóp cụt tứ giác",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-45; a=5; b=0.45*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (C)\n\t(goc:b) coordinate (B)\n\t(0,h) coordinate (A')\n\t(a,h) coordinate (C')\n\t($(B)+(0,h)$) coordinate (B');\n\t\\draw[dashed] (A)--(C);\n\t\\draw (A)--(B)--(C)--(C')--(A')--(B')--(B) (A)--(A') (B')--(C');\n\t\\foreach \\x/\\goc in {A/-180,B/-90,C/0,A'/-180,B'/-30,C'/0}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "gocx=75; goc=-40; a=5; d=0.4*a; b=0.25*a; c=0.7*a; h=7;",
+      "params": [
+        {
+          "name": "gocx",
+          "default": "75.0"
+        },
+        {
+          "name": "goc",
+          "default": "-40.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "7.0"
+        }
+      ],
+      "points": [
+        "A",
+        "B",
+        "C",
+        "A'",
+        "B'",
+        "C'"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Chóp cụt ngũ giác",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-45; gocx=75; a=5; b=0.45*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (C)\n\t(goc:b) coordinate (B)\n\t(gocx:h) coordinate (A')\n\t($(gocx:h)+(C)$) coordinate (C')\n\t($(gocx:h)+(B)$) coordinate (B');\n\t\\draw[dashed] (A)--(C);\n\t\\draw (A)--(B)--(C)--(C')--(A')--(B')--(B) (A)--(A') (B')--(C');\n\t\\foreach \\x/\\goc in {A/-180,B/-90,C/0,A'/-180,B'/-30,C'/0}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-45; gocx=75; a=5; b=0.45*a; h=5;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-45.0"
+        },
+        {
+          "name": "gocx",
+          "default": "75.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "5.0"
+        }
+      ],
+      "points": [
+        "A",
+        "B",
+        "C",
+        "A'",
+        "B'",
+        "C'"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Lăng trụ tam giác đứng",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-40; a=5; d=0.5*a; b=0.25*a; c=0.7*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(0,h) coordinate (A')\n\t(a,h) coordinate (B')\n\t($(D)+(0,h)$) coordinate (D')\n\t($(C)+(0,h)$) coordinate (C');\n\t\\draw[dashed] (A)--(B) ;\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180, B/0,C/-60,D/-100,A'/-180, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-40; a=5; d=0.5*a; b=0.25*a; c=0.7*a; h=5;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-40.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "5.0"
+        }
+      ],
+      "points": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "A'",
+        "B'",
+        "C'",
+        "D'"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Lăng trụ tam giác xiên",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-40; gocx=75; a=5; d=0.5*a; b=0.25*a; c=0.7*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(gocx:h) coordinate (A')\n\t($(gocx:h)+(B)$) coordinate (B')\n\t($(gocx:h)+(D)$) coordinate (D')\n\t($(gocx:h)+(C)$) coordinate (C');\n\t\\draw[dashed] (A)--(B) ;\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180, B/0,C/-60,D/-100,A'/-180, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-40; gocx=75; a=5; d=0.5*a; b=0.25*a; c=0.7*a; h=5;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-40"
+        },
+        {
+          "name": "gocx",
+          "default": "75"
+        },
+        {
+          "name": "a",
+          "default": "5"
+        },
+        {
+          "name": "d",
+          "default": "0.5*a"
+        },
+        {
+          "name": "b",
+          "default": "0.25*a"
+        },
+        {
+          "name": "c",
+          "default": "0.7*a"
+        },
+        {
+          "name": "h",
+          "default": "5"
+        }
+      ],
+      "points": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "A'",
+        "B'",
+        "C'",
+        "D'"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Lăng trụ tam giác xiêng",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-40; gocx=75; a=5; d=0.5*a; b=0.25*a; c=0.7*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t(0.5*goc:c) coordinate (C)\n\t(gocx:h) coordinate (A')\n\t($(gocx:h)+(B)$) coordinate (B')\n\t($(gocx:h)+(D)$) coordinate (D')\n\t($(gocx:h)+(C)$) coordinate (C');\n\t\\draw[dashed] (A)--(B) ;\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180, B/0,C/-60,D/-100,A'/-180, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-40; gocx=75; a=5; d=0.5*a; b=0.25*a; c=0.7*a; h=5;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-40.0"
+        },
+        {
+          "name": "gocx",
+          "default": "75.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "5.0"
+        }
+      ],
+      "points": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "A'",
+        "B'",
+        "C'",
+        "D'"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Lăng trụ tứ giác đứng",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=225; a=3; b=8; h=5;}]\n\t\\path\n\t(0,0) coordinate (A)\n\t(b,0) coordinate (B)\n\t(goc:a) coordinate (D)\n\t($(D)+(B)-(A)$) coordinate (C)\n\t(0,h) coordinate (A')\n\t(b,h) coordinate (B')\n\t($(D)+(0,h)$) coordinate (D')\n\t($(C)+(0,h)$) coordinate (C');\n\t\\draw[dashed] (D)--(A)--(B) (A)--(A');\n\t\\draw (D)--(C)--(B)--(B')--(A')--(D')--(C')--(C) (D)--(D') (B')--(C');\n\t\\foreach \\x/\\g in {A/135, B/0, C/0, D/180, A'/135, B'/-30, C'/-15, D'/180 }{\\draw[fill=black] (\\x) circle (1pt) node[shift={(\\g:7pt)},font=\\footnotesize]{$\\x$};}\\end{tikzpicture}",
+      "declaration": "goc=225; a=3; b=8; h=5;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "225.0"
+        },
+        {
+          "name": "a",
+          "default": "3.0"
+        },
+        {
+          "name": "b",
+          "default": "8.0"
+        },
+        {
+          "name": "h",
+          "default": "5.0"
+        }
+      ],
+      "points": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "A'",
+        "B'",
+        "C'",
+        "D'"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Lăng trụ tứ giác xiên",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=225; gocx=75; a=3; b=8; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(b,0) coordinate (B)\n\t(goc:a) coordinate (D)\n\t($(D)+(B)-(A)$) coordinate (C)\n\t(gocx:h) coordinate (A')\n\t($(gocx:h)+(B)$) coordinate (B')\n\t($(gocx:h)+(D)$) coordinate (D')\n\t($(gocx:h)+(C)$) coordinate (C'); \n\t\\draw[dashed] (D)--(A)--(B) (A)--(A');\n\t\\draw (D)--(C)--(B)--(B')--(A')--(D')--(C')--(C) (D)--(D') (B')--(C');\n\t\\foreach \\x/\\g in {A/135, B/0, C/0, D/180, A'/135, B'/-30, C'/-15, D'/180 }{\\draw[fill=black] (\\x) circle (1pt) node[shift={(\\g:7pt)},font=\\footnotesize]{$\\x$};}\\end{tikzpicture}",
+      "declaration": "goc=225; gocx=75; a=3; b=8; h=5;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "225.0"
+        },
+        {
+          "name": "gocx",
+          "default": "75.0"
+        },
+        {
+          "name": "a",
+          "default": "3.0"
+        },
+        {
+          "name": "b",
+          "default": "8.0"
+        },
+        {
+          "name": "h",
+          "default": "5.0"
+        }
+      ],
+      "points": []
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình hộp chữ nhật",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-50; a=5; d=0.5*a; b=0.3*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(A)+(B)-(C)$) coordinate(E)\n\t($(E)+(d,0)$) coordinate (F)\n\t(0,h) coordinate (A')\n\t($(E)+(0,h)$) coordinate (E')\n\t($(F)+(0,h)$) coordinate (F')\n\t(a,h) coordinate (B')\n\t($(D)+(0,h)$) coordinate (D')\n\t($(C)+(0,h)$) coordinate (C');\n\t\\draw[dashed] (A)--(E)--(F)--(B) (E)--(E') (F)--(F');\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(E')--(F')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180,E/-90,F/-140, B/0,C/-60,D/-100,A'/-180,E'/90,F'/50, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=225; gocx=75; a=3; b=8; h=5;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "225.0"
+        },
+        {
+          "name": "gocx",
+          "default": "75.0"
+        },
+        {
+          "name": "a",
+          "default": "3.0"
+        },
+        {
+          "name": "b",
+          "default": "8.0"
+        },
+        {
+          "name": "h",
+          "default": "5.0"
+        }
+      ],
+      "points": []
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Hình hộp",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-50; a=5; d=0.5*a; b=0.3*a; h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(A)+(B)-(C)$) coordinate(E)\n\t($(E)+(d,0)$) coordinate (F)\n\t(0,h) coordinate (A')\n\t($(E)+(0,h)$) coordinate (E')\n\t($(F)+(0,h)$) coordinate (F')\n\t(a,h) coordinate (B')\n\t($(D)+(0,h)$) coordinate (D')\n\t($(C)+(0,h)$) coordinate (C');\n\t\\draw[dashed] (A)--(E)--(F)--(B) (E)--(E') (F)--(F');\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(E')--(F')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180,E/-90,F/-140, B/0,C/-60,D/-100,A'/-180,E'/90,F'/50, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-50; a=5; d=0.5*a; b=0.3*a; h=5;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-50.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "5.0"
+        }
+      ],
+      "points": [
+        "A",
+        "E",
+        "F",
+        "B",
+        "C",
+        "D",
+        "A'",
+        "E'",
+        "F'",
+        "B'",
+        "C'",
+        "D'"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Lăng trụ ngũ giác đứng",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-50; gocx=85; a=5; d=0.5*a; b=0.3*a;  h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(A)+(B)-(C)$) coordinate(E)\n\t($(E)+(d,0)$) coordinate (F)\n\t(gocx:h) coordinate (A')\n\t($(gocx:h)+(E)$) coordinate (E')\n\t($(gocx:h)+(F)$) coordinate (F')\n\t($(gocx:h)+(B)$) coordinate (B')\n\t($(gocx:h)+(D)$) coordinate (D')\n\t($(gocx:h)+(C)$) coordinate (C');\n\t\\draw[dashed] (A)--(E)--(F)--(B) (E)--(E') (F)--(F');\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(E')--(F')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180,E/-90,F/-140, B/0,C/-60,D/-100,A'/-180,E'/90,F'/50, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-50; gocx=85; a=5; d=0.5*a; b=0.3*a;  h=5;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-50.0"
+        },
+        {
+          "name": "gocx",
+          "default": "85.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "5.0"
+        }
+      ],
+      "points": [
+        "A",
+        "E",
+        "F",
+        "B",
+        "C",
+        "D",
+        "A'",
+        "E'",
+        "F'",
+        "B'",
+        "C'",
+        "D'"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Lăng trụ ngũ giác xiên",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-50; gocx=85; a=5; d=0.5*a; b=0.3*a;  h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(A)+(B)-(C)$) coordinate(E)\n\t($(E)+(d,0)$) coordinate (F)\n\t(gocx:h) coordinate (A')\n\t($(gocx:h)+(E)$) coordinate (E')\n\t($(gocx:h)+(F)$) coordinate (F')\n\t($(gocx:h)+(B)$) coordinate (B')\n\t($(gocx:h)+(D)$) coordinate (D')\n\t($(gocx:h)+(C)$) coordinate (C');\n\t\\draw[dashed] (A)--(E)--(F)--(B) (E)--(E') (F)--(F');\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(E')--(F')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180,E/-90,F/-140, B/0,C/-60,D/-100,A'/-180,E'/90,F'/50, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-50; gocx=85; a=5; d=0.5*a; b=0.3*a;  h=5;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-50.0"
+        },
+        {
+          "name": "gocx",
+          "default": "85.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "5.0"
+        }
+      ],
+      "points": [
+        "A",
+        "E",
+        "F",
+        "B",
+        "C",
+        "D",
+        "A'",
+        "E'",
+        "F'",
+        "B'",
+        "C'",
+        "D'"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Lăng trụ lục giác đứng",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-50; gocx=85; a=5; d=0.5*a; b=0.3*a;  h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(A)+(B)-(C)$) coordinate(E)\n\t($(E)+(d,0)$) coordinate (F)\n\t(gocx:h) coordinate (A')\n\t($(gocx:h)+(E)$) coordinate (E')\n\t($(gocx:h)+(F)$) coordinate (F')\n\t($(gocx:h)+(B)$) coordinate (B')\n\t($(gocx:h)+(D)$) coordinate (D')\n\t($(gocx:h)+(C)$) coordinate (C');\n\t\\draw[dashed] (A)--(E)--(F)--(B) (E)--(E') (F)--(F');\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(E')--(F')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180,E/-90,F/-140, B/0,C/-60,D/-100,A'/-180,E'/90,F'/50, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-50; gocx=85; a=5; d=0.5*a; b=0.3*a;  h=5;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-50.0"
+        },
+        {
+          "name": "gocx",
+          "default": "85.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "5.0"
+        }
+      ],
+      "points": [
+        "A",
+        "E",
+        "F",
+        "B",
+        "C",
+        "D",
+        "A'",
+        "E'",
+        "F'",
+        "B'",
+        "C'",
+        "D'"
+      ]
+    },
+    {
+      "category": "Hình không gian 3D",
+      "name": "Lăng trụ lục giác xiên",
+      "tikz": "\\begin{tikzpicture}[declare function={goc=-50; gocx=85; a=5; d=0.5*a; b=0.3*a;  h=5;}]\n\t\\path \n\t(0,0) coordinate (A)\n\t(a,0) coordinate (B)\n\t(goc:b) coordinate (D)\n\t($(D)+(d,0)$) coordinate (C)\n\t($(A)+(B)-(C)$) coordinate(E)\n\t($(E)+(d,0)$) coordinate (F)\n\t(gocx:h) coordinate (A')\n\t($(gocx:h)+(E)$) coordinate (E')\n\t($(gocx:h)+(F)$) coordinate (F')\n\t($(gocx:h)+(B)$) coordinate (B')\n\t($(gocx:h)+(D)$) coordinate (D')\n\t($(gocx:h)+(C)$) coordinate (C');\n\t\\draw[dashed] (A)--(E)--(F)--(B) (E)--(E') (F)--(F');\n\t\\draw (A)--(D)--(C)--(B)--(B')--(C')--(D')--(A')--(E')--(F')--(B') (D)--(D') (C)--(C') (A)--(A') ;\n\t\\foreach \\x/\\goc in {A/-180,E/-90,F/-140, B/0,C/-60,D/-100,A'/-180,E'/90,F'/50, B'/0,C'/-20,D'/70}\n\t\\draw[fill=white] (\\x) node[shift={(\\goc:7pt)},font=\\scriptsize]{$\\x$} circle (1pt);\\end{tikzpicture}",
+      "declaration": "goc=-50; gocx=85; a=5; d=0.5*a; b=0.3*a;  h=5;",
+      "params": [
+        {
+          "name": "goc",
+          "default": "-50.0"
+        },
+        {
+          "name": "gocx",
+          "default": "85.0"
+        },
+        {
+          "name": "a",
+          "default": "5.0"
+        },
+        {
+          "name": "h",
+          "default": "5.0"
+        }
+      ],
+      "points": []
+    }
+  ],
+  "mat_tron_xoay": [],
+  "hinh_phang": [
+    {
+      "category": "Hình phẳng 2D",
+      "name": "Đường chéo b",
+      "tikz": "}{\n    \\draw[fill=white] (\\t) circle (1pt)\n      node[shift={(\\g:"
+    },
+    {
+      "category": "Hình phẳng 2D",
+      "name": "Tam giác vuông 1",
+      "tikz": "\\path pic[draw,angle radius=5pt]{right angle=B--A--C};\n\\draw (A)--(B)--(C)--cycle;\n"
+    },
+    {
+      "category": "Hình phẳng 2D",
+      "name": "Tam giác cân",
+      "tikz": "\\foreach \\x/\\y in {A/B,A/C}{\\path (\\x)--(\\y) node[midway,sloped]{\\tikz{\\draw (-90:1pt)--(90:1pt);}};}"
+    },
+    {
+      "category": "Hình phẳng 2D",
+      "name": "Tam giác ngoại tiếp",
+      "tikz": "\\path (goc:b) coordinate (A) (0,0) coordinate (B) (a,0) coordinate (C);\n\\draw (A)--(B)--(C)--cycle;\n\\begin{scope}[overlay]\n  \\path ($(A)!0.5!(B)$) coordinate (Nt) ($(Nt)!1!90:(A)$) coordinate (Xt)\n    ($(B)!0.5!(C)$) coordinate (Mt) ($(Mt)!1!90:(B)$) coordinate (Yt)\n    (intersection of Nt--Xt and Mt--Yt) coordinate (O);\n\\end{scope}\n\\draw let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)});\n"
+    },
+    {
+      "category": "Hình phẳng 2D",
+      "name": "Tam giác nội tiếp",
+      "tikz": "\\path (goc:b) coordinate (A) (0,0) coordinate (B) (a,0) coordinate (C);\n\\draw (A)--(B)--(C)--cycle;\n\\path ($(A)!1cm!(B)$) coordinate (Nt) ($(A)!1cm!(C)$) coordinate (Mt)\n  ($(Mt)!0.5!(Nt)$) coordinate (Xt) ($(B)!1cm!(C)$) coordinate (Kt)\n  ($(B)!1cm!(A)$) coordinate (Lt) ($(Kt)!0.5!(Lt)$) coordinate (Yt)\n  (intersection of A--Xt and B--Yt) coordinate (I)\n  ($(A)!(I)!(B)$) coordinate (D) ($(B)!(I)!(C)$) coordinate (E)\n  ($(C)!(I)!(A)$) coordinate (F);\n\\draw let \\p1=($(I)-(D)$) in (I) circle ({veclen(\\x1,\\y1)});\n"
+    },
+    {
+      "category": "Hình phẳng 2D",
+      "name": "Hình thang cân",
+      "tikz": "\\foreach \\x/\\y in {A/D,B/C}{\\path (\\x)--(\\y) node[midway,sloped]{\\tikz{\\draw (-90:1pt)--(90:1pt);}};}"
+    },
+    {
+      "category": "Hình phẳng 2D",
+      "name": "Hình ngôi sao",
+      "tikz": "}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={({90-goc+goc*\\i}:9pt)},font=\\scriptsize]{$\\t$};\n}"
+    }
+  ],
+  "duong_tron": [
+    {
+      "category": "Đường tròn",
+      "name": "Đường tròn mẫu",
+      "tikz": "\\path (0,0) coordinate (O) (45:r) coordinate (A);\n\\draw (O)--(A) node[above,pos=0.5,sloped]{$r$};\n\\draw let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)});\n\\foreach \\t/\\g in {A/45,O/-90}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+    },
+    {
+      "category": "Đường tròn",
+      "name": "Đường tròn mẫu",
+      "tikz": "\\path (180:r) coordinate (A) (0:r) coordinate (B)\n  ($(A)!0.5!(B)$) coordinate (O);\n\\draw (B)--(A);\n\\draw let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)});\n\\foreach \\t/\\g in {A/180,B/0,O/-90}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+    },
+    {
+      "category": "Đường tròn",
+      "name": "Đường tròn mẫu",
+      "tikz": "\\path (0,0) coordinate (O) (-45:r) coordinate (A)\n  ($(A)!1!-90:(O)$) coordinate (T) ($2*(A)-(T)$) coordinate (Th);\n\\path pic[draw,angle radius=5pt]{right angle=O--A--T};\n\\draw (O)--(A) (T)--(Th)\n  let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)});\n\\foreach \\t/\\g in {A/-90,O/90}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+    },
+    {
+      "category": "Đường tròn",
+      "name": "Đường tròn mẫu",
+      "tikz": "\\path (0,0) coordinate (O) (goc:r) coordinate (A) (-goc:r) coordinate (B);\n\\begin{scope}[overlay]\n  \\path ($(A)!1!-90:(O)$) coordinate (OA) ($(B)!1!-90:(O)$) coordinate (OB)\n    (intersection of A--OA and B--OB) coordinate (S);\n\\end{scope}\n\\path pic[draw,angle radius=5pt]{right angle=O--A--S}\n  pic[draw,angle radius=5pt]{right angle=O--B--S};\n\\draw (O)--(A)--(S)--(B)--cycle\n  let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)});\n\\foreach \\t/\\g in {A/goc,B/-goc,S/0,O/135}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+    },
+    {
+      "category": "Đường tròn",
+      "name": "Đường tròn mẫu",
+      "tikz": "\\path (0,0) coordinate (O) (180:r) coordinate (A) (0:r) coordinate (B);\n\\draw (B) arc (0:180:r)--cycle;\n\\foreach \\t/\\g in {A/180,B/0,O/-90}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+    },
+    {
+      "category": "Đường tròn",
+      "name": "Đường tròn mẫu",
+      "tikz": "\\path (0,0) coordinate (O) (180:r) coordinate (A)\n  (0:r) coordinate (B) (goc:r) coordinate (C);\n\\begin{scope}[overlay]\n  \\path ($(A)!1!-90:(O)$) coordinate (OA) ($(B)!1!-90:(O)$) coordinate (OB)\n    ($(C)!1!-90:(O)$) coordinate (OC)\n    (intersection of A--OA and C--OC) coordinate (M)\n    (intersection of B--OB and C--OC) coordinate (N);\n\\end{scope}\n\\draw (A)--(M)--(N)--(B)--cycle (B) arc (0:180:r);\n\\foreach \\t/\\g in {A/180,B/0,O/-90,M/180,N/0,C/goc}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+    },
+    {
+      "category": "Đường tròn",
+      "name": "Đường tròn mẫu",
+      "tikz": "\\path (0,0) coordinate (O) (120:r) coordinate (A) (45:r) coordinate (B)\n  (-30:r) coordinate (C) (210:r) coordinate (D);\n\\draw (A)--(B)--(C)--(D)--cycle (O) circle (r);\n\\foreach \\t/\\g in {A/120,B/45,C/-30,D/210,O/-90}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:9pt)},font=\\scriptsize]{$\\t$};\n}"
+    },
+    {
+      "category": "Đường tròn",
+      "name": "Đường tròn mẫu",
+      "tikz": "\\path (0,0) coordinate (O) (-90:r) coordinate (M) (75:r) coordinate (N)\n  (25:r) coordinate (P) (155:r) coordinate (Q);\n\\begin{scope}[overlay]\n  \\path ($(M)!1!-90:(O)$) coordinate (AB) ($(N)!1!-90:(O)$) coordinate (CD)\n    ($(P)!1!-90:(O)$) coordinate (BC) ($(Q)!1!-90:(O)$) coordinate (AD)\n    (intersection of AB--M and Q--AD) coordinate (A)\n    (intersection of AB--M and P--BC) coordinate (B)\n    (intersection of CD--N and Q--AD) coordinate (D)\n    (intersection of CD--N and P--BC) coordinate (C);\n\\end{scope}\n\\draw (A)--(B)--(C)--(D)--cycle (O) circle (r);\n\\foreach \\t/\\g in {A/-90,B/-90,C/0,D/180,O/-90}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:9pt)},font=\\scriptsize]{$\\t$};\n}"
+    },
+    {
+      "category": "Đường tròn",
+      "name": "Đường tròn mẫu",
+      "tikz": "\\path (0,0) coordinate (O) (gocm:r) coordinate (A)\n  ({180-goch}:r) coordinate (B) (goch:r) coordinate (C);\n\\begin{scope}[overlay]\n  \\path ($(A)!1!-90:(O)$) coordinate (OA)\n    (intersection of A--OA and B--C) coordinate (S);\n\\end{scope}\n\\path pic[draw,angle radius=5pt]{right angle=O--A--S};\n\\draw (O)--(A)--(S)--(B)\n  let \\p1=($(O)-(A)$) in (O) circle ({veclen(\\x1,\\y1)});\n\\foreach \\t/\\g in {A/gocm,B/{180-goch},C/goch,S/0,O/135}{\n  \\draw[fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+    },
+    {
+      "category": "Đường tròn",
+      "name": "Đường tròn mẫu",
+      "tikz": "\\path (0,0) coordinate (O) (d,0) coordinate (O')\n  (goc:R) coordinate (A) (-goc:R) coordinate (B)\n  (goch:R) coordinate (C) (-goch:R) coordinate (D)\n  ($(d,0)+(goc:r)$) coordinate (A') ($(d,0)+(-goc:r)$) coordinate (B')\n  (intersection of A--A' and B--B') coordinate (S);\n\\foreach \\x/\\y/\\z in {O/A/S,O/B/S}{\n  \\path pic[draw,angle radius=5pt]{right angle=\\x--\\y--\\z};\n}\n\\draw (O) circle (R) (O') circle (r) (A)--(S)--(B)--(O)--cycle;\n\\foreach \\t/\\g in {A/goc,A'/goc,B/-goc,B'/-goc,O/180,O'/-90,S/0}{\n  \\path[draw,fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+    },
+    {
+      "category": "Đường tròn",
+      "name": "Đường tròn mẫu",
+      "tikz": "\\path (0,0) coordinate (O) (d,0) coordinate (O')\n  (goc:R) coordinate (A) (-goc:R) coordinate (B)\n  (goch:R) coordinate (C) (-goch:R) coordinate (D)\n  ($(d,0)+(goc:r)$) coordinate (A') ($(d,0)+(-goc:r)$) coordinate (B')\n  (intersection of A--A' and B--B') coordinate (S);\n\\draw (O) circle (R) (O') circle (r) (A)--(S)--(B);\n\\foreach \\t/\\g in {A/goc,A'/goc,B/-goc,B'/-goc,O/-90,O'/-90,S/0}{\n  \\path[draw,fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+    },
+    {
+      "category": "Đường tròn",
+      "name": "Đường tròn mẫu",
+      "tikz": "\\path (0,0) coordinate (O) (d,0) coordinate (O') (0:R) coordinate (A);\n\\draw (O) circle (R) (O') circle (r);\n\\foreach \\t/\\g in {O/180,O'/-90,A/0}{\n  \\path[draw,fill=white] (\\t) circle (1pt) node[shift={(\\g:7pt)},font=\\scriptsize]{$\\t$};\n}"
+    }
+  ],
+  "duong_conic": [
+    {
+      "category": "Đường conic",
+      "name": "Hypebol",
+      "tikz": "\\draw[->] (-a-0.5,0)--(a+0.5,0) node[below]{$x$};\n\\draw[->] (0,-b-0.5)--(0,b+0.5) node[left]{$y$};"
+    },
+    {
+      "category": "Đường conic",
+      "name": "Hypebol",
+      "tikz": "\\fill (-c,0) circle (1pt) node[below]{$F_1$} (c,0) circle (1pt) node[below]{$F_2$};\n\\path (goc:a and b) coordinate (M);\n\\draw[dashed] (-c,0)--(M)--(c,0);\n\\fill (M) circle (1.2pt) node[shift={(goc:9pt)}]{$M$};"
+    },
+    {
+      "category": "Đường conic",
+      "name": "Hypebol",
+      "tikz": "\n\\path (goc:a and b) coordinate (M) ({a*sin(goc)},{-b*cos(goc)}) coordinate (v)\n  ($(M)+(v)$) coordinate (T) ($(M)!2cm!(T)$) coordinate (T1) ($2*(M)-(T1)$) coordinate (T2);\n\\draw[teal!85!blue,thick] (T1)--(T2);\n\\fill (M) circle (1.2pt) node[shift={(goc:9pt)}]{$M$};"
+    },
+    {
+      "category": "Đường conic",
+      "name": "Hypebol",
+      "tikz": "\\draw[thick,smooth,samples=160,domain=-lim:lim,variable=\\t] plot ({a*cosh(\\t)},{b*sinh(\\t)});\n\\draw[thick,smooth,samples=160,domain=-lim:lim,variable=\\t] plot ({-a*cosh(\\t)},{b*sinh(\\t)});"
+    },
+    {
+      "category": "Đường conic",
+      "name": "Hypebol",
+      "tikz": "\n\\draw[->] (-4,0)--(4,0) node[below]{$x$};\n\\draw[->] (0,-2.6)--(0,2.6) node[left]{$y$};\n\\draw[dashed] (-a,-b) rectangle (a,b);\n\\draw[dashed,smooth,domain=-8:8,samples=50] plot (\\x,{(b/a)*\\x});\n\\draw[dashed,smooth,domain=-8:8,samples=50] plot (\\x,{-(b/a)*\\x});\n\\foreach \\x/\\y/\\g/\\t in {a/0/0/A_2,-a/0/180/A_1,0/b/90/B_2,0/-b/-90/B_1,-c/0/-90/F_1,c/0/-90/F_2}{\\fill (\\x,\\y) circle (1pt) node[shift={(\\g:8pt)}]{$\\t$};}"
+    },
+    {
+      "category": "Đường conic",
+      "name": "Hypebol",
+      "tikz": "\n\\path (-c,0) coordinate (F1) (c,0) coordinate (F2) ({a*cosh(goc)},{b*sinh(goc)}) coordinate (M);\n\\draw[teal!85!blue] (F1)--(M)--(F2);\n\\foreach \\P/\\g/\\T in {F1/180/F_1,F2/0/F_2,M/135/M}{\\fill (\\P) circle (1pt) node[shift={(\\g:9pt)}]{$\\T$};}"
+    },
+    {
+      "category": "Đường conic",
+      "name": "Hypebol",
+      "tikz": "\n\\path ({a*cosh(goc)},{b*sinh(goc)}) coordinate (M)\n  ({a*sinh(goc)},{b*cosh(goc)}) coordinate (v) ($(M)+(v)$) coordinate (T)\n  ($(M)!2cm!(T)$) coordinate (T1) ($2*(M)-(T1)$) coordinate (T2);\n\\draw[blue,thick] (T1)--(T2);\n\\fill (M) circle (1pt) node[above left]{$M$};"
+    },
+    {
+      "category": "Đường conic",
+      "name": "Parabol đứng",
+      "tikz": "\\draw[->] (-xmax-0.5,0)--(xmax+0.5,0) node[below]{$x$};\n\\draw[->] (0,-0.5)--(0,2*p*xmax^2+0.5) node[left]{$y$};\n\\clip (-xmax-0.5,-0.5) rectangle (xmax+0.5,2*p*xmax^2+0.6);\n\\draw[thick,smooth,samples=160,domain=-xmax:xmax] plot (\\x,{2*p*(\\x)^2});"
+    },
+    {
+      "category": "Đường conic",
+      "name": "Parabol ngang",
+      "tikz": "\\draw[->] (-0.5,0)--(2*p*ymax^2+0.5,0) node[below]{$x$};\n\\draw[->] (0,-ymax-0.5)--(0,ymax+0.5) node[left]{$y$};\n\\clip (-0.5,-ymax-0.5) rectangle (2*p*ymax^2+0.6,ymax+0.5);\n\\draw[thick,smooth,samples=160,domain=-ymax:ymax] plot ({p*(\\x)^2},\\x);"
+    },
+    {
+      "category": "Đường conic",
+      "name": "Parabol đứng có tiêu điểm",
+      "tikz": "\\draw[->] (-3.5,0)--(3.5,0) node[below]{$x$};\n\\draw[->] (0,-0.5)--(0,4.5) node[left]{$y$};\n\\clip (-3.6,-0.6) rectangle (3.6,4.6);\n\\draw[thick,smooth,samples=160,domain=-3.5:3.5] plot (\\x,{2*p*(\\x)^2});\n\\path (0,{1/(8*p)}) coordinate (F) (0,{-1/(8*p)}) coordinate (D)\n  (xt,{-1/(8*p)}) coordinate (A) (xt,{2*p*xt^2}) coordinate (M);\n\\draw[dashed] (D)--(A)--(M)--(F);\n\\path pic[draw,angle radius=5pt]{right angle=D--A--M};\n\\fill (F) circle (1.2pt) node[right]{$F$} (M) circle (1.2pt) node[above right]{$M$} (A) circle (1pt) node[below]{$A$};"
+    },
+    {
+      "category": "Đường conic",
+      "name": "Parabol ngang có tiêu điểm",
+      "tikz": "\\draw[->] (-0.5,0)--(4.5,0) node[below]{$x$};\n\\draw[->] (0,-3.5)--(0,3.5) node[left]{$y$};\n\\clip (-0.6,-3.6) rectangle (4.6,3.6);\n\\draw[thick,smooth,samples=160,domain=-3.5:3.5] plot ({p*(\\x)^2},\\x);\n\\path ({1/(4*p)},0) coordinate (F) ({-1/(4*p)},0) coordinate (D)\n  ({-1/(4*p)},yt) coordinate (A) (p*yt^2,yt) coordinate (M);\n\\draw[dashed] (D)--(A)--(M)--(F);\n\\path pic[draw,angle radius=5pt]{right angle=D--A--M};\n\\fill (F) circle (1.2pt) node[above]{$F$} (M) circle (1.2pt) node[above right]{$M$} (A) circle (1pt) node[left]{$A$};"
+    },
+    {
+      "category": "Đường conic",
+      "name": "Parabol ngang có tiêu điểm",
+      "tikz": "\\draw[thick,smooth,samples=160,domain=-3:3] plot ({p*(\\x)^2},\\x);\n\\path (p*yt^2,yt) coordinate (M) (2*p*yt,1) coordinate (v)\n  ($(M)+(v)$) coordinate (T) ($(M)!2cm!(T)$) coordinate (T1) ($2*(M)-(T1)$) coordinate (T2);\n\\draw[blue,thick] (T1)--(T2);\n\\fill (M) circle (1.2pt) node[above right]{$M$};"
+    }
+  ],
+  "bang_bien_thien": [],
+  "do_thi": [
+    {
+      "category": "Đồ thị hàm số",
+      "name": "Phân thức bậc 2 / bậc 1",
+      "tikz": "\\draw[dashed,samples=2,domain=\\xmin:\\xmax] plot (\\x,{("
+    },
+    {
+      "category": "Đồ thị hàm số",
+      "name": "Phân thức bậc 2 / bậc 1",
+      "tikz": "\\begin{tikzpicture}[line cap=round,line join=round,>=stealth,font=\\footnotesize,scale=0.85]"
+    },
+    {
+      "category": "Đồ thị hàm số",
+      "name": "Phân thức bậc 2 / bậc 1",
+      "tikz": "\\draw[->](\\xmin,0)--(\\xmax,0) node[below]{$x$};"
+    },
+    {
+      "category": "Đồ thị hàm số",
+      "name": "Phân thức bậc 2 / bậc 1",
+      "tikz": "\\draw[->](0,\\ymin)--(0,\\ymax) node[left]{$y$};"
+    },
+    {
+      "category": "Đồ thị hàm số",
+      "name": "Phân thức bậc 2 / bậc 1",
+      "tikz": "\\draw[fill=black](\\x,0) circle (1pt) node[\\pos]{$\\x$};"
+    },
+    {
+      "category": "Đồ thị hàm số",
+      "name": "Phân thức bậc 2 / bậc 1",
+      "tikz": "\\draw[fill=black](0,\\y) circle (1pt) node[\\pos]{$\\y$};"
+    }
+  ],
+  "do_thi_khac": [
+    {
+      "category": "Đồ thị khác",
+      "name": "Logarit",
+      "tikz": "\\draw[fill=black] (\\xx,0) circle (1pt) node[\\pos]{\\ten};"
+    },
+    {
+      "category": "Đồ thị khác",
+      "name": "Logarit",
+      "tikz": "\\draw[fill=black] (0,\\yy) circle (1pt) node[\\pos]{\\ten};"
+    },
+    {
+      "category": "Đồ thị khác",
+      "name": "Logarit",
+      "tikz": "\\begin{tikzpicture}[line cap=round,line join=round,font=\\footnotesize,>=stealth,scale=0.85]"
+    },
+    {
+      "category": "Đồ thị khác",
+      "name": "Logarit",
+      "tikz": "\\draw[->] (\\xmin,0)--(\\xmax,0) node[below]{$x$};"
+    },
+    {
+      "category": "Đồ thị khác",
+      "name": "Logarit",
+      "tikz": "\\draw[->] (0,\\ymin)--(0,\\ymax) node[right]{$y$};"
+    }
+  ],
+  "to_mien": [
+    {
+      "category": "Tô miền diện tích",
+      "name": "Hàm ‘",
+      "tikz": "\\begin{tikzpicture}[line cap=round,line join=round,>=stealth,font=\\footnotesize,scale=0.85]"
+    },
+    {
+      "category": "Tô miền diện tích",
+      "name": "Hàm ‘",
+      "tikz": "\\draw[->] (\\xmin,0)--(\\xmax,0) node[below]{$x$};"
+    },
+    {
+      "category": "Tô miền diện tích",
+      "name": "Hàm ‘",
+      "tikz": "\\draw[->] (0,\\ymin)--(0,\\ymax) node[left]{$y$};"
+    },
+    {
+      "category": "Tô miền diện tích",
+      "name": "Hàm ‘",
+      "tikz": "}{\\draw[fill=black] (\\xv,0) circle (1pt) node[\\pos]{\\lab};}"
+    },
+    {
+      "category": "Tô miền diện tích",
+      "name": "Hàm ‘",
+      "tikz": "}{\\draw[fill=black] (0,\\yv) circle (1pt) node[\\pos]{\\lab};}"
+    }
+  ]
+}
