@@ -272,7 +272,7 @@ namespace MatrixExamAI.Desktop.Views
             }
 
             _activeCts?.Dispose();
-            _activeCts = new System.Threading.CancellationTokenSource(TimeSpan.FromMinutes(5));
+            _activeCts = new System.Threading.CancellationTokenSource();
 
             string prefix = _imageBytes != null ? "AI đang phân tích ảnh & lập trình TikZ" : "AI đang xử lý văn bản & dựng mã TikZ";
             StartAnalyzeTimer(prefix);
@@ -335,7 +335,7 @@ namespace MatrixExamAI.Desktop.Views
             }
 
             _activeCts?.Dispose();
-            _activeCts = new System.Threading.CancellationTokenSource(TimeSpan.FromMinutes(5));
+            _activeCts = new System.Threading.CancellationTokenSource();
 
             StartAnalyzeTimer("AI đang trích xuất bản thiết kế và mô tả tọa độ");
             SetBusy(true, "⏳ AI đang trích xuất bản thiết kế và mô tả tọa độ... (0.0s)");
