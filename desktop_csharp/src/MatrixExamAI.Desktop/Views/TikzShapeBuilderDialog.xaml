@@ -65,12 +65,27 @@
 
                         <!-- 2. Hình không gian -->
                         <TreeViewItem Header="📦 Hình không gian" IsExpanded="True" FontSize="11.5" FontWeight="SemiBold">
-                            <TreeViewItem Header="Hình chóp S.ABCD" Tag="pyramid" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình chóp tam giác S.ABC" Tag="tetrahedron" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình chóp S.ABCD (đáy hình bình hành)" Tag="pyramid" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình chóp S.ABCD (SA ⟂ đáy)" Tag="pyramid_sa_quad" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình chóp tứ giác đều S.ABCD" Tag="pyramid_regular_quad" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình chóp tam giác S.ABC" Tag="pyramid_tri" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình chóp S.ABC (SA ⟂ đáy)" Tag="pyramid_sa_perp" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình chóp tam giác đều S.ABC" Tag="pyramid_regular_tri" FontWeight="Normal" />
+                            <TreeViewItem Header="Tứ diện đều ABCD" Tag="tetrahedron" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình chóp cụt tứ giác đều" Tag="pyramid_frustum" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình lập phương ABCD.A'B'C'D'" Tag="cube" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình lập phương (Đường chéo AC')" Tag="cube_diagonal" FontWeight="Normal" />
                             <TreeViewItem Header="Hình hộp chữ nhật" Tag="cuboid" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình trụ" Tag="cylinder" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình nón" Tag="cone" FontWeight="Normal" />
-                            <TreeViewItem Header="Hình cầu" Tag="sphere" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình lăng trụ đứng tam giác" Tag="prism_triangular" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình trụ tròn xoay" Tag="cylinder" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình trụ (Thiết diện qua trục)" Tag="cylinder_section" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình nón tròn xoay" Tag="cone" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình nón cụt" Tag="cone_frustum" FontWeight="Normal" />
+                            <TreeViewItem Header="Hình cầu (Mặt cầu)" Tag="sphere" FontWeight="Normal" />
+                            <TreeViewItem Header="Mặt cầu ngoại tiếp hình lập phương" Tag="sphere_circum_cube" FontWeight="Normal" />
+                            <TreeViewItem Header="Mặt cầu nội tiếp hình lập phương" Tag="sphere_in_cube" FontWeight="Normal" />
+                            <TreeViewItem Header="Mặt cầu ngoại tiếp chóp tứ giác đều" Tag="sphere_circum_pyramid" FontWeight="Normal" />
+                            <TreeViewItem Header="Khối bát diện đều" Tag="octahedron" FontWeight="Normal" />
                         </TreeViewItem>
 
                         <!-- 3. Đồ thị hàm số -->

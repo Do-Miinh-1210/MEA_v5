@@ -7,7 +7,22 @@
              mc:Ignorable="d" 
              d:DesignHeight="750" d:DesignWidth="1100"
              Focusable="True"
-             PreviewKeyDown="TikzView_PreviewKeyDown">
+              PreviewKeyDown="TikzView_PreviewKeyDown">
+    <UserControl.Resources>
+        <!-- Style ComboBox & ComboBoxItem chống mất chữ / tối chữ trên Dark Theme -->
+        <Style TargetType="ComboBox">
+            <Setter Property="MinHeight" Value="28" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="Padding" Value="8,2" />
+        </Style>
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+            <Setter Property="Background" Value="{DynamicResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="Padding" Value="8,4" />
+        </Style>
+    </UserControl.Resources>
+
     <Grid Margin="16,12,16,14">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -65,7 +80,7 @@
                     <WrapPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock Text="Thể loại:" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,4,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <ComboBox x:Name="CmbDiagramType" Width="165" Height="26" SelectedIndex="2" FontSize="10.5"
+                        <ComboBox x:Name="CmbDiagramType" Width="165" Height="28" SelectedIndex="2" FontSize="10.5"
                                   Padding="6,0,2,0" VerticalContentAlignment="Center" Margin="0,0,8,0"
                                   ToolTip="Định hướng thể loại hình vẽ cho AI">
                             <ComboBoxItem Content="Bảng biến thiên" Tag="BBT" Padding="6,2" />
@@ -77,12 +92,14 @@
 
                         <TextBlock Text="Mẫu:" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,4,0"
                                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <ComboBox x:Name="CmbTemplateCategory" Width="155" Height="26" FontSize="10.5"
+                        <ComboBox x:Name="CmbTemplateCategory" Width="170" Height="28" FontSize="10.5"
                                   Padding="6,0,2,0" VerticalContentAlignment="Center" Margin="0,0,6,0"
+                                  DisplayMemberPath="Name"
                                   ToolTip="Chọn nhóm chuyên đề mẫu TikZ"
                                   SelectionChanged="CmbTemplateCategory_SelectionChanged" />
-                        <ComboBox x:Name="CmbTemplateItem" Width="205" Height="26" FontSize="10.5"
+                        <ComboBox x:Name="CmbTemplateItem" Width="230" Height="28" FontSize="10.5"
                                   Padding="6,0,2,0" VerticalContentAlignment="Center" Margin="0,0,8,0"
+                                  DisplayMemberPath="Title"
                                   ToolTip="Chọn mẫu hình học để nạp mã TikZ"
                                   SelectionChanged="CmbTemplateItem_SelectionChanged" />
                     </WrapPanel>

@@ -245,5 +245,43 @@ namespace MatrixExamAI.Desktop.Tests.Tikz
                 "All authentic templates in library must pass TikzPreflightValidator with zero blocking errors: " +
                 string.Join("; ", errorTemplates));
         }
+
+        [Theory]
+        [InlineData("pyramid_regular_tri", "chóp tam giác đều")]
+        [InlineData("tetrahedron_regular", "Tứ diện đều")]
+        [InlineData("pyramid_frustum", "chóp cụt")]
+        [InlineData("cube_diagonal", "lập phương")]
+        [InlineData("cylinder_section", "thiết diện qua trục")]
+        [InlineData("cone_frustum", "nón cụt")]
+        [InlineData("sphere_circum_cube", "mặt cầu ngoại tiếp")]
+        [InlineData("octahedron_regular", "bát diện đều")]
+        [InlineData("coord_3d_oxyz", "Oxyz")]
+        public void Solid3D_AdvancedShapes_ShouldExistAndBeValid(string id, string expectedTitlePart)
+        {
+            var template = TikzTemplateLibrary.FindById(id);
+            template.Should().NotBeNull($"Shape '{id}' must exist in solid_3d category");
+            template!.CategoryId.Should().Be("solid_3d");
+            template.Title.Should().ContainEquivalentOf(expectedTitlePart);
+            template.Code.Should().Contain(@"\begin{tikzpicture}");
+            template.Code.Should().Contain(@"\end{tikzpicture}");
+        }
+
+        [Fact]
+        public void LoadUserFigures_PopulatesUserCategoryWithoutMutatingCoreCategories()
+        {
+            // Arrange
+            var testFigures = new List<(string Id, string Title, string Description, IEnumerable<string> Tags, string Code)>
+            {
+                ("test_01", "Hình Test 01", "Mô tả test", new[] { "tag1" }, @"\begin{tikzpicture}\draw (0,0)--(1,1);\end{tikzpicture}")
+            };
+
+            // Act
+            TikzTemplateLibrary.LoadUserFigures(testFigures);
+
+            // Assert
+            TikzTemplateLibrary.Categories.Count.Should().Be(5);
+            TikzTemplateLibrary.UserFiguresCategory.Templates.Count.Should().Be(1);
+            TikzTemplateLibrary.UserFiguresCategory.Templates[0].Title.Should().Be("Hình Test 01");
+        }
     }
 }

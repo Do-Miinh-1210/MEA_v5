@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace MatrixExamAI.Shared.Tikz
 {
@@ -586,6 +588,311 @@ namespace MatrixExamAI.Shared.Tikz
 \end{tikzpicture}"
             });
 
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "pyramid_regular_tri",
+                Title = "Hình chóp tam giác đều S.ABC",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "hình chóp", "chóp tam giác đều", "đáy đều", "trọng tâm H" },
+                Description = "Hình chóp tam giác đều có đáy là tam giác đều và chân đường cao SH trùng với trọng tâm H",
+                Code = @"\begin{tikzpicture}[scale=1.3, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=above:$C$]       (C) at (1.5,2.6,0);
+  \coordinate (H) at (1.5,0.87,0);
+  \coordinate[label=above:$S$]       (S) at (1.5,0.87,3.5);
+  \draw (A)--(B)--(C);
+  \draw[dashed] (C)--(A);
+  \draw (S)--(A) (S)--(B);
+  \draw[dashed] (S)--(C);
+  \draw[dashed] (S)--(H);
+  \fill (H) circle (1.2pt) node[below right] {$H$};
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "pyramid_sa_quad",
+                Title = "Hình chóp S.ABCD có SA vuông góc đáy",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "hình chóp", "S.ABCD", "SA vuông góc đáy" },
+                Description = "Hình chóp tứ giác có cạnh bên SA vuông góc với mặt phẳng đáy (ABCD)",
+                Code = @"\begin{tikzpicture}[scale=1.3, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (3,3,0);
+  \coordinate[label=above left:$D$]  (D) at (0,3,0);
+  \coordinate[label=above:$S$]       (S) at (0,0,3.5);
+  \draw (A)--(B)--(C);
+  \draw[dashed] (C)--(D)--(A);
+  \draw (S)--(A) (S)--(B) (S)--(C);
+  \draw[dashed] (S)--(D);
+  \draw pic [draw, angle radius=3mm] {right angle = S--A--B};
+  \draw pic [draw, angle radius=3mm] {right angle = S--A--D};
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "tetrahedron_regular",
+                Title = "Tứ diện đều ABCD",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "tứ diện đều", "khối đa diện", "4 mặt đều" },
+                Description = "Tứ diện đều có 4 mặt là các tam giác đều và 6 cạnh bằng nhau",
+                Code = @"\begin{tikzpicture}[scale=1.4, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (1.5,2.6,0);
+  \coordinate[label=above:$D$]       (D) at (1.5,0.87,2.5);
+  \draw (A)--(B)--(C);
+  \draw[dashed] (C)--(A);
+  \draw (D)--(A) (D)--(B);
+  \draw[dashed] (D)--(C);
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "pyramid_frustum",
+                Title = "Hình chóp cụt tứ giác đều ABCD.A'B'C'D'",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "chóp cụt", "tứ giác đều", "frustum" },
+                Description = "Hình chóp cụt tứ giác đều với 2 đáy là hai hình vuông đồng tâm song song",
+                Code = @"\begin{tikzpicture}[scale=1.2, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (3,3,0);
+  \coordinate[label=above left:$D$]  (D) at (0,3,0);
+  \coordinate[label=left:$A'$]       (A1) at (0.75,0.75,2.5);
+  \coordinate[label=right:$B'$]      (B1) at (2.25,0.75,2.5);
+  \coordinate[label=right:$C'$]      (C1) at (2.25,2.25,2.5);
+  \coordinate[label=above:$D'$]      (D1) at (0.75,2.25,2.5);
+  \draw (A)--(B)--(C);
+  \draw[dashed] (C)--(D)--(A);
+  \draw (A1)--(B1)--(C1)--(D1)--cycle;
+  \draw (A)--(A1) (B)--(B1) (C)--(C1);
+  \draw[dashed] (D)--(D1);
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "cube_diagonal",
+                Title = "Hình lập phương với đường chéo AC'",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "lập phương", "đường chéo", "AC'" },
+                Description = "Hình lập phương ABCD.A'B'C'D' vẽ nổi bật đường chéo không gian AC' = a√3",
+                Code = @"\begin{tikzpicture}[scale=1.3, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (2.5,0,0);
+  \coordinate[label=right:$C$]       (C) at (2.5,2.5,0);
+  \coordinate[label=above left:$D$]  (D) at (0,2.5,0);
+  \coordinate[label=above left:$A'$]  (A1) at (0,0,2.5);
+  \coordinate[label=above right:$B'$] (B1) at (2.5,0,2.5);
+  \coordinate[label=right:$C'$]       (C1) at (2.5,2.5,2.5);
+  \coordinate[label=above:$D'$]       (D1) at (0,2.5,2.5);
+  \draw (A)--(B)--(C);
+  \draw[dashed] (C)--(D)--(A);
+  \draw (A)--(A1) (B)--(B1) (C)--(C1);
+  \draw[dashed] (D)--(D1);
+  \draw (A1)--(B1)--(C1)--(D1)--cycle;
+  \draw[red, very thick] (A)--(C1) node[midway, below right] {$a\sqrt{3}$};
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "cuboid",
+                Title = "Hình hộp chữ nhật ABCD.A'B'C'D'",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "hình hộp", "hộp chữ nhật", "kích thước a b c" },
+                Description = "Hình hộp chữ nhật với 3 kích thước dài a, rộng b, cao c",
+                Code = @"\begin{tikzpicture}[scale=1.1, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3.5,0,0);
+  \coordinate[label=right:$C$]       (C) at (3.5,2.2,0);
+  \coordinate[label=above left:$D$]  (D) at (0,2.2,0);
+  \coordinate[label=above left:$A'$]  (A1) at (0,0,2.5);
+  \coordinate[label=above right:$B'$] (B1) at (3.5,0,2.5);
+  \coordinate[label=right:$C'$]       (C1) at (3.5,2.2,2.5);
+  \coordinate[label=above:$D'$]       (D1) at (0,2.2,2.5);
+  \draw (A)--(B)--(C);
+  \draw[dashed] (C)--(D)--(A);
+  \draw (A)--(A1) (B)--(B1) (C)--(C1);
+  \draw[dashed] (D)--(D1);
+  \draw (A1)--(B1)--(C1)--(D1)--cycle;
+  \draw[<->] (0,-0.4,0)--(3.5,-0.4,0) node[midway, below] {$a$};
+  \draw[<->] (3.9,0,0)--(3.9,2.2,0) node[midway, below right] {$b$};
+  \draw[<->] (3.9,0,0)--(3.9,0,2.5) node[midway, right] {$c$};
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "cylinder_section",
+                Title = "Hình trụ có thiết diện qua trục",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "hình trụ", "thiết diện qua trục", "hình chữ nhật" },
+                Description = "Hình trụ tròn xoay với thiết diện qua trục là hình chữ nhật ABCD",
+                Code = @"\begin{tikzpicture}[scale=1.1, thick]
+  \draw         (-1.5,0) arc (180:360:1.5cm and 0.5cm);
+  \draw[dashed] (-1.5,0) arc (180:0  :1.5cm and 0.5cm);
+  \draw (0,3) ellipse (1.5cm and 0.5cm);
+  \draw (-1.5,0) -- (-1.5,3);
+  \draw ( 1.5,0) -- ( 1.5,3);
+  \draw[dashed] (0,0)--(0,3);
+  \fill (0,0) circle (1.5pt) node[below] {$O$};
+  \fill (0,3) circle (1.5pt) node[above] {$O'$};
+  \coordinate[label=below left:$A$]  (A) at (-1.5,0);
+  \coordinate[label=below right:$B$] (B) at ( 1.5,0);
+  \coordinate[label=above right:$C$] (C) at ( 1.5,3);
+  \coordinate[label=above left:$D$]  (D) at (-1.5,3);
+  \fill[blue!15, opacity=0.5] (A)--(B)--(C)--(D)--cycle;
+  \draw[blue, thick] (A)--(B)--(C)--(D)--cycle;
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "cone_frustum",
+                Title = "Hình nón cụt tròn xoay",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "hình nón", "nón cụt", "R r h" },
+                Description = "Hình nón cụt tròn xoay với bán kính đáy lớn R, đáy nhỏ r và chiều cao h",
+                Code = @"\begin{tikzpicture}[scale=1.1, thick]
+  \draw         (-2,0) arc (180:360:2cm and 0.6cm);
+  \draw[dashed] (-2,0) arc (180:0  :2cm and 0.6cm);
+  \draw (0,3) ellipse (1cm and 0.3cm);
+  \draw (-2,0) -- (-1,3);
+  \draw ( 2,0) -- ( 1,3);
+  \draw[dashed] (0,0)--(0,3);
+  \fill (0,0) circle (1.5pt) node[below] {$O$};
+  \fill (0,3) circle (1.5pt) node[above] {$O'$};
+  \draw[<->] (0.1,0)--(2,0) node[midway, below] {$R$};
+  \draw[<->] (0.1,3)--(1,3) node[midway, above] {$r$};
+  \draw[<->] (2.3,0)--(2.3,3) node[midway, right] {$h$};
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "sphere_circum_cube",
+                Title = "Mặt cầu ngoại tiếp hình lập phương",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "mặt cầu ngoại tiếp", "hình lập phương", "R = a√3/2" },
+                Description = "Mặt cầu ngoại tiếp hình lập phương có tâm I là tâm khối lập phương và bán kính R = a√3/2",
+                Code = @"\begin{tikzpicture}[scale=1.2, thick]
+  \begin{scope}[x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+    \coordinate (A) at (0,0,0); \coordinate (B) at (2,0,0);
+    \coordinate (C) at (2,2,0); \coordinate (D) at (0,2,0);
+    \coordinate (A1) at (0,0,2); \coordinate (B1) at (2,0,2);
+    \coordinate (C1) at (2,2,2); \coordinate (D1) at (0,2,2);
+    \draw (A)--(B)--(C); \draw[dashed] (C)--(D)--(A);
+    \draw (A)--(A1); \draw (B)--(B1); \draw (C)--(C1);
+    \draw[dashed] (D)--(D1);
+    \draw (A1)--(B1)--(C1)--(D1)--cycle;
+    \coordinate (I) at (1,1,1);
+    \fill (I) circle (1.2pt);
+  \end{scope}
+  \node[right=2pt of I] {$I$};
+  \draw[blue, thick] (I) circle (1.732cm);
+  \draw[blue]         ([xshift=-1.732cm] I) arc (180:360:1.732cm and 0.55cm);
+  \draw[blue, dashed] ([xshift=-1.732cm] I) arc (180:0  :1.732cm and 0.55cm);
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "sphere_circum_pyramid",
+                Title = "Mặt cầu ngoại tiếp chóp tứ giác đều",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "mặt cầu ngoại tiếp", "chóp tứ giác đều", "tâm I" },
+                Description = "Mặt cầu ngoại tiếp hình chóp tứ giác đều có tâm I nằm trên đường cao SH",
+                Code = @"\begin{tikzpicture}[scale=1.2, thick]
+  \begin{scope}[x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+    \coordinate[label=below left:$A$]  (A) at (0,0,0);
+    \coordinate[label=below right:$B$] (B) at (3,0,0);
+    \coordinate[label=right:$C$]       (C) at (3,3,0);
+    \coordinate[label=above left:$D$]  (D) at (0,3,0);
+    \coordinate[label=above:$S$]       (S) at (1.5,1.5,4);
+    \coordinate (H) at (1.5,1.5,0);
+    \coordinate (I) at (1.5,1.5,1.5);
+    \draw (A)--(B)--(C);
+    \draw[dashed] (C)--(D)--(A);
+    \draw (S)--(A) (S)--(B) (S)--(C);
+    \draw[dashed] (S)--(D);
+    \draw[dashed] (S)--(H);
+    \fill (H) circle (1pt) node[below right] {$H$};
+    \fill (I) circle (1.2pt) node[right] {$I$};
+  \end{scope}
+  \draw[blue, thick] (I) circle (2.2cm);
+  \draw[blue]         ([xshift=-2.2cm] I) arc (180:360:2.2cm and 0.7cm);
+  \draw[blue, dashed] ([xshift=-2.2cm] I) arc (180:0  :2.2cm and 0.7cm);
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "octahedron_regular",
+                Title = "Khối bát diện đều (8 mặt đều)",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "bát diện đều", "khối đa diện đều", "octahedron" },
+                Description = "Khối bát diện đều gồm hai hình chóp tứ giác đều ghép đáy ABCD đối xứng qua tâm",
+                Code = @"\begin{tikzpicture}[scale=1.3, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate[label=below left:$A$]  (A) at (0,0,0);
+  \coordinate[label=below right:$B$] (B) at (3,0,0);
+  \coordinate[label=right:$C$]       (C) at (3,3,0);
+  \coordinate[label=above left:$D$]  (D) at (0,3,0);
+  \coordinate[label=above:$S$]       (S) at (1.5,1.5,2.5);
+  \coordinate[label=below:$S'$]      (S1) at (1.5,1.5,-2.5);
+  \draw (A)--(B)--(C);
+  \draw[dashed] (C)--(D)--(A);
+  \draw (S)--(A) (S)--(B) (S)--(C);
+  \draw[dashed] (S)--(D);
+  \draw (S1)--(A) (S1)--(B) (S1)--(C);
+  \draw[dashed] (S1)--(D);
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "coord_3d_oxyz",
+                Title = "Hệ trục tọa độ không gian Oxyz",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "tọa độ", "Oxyz", "vector chỉ phương" },
+                Description = "Hệ trục tọa độ Descartes ba chiều Oxyz với các vector đơn vị i, j, k",
+                Code = @"\begin{tikzpicture}[scale=1.3, thick,
+    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]
+  \coordinate (O) at (0,0,0);
+  \draw[->] (O) -- (4,0,0) node[below] {$x$};
+  \draw[->] (O) -- (0,4,0) node[right] {$y$};
+  \draw[->] (O) -- (0,0,3.5) node[above] {$z$};
+  \node[below left] at (O) {$O$};
+  \draw[->, red, very thick] (O) -- (1,0,0) node[midway, below] {$\vec{i}$};
+  \draw[->, green!60!black, very thick] (O) -- (0,1,0) node[midway, below right] {$\vec{j}$};
+  \draw[->, blue, very thick] (O) -- (0,0,1) node[midway, left] {$\vec{k}$};
+\end{tikzpicture}"
+            });
+
             _categories.Add(cat3d);
 
             // =========================================================================
@@ -1079,6 +1386,218 @@ namespace MatrixExamAI.Shared.Tikz
                     _titleLookup[tpl.Title] = tpl;
                 }
             }
+        }
+
+        /// <summary>
+        /// Tự động quét và nạp toàn bộ template từ thư mục data/tikz_kb (nếu có).
+        /// </summary>
+        public static void AutoScanAndLoad()
+        {
+            try
+            {
+                var candidatePaths = new List<string>
+                {
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "tikz_kb"),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "data", "tikz_kb"),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "data", "tikz_kb"),
+                    Path.Combine(Environment.CurrentDirectory, "data", "tikz_kb"),
+                    @"M:\IT\Phần mềm biên soạn tài liệu\MEA_v5.0\data\tikz_kb"
+                };
+
+                foreach (var path in candidatePaths)
+                {
+                    try
+                    {
+                        string fullPath = Path.GetFullPath(path);
+                        if (Directory.Exists(fullPath))
+                        {
+                            LoadFromDirectory(fullPath);
+                            break;
+                        }
+                    }
+                    catch { }
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Nạp các mẫu TikZ từ cây thư mục .txt (chuẩn data/tikz_kb).
+        /// </summary>
+        public static void LoadFromDirectory(string dirPath)
+        {
+            if (string.IsNullOrWhiteSpace(dirPath) || !Directory.Exists(dirPath)) return;
+
+            try
+            {
+                var files = Directory.GetFiles(dirPath, "*.txt", SearchOption.AllDirectories);
+                foreach (var file in files)
+                {
+                    ParseAndMergeFile(file);
+                }
+            }
+            catch { }
+        }
+
+        private static void ParseAndMergeFile(string filePath)
+        {
+            try
+            {
+                string text = File.ReadAllText(filePath);
+                var headerRegex = new Regex(@"^=+\s*TEMPLATE\s*:\s*(.+?)\s*=+\s*$", RegexOptions.Multiline | RegexOptions.IgnoreCase);
+                var matches = headerRegex.Matches(text);
+                if (matches.Count == 0) return;
+
+                // Xác định categoryId mặc định theo tên thư mục
+                string dirName = Path.GetFileName(Path.GetDirectoryName(filePath) ?? "") ?? "";
+                string defaultCatId = "misc";
+                if (dirName.Contains("01_plane") || dirName.Contains("plane")) defaultCatId = "plane_2d";
+                else if (dirName.Contains("02_solid") || dirName.Contains("solid")) defaultCatId = "solid_3d";
+                else if (dirName.Contains("03_graph") || dirName.Contains("graph")) defaultCatId = "graphs";
+                else if (dirName.Contains("04_table") || dirName.Contains("table")) defaultCatId = "tables";
+                else if (dirName.Contains("05_chart") || dirName.Contains("chart")) defaultCatId = "charts";
+
+                for (int i = 0; i < matches.Count; i++)
+                {
+                    int start = matches[i].Index + matches[i].Length;
+                    int end = (i + 1 < matches.Count) ? matches[i + 1].Index : text.Length;
+                    string block = text.Substring(start, end - start);
+                    string title = matches[i].Groups[1].Value.Trim();
+
+                    // Tìm code tikz
+                    int beginIdx = block.IndexOf("\\begin{tikzpicture}", StringComparison.Ordinal);
+                    int endIdx = block.IndexOf("\\end{tikzpicture}", StringComparison.Ordinal);
+                    if (beginIdx < 0 || endIdx < 0 || endIdx <= beginIdx) continue;
+
+                    string code = block.Substring(beginIdx, (endIdx + "\\end{tikzpicture}".Length) - beginIdx).Trim();
+                    string meta = block.Substring(0, beginIdx);
+
+                    var tags = new List<string>();
+                    string desc = "";
+
+                    foreach (var line in meta.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        string trimmed = line.Trim();
+                        if (trimmed.StartsWith("TAGS:", StringComparison.OrdinalIgnoreCase))
+                        {
+                            var parts = trimmed.Substring(5).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                            foreach (var p in parts) tags.Add(p.Trim());
+                        }
+                        else if (trimmed.StartsWith("NOTES:", StringComparison.OrdinalIgnoreCase))
+                        {
+                            desc = trimmed.Substring(6).Trim();
+                        }
+                    }
+
+                    int openCurly = code.Count(c => c == '{');
+                    int closeCurly = code.Count(c => c == '}');
+                    int openSquare = code.Count(c => c == '[');
+                    int closeSquare = code.Count(c => c == ']');
+                    if (openCurly != closeCurly || openSquare != closeSquare) continue;
+
+                    string catId = defaultCatId;
+                    if (tags.Any(t => t.IndexOf("3D", StringComparison.OrdinalIgnoreCase) >= 0 || t.IndexOf("không gian", StringComparison.OrdinalIgnoreCase) >= 0))
+                        catId = "solid_3d";
+                    else if (tags.Any(t => t.IndexOf("graph", StringComparison.OrdinalIgnoreCase) >= 0 || t.IndexOf("đồ thị", StringComparison.OrdinalIgnoreCase) >= 0))
+                        catId = "graphs";
+                    else if (tags.Any(t => t.IndexOf("bbt", StringComparison.OrdinalIgnoreCase) >= 0 || t.IndexOf("bảng", StringComparison.OrdinalIgnoreCase) >= 0))
+                        catId = "tables";
+
+                    var category = _categories.FirstOrDefault(c => c.Id == catId);
+                    if (category == null)
+                    {
+                        category = _categories.FirstOrDefault(c => c.Id == "misc");
+                        if (category == null) continue;
+                    }
+
+                    if (_titleLookup.ContainsKey(title)) continue;
+
+                    string id = Regex.Replace(title.ToLowerInvariant(), @"[^a-z0-9_]+", "_").Trim('_');
+                    if (string.IsNullOrEmpty(id) || _idLookup.ContainsKey(id))
+                    {
+                        id = "kb_" + Guid.NewGuid().ToString("N").Substring(0, 8);
+                    }
+
+                    string finalDesc = string.IsNullOrWhiteSpace(desc) ? title : desc;
+
+                    var tpl = new TikzTemplate
+                    {
+                        Id = id,
+                        Title = title,
+                        CategoryId = category.Id,
+                        CategoryName = category.Name,
+                        Description = finalDesc,
+                        Tags = tags.ToArray(),
+                        Code = code
+                    };
+
+                    RegisterTemplate(tpl);
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Đăng ký hoặc cập nhật một mẫu TikZ vào thư viện.
+        /// </summary>
+        public static void RegisterTemplate(TikzTemplate tpl)
+        {
+            if (tpl == null || string.IsNullOrWhiteSpace(tpl.Title) || string.IsNullOrWhiteSpace(tpl.Code)) return;
+
+            var cat = _categories.FirstOrDefault(c => c.Id == tpl.CategoryId);
+            if (cat == null)
+            {
+                cat = _categories.FirstOrDefault(c => c.Id == "misc") ?? _categories.FirstOrDefault();
+                if (cat == null) return;
+                tpl.CategoryId = cat.Id;
+                tpl.CategoryName = cat.Name;
+            }
+
+            if (_idLookup.ContainsKey(tpl.Id) || _titleLookup.ContainsKey(tpl.Title)) return;
+
+            cat.Templates.Add(tpl);
+            _idLookup[tpl.Id] = tpl;
+            _titleLookup[tpl.Title] = tpl;
+        }
+
+        private static readonly TikzTemplateCategory _userFiguresCategory = new TikzTemplateCategory
+        {
+            Id = "figure_bank",
+            Name = "Kho hình cá nhân",
+            Icon = "Folder24"
+        };
+
+        /// <summary>
+        /// Chuyên đề kho hình cá nhân của người dùng (tải từ FigureBank).
+        /// </summary>
+        public static TikzTemplateCategory UserFiguresCategory => _userFiguresCategory;
+
+        /// <summary>
+        /// Nạp toàn bộ danh mục hình vẽ người dùng (FigureBank) vào chuyên đề riêng trong thư viện.
+        /// </summary>
+        public static void LoadUserFigures(IEnumerable<(string Id, string Title, string Description, IEnumerable<string> Tags, string Code)> figures)
+        {
+            if (figures == null) return;
+            _userFiguresCategory.Templates.Clear();
+
+            foreach (var fig in figures)
+            {
+                if (string.IsNullOrWhiteSpace(fig.Code)) continue;
+                var tpl = new TikzTemplate
+                {
+                    Id = $"fig_{fig.Id}",
+                    Title = string.IsNullOrWhiteSpace(fig.Title) ? $"Hình #{fig.Id}" : fig.Title,
+                    CategoryId = _userFiguresCategory.Id,
+                    CategoryName = _userFiguresCategory.Name,
+                    Description = string.IsNullOrWhiteSpace(fig.Description) ? $"Hình #{fig.Id}" : fig.Description,
+                    Tags = fig.Tags?.ToArray() ?? new[] { "kho hình", "cá nhân" },
+                    Code = fig.Code
+                };
+
+                _userFiguresCategory.Templates.Add(tpl);
+            }
+
+            _userFiguresCategory.Name = $"Kho hình cá nhân ({_userFiguresCategory.Templates.Count} hình)";
         }
     }
 }

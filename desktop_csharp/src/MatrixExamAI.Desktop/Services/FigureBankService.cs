@@ -89,19 +89,87 @@ namespace MatrixExamAI.Desktop.Services
         {
             lock (_lock)
             {
+                string bankDir = GetFiguresDirectory();
                 string path = GetIndexFilePath();
-                if (!File.Exists(path)) return new List<FigureEntry>();
+                var entries = new List<FigureEntry>();
 
+                if (File.Exists(path))
+                {
+                    try
+                    {
+                        string json = File.ReadAllText(path, Encoding.UTF8);
+                        entries = JsonSerializer.Deserialize<List<FigureEntry>>(json) ?? new List<FigureEntry>();
+                    }
+                    catch { }
+                }
+
+                // Tự động quét và đồng bộ các file figure_*.tex có sẵn trong thư mục chưa được lập chỉ mục
                 try
                 {
-                    string json = File.ReadAllText(path, Encoding.UTF8);
-                    return JsonSerializer.Deserialize<List<FigureEntry>>(json) ?? new List<FigureEntry>();
+                    if (Directory.Exists(bankDir))
+                    {
+                        var texFiles = Directory.GetFiles(bankDir, "figure_*.tex");
+                        var indexedTex = new HashSet<string>(entries.Select(e => e.TexFilename), StringComparer.OrdinalIgnoreCase);
+                        bool updated = false;
+
+                        foreach (var tf in texFiles)
+                        {
+                            string fileName = Path.GetFileName(tf);
+                            if (!indexedTex.Contains(fileName))
+                            {
+                                string idPart = Path.GetFileNameWithoutExtension(fileName).Replace("figure_", "");
+                                string pngName = Path.ChangeExtension(fileName, ".png");
+                                string code = File.ReadAllText(tf, Encoding.UTF8);
+                                string title = InferFigureTitle(code, idPart);
+
+                                var entry = new FigureEntry
+                                {
+                                    Id = idPart,
+                                    Title = title,
+                                    Description = "",
+                                    Tags = InferTags(code),
+                                    CreatedAt = File.GetCreationTime(tf).ToString("yyyy-MM-ddTHH:mm:ss"),
+                                    Source = "manual",
+                                    TexFilename = fileName,
+                                    PngFilename = File.Exists(Path.Combine(bankDir, pngName)) ? pngName : "",
+                                    CharCount = code.Length,
+                                    TikzHash = ComputeHash(code)
+                                };
+                                entries.Add(entry);
+                                indexedTex.Add(fileName);
+                                updated = true;
+                            }
+                        }
+
+                        if (updated)
+                        {
+                            entries = entries.OrderByDescending(e => int.TryParse(e.Id, out int n) ? n : 0).ToList();
+                            SaveIndex(entries);
+                        }
+                    }
                 }
-                catch
-                {
-                    return new List<FigureEntry>();
-                }
+                catch { }
+
+                return entries;
             }
+        }
+
+        private static string InferFigureTitle(string code, string idPart)
+        {
+            if (code.Contains("\\tkzTabInit")) return $"Bảng biến thiên #{idPart}";
+            if (code.Contains("x={(1cm") || code.Contains("z={(0cm") || code.Contains("3D")) return $"Hình không gian #{idPart}";
+            if (code.Contains("begin{axis}")) return $"Đồ thị hàm số #{idPart}";
+            return $"Hình vẽ #{idPart}";
+        }
+
+        private static List<string> InferTags(string code)
+        {
+            var tags = new List<string>();
+            if (code.Contains("\\tkzTabInit")) tags.Add("BBT");
+            if (code.Contains("x={(1cm") || code.Contains("z={(0cm")) tags.Add("3D");
+            if (code.Contains("begin{axis}")) tags.Add("Đồ thị");
+            if (tags.Count == 0) tags.Add("Hình học");
+            return tags;
         }
 
         public static void SaveIndex(List<FigureEntry> entries)

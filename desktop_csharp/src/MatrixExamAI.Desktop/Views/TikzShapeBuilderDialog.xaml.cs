@@ -195,12 +195,76 @@ namespace MatrixExamAI.Desktop.Views
                     ChkOption.Content = "Đáy hình vuông đều";
                     break;
 
-                case "tetrahedron":
-                    LblParam1.Text = "Cạnh đáy a:"; TxtParam1.Text = "4";
-                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "4";
+                case "pyramid_sa_quad":
+                    LblParam1.Text = "Cạnh đáy a:"; TxtParam1.Text = "3.5";
+                    LblParam2.Text = "Chiều cao SA:"; TxtParam2.Text = "3.5";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Đỉnh chóp & Đáy:"; TxtParam4.Text = "S, A, B, C, D";
+                    ChkOption.Content = "Ký hiệu vuông góc tại A";
+                    break;
+
+                case "pyramid_regular_quad":
+                    LblParam1.Text = "Cạnh đáy a:"; TxtParam1.Text = "3.5";
+                    LblParam2.Text = "Chiều cao SH:"; TxtParam2.Text = "4";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Đỉnh & Tâm đáy:"; TxtParam4.Text = "S, A, B, C, D, H";
+                    ChkOption.Content = "Hiển thị đường cao SH";
+                    break;
+
+                case "pyramid_tri":
+                    LblParam1.Text = "Cạnh đáy a:"; TxtParam1.Text = "3.5";
+                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "3.5";
                     GridParam3.Visibility = Visibility.Collapsed;
                     LblParam4.Text = "Đỉnh & Đáy:"; TxtParam4.Text = "S, A, B, C";
-                    ChkOption.Content = "Tứ diện đều";
+                    ChkOption.Content = "Nét đứt cạnh khuất chuẩn Cabinet";
+                    break;
+
+                case "pyramid_sa_perp":
+                    LblParam1.Text = "Cạnh đáy a:"; TxtParam1.Text = "3.5";
+                    LblParam2.Text = "Chiều cao SA:"; TxtParam2.Text = "3.5";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Đỉnh & Đáy:"; TxtParam4.Text = "S, A, B, C";
+                    ChkOption.Content = "Ký hiệu góc vuông SA ⟂ đáy";
+                    break;
+
+                case "pyramid_regular_tri":
+                    LblParam1.Text = "Cạnh đáy a:"; TxtParam1.Text = "3.5";
+                    LblParam2.Text = "Chiều cao SH:"; TxtParam2.Text = "3.5";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Đỉnh & Trọng tâm:"; TxtParam4.Text = "S, A, B, C, H";
+                    ChkOption.Content = "Đánh dấu trọng tâm H";
+                    break;
+
+                case "tetrahedron":
+                    LblParam1.Text = "Cạnh tứ diện a:"; TxtParam1.Text = "3.5";
+                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "3.5";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Đỉnh & Đáy:"; TxtParam4.Text = "A, B, C, D";
+                    ChkOption.Content = "Tứ diện đều (6 cạnh bằng)";
+                    break;
+
+                case "pyramid_frustum":
+                    LblParam1.Text = "Đáy lớn a:"; TxtParam1.Text = "3.5";
+                    LblParam2.Text = "Đáy nhỏ a':"; TxtParam2.Text = "1.8";
+                    LblParam3.Text = "Chiều cao h:"; TxtParam3.Text = "2.8";
+                    LblParam4.Text = "Hai đáy:"; TxtParam4.Text = "A,B,C,D,A',B',C',D'";
+                    ChkOption.Visibility = Visibility.Collapsed;
+                    break;
+
+                case "cube":
+                    LblParam1.Text = "Cạnh lập phương a:"; TxtParam1.Text = "3";
+                    GridParam2.Visibility = Visibility.Collapsed;
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Đỉnh hai đáy:"; TxtParam4.Text = "A,B,C,D,A',B',C',D'";
+                    ChkOption.Content = "Vẽ đường chéo AC'";
+                    break;
+
+                case "cube_diagonal":
+                    LblParam1.Text = "Cạnh lập phương a:"; TxtParam1.Text = "3";
+                    GridParam2.Visibility = Visibility.Collapsed;
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Đường chéo:"; TxtParam4.Text = "A, C'";
+                    ChkOption.Content = "Gắn nhãn độ dài a√3";
                     break;
 
                 case "cuboid":
@@ -208,23 +272,47 @@ namespace MatrixExamAI.Desktop.Views
                     LblParam2.Text = "Rộng b:"; TxtParam2.Text = "3";
                     LblParam3.Text = "Cao h:"; TxtParam3.Text = "3.5";
                     LblParam4.Text = "Đỉnh đáy:"; TxtParam4.Text = "A, B, C, D";
-                    ChkOption.Visibility = Visibility.Collapsed;
+                    ChkOption.Content = "Hiển thị kích thước a, b, c";
+                    break;
+
+                case "prism_triangular":
+                    LblParam1.Text = "Cạnh đáy a:"; TxtParam1.Text = "3.5";
+                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "3.5";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Đỉnh hai đáy:"; TxtParam4.Text = "A,B,C,A',B',C'";
+                    ChkOption.Content = "Đánh dấu cạnh bên ⟂ đáy";
                     break;
 
                 case "cylinder":
                     LblParam1.Text = "Bán kính đáy R:"; TxtParam1.Text = "2";
-                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "4";
+                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "3.5";
                     GridParam3.Visibility = Visibility.Collapsed;
                     LblParam4.Text = "Hai tâm:"; TxtParam4.Text = "O, O'";
                     ChkOption.Content = "Hiển thị trục đối xứng OO'";
                     break;
 
+                case "cylinder_section":
+                    LblParam1.Text = "Bán kính đáy R:"; TxtParam1.Text = "2";
+                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "3.5";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Thiết diện:"; TxtParam4.Text = "A, B, C, D";
+                    ChkOption.Content = "Tô màu nền thiết diện chữ nhật";
+                    break;
+
                 case "cone":
                     LblParam1.Text = "Bán kính đáy R:"; TxtParam1.Text = "2.5";
-                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "4";
+                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "3.5";
                     GridParam3.Visibility = Visibility.Collapsed;
                     LblParam4.Text = "Đỉnh & Tâm:"; TxtParam4.Text = "S, O";
-                    ChkOption.Content = "Hiển thị đường sinh SA";
+                    ChkOption.Content = "Hiển thị đường sinh l";
+                    break;
+
+                case "cone_frustum":
+                    LblParam1.Text = "Bán kính lớn R:"; TxtParam1.Text = "2.5";
+                    LblParam2.Text = "Bán kính nhỏ r:"; TxtParam2.Text = "1.2";
+                    LblParam3.Text = "Chiều cao h:"; TxtParam3.Text = "3";
+                    LblParam4.Text = "Hai tâm:"; TxtParam4.Text = "O, O'";
+                    ChkOption.Content = "Hiển thị bán kính R, r";
                     break;
 
                 case "sphere":
@@ -233,6 +321,38 @@ namespace MatrixExamAI.Desktop.Views
                     GridParam3.Visibility = Visibility.Collapsed;
                     LblParam4.Text = "Tên tâm:"; TxtParam4.Text = "O";
                     ChkOption.Content = "Đổ bóng cầu 3D";
+                    break;
+
+                case "sphere_circum_cube":
+                    LblParam1.Text = "Cạnh lập phương a:"; TxtParam1.Text = "2.5";
+                    GridParam2.Visibility = Visibility.Collapsed;
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Tâm cầu:"; TxtParam4.Text = "I";
+                    ChkOption.Content = "Bán kính R = a√3/2";
+                    break;
+
+                case "sphere_in_cube":
+                    LblParam1.Text = "Cạnh lập phương a:"; TxtParam1.Text = "2.5";
+                    GridParam2.Visibility = Visibility.Collapsed;
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Tâm cầu:"; TxtParam4.Text = "I";
+                    ChkOption.Content = "Bán kính R = a/2";
+                    break;
+
+                case "sphere_circum_pyramid":
+                    LblParam1.Text = "Cạnh đáy chóp a:"; TxtParam1.Text = "3";
+                    LblParam2.Text = "Chiều cao h:"; TxtParam2.Text = "4";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Đỉnh & Tâm:"; TxtParam4.Text = "S, I, H";
+                    ChkOption.Content = "Tâm I trên đường cao SH";
+                    break;
+
+                case "octahedron":
+                    LblParam1.Text = "Cạnh bát diện a:"; TxtParam1.Text = "3";
+                    LblParam2.Text = "Chiều cao nửa trên h:"; TxtParam2.Text = "2.5";
+                    GridParam3.Visibility = Visibility.Collapsed;
+                    LblParam4.Text = "Đỉnh:"; TxtParam4.Text = "S, S', A, B, C, D";
+                    ChkOption.Content = "Khối bát diện đều 8 mặt";
                     break;
 
                 // Graph
@@ -533,16 +653,146 @@ namespace MatrixExamAI.Desktop.Views
                     sb.Append(@"\end{tikzpicture}");
                     break;
 
+                case "pyramid_sa_quad":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick,");
+                    sb.AppendLine(@"    x={(1cm,0cm)}, y={(0.4cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
+                    sb.AppendLine($@"  \coordinate[label=right:$C$] (C) at ({v1},{v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above left:$D$] (D) at (0,{v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above:$S$] (S) at (0,0,{v2});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C);");
+                    sb.AppendLine(@"  \draw[dashed] (C)--(D)--(A);");
+                    sb.AppendLine(@"  \draw (S)--(A) (S)--(B) (S)--(C);");
+                    sb.AppendLine(@"  \draw[dashed] (S)--(D);");
+                    if (opt)
+                    {
+                        sb.AppendLine(@"  \draw pic [draw, angle radius=3mm] {right angle = S--A--B};");
+                        sb.AppendLine(@"  \draw pic [draw, angle radius=3mm] {right angle = S--A--D};");
+                    }
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "pyramid_regular_quad":
+                    double hCent = Math.Round(v1 / 2.0, 2);
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick,");
+                    sb.AppendLine(@"    x={(1cm,0cm)}, y={(0.4cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
+                    sb.AppendLine($@"  \coordinate[label=right:$C$] (C) at ({v1},{v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above left:$D$] (D) at (0,{v1},0);");
+                    sb.AppendLine($@"  \coordinate (H) at ({hCent},{hCent},0);");
+                    sb.AppendLine($@"  \coordinate[label=above:$S$] (S) at ({hCent},{hCent},{v2});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C);");
+                    sb.AppendLine(@"  \draw[dashed] (C)--(D)--(A);");
+                    sb.AppendLine(@"  \draw (S)--(A) (S)--(B) (S)--(C);");
+                    sb.AppendLine(@"  \draw[dashed] (S)--(D);");
+                    sb.AppendLine(@"  \draw[dashed] (S)--(H);");
+                    sb.AppendLine(@"  \fill (H) circle (1.2pt) node[below right] {$H$};");
+                    sb.AppendLine(@"  \draw[densely dotted] (A)--(C) (B)--(D);");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "pyramid_tri":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick,");
+                    sb.AppendLine(@"    x={(1cm,0cm)}, y={(0.4cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
+                    sb.AppendLine($@"  \coordinate[label=right:$C$] (C) at ({Math.Round(v1 * 0.5, 2)},{Math.Round(v1 * 0.8, 2)},0);");
+                    sb.AppendLine($@"  \coordinate[label=above:$S$] (S) at ({Math.Round(v1 * 0.4, 2)},{Math.Round(v1 * 0.3, 2)},{v2});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C);");
+                    sb.AppendLine(@"  \draw[dashed] (C)--(A);");
+                    sb.AppendLine(@"  \draw (S)--(A) (S)--(B) (S)--(C);");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "pyramid_sa_perp":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick,");
+                    sb.AppendLine(@"    x={(1cm,0cm)}, y={(0.4cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
+                    sb.AppendLine($@"  \coordinate[label=right:$C$] (C) at ({Math.Round(v1 * 0.5, 2)},{Math.Round(v1 * 0.8, 2)},0);");
+                    sb.AppendLine($@"  \coordinate[label=above:$S$] (S) at (0,0,{v2});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C);");
+                    sb.AppendLine(@"  \draw[dashed] (A)--(C);");
+                    sb.AppendLine(@"  \draw (S)--(A) (S)--(B) (S)--(C);");
+                    if (opt)
+                    {
+                        sb.AppendLine(@"  \draw pic [draw, angle radius=3mm] {right angle = S--A--B};");
+                    }
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "pyramid_regular_tri":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick,");
+                    sb.AppendLine(@"    x={(1cm,0cm)}, y={(0.4cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
+                    sb.AppendLine($@"  \coordinate[label=above:$C$] (C) at ({Math.Round(v1 * 0.5, 2)},{Math.Round(v1 * 0.86, 2)},0);");
+                    sb.AppendLine($@"  \coordinate (H) at ({Math.Round(v1 * 0.5, 2)},{Math.Round(v1 * 0.29, 2)},0);");
+                    sb.AppendLine($@"  \coordinate[label=above:$S$] (S) at ({Math.Round(v1 * 0.5, 2)},{Math.Round(v1 * 0.29, 2)},{v2});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C);");
+                    sb.AppendLine(@"  \draw[dashed] (C)--(A);");
+                    sb.AppendLine(@"  \draw (S)--(A) (S)--(B);");
+                    sb.AppendLine(@"  \draw[dashed] (S)--(C);");
+                    sb.AppendLine(@"  \draw[dashed] (S)--(H);");
+                    sb.AppendLine(@"  \fill (H) circle (1.2pt) node[below right] {$H$};");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
                 case "tetrahedron":
                     sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick,");
                     sb.AppendLine(@"    x={(1cm,0cm)}, y={(0.4cm,0.3cm)}, z={(0cm,1cm)}]");
                     sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0,0);");
                     sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
                     sb.AppendLine($@"  \coordinate[label=right:$C$] (C) at ({Math.Round(v1 * 0.5, 2)},{Math.Round(v1 * 0.86, 2)},0);");
-                    sb.AppendLine($@"  \coordinate[label=above:$S$] (S) at ({Math.Round(v1 * 0.5, 2)},{Math.Round(v1 * 0.3, 2)},{v2});");
+                    sb.AppendLine($@"  \coordinate[label=above:$D$] (S) at ({Math.Round(v1 * 0.5, 2)},{Math.Round(v1 * 0.3, 2)},{v2});");
                     sb.AppendLine(@"  \draw (A)--(B)--(S)--cycle;");
                     sb.AppendLine(@"  \draw (B)--(C)--(S);");
                     sb.AppendLine(@"  \draw[dashed] (A)--(C);");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "cube":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick,");
+                    sb.AppendLine(@"    x={(1cm,0cm)}, y={(0.4cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
+                    sb.AppendLine($@"  \coordinate[label=right:$C$] (C) at ({v1},{v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above left:$D$] (D) at (0,{v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above left:$A'$] (A1) at (0,0,{v1});");
+                    sb.AppendLine($@"  \coordinate[label=above right:$B'$] (B1) at ({v1},0,{v1});");
+                    sb.AppendLine($@"  \coordinate[label=right:$C'$] (C1) at ({v1},{v1},{v1});");
+                    sb.AppendLine($@"  \coordinate[label=above:$D'$] (D1) at (0,{v1},{v1});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C);");
+                    sb.AppendLine(@"  \draw[dashed] (C)--(D)--(A);");
+                    sb.AppendLine(@"  \draw (A)--(A1) (B)--(B1) (C)--(C1);");
+                    sb.AppendLine(@"  \draw[dashed] (D)--(D1);");
+                    sb.AppendLine(@"  \draw (A1)--(B1)--(C1)--(D1)--cycle;");
+                    if (opt)
+                    {
+                        sb.AppendLine(@"  \draw[red, very thick] (A)--(C1) node[midway, below right] {$a\sqrt{3}$};");
+                    }
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "cube_diagonal":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick,");
+                    sb.AppendLine(@"    x={(1cm,0cm)}, y={(0.4cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
+                    sb.AppendLine($@"  \coordinate[label=right:$C$] (C) at ({v1},{v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above left:$D$] (D) at (0,{v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above left:$A'$] (A1) at (0,0,{v1});");
+                    sb.AppendLine($@"  \coordinate[label=above right:$B'$] (B1) at ({v1},0,{v1});");
+                    sb.AppendLine($@"  \coordinate[label=right:$C'$] (C1) at ({v1},{v1},{v1});");
+                    sb.AppendLine($@"  \coordinate[label=above:$D'$] (D1) at (0,{v1},{v1});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C);");
+                    sb.AppendLine(@"  \draw[dashed] (C)--(D)--(A);");
+                    sb.AppendLine(@"  \draw (A)--(A1) (B)--(B1) (C)--(C1);");
+                    sb.AppendLine(@"  \draw[dashed] (D)--(D1);");
+                    sb.AppendLine(@"  \draw (A1)--(B1)--(C1)--(D1)--cycle;");
+                    sb.AppendLine(@"  \draw[red, very thick] (A)--(C1) node[midway, below right] {$a\sqrt{3}$};");
                     sb.Append(@"\end{tikzpicture}");
                     break;
 
@@ -563,6 +813,46 @@ namespace MatrixExamAI.Desktop.Views
                     sb.AppendLine(@"  \draw (A1)--(B1)--(C1)--(D1)--cycle;");
                     sb.AppendLine(@"  \draw (A)--(A1) (B)--(B1) (C)--(C1);");
                     sb.AppendLine(@"  \draw[dashed] (D)--(D1);");
+                    if (opt)
+                    {
+                        sb.AppendLine($@"  \draw[<->] (0,-0.4,0)--({v1},-0.4,0) node[midway, below] {{$a$}};");
+                    }
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "prism_triangular":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick,");
+                    sb.AppendLine(@"    x={(1cm,0cm)}, y={(0.4cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
+                    sb.AppendLine($@"  \coordinate[label=right:$C$] (C) at ({Math.Round(v1 * 0.5, 2)},{Math.Round(v1 * 0.8, 2)},0);");
+                    sb.AppendLine($@"  \coordinate[label=above left:$A'$] (A1) at (0,0,{v2});");
+                    sb.AppendLine($@"  \coordinate[label=above right:$B'$] (B1) at ({v1},0,{v2});");
+                    sb.AppendLine($@"  \coordinate[label=above:$C'$] (C1) at ({Math.Round(v1 * 0.5, 2)},{Math.Round(v1 * 0.8, 2)},{v2});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C);");
+                    sb.AppendLine(@"  \draw (A)--(A1) (B)--(B1) (C)--(C1);");
+                    sb.AppendLine(@"  \draw (A1)--(B1)--(C1)--cycle;");
+                    sb.AppendLine(@"  \draw[dashed] (C)--(A);");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "pyramid_frustum":
+                    double hFrust = v3 > 0 ? v3 : 2.8;
+                    double offF = Math.Round((v1 - v2) / 2.0, 2);
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick,");
+                    sb.AppendLine(@"    x={(1cm,0cm)}, y={(0.4cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
+                    sb.AppendLine($@"  \coordinate[label=right:$C$] (C) at ({v1},{v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above left:$D$] (D) at (0,{v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=left:$A'$] (A1) at ({offF},{offF},{hFrust});");
+                    sb.AppendLine($@"  \coordinate[label=right:$B'$] (B1) at ({Math.Round(offF + v2, 2)},{offF},{hFrust});");
+                    sb.AppendLine($@"  \coordinate[label=right:$C'$] (C1) at ({Math.Round(offF + v2, 2)},{Math.Round(offF + v2, 2)},{hFrust});");
+                    sb.AppendLine($@"  \coordinate[label=above:$D'$] (D1) at ({offF},{Math.Round(offF + v2, 2)},{hFrust});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C); \draw[dashed] (C)--(D)--(A);");
+                    sb.AppendLine(@"  \draw (A1)--(B1)--(C1)--(D1)--cycle;");
+                    sb.AppendLine(@"  \draw (A)--(A1) (B)--(B1) (C)--(C1);");
+                    sb.AppendLine(@"  \draw[dashed] (D)--(D1);");
                     sb.Append(@"\end{tikzpicture}");
                     break;
 
@@ -579,6 +869,26 @@ namespace MatrixExamAI.Desktop.Views
                     sb.Append(@"\end{tikzpicture}");
                     break;
 
+                case "cylinder_section":
+                    double eSec = Math.Round(v1 * 0.35, 2);
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine($@"  \draw (-{v1},0) arc (180:360:{v1}cm and {eSec}cm);");
+                    sb.AppendLine($@"  \draw[dashed] (-{v1},0) arc (180:0:{v1}cm and {eSec}cm);");
+                    sb.AppendLine($@"  \draw (0,{v2}) ellipse ({v1}cm and {eSec}cm);");
+                    sb.AppendLine($@"  \draw (-{v1},0)--(-{v1},{v2});");
+                    sb.AppendLine($@"  \draw ({v1},0)--({v1},{v2});");
+                    sb.AppendLine($@"  \draw[dashed] (0,0)--(0,{v2});");
+                    sb.AppendLine(@"  \fill (0,0) circle (1.5pt) node[below]{$O$};");
+                    sb.AppendLine($@"  \fill (0,{v2}) circle (1.5pt) node[above]{{$O'$}};");
+                    sb.AppendLine($@"  \coordinate[label=below left:$A$] (A) at (-{v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above right:$C$] (C) at ({v1},{v2});");
+                    sb.AppendLine($@"  \coordinate[label=above left:$D$] (D) at (-{v1},{v2});");
+                    sb.AppendLine(@"  \fill[blue!15, opacity=0.5] (A)--(B)--(C)--(D)--cycle;");
+                    sb.AppendLine(@"  \draw[blue, thick] (A)--(B)--(C)--(D)--cycle;");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
                 case "cone":
                     double eCone = Math.Round(v1 * 0.35, 2);
                     sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
@@ -591,6 +901,22 @@ namespace MatrixExamAI.Desktop.Views
                     sb.Append(@"\end{tikzpicture}");
                     break;
 
+                case "cone_frustum":
+                    double eR = Math.Round(v1 * 0.35, 2);
+                    double er = Math.Round(v2 * 0.35, 2);
+                    double hCf = v3 > 0 ? v3 : 3;
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
+                    sb.AppendLine($@"  \draw (-{v1},0) arc (180:360:{v1}cm and {eR}cm);");
+                    sb.AppendLine($@"  \draw[dashed] (-{v1},0) arc (180:0:{v1}cm and {eR}cm);");
+                    sb.AppendLine($@"  \draw (0,{hCf}) ellipse ({v2}cm and {er}cm);");
+                    sb.AppendLine($@"  \draw (-{v1},0)--(-{v2},{hCf});");
+                    sb.AppendLine($@"  \draw ({v1},0)--({v2},{hCf});");
+                    sb.AppendLine($@"  \draw[dashed] (0,0)--(0,{hCf});");
+                    sb.AppendLine(@"  \fill (0,0) circle (1.5pt) node[below]{$O$};");
+                    sb.AppendLine($@"  \fill (0,{hCf}) circle (1.5pt) node[above]{{$O'$}};");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
                 case "sphere":
                     double eSph = Math.Round(v1 * 0.35, 2);
                     sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
@@ -599,6 +925,90 @@ namespace MatrixExamAI.Desktop.Views
                     sb.AppendLine($@"  \draw[dashed] (0,0) ellipse ({v1}cm and {eSph}cm);");
                     sb.AppendLine(@"  \fill (0,0) circle (1.5pt) node[below right]{$O$};");
                     sb.AppendLine($@"  \draw[<->] (0,0)--({v1},0) node[midway,above]{{$R={v1}$}};");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "sphere_circum_cube":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick]");
+                    sb.AppendLine(@"  \begin{scope}[x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine($@"    \coordinate (A) at (0,0,0); \coordinate (B) at ({v1},0,0);");
+                    sb.AppendLine($@"    \coordinate (C) at ({v1},{v1},0); \coordinate (D) at (0,{v1},0);");
+                    sb.AppendLine($@"    \coordinate (A1) at (0,0,{v1}); \coordinate (B1) at ({v1},0,{v1});");
+                    sb.AppendLine($@"    \coordinate (C1) at ({v1},{v1},{v1}); \coordinate (D1) at (0,{v1},{v1});");
+                    sb.AppendLine(@"    \draw (A)--(B)--(C); \draw[dashed] (C)--(D)--(A);");
+                    sb.AppendLine(@"    \draw (A)--(A1); \draw (B)--(B1); \draw (C)--(C1);");
+                    sb.AppendLine(@"    \draw[dashed] (D)--(D1);");
+                    sb.AppendLine(@"    \draw (A1)--(B1)--(C1)--(D1)--cycle;");
+                    double halfC = Math.Round(v1 / 2.0, 2);
+                    sb.AppendLine($@"    \coordinate (I) at ({halfC},{halfC},{halfC}); \fill (I) circle (1.2pt);");
+                    sb.AppendLine(@"  \end{scope}");
+                    sb.AppendLine(@"  \node[right=2pt of I] {$I$};");
+                    double rCirc = Math.Round(v1 * 0.866, 2);
+                    sb.AppendLine($@"  \draw[blue, thick] (I) circle ({rCirc}cm);");
+                    sb.AppendLine($@"  \draw[blue] ([xshift=-{rCirc}cm] I) arc (180:360:{rCirc}cm and {Math.Round(rCirc * 0.35, 2)}cm);");
+                    sb.AppendLine($@"  \draw[blue, dashed] ([xshift=-{rCirc}cm] I) arc (180:0:{rCirc}cm and {Math.Round(rCirc * 0.35, 2)}cm);");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "sphere_in_cube":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick]");
+                    sb.AppendLine(@"  \begin{scope}[x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine($@"    \coordinate (A) at (0,0,0); \coordinate (B) at ({v1},0,0);");
+                    sb.AppendLine($@"    \coordinate (C) at ({v1},{v1},0); \coordinate (D) at (0,{v1},0);");
+                    sb.AppendLine($@"    \coordinate (A1) at (0,0,{v1}); \coordinate (B1) at ({v1},0,{v1});");
+                    sb.AppendLine($@"    \coordinate (C1) at ({v1},{v1},{v1}); \coordinate (D1) at (0,{v1},{v1});");
+                    sb.AppendLine(@"    \draw (A)--(B)--(C); \draw[dashed] (C)--(D)--(A);");
+                    sb.AppendLine(@"    \draw (A)--(A1); \draw (B)--(B1); \draw (C)--(C1);");
+                    sb.AppendLine(@"    \draw[dashed] (D)--(D1);");
+                    sb.AppendLine(@"    \draw (A1)--(B1)--(C1)--(D1)--cycle;");
+                    double halfCi = Math.Round(v1 / 2.0, 2);
+                    sb.AppendLine($@"    \coordinate (I) at ({halfCi},{halfCi},{halfCi}); \fill (I) circle (1.2pt);");
+                    sb.AppendLine(@"  \end{scope}");
+                    sb.AppendLine(@"  \node[right=2pt of I] {$I$};");
+                    double rIn = Math.Round(v1 / 2.0, 2);
+                    sb.AppendLine($@"  \draw[blue, thick] (I) circle ({rIn}cm);");
+                    sb.AppendLine($@"  \draw[blue] ([xshift=-{rIn}cm] I) arc (180:360:{rIn}cm and {Math.Round(rIn * 0.35, 2)}cm);");
+                    sb.AppendLine($@"  \draw[blue, dashed] ([xshift=-{rIn}cm] I) arc (180:0:{rIn}cm and {Math.Round(rIn * 0.35, 2)}cm);");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "sphere_circum_pyramid":
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick]");
+                    sb.AppendLine(@"  \begin{scope}[x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine(@"    \coordinate[label=below left:$A$] (A) at (0,0,0);");
+                    sb.AppendLine($@"    \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
+                    sb.AppendLine($@"    \coordinate[label=right:$C$] (C) at ({v1},{v1},0);");
+                    sb.AppendLine($@"    \coordinate[label=above left:$D$] (D) at (0,{v1},0);");
+                    double hCp = Math.Round(v1 / 2.0, 2);
+                    sb.AppendLine($@"    \coordinate[label=above:$S$] (S) at ({hCp},{hCp},{v2});");
+                    sb.AppendLine($@"    \coordinate (H) at ({hCp},{hCp},0);");
+                    sb.AppendLine($@"    \coordinate (I) at ({hCp},{hCp},{Math.Round(v2 * 0.4, 2)});");
+                    sb.AppendLine(@"    \draw (A)--(B)--(C); \draw[dashed] (C)--(D)--(A);");
+                    sb.AppendLine(@"    \draw (S)--(A) (S)--(B) (S)--(C); \draw[dashed] (S)--(D) (S)--(H);");
+                    sb.AppendLine(@"    \fill (H) circle (1pt) node[below right] {$H$};");
+                    sb.AppendLine(@"    \fill (I) circle (1.2pt) node[right] {$I$};");
+                    sb.AppendLine(@"  \end{scope}");
+                    double rCp = Math.Round(v2 * 0.55, 2);
+                    sb.AppendLine($@"  \draw[blue, thick] (I) circle ({rCp}cm);");
+                    sb.AppendLine($@"  \draw[blue] ([xshift=-{rCp}cm] I) arc (180:360:{rCp}cm and {Math.Round(rCp * 0.35, 2)}cm);");
+                    sb.AppendLine($@"  \draw[blue, dashed] ([xshift=-{rCp}cm] I) arc (180:0:{rCp}cm and {Math.Round(rCp * 0.35, 2)}cm);");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "octahedron":
+                    double hOct = v2 > 0 ? v2 : 2.5;
+                    double hCentO = Math.Round(v1 / 2.0, 2);
+                    sb.AppendLine(@"\begin{tikzpicture}[scale=1.2, thick,");
+                    sb.AppendLine(@"    x={(1cm,0cm)}, y={(0.5cm,0.3cm)}, z={(0cm,1cm)}]");
+                    sb.AppendLine(@"  \coordinate[label=below left:$A$] (A) at (0,0,0);");
+                    sb.AppendLine($@"  \coordinate[label=below right:$B$] (B) at ({v1},0,0);");
+                    sb.AppendLine($@"  \coordinate[label=right:$C$] (C) at ({v1},{v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above left:$D$] (D) at (0,{v1},0);");
+                    sb.AppendLine($@"  \coordinate[label=above:$S$] (S) at ({hCentO},{hCentO},{hOct});");
+                    sb.AppendLine($@"  \coordinate[label=below:$S'$] (S1) at ({hCentO},{hCentO},-{hOct});");
+                    sb.AppendLine(@"  \draw (A)--(B)--(C); \draw[dashed] (C)--(D)--(A);");
+                    sb.AppendLine(@"  \draw (S)--(A) (S)--(B) (S)--(C); \draw[dashed] (S)--(D);");
+                    sb.AppendLine(@"  \draw (S1)--(A) (S1)--(B) (S1)--(C); \draw[dashed] (S1)--(D);");
                     sb.Append(@"\end{tikzpicture}");
                     break;
 

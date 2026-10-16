@@ -225,7 +225,20 @@ namespace MatrixExamAI.Desktop.Views
             try
             {
                 _suppressTemplateAutoFill = true;
-                CmbTemplateCategory.ItemsSource = TikzTemplateLibrary.Categories;
+
+                // 1. Quét tự động nạp từ thư mục data/tikz_kb nếu có
+                TikzTemplateLibrary.AutoScanAndLoad();
+
+                // 2. Nạp kho 208 hình cá nhân của người dùng từ FigureBankService
+                LoadUserFiguresIntoLibrary();
+
+                var cats = new List<TikzTemplateCategory>(TikzTemplateLibrary.Categories);
+                if (TikzTemplateLibrary.UserFiguresCategory.Templates.Count > 0)
+                {
+                    cats.Add(TikzTemplateLibrary.UserFiguresCategory);
+                }
+
+                CmbTemplateCategory.ItemsSource = cats;
                 CmbTemplateCategory.DisplayMemberPath = "Name";
                 CmbTemplateCategory.SelectedIndex = -1;
                 CmbTemplateItem.ItemsSource = null;
@@ -242,6 +255,32 @@ namespace MatrixExamAI.Desktop.Views
             }
         }
 
+        private void LoadUserFiguresIntoLibrary()
+        {
+            try
+            {
+                var entries = FigureBankService.LoadIndex();
+                if (entries != null && entries.Count > 0)
+                {
+                    var figures = new List<(string Id, string Title, string Description, IEnumerable<string> Tags, string Code)>();
+                    foreach (var entry in entries)
+                    {
+                        string code = FigureBankService.GetTikzCode(entry);
+                        if (!string.IsNullOrWhiteSpace(code))
+                        {
+                            figures.Add((entry.Id, string.IsNullOrWhiteSpace(entry.Title) ? $"Hình #{entry.Id}" : entry.Title, entry.Description, entry.Tags, code));
+                        }
+                    }
+
+                    if (figures.Count > 0)
+                    {
+                        TikzTemplateLibrary.LoadUserFigures(figures);
+                    }
+                }
+            }
+            catch { }
+        }
+
         private void CmbTemplateCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (CmbTemplateCategory.SelectedItem is TikzTemplateCategory cat)
@@ -249,15 +288,17 @@ namespace MatrixExamAI.Desktop.Views
                 SyncDiagramTypeForCategory(cat.Id);
                 CmbTemplateItem.ItemsSource = cat.Templates;
                 CmbTemplateItem.DisplayMemberPath = "Title";
-                if (cat.Templates.Count > 0)
-                {
-                    CmbTemplateItem.SelectedIndex = 0;
-                }
+                CmbTemplateItem.SelectedIndex = -1;
+            }
+            else
+            {
+                CmbTemplateItem.ItemsSource = null;
             }
         }
 
         private void SyncDiagramTypeForCategory(string categoryId)
         {
+            if (CmbDiagramType == null) return;
             switch (categoryId)
             {
                 case "tables":
@@ -279,7 +320,7 @@ namespace MatrixExamAI.Desktop.Views
         private void CmbTemplateItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (_suppressTemplateAutoFill) return;
-            if (CmbTemplateItem.SelectedItem is TikzTemplate tpl)
+            if (CmbTemplateItem.SelectedItem is TikzTemplate tpl && !string.IsNullOrWhiteSpace(tpl.Code))
             {
                 TxtTikzCode.Text = tpl.Code;
                 TxtDiagramStats.Text = $"Đã nạp mẫu: {tpl.Title} ({tpl.CategoryName})";
@@ -292,6 +333,7 @@ namespace MatrixExamAI.Desktop.Views
         /// </summary>
         private void SyncDiagramTypeForTemplate(TikzTemplate tpl)
         {
+            if (CmbDiagramType == null) return;
             switch (tpl.CategoryId)
             {
                 case "tables":
