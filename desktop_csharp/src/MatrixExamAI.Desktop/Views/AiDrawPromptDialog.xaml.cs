@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using MatrixExamAI.Desktop.Services;
@@ -62,7 +63,6 @@ namespace MatrixExamAI.Desktop.Views
             try
             {
                 _imageBytes = bytes;
-                _imageBase64 = Convert.ToBase64String(bytes);
 
                 using var ms = new MemoryStream(bytes);
                 var bmp = new BitmapImage();
@@ -73,14 +73,49 @@ namespace MatrixExamAI.Desktop.Views
                 bmp.Freeze();
 
                 ImgPreview.Source = bmp;
-                TxtImageDimensions.Text = $"Kích thước ảnh: {bmp.PixelWidth} × {bmp.PixelHeight} px ({(bytes.Length / 1024.0):F1} KB)";
-                TxtImageStatus.Text = "Đã nạp ảnh bài toán thành công.";
+
+                // Tối ưu hóa kích thước và dung lượng ảnh cho AI Vision (giảm tải token và tăng tốc suy luận)
+                var (optBytes, optMime) = OptimizeImageForAiVision(bmp, bytes, _imageMime);
+                _imageBase64 = Convert.ToBase64String(optBytes);
+                _imageMime = optMime;
+
+                TxtImageDimensions.Text = $"Kích thước ảnh: {bmp.PixelWidth} × {bmp.PixelHeight} px ({(bytes.Length / 1024.0):F1} KB) [Tối ưu Vision: {(optBytes.Length / 1024.0):F1} KB]";
+                TxtImageStatus.Text = "Đã nạp và tối ưu ảnh cho AI Vision thành công.";
                 BorderImagePreview.Visibility = Visibility.Visible;
                 BtnClearImage.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
             {
                 TxtImageStatus.Text = $"Lỗi đọc ảnh: {ex.Message}";
+            }
+        }
+
+        private static (byte[] Bytes, string Mime) OptimizeImageForAiVision(BitmapSource source, byte[] originalBytes, string originalMime, int maxDimension = 1024)
+        {
+            try
+            {
+                int w = source.PixelWidth;
+                int h = source.PixelHeight;
+
+                if (w <= maxDimension && h <= maxDimension && originalBytes.Length <= 250 * 1024)
+                {
+                    return (originalBytes, originalMime);
+                }
+
+                double scale = Math.Min(1.0, Math.Min((double)maxDimension / w, (double)maxDimension / h));
+                BitmapSource scaled = (scale < 1.0)
+                    ? new TransformedBitmap(source, new ScaleTransform(scale, scale))
+                    : source;
+
+                var encoder = new JpegBitmapEncoder { QualityLevel = 85 };
+                encoder.Frames.Add(BitmapFrame.Create(scaled));
+                using var outMs = new MemoryStream();
+                encoder.Save(outMs);
+                return (outMs.ToArray(), "image/jpeg");
+            }
+            catch
+            {
+                return (originalBytes, originalMime);
             }
         }
 
@@ -237,7 +272,7 @@ namespace MatrixExamAI.Desktop.Views
             }
 
             _activeCts?.Dispose();
-            _activeCts = new System.Threading.CancellationTokenSource();
+            _activeCts = new System.Threading.CancellationTokenSource(TimeSpan.FromMinutes(5));
 
             string prefix = _imageBytes != null ? "AI đang phân tích ảnh & lập trình TikZ" : "AI đang xử lý văn bản & dựng mã TikZ";
             StartAnalyzeTimer(prefix);
@@ -300,7 +335,7 @@ namespace MatrixExamAI.Desktop.Views
             }
 
             _activeCts?.Dispose();
-            _activeCts = new System.Threading.CancellationTokenSource();
+            _activeCts = new System.Threading.CancellationTokenSource(TimeSpan.FromMinutes(5));
 
             StartAnalyzeTimer("AI đang trích xuất bản thiết kế và mô tả tọa độ");
             SetBusy(true, "⏳ AI đang trích xuất bản thiết kế và mô tả tọa độ... (0.0s)");

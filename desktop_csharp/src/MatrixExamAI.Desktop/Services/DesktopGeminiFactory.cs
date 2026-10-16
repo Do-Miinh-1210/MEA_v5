@@ -26,7 +26,7 @@ namespace MatrixExamAI.Desktop.Services
 
     public static class DesktopGeminiFactory
     {
-        private static readonly HttpClient _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(120) };
+        private static readonly HttpClient _httpClient = new HttpClient { Timeout = TimeSpan.FromMinutes(5) };
         private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions
         {
             PropertyNamingPolicy = null,
@@ -407,7 +407,7 @@ namespace MatrixExamAI.Desktop.Services
                     var geminiReq = new
                     {
                         contents = new[] { new { role = "user", parts = partsList.ToArray() } },
-                        generationConfig = new { temperature = 0.2, maxOutputTokens = 4096 }
+                        generationConfig = new { temperature = 0.2, maxOutputTokens = 8192 }
                     };
 
                     try
@@ -531,11 +531,23 @@ namespace MatrixExamAI.Desktop.Services
                         {
                             candidateModels.Add(model);
                             candidateModels.Add(model.Substring(3));
+                            if (model.EndsWith("-high", StringComparison.OrdinalIgnoreCase))
+                            {
+                                string fastModel = model.Substring(0, model.Length - 5);
+                                candidateModels.Add(fastModel);
+                                candidateModels.Add(fastModel.Substring(3));
+                            }
                         }
                         else
                         {
                             candidateModels.Add($"ag/{model}");
                             candidateModels.Add(model);
+                            if (model.EndsWith("-high", StringComparison.OrdinalIgnoreCase))
+                            {
+                                string fastModel = model.Substring(0, model.Length - 5);
+                                candidateModels.Add($"ag/{fastModel}");
+                                candidateModels.Add(fastModel);
+                            }
                         }
                     }
                     else
@@ -551,7 +563,7 @@ namespace MatrixExamAI.Desktop.Services
                             {
                                 model = modelAttempt,
                                 temperature = 0.2,
-                                max_tokens = 4096,
+                                max_tokens = 8192,
                                 stream = false,
                                 messages = new object[]
                                 {
