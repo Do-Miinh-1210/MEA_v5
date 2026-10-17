@@ -34,9 +34,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.20"
-TITLE = "MatrixExamAI Pro v5.3.0.20 (AI Chỉnh sửa Hình TikZ hỗ trợ Dán ảnh Vision Multimodal)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.20: Hỗ trợ dán ảnh (Ctrl+V) hoặc kéo thả trực tiếp vào hộp thoại AI Chỉnh sửa Hình TikZ, cho phép AI Vision phân tích đối chiếu trực quan kết hợp mã TikZ hiện tại để chỉnh sửa chính xác nhất; nâng cấp đồng bộ trên cả Desktop App và Word Add-in."
+TAG = "v5.3.0.21"
+TITLE = "MatrixExamAI Pro v5.3.0.21 (AI Chỉnh sửa TikZ bám sát code gốc & Bộ đếm giờ thực)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.21: Tinh chỉnh AI Chỉnh sửa hình TikZ bám sát code gốc không vẽ lại từ đầu, kết hợp đối chiếu ảnh minh họa; bổ sung bộ đếm thời gian thực (live elapsed timer) khi AI chỉnh sửa và tối ưu hình."
 
 def compute_sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest().lower()

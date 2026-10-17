@@ -699,6 +699,24 @@ namespace MatrixExamAI.Desktop.Views
                 return;
             }
 
+            var optSw = Stopwatch.StartNew();
+            TxtDiagramStats.Text = "⏳ Đang tối ưu mã TikZ... (0.0s)";
+
+            var optTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(100)
+            };
+            optTimer.Tick += (s, ev) =>
+            {
+                if (BtnAiOptimize.IsEnabled == false)
+                {
+                    double sec = optSw.Elapsed.TotalSeconds;
+                    TxtDiagramStats.Text = $"⏳ Đang tối ưu mã TikZ... ({sec:F1}s)";
+                    InfoTikzNotification.Title = $"Đang tối ưu mã TikZ ({sec:F1}s)";
+                }
+            };
+            optTimer.Start();
+
             BtnAiOptimize.IsEnabled = false;
             InfoTikzNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Informational;
             InfoTikzNotification.Title = "Đang tối ưu mã TikZ";
@@ -715,8 +733,11 @@ namespace MatrixExamAI.Desktop.Views
                     if (!string.IsNullOrWhiteSpace(clean))
                     {
                         TxtTikzCode.Text = clean;
+                        optTimer.Stop();
+                        optSw.Stop();
+                        TxtDiagramStats.Text = $"✓ Đã tối ưu mã TikZ trong {optSw.Elapsed.TotalSeconds:F1}s. Đang biên dịch hình...";
                         InfoTikzNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
-                        InfoTikzNotification.Title = "Tối ưu hóa hoàn tất";
+                        InfoTikzNotification.Title = $"Tối ưu hóa hoàn tất ({optSw.Elapsed.TotalSeconds:F1}s)";
                         InfoTikzNotification.Message = "Đã tối ưu mã TikZ. Tự động biên dịch lại hình ảnh.";
                         BtnCompile_Click(this, new RoutedEventArgs());
                     }
@@ -736,6 +757,8 @@ namespace MatrixExamAI.Desktop.Views
             }
             finally
             {
+                optTimer.Stop();
+                optSw.Stop();
                 BtnAiOptimize.IsEnabled = true;
             }
         }
@@ -1494,10 +1517,31 @@ namespace MatrixExamAI.Desktop.Views
             _activeTikzCts?.Dispose();
             _activeTikzCts = new System.Threading.CancellationTokenSource();
 
+            var editStopwatch = Stopwatch.StartNew();
+            TxtDiagramStats.Text = "⏳ Đang áp dụng AI chỉnh sửa... (0.0s)";
+
+            var editTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(100)
+            };
+            editTimer.Tick += (s, ev) =>
+            {
+                if (BtnAiEdit.IsEnabled == false)
+                {
+                    double sec = editStopwatch.Elapsed.TotalSeconds;
+                    TxtDiagramStats.Text = $"⏳ Đang áp dụng AI chỉnh sửa... ({sec:F1}s)";
+                    InfoTikzNotification.Title = $"Đang áp dụng chỉnh sửa ({sec:F1}s)";
+                    InfoTikzNotification.Message = imageBytes != null
+                        ? $"AI đang quan sát ảnh minh họa và đối chiếu mã TikZ gốc ({sec:F1}s)..."
+                        : $"AI đang cập nhật mã TikZ gốc theo yêu cầu ({sec:F1}s)...";
+                }
+            };
+            editTimer.Start();
+
             BtnAiEdit.IsEnabled = false;
             BtnStopTikzAction.Visibility = Visibility.Visible;
             InfoTikzNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Informational;
-            InfoTikzNotification.Title = "Đang áp dụng chỉnh sửa";
+            InfoTikzNotification.Title = "Đang áp dụng chỉnh sửa (0.0s)";
             InfoTikzNotification.Message = imageBytes != null
                 ? "AI đang quan sát ảnh minh họa và đối chiếu mã TikZ để cập nhật..."
                 : "AI đang cập nhật hình vẽ theo yêu cầu...";
@@ -1508,10 +1552,13 @@ namespace MatrixExamAI.Desktop.Views
                 var res = await DesktopGeminiFactory.EditTikzAsync(currentCode, editRequest, imageBase64, _activeTikzCts.Token);
                 if (res.Success && !string.IsNullOrWhiteSpace(res.TikzCode))
                 {
+                    editTimer.Stop();
+                    editStopwatch.Stop();
                     TxtTikzCode.Text = res.TikzCode;
+                    TxtDiagramStats.Text = $"✓ Đã chỉnh sửa hoàn tất trong {editStopwatch.Elapsed.TotalSeconds:F1}s. Đang biên dịch hình...";
                     InfoTikzNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
-                    InfoTikzNotification.Title = "Chỉnh sửa hoàn tất";
-                    InfoTikzNotification.Message = "Đã cập nhật mã TikZ theo yêu cầu. Tự động biên dịch lại hình ảnh...";
+                    InfoTikzNotification.Title = $"Chỉnh sửa hoàn tất ({editStopwatch.Elapsed.TotalSeconds:F1}s)";
+                    InfoTikzNotification.Message = "Đã cập nhật mã TikZ từ code gốc và hình ảnh. Tự động biên dịch lại hình ảnh...";
                     BtnCompile_Click(this, new RoutedEventArgs());
                 }
                 else
@@ -1524,7 +1571,9 @@ namespace MatrixExamAI.Desktop.Views
             }
             catch (OperationCanceledException)
             {
-                TxtDiagramStats.Text = "Đã dừng AI chỉnh sửa.";
+                editTimer.Stop();
+                editStopwatch.Stop();
+                TxtDiagramStats.Text = $"Đã dừng AI chỉnh sửa sau {editStopwatch.Elapsed.TotalSeconds:F1}s.";
             }
             catch (Exception ex)
             {
@@ -1532,6 +1581,8 @@ namespace MatrixExamAI.Desktop.Views
             }
             finally
             {
+                editTimer.Stop();
+                editStopwatch.Stop();
                 BtnAiEdit.IsEnabled = true;
                 BtnStopTikzAction.Visibility = Visibility.Collapsed;
             }

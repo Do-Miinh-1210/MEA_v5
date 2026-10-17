@@ -1035,7 +1035,7 @@
     await generateTikzFromAi();
   }
 
-  // Handler: AI Sửa (Nhập yêu cầu bổ sung/sửa đổi, timeout 240s)
+  // Handler: AI Sửa (Nhập yêu cầu bổ sung/sửa đổi hoặc theo ảnh đính kèm, timeout 240s)
   async function handleAiEdit() {
     const currentCode = dom.codeTextarea ? dom.codeTextarea.value.trim() : '';
     if (!currentCode) {
@@ -1043,18 +1043,27 @@
       return;
     }
 
-    const editInstruction = window.prompt(
-      'Yêu cầu AI Chỉnh sửa Hình TikZ:\nNhập yêu cầu cần AI chỉnh sửa (ví dụ: "Đổi màu đồ thị thành xanh", "Thêm điểm M trên BC", "Gắn nhãn độ dài a = 4"):'
-    );
-    if (!editInstruction || !editInstruction.trim()) return;
+    const hasImg = !!state.pastedImageBase64;
+    const promptMsg = hasImg
+      ? '✏️ Yêu cầu AI Chỉnh sửa Hình TikZ (Đã có ảnh đính kèm):\nNhập yêu cầu bổ sung (hoặc bấm OK để AI tự động đối chiếu sửa theo ảnh):'
+      : '✏️ Yêu cầu AI Chỉnh sửa Hình TikZ:\nNhập yêu cầu cần AI chỉnh sửa (Mẹo: Có thể bấm [Dán ảnh] trước để đính kèm hình):';
+
+    let editInstruction = window.prompt(promptMsg);
+    if (editInstruction === null) return;
+    if (!editInstruction.trim() && !hasImg) return;
+    if (!editInstruction.trim() && hasImg) {
+      editInstruction = 'Chỉnh sửa và hoàn thiện mã TikZ khớp chính xác với hình ảnh minh họa được đính kèm.';
+    }
 
     state.isGenerating = true;
     updateActionButtons();
-    tikzProgress.start('✏️ AI đang cập nhật hình vẽ...', editInstruction.trim());
+    tikzProgress.start(hasImg ? '✏️ AI đang quan sát ảnh & cập nhật hình vẽ...' : '✏️ AI đang cập nhật hình vẽ...', editInstruction.trim());
 
     try {
       const res = await window.WordBridge.aiEditTikz(currentCode, editInstruction.trim(), {
-        diagramType: state.selectedDiagramType
+        diagramType: state.selectedDiagramType,
+        imageBase64: state.pastedImageBase64 || null,
+        imageMimeType: state.pastedImageMimeType || 'image/png'
       });
 
       if (res && res.success && res.tikzCode) {

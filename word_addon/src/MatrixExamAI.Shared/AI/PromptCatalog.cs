@@ -259,6 +259,7 @@ Bước 5: Tự kiểm tra đối chiếu (2 chiều) các quy tắc font \norma
 
         /// <summary>
         /// Tạo prompt chỉnh sửa mã TikZ hiện tại theo yêu cầu người dùng và ảnh minh họa tùy chọn.
+        /// Nguyên tắc nghiêm ngặt: Chỉnh sửa trực tiếp từ code gốc, thêm/bớt chi tiết, tuyệt đối KHÔNG vẽ lại từ đầu.
         /// </summary>
         public static string GetEditPrompt(string currentCode, string editRequest, bool hasImage = false)
         {
@@ -266,31 +267,43 @@ Bước 5: Tự kiểm tra đối chiếu (2 chiều) các quy tắc font \norma
                 ? @"══════════════════════════════════════════════════════════════════════════
 HÌNH ẢNH MINH HỌA ĐÍNH KÈM (MULTIMODAL VISION):
 Người dùng đã gửi kèm HÌNH ẢNH MINH HỌA bài toán hoặc hình vẽ cần chỉnh sửa.
-Bạn hãy QUAN SÁT KỸ HÌNH ẢNH đính kèm, đối chiếu trực tiếp với CODE TIKZ HIỆN TẠI và YÊU CẦU CHỈNH SỬA
-để cập nhật mã TikZ sao cho hình vẽ kết quả khớp chuẩn xác nhất với hình ảnh và yêu cầu đã nêu.
+NHIỆM VỤ CỦA BẠN:
+1. QUAN SÁT KỸ HÌNH ẢNH đính kèm và ĐỐI CHIẾU với CODE TIKZ GỐC dưới đây.
+2. Giữ nguyên toàn bộ các phần trong CODE TIKZ GỐC đã khớp đúng với hình ảnh.
+3. THÊM BỚT hoặc ĐIỀU CHỈNH các đối tượng (đường vẽ, nhãn điểm, góc, đường gióng, nét đứt/liền, màu sắc, bóng mờ...) trong CODE TIKZ GỐC để khớp hoàn hảo với hình ảnh và yêu cầu của người dùng.
+4. TUYỆT ĐỐI KHÔNG TỰ Ý BỎ HẾT ĐI VẼ LẠI TỪ ĐẦU. Hãy kế thừa nguyên vẹn phong cách, tên biến (a, b, h, r...), tên đỉnh (A, B, C...) trong code gốc!
 ══════════════════════════════════════════════════════════════════════════" + Environment.NewLine
-                : string.Empty;
+                : @"══════════════════════════════════════════════════════════════════════════
+NHIỆM VỤ CHỈNH SỬA:
+Dựa trực tiếp trên CODE TIKZ GỐC dưới đây, chỉ THÊM, BỚT hoặc SỬA các dòng lệnh theo đúng YÊU CẦU CHỈNH SỬA của người dùng.
+TUYỆT ĐỐI KHÔNG vẽ lại từ đầu, bảo tồn nguyên vẹn các phần còn lại!
+══════════════════════════════════════════════════════════════════════════" + Environment.NewLine;
 
-            return $@"{GetSystemPrompt()}
+            return $@"Bạn là Trợ lý AI chuyên gia CHỈNH SỬA MÃ TIKZ TOÁN HỌC (Chuẩn Thầy Đỗ Minh - DoMinhMath).
 
 {imageNotice}══════════════════════════════════════════════════════════════════════════
-CODE TIKZ HIỆN TẠI:
+CODE TIKZ GỐC HIỆN TẠI (NỀN TẢNG BẮT BUỘC ĐỂ SỬA):
 ══════════════════════════════════════════════════════════════════════════
 {currentCode.Trim()}
 
 ══════════════════════════════════════════════════════════════════════════
-YÊU CẦU CHỈNH SỬA:
+YÊU CẦU CHỈNH SỬA TỪ NGƯỜI DÙNG:
 ══════════════════════════════════════════════════════════════════════════
 {editRequest.Trim()}
 
 ══════════════════════════════════════════════════════════════════════════
-QUY TẮC CHỈNH SỬA:
-1. BẢO TỒN NGUYÊN TRẠNG các phần không liên quan; chỉ sửa hoặc bổ sung phần được yêu cầu hoặc theo ảnh đính kèm.
-2. Áp dụng chuẩn Thầy Đỗ Minh (declare function, \normalsize, shift góc cho nhãn, không line cap=round).
-3. Đảm bảo toàn bộ quan hệ hình học (vuông góc, song song, tiếp xúc, tỉ lệ) đúng tuyệt đối.
-4. Trả về toàn bộ code TikZ hoàn chỉnh từ \begin{{tikzpicture}} đến \end{{tikzpicture}}.
-5. KHÔNG kèm \documentclass / \usepackage / \begin{{document}}.
-6. CHỈ TRẢ VỀ CODE TIKZ THUẦN, KHÔNG GIẢI THÍCH.
+QUY TẮC BẮT BUỘC:
+1. CHỈNH SỬA TỪNG PHẦN: Chỉ chỉnh sửa hoặc thêm bớt các lệnh liên quan đến yêu cầu hoặc ảnh đính kèm. Giữ nguyên 100% các phần không yêu cầu thay đổi.
+2. BẢO TỒN CẤU TRÚC: Giữ nguyên các khai báo biến declare function={{...}}, hệ trục tọa độ, các điểm và phong cách sẵn có trong code gốc.
+3. QUY TẮC PHONG CÁCH THẦY ĐỖ MINH:
+   - every node/.style={{font=\normalsize}}
+   - Nhãn điểm trong \foreach dùng shift={{(\goc:9pt)}}
+   - Tuyệt đối KHÔNG dùng line cap=round
+   - Tên đỉnh và ký hiệu toán học đặt trong $...$
+4. ĐẦU RA:
+   - Trả về toàn bộ code TikZ hoàn chỉnh từ \begin{{tikzpicture}} đến \end{{tikzpicture}}.
+   - KHÔNG bọc trong markdown code blocks (không dùng ```latex).
+   - KHÔNG kèm bất kỳ lời dẫn hay giải thích nào.
 ══════════════════════════════════════════════════════════════════════════".Trim();
         }
 
