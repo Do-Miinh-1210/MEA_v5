@@ -953,9 +953,37 @@ namespace MatrixExamAI.Desktop.Views
         private Point _lastMousePos;
         private string? _lastCompileError;
 
+        private double GetMinDiagramZoom()
+        {
+            if (ImgDiagramPreview.Source is BitmapSource bs && bs.PixelWidth > 0 && bs.PixelHeight > 0 && ViewportDiagramContainer != null && ViewportDiagramContainer.ActualWidth > 0 && ViewportDiagramContainer.ActualHeight > 0)
+            {
+                double imgW = bs.Width > 0 ? bs.Width : bs.PixelWidth;
+                double imgH = bs.Height > 0 ? bs.Height : bs.PixelHeight;
+                double availW = Math.Max(50, ViewportDiagramContainer.ActualWidth - 32);
+                double availH = Math.Max(50, ViewportDiagramContainer.ActualHeight - 32);
+                double fit = Math.Min(availW / imgW, availH / imgH) * 0.95;
+                return Math.Clamp(Math.Min(fit, 1.0), 0.05, 1.0);
+            }
+            return 1.0;
+        }
+
+        private void UpdateDiagramZoomState()
+        {
+            double minZoom = GetMinDiagramZoom();
+            if (BtnZoomOut != null)
+            {
+                BtnZoomOut.IsEnabled = _currentZoom > minZoom + 0.005;
+            }
+            if (TxtZoomLevel != null)
+            {
+                TxtZoomLevel.Text = $"Thu phóng: {_currentZoom * 100:0}%";
+            }
+        }
+
         private void CenterDiagramContent(double zoom)
         {
-            _currentZoom = Math.Clamp(zoom, 0.05, 5.0);
+            double minZoom = GetMinDiagramZoom();
+            _currentZoom = Math.Clamp(zoom, minZoom, 15.0);
             if (ImgScaleTransform != null)
             {
                 ImgScaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, null);
@@ -975,16 +1003,20 @@ namespace MatrixExamAI.Desktop.Views
                 ImgTranslateTransform.Y = (canvasH / 2.0) * (1.0 - _currentZoom);
             }
 
-            if (TxtZoomLevel != null)
-            {
-                TxtZoomLevel.Text = $"Thu phóng: {_currentZoom * 100:0}%";
-            }
+            UpdateDiagramZoomState();
         }
 
         private void SetDiagramZoomAt(double targetZoom, Point focalPoint)
         {
-            double newZoom = Math.Clamp(targetZoom, 0.05, 5.0);
+            double minZoom = GetMinDiagramZoom();
+            double newZoom = Math.Clamp(targetZoom, minZoom, 15.0);
             if (Math.Abs(newZoom - _currentZoom) < 0.0001) return;
+
+            if (Math.Abs(newZoom - minZoom) < 0.005)
+            {
+                CenterDiagramContent(minZoom);
+                return;
+            }
 
             if (ImgTranslateTransform != null && ViewportDiagramContainer != null && CanvasDiagramContainer != null)
             {
@@ -1010,10 +1042,7 @@ namespace MatrixExamAI.Desktop.Views
                 ImgScaleTransform.ScaleY = _currentZoom;
             }
 
-            if (TxtZoomLevel != null)
-            {
-                TxtZoomLevel.Text = $"Thu phóng: {_currentZoom * 100:0}%";
-            }
+            UpdateDiagramZoomState();
         }
 
         private void SetZoom(double zoom) => CenterDiagramContent(zoom);
@@ -1026,32 +1055,25 @@ namespace MatrixExamAI.Desktop.Views
 
         private void BtnZoomOut_Click(object sender, RoutedEventArgs e)
         {
+            double minZoom = GetMinDiagramZoom();
+            if (_currentZoom <= minZoom + 0.001) return;
             Point center = new Point(ViewportDiagramContainer.ActualWidth / 2.0, ViewportDiagramContainer.ActualHeight / 2.0);
-            SetDiagramZoomAt(_currentZoom / 1.25, center);
+            SetDiagramZoomAt(Math.Max(minZoom, _currentZoom / 1.25), center);
         }
 
-        private void BtnZoomReset_Click(object sender, RoutedEventArgs e) => CenterDiagramContent(1.0);
+        private void BtnZoomReset_Click(object sender, RoutedEventArgs e) => CenterDiagramContent(Math.Max(1.0, GetMinDiagramZoom()));
 
-        private void BtnZoomFit_Click(object sender, RoutedEventArgs e)
-        {
-            if (ImgDiagramPreview.Source is BitmapSource bs && bs.PixelWidth > 0 && bs.PixelHeight > 0 && ViewportDiagramContainer != null)
-            {
-                double imgW = bs.Width > 0 ? bs.Width : bs.PixelWidth;
-                double imgH = bs.Height > 0 ? bs.Height : bs.PixelHeight;
-                double availW = Math.Max(50, ViewportDiagramContainer.ActualWidth - 32);
-                double availH = Math.Max(50, ViewportDiagramContainer.ActualHeight - 32);
-                double fit = Math.Min(availW / imgW, availH / imgH) * 0.95;
-                if (fit >= 0.05 && fit <= 5.0) CenterDiagramContent(fit);
-                else CenterDiagramContent(1.0);
-            }
-            else
-            {
-                CenterDiagramContent(1.0);
-            }
-        }
+        private void BtnZoomFit_Click(object sender, RoutedEventArgs e) => CenterDiagramContent(GetMinDiagramZoom());
 
         private void ViewportDiagramContainer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
+            double minZoom = GetMinDiagramZoom();
+            if (e.Delta < 0 && _currentZoom <= minZoom + 0.001)
+            {
+                e.Handled = true;
+                return;
+            }
+
             double factor = e.Delta > 0 ? 1.15 : (1.0 / 1.15);
             Point mousePos = e.GetPosition(ViewportDiagramContainer);
             SetDiagramZoomAt(_currentZoom * factor, mousePos);
