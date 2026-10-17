@@ -27,9 +27,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.11"
-TITLE = "MatrixExamAI Pro v5.3.0.11 (Focal-Point Zoom & Centered Viewport Canvas)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.11: Nâng cấp hoàn chỉnh cơ chế Pan/Zoom cho khung xem hình TikZ chi tiết và phân hệ TikzView; thu phóng chuẩn xác tại vị trí con trỏ chuột (Focal Point Zoom), ảnh luôn tự động căn giữa khung nhìn, loại bỏ triệt để hiện tượng lệch vào một góc màn hình."
+TAG = "v5.3.0.12"
+TITLE = "MatrixExamAI Pro v5.3.0.12 (Fix TikZ Comma Decimal LaTeX Syntax & Invariant Culture)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.12: Chuẩn hóa triệt để lỗi biên dịch hình vẽ TikZ do dấu phẩy thập phân kiểu tiếng Việt (vi-VN); áp dụng InvariantCulture cho toàn bộ các mô hình hình học trong kho tạo hình TikzShapeBuilder; tự động chuyển đổi dấu phẩy thành dấu chấm trong bộ tiền xử lý TeX StandaloneLatexBuilder."
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)

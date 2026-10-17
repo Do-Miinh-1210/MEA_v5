@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using MatrixExamAI.Shared.AI;
 
 namespace MatrixExamAI.Shared.Tikz
@@ -22,6 +23,13 @@ namespace MatrixExamAI.Shared.Tikz
             {
                 code = (tikzCode ?? string.Empty).Trim();
             }
+
+            // Tự động chuẩn hóa dấu phẩy thập phân kiểu tiếng Việt/châu Âu thành dấu chấm chuẩn LaTeX TeX
+            // Ví dụ: \def\R{1,25} -> \def\R{1.25}, 0,75cm -> 0.75cm, scale=1,1 -> scale=1.1, circle (1,25) -> circle (1.25)
+            code = Regex.Replace(code, @"(?<=\\def\\[a-zA-Z]+\{)(\d+),(\d+)(?=\})", "$1.$2");
+            code = Regex.Replace(code, @"(\d+),(\d+)\s*(cm|mm|pt|in|ex|em)", "$1.$2$3");
+            code = Regex.Replace(code, @"(?<=\b[a-zA-Z_]+\s*=\s*)(\d+),(\d+)(?=[,;\}\]])", "$1.$2");
+            code = Regex.Replace(code, @"circle\s*\(\s*(\d+),(\d+)\s*\)", "circle ($1.$2)");
 
             var packages = new List<string>
             {

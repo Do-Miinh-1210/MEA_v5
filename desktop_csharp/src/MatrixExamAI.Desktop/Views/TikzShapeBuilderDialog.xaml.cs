@@ -582,22 +582,31 @@ namespace MatrixExamAI.Desktop.Views
 
         public static string GenerateTikzCodeForShape(string tag, string p1, string p2, string p3, string p4, bool opt, string color, bool fill)
         {
-            var sb = new StringBuilder();
-            double.TryParse(p1, NumberStyles.Any, CultureInfo.InvariantCulture, out double v1);
-            double.TryParse(p2, NumberStyles.Any, CultureInfo.InvariantCulture, out double v2);
-            double.TryParse(p3, NumberStyles.Any, CultureInfo.InvariantCulture, out double v3);
-            if (v1 <= 0) v1 = 4;
-            if (v2 <= 0) v2 = 3;
-
-            string drawOpt = color switch
+            var prevCulture = Thread.CurrentThread.CurrentCulture;
+            var prevUiCulture = Thread.CurrentThread.CurrentUICulture;
+            try
             {
-                "red" => fill ? "thick, red, fill=red!15" : "thick, red",
-                "teal" => fill ? "thick, teal, fill=teal!15" : "thick, teal",
-                "orange" => fill ? "thick, orange, fill=orange!15" : "thick, orange",
-                "purple" => fill ? "thick, purple, fill=purple!15" : "thick, purple",
-                "black" => fill ? "thick, black, fill=gray!15" : "thick, black",
-                _ => fill ? "thick, blue, fill=blue!15" : "thick, blue"
-            };
+                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+                CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+                CultureInfo.CurrentUICulture = CultureInfo.InvariantCulture;
+
+                var sb = new StringBuilder();
+                double.TryParse(p1?.Trim().Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture, out double v1);
+                double.TryParse(p2?.Trim().Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture, out double v2);
+                double.TryParse(p3?.Trim().Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture, out double v3);
+                if (v1 <= 0) v1 = 4;
+                if (v2 <= 0) v2 = 3;
+
+                string drawOpt = color switch
+                {
+                    "red" => fill ? "thick, red, fill=red!15" : "thick, red",
+                    "teal" => fill ? "thick, teal, fill=teal!15" : "thick, teal",
+                    "orange" => fill ? "thick, orange, fill=orange!15" : "thick, orange",
+                    "purple" => fill ? "thick, purple, fill=purple!15" : "thick, purple",
+                    "black" => fill ? "thick, black, fill=gray!15" : "thick, black",
+                    _ => fill ? "thick, blue, fill=blue!15" : "thick, blue"
+                };
 
             switch (tag)
             {
@@ -1295,8 +1304,24 @@ namespace MatrixExamAI.Desktop.Views
                     break;
             }
 
-            string raw = sb.ToString();
-            return Regex.Replace(raw, @"\\\\([a-zA-Z]+|\{|\})", @"\$1");
+                string raw = sb.ToString();
+                raw = Regex.Replace(raw, @"\\\\([a-zA-Z]+|\{|\})", @"\$1");
+
+                // Đảm bảo không bao giờ tồn tại dấu phẩy thập phân kiểu vi-VN (1,25 -> 1.25)
+                raw = Regex.Replace(raw, @"(?<=\\def\\[a-zA-Z]+\{)(\d+),(\d+)(?=\})", "$1.$2");
+                raw = Regex.Replace(raw, @"(\d+),(\d+)\s*(cm|mm|pt|in|ex|em)", "$1.$2$3");
+                raw = Regex.Replace(raw, @"(?<=\b[a-zA-Z_]+\s*=\s*)(\d+),(\d+)(?=[,;\}\]])", "$1.$2");
+                raw = Regex.Replace(raw, @"circle\s*\(\s*(\d+),(\d+)\s*\)", "circle ($1.$2)");
+
+                return raw;
+            }
+            finally
+            {
+                Thread.CurrentThread.CurrentCulture = prevCulture;
+                Thread.CurrentThread.CurrentUICulture = prevUiCulture;
+                CultureInfo.CurrentCulture = prevCulture;
+                CultureInfo.CurrentUICulture = prevUiCulture;
+            }
         }
 
         private void BtnPreviewCode_Click(object sender, RoutedEventArgs e)
