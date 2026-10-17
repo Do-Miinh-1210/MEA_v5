@@ -206,24 +206,15 @@ def create_release_and_upload():
     upload_url_template = data["upload_url"].split("{")[0]
     # 3. List of files to upload
     files_to_upload = []
-    # For v5.3.0.15: Transition to ensure all v5.3.0.14 clients get ICSharpCode.SharpZipLib.dll safely
-    # without Delta Patcher assembly resolution errors
+    if delta_zip_path.exists():
+        files_to_upload.append(delta_zip_path)
     if patch_zip_path.exists():
         files_to_upload.append(patch_zip_path)
     if installer_path.exists():
         files_to_upload.append(installer_path)
 
-    # Delete existing assets if they have matching names or if obsolete
+    # Delete existing assets if they have matching names
     existing_assets = {a["name"]: a["id"] for a in data.get("assets", [])}
-    if "MatrixExamAI_Delta.zip" in existing_assets:
-        asset_id = existing_assets["MatrixExamAI_Delta.zip"]
-        print(f"Deleting obsolete asset 'MatrixExamAI_Delta.zip' (ID: {asset_id})...")
-        del_req = urllib.request.Request(f"https://api.github.com/repos/{REPO}/releases/assets/{asset_id}", headers=headers, method="DELETE")
-        try:
-            urllib.request.urlopen(del_req)
-            print("[OK] Deleted obsolete asset: MatrixExamAI_Delta.zip")
-        except Exception as ex:
-            print(f"[WARN] Failed to delete old asset MatrixExamAI_Delta.zip: {ex}")
 
     for file_path in files_to_upload:
         asset_name = file_path.name
