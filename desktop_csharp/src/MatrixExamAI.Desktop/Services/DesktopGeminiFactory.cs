@@ -372,6 +372,35 @@ namespace MatrixExamAI.Desktop.Services
         }
 
         /// <summary>
+        /// Sinh mã mô hình mô phỏng HTML 3D / Three.js / KaTeX từ mô tả hoặc ảnh bài toán.
+        /// </summary>
+        public static async Task<AiExecutionResult> GenerateHtmlModelAsync(string prompt, string category, string? imageBase64 = null, CancellationToken ct = default)
+        {
+            bool hasImage = !string.IsNullOrEmpty(imageBase64);
+            string fullPrompt = PromptCatalog.HtmlModelSystemPrompt + "\n\n" + PromptCatalog.GetHtmlModelPrompt(prompt, category, hasImage);
+            return await ExecutePromptAsync(fullPrompt, imageBase64, "image/png", ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Chỉnh sửa mô hình HTML 3D theo yêu cầu người dùng và ảnh minh họa.
+        /// </summary>
+        public static async Task<AiExecutionResult> EditHtmlModelAsync(string currentHtml, string editRequest, string? imageBase64 = null, CancellationToken ct = default)
+        {
+            bool hasImage = !string.IsNullOrEmpty(imageBase64);
+            string fullPrompt = PromptCatalog.HtmlModelSystemPrompt + "\n\n" + PromptCatalog.GetHtmlModelEditPrompt(currentHtml, editRequest, hasImage);
+            return await ExecutePromptAsync(fullPrompt, imageBase64, "image/png", ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Tối ưu hóa mã nguồn mô hình HTML 3D / Three.js / KaTeX.
+        /// </summary>
+        public static async Task<AiExecutionResult> OptimizeHtmlModelAsync(string currentHtml, CancellationToken ct = default)
+        {
+            string fullPrompt = PromptCatalog.HtmlModelSystemPrompt + "\n\n" + PromptCatalog.GetHtmlModelOptimizePrompt(currentHtml);
+            return await ExecutePromptAsync(fullPrompt, null, "image/png", ct).ConfigureAwait(false);
+        }
+
+        /// <summary>
         /// Thực thi truy vấn AI văn bản và Vision hỗ trợ đa nhà cung cấp với Multi-Key Rotation và Fallback.
         /// </summary>
         public static async Task<AiExecutionResult> ExecutePromptAsync(

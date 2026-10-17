@@ -31,7 +31,7 @@
                         <TextBlock Text="Bản quyền PRO" FontSize="10" Foreground="#0D9488" FontWeight="SemiBold" />
                     </Border>
                     <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="6,0,0,0" VerticalAlignment="Center">
-                        <TextBlock x:Name="TxtAppVersionTop" Text="v5.3.0.22" FontSize="10" Foreground="#38BDF8" FontWeight="SemiBold" />
+                        <TextBlock x:Name="TxtAppVersionTop" Text="v5.3.0.23" FontSize="10" Foreground="#38BDF8" FontWeight="SemiBold" />
                     </Border>
                 </StackPanel>
             </ui:TitleBar.Header>
@@ -71,6 +71,7 @@
                     <ui:NavigationViewItem x:Name="NavItemConvert" Content="Convert" Tag="convert" Icon="{ui:SymbolIcon ArrowSync24}" Click="NavItem_Click" ToolTip="Chuyển đổi &amp; Xuất Word (Ctrl + 2)" />
                     <ui:NavigationViewItem x:Name="NavItemMatrix" Content="Soạn đề theo Ma trận" Tag="matrix" Icon="{ui:SymbolIcon Sparkle24}" Click="NavItem_Click" ToolTip="Soạn đề theo ma trận BGD (Ctrl + 3)" />
                     <ui:NavigationViewItem x:Name="NavItemTikz" Content="AI Vẽ hình toán TikZ" Tag="tikz" Icon="{ui:SymbolIcon Shapes24}" Click="NavItem_Click" ToolTip="Vẽ hình TikZ &amp; Đồ thị (Ctrl + 4)" />
+                    <ui:NavigationViewItem x:Name="NavItemHtmlModel" Content="Mô hình Toán học HTML" Tag="html_model" Icon="{ui:SymbolIcon Cube24}" Click="NavItem_Click" ToolTip="Mô hình Toán học &amp; Khoa học 3D HTML (Ctrl + 0)" />
                     <ui:NavigationViewItem x:Name="NavItemShuffle" Content="Trộn đề &amp; Phiếu OMR" Tag="shuffle" Icon="{ui:SymbolIcon ArrowShuffle24}" Click="NavItem_Click" ToolTip="Trộn mã đề thi (Ctrl + 5)" />
                     <ui:NavigationViewItem x:Name="NavItemBank" Content="Ngân hàng câu hỏi" Tag="bank" Icon="{ui:SymbolIcon Archive24}" Click="NavItem_Click" ToolTip="Ngân hàng câu hỏi (Ctrl + 6)" />
                     <ui:NavigationViewItem x:Name="NavItemAiUsage" Content="Thống kê AI" Tag="ai_usage" Icon="{ui:SymbolIcon DataUsage24}" Click="NavItem_Click" ToolTip="Thống kê lưu lượng &amp; quota AI (Ctrl + 7)" />
@@ -174,7 +175,7 @@
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <Border Background="#1E293B" CornerRadius="4" Padding="6,1" Margin="0,0,6,0">
-                        <TextBlock x:Name="TxtAppVersionBottom" Text="v5.3.0.22" FontSize="10.5" Foreground="#38BDF8" FontWeight="SemiBold" />
+                        <TextBlock x:Name="TxtAppVersionBottom" Text="v5.3.0.23" FontSize="10.5" Foreground="#38BDF8" FontWeight="SemiBold" />
                     </Border>
                     <TextBlock Text=" | " FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,0,6,0" />
                     <TextBlock Text="RAM: ~42MB" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />

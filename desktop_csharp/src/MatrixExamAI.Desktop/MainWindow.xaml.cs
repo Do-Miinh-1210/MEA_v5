@@ -13,6 +13,7 @@ namespace MatrixExamAI.Desktop
         private readonly DashboardView _dashboardView;
         private readonly ConvertView _convertView;
         private readonly TikzView _tikzView;
+        private readonly HtmlModelView _htmlModelView;
         private readonly ExamMatrixView _examMatrixView;
         private readonly ShuffleView _shuffleView;
         private readonly QuestionBankView _questionBankView;
@@ -23,6 +24,7 @@ namespace MatrixExamAI.Desktop
         public DashboardView DashboardView => _dashboardView;
         public ConvertView ConvertView => _convertView;
         public TikzView TikzView => _tikzView;
+        public HtmlModelView HtmlModelView => _htmlModelView;
         public ExamMatrixView ExamMatrixView => _examMatrixView;
         public ShuffleView ShuffleView => _shuffleView;
         public QuestionBankView QuestionBankView => _questionBankView;
@@ -41,6 +43,7 @@ namespace MatrixExamAI.Desktop
             _dashboardView = new DashboardView();
             _convertView = new ConvertView();
             _tikzView = new TikzView();
+            _htmlModelView = new HtmlModelView();
             _examMatrixView = new ExamMatrixView();
             _shuffleView = new ShuffleView();
             _questionBankView = new QuestionBankView();
@@ -111,6 +114,7 @@ namespace MatrixExamAI.Desktop
             NavItemConvert.IsActive = (NavItemConvert == activeItem);
             NavItemMatrix.IsActive = (NavItemMatrix == activeItem);
             NavItemTikz.IsActive = (NavItemTikz == activeItem);
+            NavItemHtmlModel.IsActive = (NavItemHtmlModel == activeItem);
             NavItemShuffle.IsActive = (NavItemShuffle == activeItem);
             NavItemBank.IsActive = (NavItemBank == activeItem);
             NavItemAiUsage.IsActive = (NavItemAiUsage == activeItem);
@@ -138,6 +142,10 @@ namespace MatrixExamAI.Desktop
                 case "tikz":
                     MainContentFrame.Content = _tikzView;
                     SetActiveItem(NavItemTikz);
+                    break;
+                case "html_model":
+                    MainContentFrame.Content = _htmlModelView;
+                    SetActiveItem(NavItemHtmlModel);
                     break;
                 case "shuffle":
                     MainContentFrame.Content = _shuffleView;
@@ -451,6 +459,11 @@ namespace MatrixExamAI.Desktop
                     case Key.NumPad9:
                         NavigateTo("ai_usage");
                         return true;
+                    case Key.D0:
+                    case Key.NumPad0:
+                    case Key.M:
+                        NavigateTo("html_model");
+                        return true;
                 }
             }
 
@@ -485,6 +498,9 @@ namespace MatrixExamAI.Desktop
                     case "tikz":
                         TriggerButtonClick(_tikzView.BtnSavePng);
                         return true;
+                    case "html_model":
+                        TriggerButtonClick(_htmlModelView.BtnSaveHtml);
+                        return true;
                     default:
                         NavigateTo("convert");
                         TriggerButtonClick(_convertView.BtnExportWord);
@@ -504,6 +520,9 @@ namespace MatrixExamAI.Desktop
                         return true;
                     case "tikz":
                         TriggerButtonClick(_tikzView.BtnCompile);
+                        return true;
+                    case "html_model":
+                        TriggerButtonClick(_htmlModelView.BtnRun);
                         return true;
                     case "matrix":
                         TriggerButtonClick(_examMatrixView.BtnAiGenerateExam);

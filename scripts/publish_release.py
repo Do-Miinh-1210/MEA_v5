@@ -34,9 +34,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.22"
-TITLE = "MatrixExamAI Pro v5.3.0.22 (Nâng cấp Kỹ năng Vẽ hình TikZ 3D & Mô hình Khối Tròn Xoay Chuyên sâu)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.22: Nâng cấp toàn diện phân hệ TikZ 3D và các mô hình khối tròn xoay (hình nón, hình trụ, mặt cầu, nón cụt, chỏm cầu, thiết diện qua trục/song song trục, mặt phẳng cắt mặt cầu, khối tròn xoay lồng nhau và khối tròn xoay tích phân). Chuẩn hóa góc nhìn elip đáy (nửa sau nét đứt, nửa trước nét liền), bổ sung đổ bóng 3D chân thực trên cả Desktop App và Word Add-in."
+TAG = "v5.3.0.23"
+TITLE = "MatrixExamAI Pro v5.3.0.23 (Ra mắt Tab Mô hình Toán học & Khoa học 3D HTML Tương tác Trực quan)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.23: Bổ sung phân hệ hoàn toàn mới 'Mô hình Toán học HTML' mô phỏng 3D tương tác thời gian thực bằng Three.js, Tailwind CSS, KaTeX. Tích hợp trọn bộ thư viện mẫu 3D chuẩn xác (khối tròn xoay ứng dụng tích phân theo đề bài thi, mặt cầu cắt thiết diện, hình chóp, mặt cong giải tích Oxyz, con lắc vật lý, phân tử hóa học, chuỗi xoắn kép ADN). Cung cấp đầy đủ công cụ AI tạo mã, AI chỉnh sửa ngữ cảnh, dán ảnh đính kèm (Vision), lọc mã, chạy thử nghiệm WebView2 và mở trực tiếp trên trình duyệt Web."
 
 def compute_sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest().lower()
@@ -188,7 +188,13 @@ def build_delta_zip(publish_dir: Path, output_delta_zip: Path, cache_dir: Path):
     for fname in files_to_pack:
         src = publish_dir / fname
         if src.exists():
-            shutil.copy2(src, last_pub / fname)
+            dst = last_pub / fname
+            try:
+                if dst.exists():
+                    dst.unlink(missing_ok=True)
+                dst.write_bytes(src.read_bytes())
+            except Exception as e:
+                print(f"[WARN] Cache update for {fname} skipped: {e}")
 
     return True
 

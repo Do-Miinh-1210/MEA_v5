@@ -20,9 +20,9 @@
     <UseWPF>true</UseWPF>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
-    <Version>5.3.0.22</Version>
-    <AssemblyVersion>5.3.0.22</AssemblyVersion>
-    <FileVersion>5.3.0.22</FileVersion>
+    <Version>5.3.0.23</Version>
+    <AssemblyVersion>5.3.0.23</AssemblyVersion>
+    <FileVersion>5.3.0.23</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

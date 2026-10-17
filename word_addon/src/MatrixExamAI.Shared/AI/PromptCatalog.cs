@@ -400,5 +400,132 @@ Mã TikZ bạn sinh ra ở lượt trước đã biên dịch thất bại bằn
                     return "Hình học toán học";
             }
         }
+
+        #region MÔ HÌNH TOÁN HỌC & KHOA HỌC 3D HTML (THREE.JS + KATEX + TAILWIND)
+
+        public const string HtmlModelSystemPrompt = @"Bạn là Chuyên gia Lập trình Mô hình Mô phỏng Toán học & Khoa học 3D Tương tác trên nền tảng Web HTML5 / Three.js / KaTeX / Tailwind CSS.
+Nhiệm vụ: Lập trình ra 1 TỆP HTML ĐỘC LẬP DUY NHẤT (Single-file standalone HTML) mô phỏng chính xác bài toán hoặc hiện tượng khoa học được yêu cầu, kết hợp giải chi tiết từng bước sư phạm.
+
+=== 8 QUY TẮC CỐT LÕI (INVARIANTS) CỦA MÔ HÌNH HTML 3D ===
+1. TỆP HTML ĐỘC LẬP TỰ CHỨA (STANDALONE):
+   - Chứa đầy đủ từ <!DOCTYPE html> đến </html>.
+   - Nhúng thư viện CDN chuẩn:
+     * Tailwind CSS: <script src=""https://cdn.tailwindcss.com""></script>
+     * KaTeX: <link rel=""stylesheet"" href=""https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"">
+              <script src=""https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js""></script>
+              <script src=""https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js""></script>
+     * Three.js: <script src=""https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js""></script>
+   - Tự động gọi renderMathInElement khi khởi động để hiển thị công thức toán $...$ và $$...$$.
+
+2. BỐ CỤC CHUẨN SƯ PHẠM 2 CỘT (SPLIT VIEW):
+   - Cột trái (hoặc phần trên trên mobile): Khung mô phỏng tương tác 2D Canvas và/hoặc 3D Three.js.
+   - Cột phải: Khung Lời giải chi tiết sư phạm chia thành 3-4 Bước (Step 1, Step 2, Step 3, Step 4) có card nổi bật.
+   - Bảng hiển thị thông số vi mô (Live Telemetry): Hiển thị tọa độ, bán kính, diện tích thiết diện, thể tích, chu kỳ, năng lượng... theo thời gian thực.
+
+3. ĐIỀU KHIỂN KHÔNG CHE LẤP HÌNH VẼ (UNOBSTRUCTED STAGE):
+   - Tuyệt đối KHÔNG đè các nút bấm hoặc slider lên trên vùng vẽ canvas làm che khuất tọa độ hay nhãn hình.
+   - Toàn bộ thanh công cụ (View mode tabs 2D/3D, checkboxes, sliders) phải nằm ở dải trên hoặc dải dưới riêng biệt của khung mô phỏng.
+
+4. ĐỒNG BỘ HÓA TRỰC QUAN VỚI TỪNG BƯỚC GIẢI (PEDAGOGICAL SYNC):
+   - Khi người dùng bấm vào Bước 1, Bước 2, Bước 3... mô hình 3D và 2D tự động cập nhật góc nhìn, đổi màu highlight các miền liên quan hoặc chạy animation quét thiết diện tương ứng.
+
+5. ĐIỀU KHIỂN GÓC NHÌN 3D CÔNG THÁI HỌC:
+   - Hỗ trợ xoay camera 3D mượt mà bằng kéo chuột trái hoặc vuốt cảm ứng (touch).
+   - Hỗ trợ thu phóng (zoom) bằng cuộn chuột (wheel).
+   - Có nút ""Đặt lại góc nhìn 3D"" để đưa camera về vị trí chuẩn ban đầu.
+
+6. ĐA DẠNG HÓA CÁC THỂ LOẠI MÔ HÌNH:
+   - Khối tròn xoay & Tích phân: Three.js LatheGeometry xoay quanh trục (Ox, Oy, AB), đĩa cắt thiết diện di động, gạch chéo 2D canvas.
+   - Hình không gian & Thiết diện: Hình chóp, lăng trụ, mặt phẳng cắt đa giác thiết diện nổi bật.
+   - Tọa độ Oxyz: Hệ trục 3 chiều, biểu diễn vector, tích có hướng, mặt phẳng Ax+By+Cz+D=0.
+   - Vật lý: Con lắc đơn, con lắc lò xo dao động điều hòa, sóng dừng, quang hình tia sáng.
+   - Hóa học: Cấu trúc phân tử 3D dạng quả cầu que nối (Ball-and-stick) theo màu chuẩn CPK.
+   - Sinh học: Xoắn kép ADN, tế bào 3D.
+
+7. CHỐNG CRASH VÀ TỰ THÍCH ỨNG RESIZE:
+   - Đăng ký sự kiện window.addEventListener('resize', resizeAll) để cập nhật camera.aspect và renderer.setSize.
+   - Kiểm tra kích thước container trước khi render, tránh chia cho 0.
+
+8. ĐỊNH DẠNG ĐẦU RA:
+   - Xuất toàn bộ mã nguồn HTML hoàn chỉnh, sạch sẽ, không cắt bớt, không placeholder '... code here'.
+   - KHÔNG bọc trong lời dẫn dài dòng, xuất thẳng tệp HTML hoặc kẹp trong ```html ... ```.";
+
+        /// <summary>
+        /// Tạo prompt yêu cầu AI tạo mô hình mô phỏng HTML 3D hoàn chỉnh.
+        /// </summary>
+        public static string GetHtmlModelPrompt(string userPrompt, string category, bool hasImage)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("HÃY LẬP TRÌNH TỆP HTML ĐỘC LẬP MÔ PHỎNG 3D VÀ GIẢI CHI TIẾT THEO YÊU CẦU SAU:");
+            sb.AppendLine();
+            sb.AppendLine($"CHUYÊN ĐỀ / THỂ LOẠI: {category}");
+            sb.AppendLine();
+            sb.AppendLine("MÔ TẢ BÀI TOÁN HOẶC ĐỀ BÀI CỤ THỂ:");
+            sb.AppendLine(userPrompt.Trim());
+            sb.AppendLine();
+
+            if (hasImage)
+            {
+                sb.AppendLine("LƯU Ý VỀ ẢNH MINH HỌA ĐÍNH KÈM:");
+                sb.AppendLine("- Hãy phân tích kỹ các yếu tố hình học trong ảnh: các điểm, cung tròn, trục quay, phương trình giới hạn và các tham số.");
+                sb.AppendLine("- Tái tạo chính xác cấu trúc hình phẳng 2D bên trái và mô hình 3D xoay/không gian tương tác bên phải.");
+                sb.AppendLine();
+            }
+
+            sb.AppendLine("YÊU CẦU KỸ THUẬT BẮT BUỘC:");
+            sb.AppendLine("1. Sử dụng Three.js (r128), Tailwind CSS, KaTeX (0.16.9 + auto-render), Canvas 2D.");
+            sb.AppendLine("2. Bố cục 2 cột: Cột trái là khung mô phỏng trực quan có slider điều khiển; Cột phải là lời giải chi tiết 3-4 bước toán học có KaTeX đẹp mắt.");
+            sb.AppendLine("3. Hỗ trợ xoay chuột 3D 360°, cuộn zoom chuột, thanh trượt quét thiết diện hoặc góc xoay theo thời gian thực.");
+            sb.AppendLine("4. Trả về toàn bộ mã nguồn trong 1 tệp HTML hoàn chỉnh duy nhất.");
+
+            return sb.ToString().Trim();
+        }
+
+        /// <summary>
+        /// Tạo prompt yêu cầu AI chỉnh sửa mô hình HTML 3D hiện tại.
+        /// </summary>
+        public static string GetHtmlModelEditPrompt(string currentHtml, string editRequest, bool hasImage)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("HÃY CHỈNH SỬA TỆP HTML MÔ HÌNH 3D DƯỚI ĐÂY THEO YÊU CẦU NGƯỜI DÙNG:");
+            sb.AppendLine();
+            sb.AppendLine("══════════════════════════════════════════════════════════════════════════");
+            sb.AppendLine("YÊU CẦU CHỈNH SỬA CỦA NGƯỜI DÙNG:");
+            sb.AppendLine("══════════════════════════════════════════════════════════════════════════");
+            sb.AppendLine(editRequest.Trim());
+            sb.AppendLine();
+
+            if (hasImage)
+            {
+                sb.AppendLine("LƯU Ý: Người dùng có đính kèm ảnh minh họa. Hãy đối chiếu ảnh đính kèm để điều chỉnh chính xác tọa độ, hình học và màu sắc.");
+                sb.AppendLine();
+            }
+
+            sb.AppendLine("══════════════════════════════════════════════════════════════════════════");
+            sb.AppendLine("MÃ NGUỒN HTML HIỆN TẠI:");
+            sb.AppendLine("══════════════════════════════════════════════════════════════════════════");
+            sb.AppendLine(currentHtml.Trim());
+            sb.AppendLine();
+            sb.AppendLine("NGUYÊN TẮC: Giữ nguyên cấu trúc Three.js, KaTeX, Tailwind CSS và khả năng tương tác. Trả về toàn bộ tệp HTML đã sửa hoàn chỉnh.");
+
+            return sb.ToString().Trim();
+        }
+
+        /// <summary>
+        /// Tạo prompt yêu cầu AI tối ưu hóa mã nguồn HTML / Three.js / KaTeX.
+        /// </summary>
+        public static string GetHtmlModelOptimizePrompt(string currentHtml)
+        {
+            return $@"HÃY TỐI ƯU HÓA MÃ NGUỒN TỆP HTML MÔ PHỎNG 3D DƯỚI ĐÂY:
+1. Tối ưu hiệu năng Three.js: dọn dẹp geometries/materials khi rebuild, giới hạn pixelRatio <= 2.
+2. Đảm bảo KaTeX auto-render chạy mượt mà, không giật lag khi kéo slider.
+3. Làm sạch cấu trúc Tailwind CSS, đảm bảo responsive trên mọi kích thước màn hình.
+4. Trả về toàn bộ tệp HTML hoàn chỉnh đã tối ưu hóa.
+
+MÃ NGUỒN HTML CẦN TỐI ƯU:
+{currentHtml.Trim()}".Trim();
+        }
+
+        #endregion
     }
 }
