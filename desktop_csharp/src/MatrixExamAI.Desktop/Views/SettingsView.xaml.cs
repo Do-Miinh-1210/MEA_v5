@@ -31,6 +31,7 @@ namespace MatrixExamAI.Desktop.Views
             LoadCurrentConfig();
             LoadLicenseInfo();
             UpdateLastCheckDisplay();
+            TxtSettingsAppVersion.Text = $"MatrixExamAI Pro v{GitHubUpdateService.Instance.CurrentVersion}";
             SupabaseLicenseService.Instance.LicenseChanged += (s, info) => Dispatcher.Invoke(() => UpdateLicenseUi(info));
         }
 

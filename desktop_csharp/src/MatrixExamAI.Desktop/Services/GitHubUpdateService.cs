@@ -36,8 +36,8 @@ public class GitHubUpdateService
 {
     public static GitHubUpdateService Instance { get; } = new();
 
-    public string CurrentVersion { get; set; } = "5.3.0.17";
-    public string DisplayVersion => "5.3.0.17";
+    public string CurrentVersion { get; set; } = "5.3.0.18";
+    public string DisplayVersion => "5.3.0.18";
     public string GitHubRepo { get; set; } = "Do-Miinh-1210/MEA_v5";
     public DateTime? LastCheckedTime { get; private set; }
 
@@ -398,7 +398,41 @@ public class GitHubUpdateService
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[DeltaPatch] ApplyDeltaManifest error: {ex.Message}. Falling back to standard copy.");
+                Debug.WriteLine($"[DeltaPatch] ApplyDeltaManifest error: {ex.Message}. Falling back to MatrixExamAI_Patch.zip.");
+                try
+                {
+                    foreach (var f in Directory.GetFiles(patchStaging)) File.Delete(f);
+                }
+                catch { }
+
+                bool fallbackOk = false;
+                try
+                {
+                    string repo = Environment.GetEnvironmentVariable("MEA_GITHUB_REPO") ?? GitHubRepo;
+                    string fullPatchUrl = $"https://github.com/{repo}/releases/latest/download/MatrixExamAI_Patch.zip";
+                    string fallbackZip = Path.Combine(tempDir, $"MatrixExamAI_Patch_Fallback_{Guid.NewGuid():N}.zip");
+                    using var resp = _httpClient.GetAsync(fullPatchUrl).GetAwaiter().GetResult();
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        using (var fs = new FileStream(fallbackZip, FileMode.Create, FileAccess.Write, FileShare.None))
+                        {
+                            resp.Content.CopyToAsync(fs).GetAwaiter().GetResult();
+                        }
+                        ZipFile.ExtractToDirectory(fallbackZip, patchStaging, overwriteFiles: true);
+                        try { File.Delete(fallbackZip); } catch { }
+                        fallbackOk = true;
+                    }
+                }
+                catch (Exception fbEx)
+                {
+                    Debug.WriteLine($"[DeltaPatch] Fallback download failed: {fbEx.Message}");
+                }
+
+                if (!fallbackOk)
+                {
+                    try { Directory.Delete(patchStaging, true); } catch { }
+                    throw new InvalidOperationException($"Áp dụng bản vá vi mô thất bại ({ex.Message}) và không thể tải bản vá thay thế.", ex);
+                }
             }
         }
 

@@ -213,4 +213,14 @@ public class GitHubUpdateServiceTests
         string display = service.GetLastCheckedDisplayText();
         display.Should().Be("Lần cập nhật gần nhất: 15/10/2026 14:30:00");
     }
+
+    [Fact]
+    public void CurrentVersion_ShouldBeAtLeast53018()
+    {
+        var service = GitHubUpdateService.Instance;
+        service.CurrentVersion.Should().Be("5.3.0.18");
+        service.DisplayVersion.Should().Be("5.3.0.18");
+        GitHubUpdateService.IsNewerVersion("5.3.0.18", "5.3.0.17").Should().BeTrue();
+        GitHubUpdateService.IsNewerVersion("5.3.0.17", "5.3.0.18").Should().BeFalse();
+    }
 }

@@ -66,6 +66,13 @@ namespace MatrixExamAI.Desktop
             // Kiểm tra cập nhật tự động khi khởi động
             _ = Task.Run(async () => await CheckForUpdateSilentlyOnStartupAsync());
 
+            // Hiển thị số hiệu phiên bản trên TitleBar và StatusBar
+            string verText = $"v{GitHubUpdateService.Instance.CurrentVersion}";
+            TxtAppVersionTop.Text = verText;
+            TxtAppVersionBottom.Text = verText;
+            Title = $"MatrixExamAI Pro {verText} • Trợ lý Soạn đề & Chuyển đổi Tài liệu AI";
+            MainTitleBar.Title = $"MatrixExamAI Pro {verText} • Trợ lý Soạn đề & Chuyển đổi Tài liệu AI";
+
             // Mặc định khởi tạo: mở trang Tổng quan Dashboard
             NavigateTo("dashboard");
         }

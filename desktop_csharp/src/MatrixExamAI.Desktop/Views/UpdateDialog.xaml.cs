@@ -81,6 +81,31 @@ public partial class UpdateDialog : FluentWindow
         }
         catch (Exception ex)
         {
+            if (_updateInfo.IsPatch && _updateInfo.AssetName.Contains("delta", StringComparison.OrdinalIgnoreCase))
+            {
+                try
+                {
+                    TxtStatus.Text = "Đang chuyển sang tải bản vá đầy đủ...";
+                    TxtProgressStatus.Text = "Tải bản vá toàn diện MatrixExamAI_Patch.zip...";
+                    ProgressBarDownload.Value = 0;
+                    string patchUrl = _updateInfo.DownloadUrl.Replace("MatrixExamAI_Delta.zip", "MatrixExamAI_Patch.zip");
+                    string fullPatchPath = await GitHubUpdateService.Instance.DownloadUpdateAsync(
+                        patchUrl,
+                        "MatrixExamAI_Patch.zip",
+                        progress,
+                        _cts?.Token ?? CancellationToken.None
+                    );
+                    TxtStatus.Text = "Ứng dụng sẽ tự khởi động lại trong 2 giây...";
+                    await System.Threading.Tasks.Task.Delay(500);
+                    GitHubUpdateService.Instance.ApplyAndExit(fullPatchPath, verySilent: true, isPatch: true);
+                    return;
+                }
+                catch (Exception fbEx)
+                {
+                    ex = fbEx;
+                }
+            }
+
             PanelProgress.Visibility = Visibility.Collapsed;
             BtnUpdateNow.IsEnabled = true;
             BtnCancel.IsEnabled = true;

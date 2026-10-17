@@ -34,9 +34,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.17"
-TITLE = "MatrixExamAI Pro v5.3.0.17 (Fix 9Router SSE Streaming & AI Diagram Generation)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.17: Khắc phục triệt để lỗi sinh hình TikZ AI qua 9Router do xung đột định dạng phản hồi dòng dữ liệu (SSE streaming chunk). Thiết lập chế độ stream=false và bổ sung bộ giải mã SSE tự động, giúp toàn bộ các mô hình AI sinh mã TikZ ổn định."
+TAG = "v5.3.0.18"
+TITLE = "MatrixExamAI Pro v5.3.0.18 (UI Version Badges & Bulletproof Delta Update Engine)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.18: Hiển thị số hiệu phiên bản trên TitleBar và StatusBar, nâng cấp cơ chế cập nhật vi mô Delta Patch tự phục hồi kèm fallback tự động sang bản vá toàn diện, loại bỏ triệt để lỗi không thể cập nhật và tối ưu dung lượng tải về."
 
 def compute_sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest().lower()
@@ -68,20 +68,21 @@ def build_delta_zip(publish_dir: Path, output_delta_zip: Path, cache_dir: Path):
     last_pub = cache_dir / "last_published"
     last_pub.mkdir(parents=True, exist_ok=True)
 
-    ref_dll = last_pub / "MatrixExamAI.Desktop.dll"
-    if not ref_dll.exists():
-        try:
-            print("[INFO] Fetching latest baseline patch from GitHub for delta reference...")
-            prev_patch_url = f"https://github.com/{REPO}/releases/latest/download/MatrixExamAI_Patch.zip"
-            tmp_zip = cache_dir / "prev_patch.zip"
-            urllib.request.urlretrieve(prev_patch_url, tmp_zip)
-            with zipfile.ZipFile(tmp_zip, "r") as zf:
-                zf.extractall(last_pub)
-            tmp_zip.unlink(missing_ok=True)
-            print("[OK] Loaded reference baseline files into cache.")
-        except Exception as ex:
-            print(f"[WARN] Could not fetch baseline patch: {ex}")
-            return False
+    # Always fetch latest published baseline from GitHub to ensure accurate delta against deployed version
+    try:
+        print("[INFO] Fetching latest baseline patch from GitHub for delta reference...")
+        prev_patch_url = f"https://github.com/{REPO}/releases/latest/download/MatrixExamAI_Patch.zip"
+        tmp_zip = cache_dir / "prev_patch.zip"
+        urllib.request.urlretrieve(prev_patch_url, tmp_zip)
+        for f in last_pub.iterdir():
+            if f.is_file():
+                f.unlink()
+        with zipfile.ZipFile(tmp_zip, "r") as zf:
+            zf.extractall(last_pub)
+        tmp_zip.unlink(missing_ok=True)
+        print("[OK] Loaded fresh reference baseline files from GitHub into cache.")
+    except Exception as ex:
+        print(f"[WARN] Could not fetch fresh baseline from GitHub: {ex}")
 
     if not (last_pub / "MatrixExamAI.Desktop.dll").exists():
         print("[WARN] Baseline dll not found, skipping delta.")
@@ -137,6 +138,21 @@ def build_delta_zip(publish_dir: Path, output_delta_zip: Path, cache_dir: Path):
                 "is_delta": False,
                 "target_sha256": new_sha
             })
+
+    # SAFEGUARD: MatrixExamAI.Desktop.dll MUST ALWAYS be included in manifest!
+    # If not added as a delta bsdiff, include full DLL so the app never fails to update!
+    has_desktop_dll = any(f["name"] == "MatrixExamAI.Desktop.dll" for f in manifest["files"])
+    if not has_desktop_dll:
+        dll_path = publish_dir / "MatrixExamAI.Desktop.dll"
+        if dll_path.exists():
+            dll_bytes = dll_path.read_bytes()
+            (staging_dir / "MatrixExamAI.Desktop.dll").write_bytes(dll_bytes)
+            manifest["files"].append({
+                "name": "MatrixExamAI.Desktop.dll",
+                "is_delta": False,
+                "target_sha256": compute_sha256(dll_bytes)
+            })
+            print(f"[SAFEGUARD] MatrixExamAI.Desktop.dll included as full file in delta package ({len(dll_bytes)} bytes)")
 
     manifest_path = staging_dir / "delta_manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
