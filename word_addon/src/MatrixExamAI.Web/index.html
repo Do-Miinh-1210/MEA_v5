@@ -177,6 +177,24 @@
         </button>
       </div>
 
+      <!-- Live Progress & Timer Tracker -->
+      <div id="tikz-progress-card" class="tikz-progress-card" style="display: none;">
+        <div class="progress-header">
+          <div class="progress-status-info">
+            <span class="progress-spinner"></span>
+            <span id="tikz-progress-stage" class="progress-stage-text">Đang kết nối AI...</span>
+          </div>
+          <span id="tikz-progress-timer" class="progress-timer-badge">⏱️ 00:00.0</span>
+        </div>
+        <div class="progress-bar-track">
+          <div id="tikz-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+        <div class="progress-footer">
+          <span id="tikz-progress-subtext" class="progress-subtext">Đang chuẩn bị prompt và ảnh gửi đến AI</span>
+          <span id="tikz-progress-percent" class="progress-percent-badge">0%</span>
+        </div>
+      </div>
+
       <!-- Tabs: Code Viewer vs Visual Preview -->
       <section>
         <div class="tab-controls">
@@ -346,6 +364,24 @@
             </button>
           </div>
         </div>
+
+        <!-- Live Authoring Progress & Timer Tracker -->
+        <div id="authoring-progress-card" class="tikz-progress-card" style="display: none; margin-top: 8px;">
+          <div class="progress-header">
+            <div class="progress-status-info">
+              <span class="progress-spinner"></span>
+              <span id="authoring-progress-stage" class="progress-stage-text">AI đang phân tích câu hỏi...</span>
+            </div>
+            <span id="authoring-progress-timer" class="progress-timer-badge">⏱️ 00:00.0</span>
+          </div>
+          <div class="progress-bar-track">
+            <div id="authoring-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
+          </div>
+          <div class="progress-footer">
+            <span id="authoring-progress-subtext" class="progress-subtext">Đang kết nối Gemini...</span>
+            <span id="authoring-progress-percent" class="progress-percent-badge">0%</span>
+          </div>
+        </div>
       </section>
 
       <!-- AI Result Section -->
@@ -452,6 +488,24 @@
             <button id="btn-convert-run" class="btn btn-success" style="width: 100%; margin-top: 10px; font-weight: 700;">
               <span>⚡</span> Nhận diện & Xuất vào Word
             </button>
+
+            <!-- Live Convert Image Progress & Timer Tracker -->
+            <div id="convert-img-progress-card" class="tikz-progress-card" style="display: none; margin-top: 8px;">
+              <div class="progress-header">
+                <div class="progress-status-info">
+                  <span class="progress-spinner"></span>
+                  <span id="convert-img-progress-stage" class="progress-stage-text">Đang nhận diện AI Vision...</span>
+                </div>
+                <span id="convert-img-progress-timer" class="progress-timer-badge">⏱️ 00:00.0</span>
+              </div>
+              <div class="progress-bar-track">
+                <div id="convert-img-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
+              </div>
+              <div class="progress-footer">
+                <span id="convert-img-progress-subtext" class="progress-subtext">Đang bóc tách câu hỏi và công thức...</span>
+                <span id="convert-img-progress-percent" class="progress-percent-badge">0%</span>
+              </div>
+            </div>
           </div>
         </section>
       </div>
@@ -532,6 +586,24 @@
                 <button id="btn-convert-text-copy" class="btn btn-secondary btn-compact" style="flex: 1;" title="Sao chép toàn bộ nội dung">
                   <span>📋</span> Copy
                 </button>
+              </div>
+            </div>
+
+            <!-- Live Convert Text Progress & Timer Tracker -->
+            <div id="convert-text-progress-card" class="tikz-progress-card" style="display: none; margin-top: 8px;">
+              <div class="progress-header">
+                <div class="progress-status-info">
+                  <span class="progress-spinner"></span>
+                  <span id="convert-text-progress-stage" class="progress-stage-text">AI đang chuẩn hóa văn bản...</span>
+                </div>
+                <span id="convert-text-progress-timer" class="progress-timer-badge">⏱️ 00:00.0</span>
+              </div>
+              <div class="progress-bar-track">
+                <div id="convert-text-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
+              </div>
+              <div class="progress-footer">
+                <span id="convert-text-progress-subtext" class="progress-subtext">Đang xử lý cấu trúc câu hỏi và LaTeX...</span>
+                <span id="convert-text-progress-percent" class="progress-percent-badge">0%</span>
               </div>
             </div>
           </div>

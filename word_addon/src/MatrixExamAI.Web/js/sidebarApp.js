@@ -293,9 +293,176 @@
       normFontSize: document.getElementById('norm-font-size'),
       normLineSpacing: document.getElementById('norm-line-spacing'),
       btnStandardizeSelection: document.getElementById('btn-standardize-selection'),
-      btnStandardizeDoc: document.getElementById('btn-standardize-doc')
+      btnStandardizeDoc: document.getElementById('btn-standardize-doc'),
+
+      // Live Progress Trackers
+      tikzProgressCard: document.getElementById('tikz-progress-card'),
+      tikzProgressStage: document.getElementById('tikz-progress-stage'),
+      tikzProgressTimer: document.getElementById('tikz-progress-timer'),
+      tikzProgressBar: document.getElementById('tikz-progress-bar'),
+      tikzProgressSubtext: document.getElementById('tikz-progress-subtext'),
+      tikzProgressPercent: document.getElementById('tikz-progress-percent'),
+
+      authoringProgressCard: document.getElementById('authoring-progress-card'),
+      authoringProgressStage: document.getElementById('authoring-progress-stage'),
+      authoringProgressTimer: document.getElementById('authoring-progress-timer'),
+      authoringProgressBar: document.getElementById('authoring-progress-bar'),
+      authoringProgressSubtext: document.getElementById('authoring-progress-subtext'),
+      authoringProgressPercent: document.getElementById('authoring-progress-percent'),
+
+      convertImgProgressCard: document.getElementById('convert-img-progress-card'),
+      convertImgProgressStage: document.getElementById('convert-img-progress-stage'),
+      convertImgProgressTimer: document.getElementById('convert-img-progress-timer'),
+      convertImgProgressBar: document.getElementById('convert-img-progress-bar'),
+      convertImgProgressSubtext: document.getElementById('convert-img-progress-subtext'),
+      convertImgProgressPercent: document.getElementById('convert-img-progress-percent'),
+
+      convertTextProgressCard: document.getElementById('convert-text-progress-card'),
+      convertTextProgressStage: document.getElementById('convert-text-progress-stage'),
+      convertTextProgressTimer: document.getElementById('convert-text-progress-timer'),
+      convertTextProgressBar: document.getElementById('convert-text-progress-bar'),
+      convertTextProgressSubtext: document.getElementById('convert-text-progress-subtext'),
+      convertTextProgressPercent: document.getElementById('convert-text-progress-percent')
     };
   }
+
+  // Live Progress & Realtime Stopwatch Tracker Factory
+  function createProgressTracker(getCard, getStage, getTimer, getBar, getSubtext, getPercent) {
+    let timerInterval = null;
+    let startTime = 0;
+
+    return {
+      start(title, initialSubtext = '') {
+        startTime = Date.now();
+        const card = getCard();
+        const bar = getBar();
+        const percent = getPercent();
+        const stage = getStage();
+        const subtext = getSubtext();
+        const timer = getTimer();
+
+        if (card) card.style.display = 'block';
+        if (bar) {
+          bar.className = 'progress-bar-fill';
+          bar.style.width = '12%';
+        }
+        if (percent) percent.innerText = '12%';
+        if (stage) stage.innerText = title;
+        if (subtext) subtext.innerText = initialSubtext;
+        if (timer) timer.innerText = '⏱️ 00:00.0';
+
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+          const elapsedMs = Date.now() - startTime;
+          const totalSec = Math.floor(elapsedMs / 1000);
+          const mins = String(Math.floor(totalSec / 60)).padStart(2, '0');
+          const secs = String(totalSec % 60).padStart(2, '0');
+          const tenths = Math.floor((elapsedMs % 1000) / 100);
+          const timeFormatted = `⏱️ ${mins}:${secs}.${tenths}`;
+          const curTimer = getTimer();
+          if (curTimer) curTimer.innerText = timeFormatted;
+
+          // Update active buttons dynamically with live seconds
+          if (state.isGenerating && dom.btnGenerateAi) {
+            dom.btnGenerateAi.innerHTML = `<span class="spinner"></span> Đang tạo AI (${(elapsedMs / 1000).toFixed(1)}s)...`;
+          } else if (state.isCompiling && dom.btnCompileTikz) {
+            dom.btnCompileTikz.innerHTML = `<span class="spinner"></span> Đang biên dịch (${(elapsedMs / 1000).toFixed(1)}s)...`;
+          } else if (state.isConverting && dom.btnConvertRun) {
+            dom.btnConvertRun.innerHTML = `<span class="spinner"></span> Đang nhận diện AI Vision (${(elapsedMs / 1000).toFixed(1)}s)...`;
+          }
+        }, 100);
+      },
+
+      setStage(percentVal, stageText, subtextMsg = '') {
+        const bar = getBar();
+        const percent = getPercent();
+        const stage = getStage();
+        const subtext = getSubtext();
+
+        if (bar) bar.style.width = `${percentVal}%`;
+        if (percent) percent.innerText = `${percentVal}%`;
+        if (stage) stage.innerText = stageText;
+        if (subtext && subtextMsg) subtext.innerText = subtextMsg;
+      },
+
+      finish(success, message = '') {
+        clearInterval(timerInterval);
+        const elapsedMs = Date.now() - startTime;
+        const totalSec = Math.floor(elapsedMs / 1000);
+        const mins = String(Math.floor(totalSec / 60)).padStart(2, '0');
+        const secs = String(totalSec % 60).padStart(2, '0');
+        const tenths = Math.floor((elapsedMs % 1000) / 100);
+        const finalTime = `${mins}:${secs}.${tenths}`;
+        const timer = getTimer();
+        if (timer) timer.innerText = `⏱️ ${finalTime}`;
+
+        const bar = getBar();
+        const percent = getPercent();
+        const stage = getStage();
+        const subtext = getSubtext();
+
+        if (success) {
+          if (bar) {
+            bar.className = 'progress-bar-fill success';
+            bar.style.width = '100%';
+          }
+          if (percent) percent.innerText = '100%';
+          if (stage) stage.innerHTML = `✓ ${message || 'Hoàn tất thành công!'}`;
+          if (subtext) subtext.innerText = `Tổng thời gian thực thi: ${(elapsedMs / 1000).toFixed(1)}s`;
+        } else {
+          if (bar) {
+            bar.className = 'progress-bar-fill error';
+            bar.style.width = '100%';
+          }
+          if (percent) percent.innerText = 'Lỗi';
+          if (stage) stage.innerHTML = `✕ ${message || 'Thao tác thất bại'}`;
+          if (subtext) subtext.innerText = `Dừng lại sau: ${(elapsedMs / 1000).toFixed(1)}s`;
+        }
+      },
+
+      hide() {
+        clearInterval(timerInterval);
+        const card = getCard();
+        if (card) card.style.display = 'none';
+      }
+    };
+  }
+
+  const tikzProgress = createProgressTracker(
+    () => dom.tikzProgressCard,
+    () => dom.tikzProgressStage,
+    () => dom.tikzProgressTimer,
+    () => dom.tikzProgressBar,
+    () => dom.tikzProgressSubtext,
+    () => dom.tikzProgressPercent
+  );
+
+  const authoringProgress = createProgressTracker(
+    () => dom.authoringProgressCard,
+    () => dom.authoringProgressStage,
+    () => dom.authoringProgressTimer,
+    () => dom.authoringProgressBar,
+    () => dom.authoringProgressSubtext,
+    () => dom.authoringProgressPercent
+  );
+
+  const convertImgProgress = createProgressTracker(
+    () => dom.convertImgProgressCard,
+    () => dom.convertImgProgressStage,
+    () => dom.convertImgProgressTimer,
+    () => dom.convertImgProgressBar,
+    () => dom.convertImgProgressSubtext,
+    () => dom.convertImgProgressPercent
+  );
+
+  const convertTextProgress = createProgressTracker(
+    () => dom.convertTextProgressCard,
+    () => dom.convertTextProgressStage,
+    () => dom.convertTextProgressTimer,
+    () => dom.convertTextProgressBar,
+    () => dom.convertTextProgressSubtext,
+    () => dom.convertTextProgressPercent
+  );
 
   // Toast / Status Notification
   let toastTimer = null;
@@ -1150,6 +1317,18 @@
       dom.btnConvertRun.innerHTML = '<span class="spinner"></span> Đang nhận diện AI Vision...';
     }
 
+    convertImgProgress.start('📤 Đang gửi ảnh đề thi lên AI Vision...', 'Đang mã hóa dữ liệu ảnh bài toán');
+    const cTimer1 = setTimeout(() => {
+      if (state.isConverting) {
+        convertImgProgress.setStage(35, '🧠 AI đang đọc đề & công thức LaTeX...', 'Phân tích cấu trúc câu hỏi & hình vẽ');
+      }
+    }, 1500);
+    const cTimer2 = setTimeout(() => {
+      if (state.isConverting) {
+        convertImgProgress.setStage(70, '📐 Đang chuẩn hóa cấu trúc 3 phần BGD...', 'Kẹp công thức ${...} và lọc đáp án ABCD');
+      }
+    }, 4500);
+
     showToast('Đang gọi AI Vision nhận diện đề thi Toán và trích xuất LaTeX...', 'info', 0);
 
     try {
@@ -1161,6 +1340,8 @@
       };
 
       const res = await window.WordBridge.request('convert/extract', payload);
+      clearTimeout(cTimer1);
+      clearTimeout(cTimer2);
 
       if (res && res.success) {
         state.convertExtractedQuestions = res.questions || [];
@@ -1175,12 +1356,14 @@
           }
         }
 
+        convertImgProgress.setStage(90, '📥 Đang xuất câu hỏi chuẩn hóa vào Word...', 'Căn chỉnh tab stops & lề trang in');
         showToast('🚀 Đang chèn đề thi chuẩn hóa kèm hình ảnh vào Word...', 'info', 0);
         const resWord = await window.WordBridge.request('word/insertTextAfterSelection', {
           questions: state.convertExtractedQuestions,
           text: state.convertFormattedText
         });
 
+        convertImgProgress.finish(true, `Nhận diện và xuất thành công ${state.convertExtractedQuestions.length} câu hỏi!`);
         if (resWord && resWord.success) {
           showToast(`🎉 Nhận diện thành công ${state.convertExtractedQuestions.length} câu hỏi và đã xuất vào Word chuẩn hóa!`, 'success', 4500);
         } else {
@@ -1190,7 +1373,10 @@
         throw new Error(res?.errorMessage || 'Không thể nhận diện nội dung từ ảnh đề thi.');
       }
     } catch (err) {
+      clearTimeout(cTimer1);
+      clearTimeout(cTimer2);
       console.error('[SidebarApp] executeConvertImage error:', err);
+      convertImgProgress.finish(false, err.message || err);
       showToast('Lỗi nhận diện đề thi: ' + (err.message || err), 'error', 6000);
     } finally {
       state.isConverting = false;
@@ -1419,12 +1605,22 @@
       dom.btnConvertTextCallAi.innerHTML = '<span class="spinner"></span> AI đang xử lý...';
     }
 
+    convertTextProgress.start('🤖 Đang gửi văn bản lên AI Gemini...', 'Phân tích văn bản thô đề thi');
+    const ctTimer1 = setTimeout(() => {
+      convertTextProgress.setStage(40, '🧠 AI đang chuẩn hóa cấu trúc câu hỏi...', 'Tách ý a,b,c,d & phương án ABCD');
+    }, 1500);
+    const ctTimer2 = setTimeout(() => {
+      convertTextProgress.setStage(75, '📐 Đang kẹp công thức toán LaTeX...', 'Chuẩn hóa định dạng đề thi');
+    }, 4000);
+
     try {
       const res = await window.WordBridge.request('convert/extract', {
         rawInputText: rawText,
         qtypeFilter: 'auto',
         includeSolution: true
       });
+      clearTimeout(ctTimer1);
+      clearTimeout(ctTimer2);
 
       if (res && res.success) {
         state.convertExtractedQuestions = res.questions || [];
@@ -1443,12 +1639,16 @@
           dom.convertResultContent.innerText = state.convertFormattedText;
         }
 
+        convertTextProgress.finish(true, `Chuẩn hóa thành công ${state.convertExtractedQuestions.length} câu hỏi!`);
         showToast(`🎉 AI đã chuẩn hóa thành công ${state.convertExtractedQuestions.length} câu hỏi!`, 'success', 4000);
       } else {
         throw new Error(res?.errorMessage || 'Không thể chuẩn hóa văn bản bằng AI.');
       }
     } catch (err) {
+      clearTimeout(ctTimer1);
+      clearTimeout(ctTimer2);
       console.error('[SidebarApp] executeAiCallForText error:', err);
+      convertTextProgress.finish(false, err.message || err);
       showToast('Lỗi AI chuẩn hóa: ' + (err.message || err), 'error', 6000);
     } finally {
       if (dom.btnConvertTextCallAi) {
@@ -1611,12 +1811,22 @@
 
     showToast(`✨ Gemini 3.8 Flash đang thực hiện "${taskTitle}"...`, 'info', 0);
 
+    authoringProgress.start(`✨ Đang thực hiện "${taskTitle}"...`, 'Gửi nội dung đến AI...');
+    const authTimer1 = setTimeout(() => {
+      authoringProgress.setStage(45, `🧠 AI đang xử lý "${taskTitle}"...`, 'Suy luận & chuẩn hóa nội dung');
+    }, 1200);
+    const authTimer2 = setTimeout(() => {
+      authoringProgress.setStage(80, '📐 Đang định dạng công thức & cấu trúc...', 'Hoàn thiện bản nháp');
+    }, 3500);
+
     try {
       const res = await window.WordBridge.request('ai/assistant', {
         taskType: taskType,
         selectedText: selectedText,
         prompt: customPrompt
       });
+      clearTimeout(authTimer1);
+      clearTimeout(authTimer2);
 
       if (res && res.success && res.resultText) {
         if (dom.authoringResultSection) dom.authoringResultSection.style.display = 'block';
@@ -1624,12 +1834,17 @@
         if (dom.authoringResultContent) dom.authoringResultContent.innerText = res.resultText;
         if (dom.authoringModelUsed) dom.authoringModelUsed.innerText = res.model || 'Gemini 3.8 Flash';
 
+        authoringProgress.finish(true, `Hoàn tất "${taskTitle}" (${res.latencyMs || 0}ms)!`);
         showToast(`Đã hoàn tất "${taskTitle}" (${res.latencyMs || 0}ms)!`, 'success', 3000);
       } else {
         const err = (res && res.errorMessage) || 'Xử lý AI không thành công.';
+        authoringProgress.finish(false, err);
         showToast('Lỗi AI: ' + err, 'error', 4000);
       }
     } catch (err) {
+      clearTimeout(authTimer1);
+      clearTimeout(authTimer2);
+      authoringProgress.finish(false, err.message || err);
       showToast('Lỗi khi gọi AI: ' + err.message, 'error', 4000);
     }
   }
@@ -1687,7 +1902,28 @@
 
     state.isGenerating = true;
     updateActionButtons();
-    showToast('✨ AI Gemini 3.8 Flash đang phân tích và sinh mã TikZ...', 'info', 0);
+    tikzProgress.start(
+      '🚀 Đang kết nối AI sinh mã TikZ...',
+      state.pastedImageBase64 ? 'Đang mã hóa ảnh bài toán (Vision)...' : 'Đang gửi mô tả bài toán...'
+    );
+
+    const stageTimer1 = setTimeout(() => {
+      if (state.isGenerating) {
+        tikzProgress.setStage(30, '🧠 AI đang nhận diện tọa độ & cấu trúc...', 'Phân tích các đối tượng hình học, đỉnh & nhãn');
+      }
+    }, 1200);
+
+    const stageTimer2 = setTimeout(() => {
+      if (state.isGenerating) {
+        tikzProgress.setStage(65, '📐 Đang sinh mã LaTeX TikZ chuẩn hóa...', 'Áp dụng 5 lớp Layering Rules & chuẩn SGK mới');
+      }
+    }, 3200);
+
+    const stageTimer3 = setTimeout(() => {
+      if (state.isGenerating) {
+        tikzProgress.setStage(85, '📝 Đang kiểm tra mã lệnh TikZ...', 'Chuẩn bị biên dịch xem trước');
+      }
+    }, 6000);
 
     try {
       const options = {
@@ -1697,22 +1933,32 @@
       };
 
       const result = await window.WordBridge.generateTikz(prompt, options);
+      clearTimeout(stageTimer1);
+      clearTimeout(stageTimer2);
+      clearTimeout(stageTimer3);
 
       if (result && result.success && result.tikzCode) {
         state.currentTikzCode = result.tikzCode;
         dom.codeTextarea.value = result.tikzCode;
         updateLineNumbers();
 
-        showToast(`Tạo mã TikZ thành công qua ${result.model || 'Gemini 3.8 Flash'} (${result.executionTimeMs || 0}ms)! Đang biên dịch xem trước...`, 'success', 3500);
+        tikzProgress.setStage(90, '⚙️ Đang biên dịch hình vẽ xem trước (600 DPI)...', 'Khởi chạy TeXLive pdflatex');
+        showToast(`Tạo mã TikZ thành công qua ${result.model || 'AI'}! Đang biên dịch xem trước...`, 'success', 2500);
 
         // Auto-compile to preview visual image
-        await compileTikzCode(true);
+        await compileTikzCode(true, true);
+        tikzProgress.finish(true, `Hoàn tất tạo hình qua ${result.model || 'AI'}!`);
       } else {
         const errorMsg = (result && result.errorMessage) || 'Không thể tạo mã TikZ từ AI.';
+        tikzProgress.finish(false, errorMsg);
         showToast(errorMsg, 'error', 6000);
       }
     } catch (err) {
+      clearTimeout(stageTimer1);
+      clearTimeout(stageTimer2);
+      clearTimeout(stageTimer3);
       console.error('[SidebarApp] Generate error:', err);
+      tikzProgress.finish(false, err.message || err);
       showToast('Lỗi sinh mã TikZ: ' + (err.message || err), 'error', 6000);
     } finally {
       state.isGenerating = false;
@@ -1720,7 +1966,7 @@
     }
   }
 
-  async function compileTikzCode(silentToast = false) {
+  async function compileTikzCode(silentToast = false, fromGenerate = false) {
     const code = dom.codeTextarea.value.trim();
     if (!code) {
       showToast('Mã TikZ rỗng, không thể biên dịch.', 'warning');
@@ -1729,9 +1975,15 @@
 
     state.isCompiling = true;
     updateActionButtons();
-    if (!silentToast) {
-      showToast('⚙️ Đang biên dịch mã TikZ qua TeXLive (pdflatex)...', 'info', 0);
+    if (!fromGenerate) {
+      tikzProgress.start('⚙️ Khởi chạy TeXLive (pdflatex)...', 'Đang nạp mã nguồn TikZ...');
     }
+
+    const compileTimer = setTimeout(() => {
+      if (state.isCompiling) {
+        tikzProgress.setStage(60, '🖼️ Đang render hình vẽ sang PNG 600 DPI / SVG...', 'Xử lý vector độ nét cao');
+      }
+    }, 1200);
 
     // Hide error panel
     if (dom.latexErrorPanel) dom.latexErrorPanel.classList.remove('active');
@@ -1741,6 +1993,7 @@
         border: '2pt',
         autoHeal: true
       });
+      clearTimeout(compileTimer);
 
       if (result && result.success) {
         state.compiledImagePath = result.imagePath;
@@ -1759,9 +2012,18 @@
         switchTab('preview');
         resetZoomAndPan();
 
-        showToast(`Biên dịch thành công (${result.compilationTimeMs || 0}ms)!`, 'success', 3000);
+        if (!fromGenerate) {
+          tikzProgress.finish(true, `Biên dịch thành công (${result.compilationTimeMs || 0}ms)!`);
+        }
+        if (!silentToast) {
+          showToast(`Biên dịch thành công (${result.compilationTimeMs || 0}ms)!`, 'success', 3000);
+        }
       } else {
+        clearTimeout(compileTimer);
         const errorMsg = (result && result.errorMessage) || 'Biên dịch pdflatex thất bại.';
+        if (!fromGenerate) {
+          tikzProgress.finish(false, errorMsg);
+        }
         showToast(errorMsg, 'error', 6000);
 
         if (dom.latexErrorPanel && result && result.rawLog) {
@@ -1772,7 +2034,11 @@
         }
       }
     } catch (err) {
+      clearTimeout(compileTimer);
       console.error('[SidebarApp] Compile error:', err);
+      if (!fromGenerate) {
+        tikzProgress.finish(false, err.message || err);
+      }
       showToast('Lỗi biên dịch TeXLive: ' + (err.message || err), 'error', 6000);
     } finally {
       state.isCompiling = false;
@@ -2429,7 +2695,12 @@
     // 2. Auto-healing progress event from C#
     window.WordBridge.on('ai/healingProgress', (data) => {
       console.log('[SidebarApp] Healing progress:', data);
-      showToast(`Đang tự sửa lỗi cú pháp TikZ (Lần thử ${data.attempt || 1})...`, 'warning', 0);
+      const attempt = data?.attempt || 1;
+      const maxAttempts = data?.maxAttempts || 3;
+      const pct = Math.min(95, 70 + Math.round((attempt / maxAttempts) * 25));
+      const snippet = data?.errorSnippet ? ` • ${data.errorSnippet.substring(0, 45)}...` : '';
+      tikzProgress.setStage(pct, `🩹 Tự động sửa lỗi TeX (${attempt}/${maxAttempts})...`, `Đang hiệu chỉnh mã lệnh TikZ${snippet}`);
+      showToast(`Đang tự sửa lỗi cú pháp TikZ (Lần thử ${attempt}/${maxAttempts})...`, 'warning', 0);
     });
 
     // 3. Tab switch event from Ribbon

@@ -34,9 +34,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.15"
-TITLE = "MatrixExamAI Pro v5.3.0.15 (Word Add-in Drag & Drop, Word Image Extraction & Multi-Provider AI Sync)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.15: Bổ sung tính năng kéo thả ảnh trực tiếp và trích xuất ảnh đang chọn từ Word vào AI TikZ; đồng bộ hóa cấu hình đa nhà cung cấp AI (Google Gemini, 9Router, OpenAI GPT, Claude, DeepSeek); sửa lỗi dán ảnh từ clipboard định dạng DIB/Word; hoàn thiện trải nghiệm kết nối thời gian thực."
+TAG = "v5.3.0.16"
+TITLE = "MatrixExamAI Pro v5.3.0.16 (Word Add-in Realtime Progress & Stopwatch Timer)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.16: Bổ sung bộ đếm thời gian thời gian thực (Stopwatch Elapsed Timer) và thanh tiến trình chi tiết (Progress Tracker) cho toàn bộ các tác vụ AI Vẽ hình TikZ, Soạn thảo đề thi, Convert OCR ảnh & nhận diện Text/LaTeX; hiển thị tiến độ sửa lỗi TeX tự động (Auto-healing) theo thời gian thực."
 
 def compute_sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest().lower()
