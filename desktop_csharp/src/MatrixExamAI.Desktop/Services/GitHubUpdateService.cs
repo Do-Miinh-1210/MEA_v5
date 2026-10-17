@@ -10,6 +10,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace MatrixExamAI.Desktop.Services;
 
@@ -390,7 +392,14 @@ public class GitHubUpdateService
 
         if (File.Exists(manifestPath))
         {
-            ApplyDeltaManifest(manifestPath, patchStaging, targetDir);
+            try
+            {
+                ApplyDeltaManifestWithResolve(manifestPath, patchStaging, targetDir);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[DeltaPatch] ApplyDeltaManifest error: {ex.Message}. Falling back to standard copy.");
+            }
         }
 
         string exeName = "MatrixExamAI.Desktop.exe";
@@ -496,6 +505,35 @@ public class GitHubUpdateService
             {
                 Environment.Exit(0);
             }
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void ApplyDeltaManifestWithResolve(string manifestPath, string stagingDir, string targetDir)
+    {
+        ResolveEventHandler resolver = (sender, args) =>
+        {
+            try
+            {
+                string assemblyName = new AssemblyName(args.Name).Name + ".dll";
+                string probePath = Path.Combine(stagingDir, assemblyName);
+                if (File.Exists(probePath))
+                {
+                    return Assembly.LoadFrom(probePath);
+                }
+            }
+            catch { }
+            return null;
+        };
+
+        AppDomain.CurrentDomain.AssemblyResolve += resolver;
+        try
+        {
+            ApplyDeltaManifest(manifestPath, stagingDir, targetDir);
+        }
+        finally
+        {
+            AppDomain.CurrentDomain.AssemblyResolve -= resolver;
         }
     }
 
