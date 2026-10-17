@@ -61,14 +61,48 @@ Bước 5: Kiểm tra chéo toàn bộ quy tắc rồi mới xuất. Tự hỏi:
    - Góc pattern: BẮT BUỘC góc xiên (30, 45, 60, 120, 150) — KHÔNG dùng 0, 90, 180.
    - Distance: 1-2 miền -> 4pt; 3 miền trở lên -> 5pt.
    - KHÔNG dùng pattern=north west lines hay pattern color=black!70.
-10. HÌNH KHÔNG GIAN (3D) VÀ TRỤC SỐ:
-   - Điểm gốc: Luôn xác định (0,0) là điểm cơ sở. Các điểm còn lại dùng tọa độ cực + phép biến hình.
-   - Ký hiệu góc vuông: \path pic[draw, line width=0.6pt, angle radius=5pt]{right angle=A--B--C};
-   - Elip/tròn 3D: Chia domain thành 2 phần — phần khuất dùng dash pattern=on 2pt off 1.5pt, phần thấy vẽ liền.
-   - Nét khuất 3D: line width=0.4pt dashed. Nét thấy: line width=0.6pt.
-   - Hình hộp: C' đặt nhãn ở góc 90 hoặc -25 độ; A ở 170 độ.
-   - Trục số: KHÔNG vẽ cung tròn. Dùng ký tự ngoặc (, ), [, ] đặt vào node trên trục.
-   - Mạch điện: circuitikz chuẩn european. Lưỡng cực: \draw ... to[R, l=$R_1$] ...;
+10. HÌNH KHÔNG GIAN (3D) VÀ CÁC MÔ HÌNH KHỐI TRÒN XOAY CHUYÊN SÂU:
+   - NGUYÊN TẮC ELIP ĐÁY VÀ THIẾT DIỆN (QUY TẮC SỐNG CÒN):
+     + Đáy nón / trụ / nón cụt / xích đạo mặt cầu là elip tâm O(0,0) bán kính (a, b) với b ≈ 0.3*a đến 0.35*a để góc nhìn nghiêng tự nhiên nhất.
+     + TUYỆT ĐỐI CẤM vẽ nguyên elip \draw (O) ellipse (a and b) cho đáy nón hoặc đáy dưới hình trụ! BẮT BUỘC CHIA 2 NỬA:
+       * Nửa sau (khuất): \draw[dashed, line width=0.5pt] (-a,0) arc (180:0:a and b);
+       * Nửa trước (thấy): \draw[line width=0.6pt] (-a,0) arc (180:360:a and b);
+     + Riêng đáy trên hình trụ / nón cụt: nhìn thấy toàn bộ nên vẽ liền: \draw[line width=0.6pt] (0,h) ellipse (a and b);
+   - KHỐI NÓN TRÒN XOAY (CONE):
+     + Khai báo: declare function={r=2.5; h=4; b=0.8;}
+     + Đỉnh S(0,h), tâm đáy O(0,0). Hai đường sinh biên viền ngoài: \draw[line width=0.6pt] (-r,0) -- (S) -- (r,0);
+     + Trục SO và bán kính đáy OA nét đứt: \draw[dashed, line width=0.5pt] (S) -- (O) -- (r,0);
+     + Thiết diện qua trục: tam giác cân SAB nét liền \draw[thick, blue] (-r,0) -- (S) -- (r,0) (cạnh AB đáy nét đứt nếu trong lòng khối).
+     + Thiết diện qua đỉnh: hai đường sinh SA, SB tới 2 điểm trên elip đáy, dây cung AB đáy nét đứt.
+     + Thiết diện song song đáy: cắt nón tại cao độ z_0 tạo nón nhỏ, elip thiết diện nửa sau đứt, nửa trước liền.
+   - KHỐI TRỤ TRÒN XOAY (CYLINDER):
+     + Khai báo: declare function={r=2; h=3.8; b=0.65;}
+     + Đáy trên vẽ liền trọn vẹn tại (0,h). Đáy dưới nửa sau đứt, nửa trước liền.
+     + Hai đường sinh biên: \draw[line width=0.6pt] (-r,0) -- (-r,h) (r,0) -- (r,h);
+     + Trục OO' nét đứt: \draw[dashed, line width=0.5pt] (0,0) coordinate (O) -- (0,h) coordinate (O');
+     + Thiết diện qua trục: hình chữ nhật viền quanh trục; thiết diện song song trục cách trục một khoảng d.
+   - KHỐI CẦU VÀ MẶT CẦU (SPHERE & SECTIONS):
+     + Khai báo: declare function={R=2.5; b=0.8;}
+     + Đường bao tròn lớn: \draw[line width=0.7pt] (0,0) coordinate (O) circle (R);
+     + Đổ bóng 3D chân thực (Ball Shading): \shade[ball color=cyan!15, opacity=0.3] (O) circle (R);
+     + Đường xích đạo: nửa sau arc (180:0:R and b) nét đứt, nửa trước arc (180:360:R and b) nét liền.
+     + Trục Bắc - Nam: \draw[dashed] (0,-R) -- (0,R);
+     + Mặt phẳng cắt mặt cầu tại khoảng cách d (tâm H(0,d)): bán kính thiết diện r_td = sqrt(R^2 - d^2), elip thiết diện nửa sau đứt, nửa trước liền; tam giác vuông OHM vuông tại H.
+     + Khối chỏm cầu (Spherical cap): elip thiết diện đáy chỏm và cung tròn chỏm cầu phía trên.
+   - KHỐI NÓN CỤT (FRUSTUM OF CONE):
+     + Khai báo: declare function={R=2.5; r=1.3; h=3.5; b1=0.75; b2=0.39;}
+     + Đáy dưới bán kính (R, b1) nửa sau đứt nửa trước liền; đáy trên bán kính (r, b2) elip liền; hai đường sinh (-R,0)--(-r,h) và (R,0)--(r,h).
+   - KHỐI TRÒN XOAY LỒNG NHAU (INSCRIBED / CIRCUMSCRIBED):
+     + Hình trụ nội tiếp hình nón / hình cầu.
+     + Hình cầu nội tiếp hình nón: tâm cầu I(0, R_c) trên trục SO, tiếp xúc đáy tại O và tiếp xúc hai đường sinh.
+     + Mặt cầu ngoại tiếp hình trụ / hình chóp / hình lập phương: tâm I là tâm đối xứng.
+   - KHỐI TRÒN XOAY TÍCH PHÂN (CALCULUS REVOLUTION SOLIDS):
+     + Đồ thị y=f(x) quay quanh Ox: vẽ đường sinh cong y=f(x) và đối xứng y=-f(x), các lát cắt elip đứng vuông góc Ox tại các mốc x.
+   - HÌNH KHÔNG GIAN ĐA DIỆN (CHÓP, LĂNG TRỤ, HỘP):
+     + Gốc tọa độ cơ sở, các cạnh khuất nét đứt 0.4pt dashed, cạnh thấy 0.6pt.
+     + Ký hiệu góc vuông: \path pic[draw, line width=0.6pt, angle radius=5pt]{right angle=A--B--C};
+   - TRỤC SỐ: KHÔNG vẽ cung tròn. Dùng ký tự ngoặc (, ), [, ] đặt vào node trên trục.
+   - MẠCH ĐIỆN: circuitikz chuẩn european. Lưỡng cực: \draw ... to[R, l=$R_1$] ...;
 
 === XUẤT CODE ===
 - Bắt đầu bằng \begin{tikzpicture}[...] (hoặc \begin{circuitikz}).
@@ -360,6 +394,8 @@ Mã TikZ bạn sinh ra ở lượt trước đã biên dịch thất bại bằn
                     return "Đồ thị hàm số, hệ trục Oxy, tiệm cận nét đứt, gióng cực trị";
                 case DiagramType.HinhKhongGian:
                     return "Hình học không gian 3D (tikz-3dplot, nét đứt 0.4pt, nét thấy 0.6pt, góc vuông pic)";
+                case DiagramType.TronXoay:
+                    return "Khối tròn xoay 3D (Hình nón, hình trụ, mặt cầu, nón cụt, chỏm cầu, thiết diện qua trục/song song trục và khối lồng nhau)";
                 default:
                     return "Hình học toán học";
             }

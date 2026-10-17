@@ -99,6 +99,21 @@ Một vật chuyển động theo quy luật $s(t) = -t^3 + 6t^2$. Tính vận t
 
             string sphere = TikzShapeGenerators.GenerateSphere(4);
             Assert.Contains(@"\draw (0,0) circle (4cm)", sphere);
+            Assert.Contains(@"arc (180:0:4cm", sphere);
+            Assert.Contains(@"arc (180:360:4cm", sphere);
+
+            string frustum = TikzShapeGenerators.GenerateConeFrustum(3.0, 1.5, 4.0);
+            Assert.Contains(@"\begin{tikzpicture}", frustum);
+            Assert.Contains(@"ellipse (1.5cm", frustum);
+            Assert.Contains(@"arc (180:0:3cm", frustum);
+
+            string planeSec = TikzShapeGenerators.GenerateSpherePlaneSection(3.0, 1.5);
+            Assert.Contains(@"\begin{tikzpicture}", planeSec);
+            Assert.Contains(@"circle (3cm)", planeSec);
+
+            string cylSec = TikzShapeGenerators.GenerateCylinderSection(2.5, 4.0, 1.0);
+            Assert.Contains(@"\begin{tikzpicture}", cylSec);
+            Assert.Contains(@"\draw[blue, thick]", cylSec);
         }
 
         [Fact]
@@ -930,6 +945,17 @@ Câu 1. Tìm giá trị lớn nhất của hàm số y = -x^2 + 4x + 1.
             thread.Join();
 
             Assert.Null(threadEx);
+        }
+
+        [Fact]
+        public void PromptCatalog_WithTronXoay_ContainsRevolutionInstructions()
+        {
+            string prompt = MatrixExamAI.Shared.AI.PromptCatalog.GetDrawPrompt("Vẽ hình nón", MatrixExamAI.Shared.Models.DiagramType.TronXoay);
+            Assert.Contains("Khối tròn xoay 3D", prompt);
+            Assert.Contains("KHỐI NÓN TRÒN XOAY", prompt);
+            Assert.Contains("KHỐI TRỤ TRÒN XOAY", prompt);
+            Assert.Contains("KHỐI CẦU VÀ MẶT CẦU", prompt);
+            Assert.Contains("KHỐI NÓN CỤT", prompt);
         }
     }
 }

@@ -963,61 +963,116 @@ namespace MatrixExamAI.Desktop.Views
 
                 // ================= 3. MẶT TRÒN XOAY =================
                 case "cylinder":
-                case "cylinder_section":
-                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=0.95, {drawOpt}]");
-                    sb.AppendLine($@"  \def\r{{{v1 / 2.0}}} \def\h{{{v2}}}");
-                    sb.AppendLine(@"  \draw[dashed] (-\r,0) arc (180:0:\r cm and 0.65cm);");
-                    sb.AppendLine(@"  \draw (-\r,0) arc (180:360:\r cm and 0.65cm);");
-                    sb.AppendLine(@"  \draw (0,\h) ellipse (\r cm and 0.65cm);");
+                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=0.95, {drawOpt}, every node/.style={{font=\normalsize}}]");
+                    sb.AppendLine($@"  \def\r{{{v1 / 2.0}}} \def\h{{{v2}}} \def\e{{\r * 0.35}}");
+                    sb.AppendLine(@"  \draw[dashed] (-\r,0) arc (180:0:\r cm and \e cm);");
+                    sb.AppendLine(@"  \draw (-\r,0) arc (180:360:\r cm and \e cm);");
+                    sb.AppendLine(@"  \draw (0,\h) ellipse (\r cm and \e cm);");
                     sb.AppendLine(@"  \draw (-\r,0) -- (-\r,\h) (\r,0) -- (\r,\h);");
                     sb.AppendLine(@"  \draw[dashed] (0,0) coordinate (O) -- (0,\h) coordinate (O');");
-                    sb.AppendLine(@"  \draw[dashed] (O) -- (\r,0) node[midway,above,font=\small] {$r$};");
-                    sb.AppendLine(@"  \filldraw (O) circle (1pt) node[below] {$O$};");
-                    sb.AppendLine(@"  \filldraw (O') circle (1pt) node[above] {$O'$};");
+                    sb.AppendLine(@"  \draw[dashed] (O) -- (\r,0) node[midway,below] {$r$};");
+                    sb.AppendLine(@"  \filldraw (O) circle (1.2pt) node[below] {$O$};");
+                    sb.AppendLine(@"  \filldraw (O') circle (1.2pt) node[above] {$O'$};");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "cylinder_section":
+                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=0.95, {drawOpt}, every node/.style={{font=\normalsize}}]");
+                    sb.AppendLine($@"  \def\r{{{v1 / 2.0}}} \def\h{{{v2}}} \def\e{{\r * 0.35}}");
+                    sb.AppendLine(@"  \draw[dashed] (-\r,0) arc (180:0:\r cm and \e cm);");
+                    sb.AppendLine(@"  \draw (-\r,0) arc (180:360:\r cm and \e cm);");
+                    sb.AppendLine(@"  \draw (0,\h) ellipse (\r cm and \e cm);");
+                    sb.AppendLine(@"  \draw (-\r,0) -- (-\r,\h) (\r,0) -- (\r,\h);");
+                    sb.AppendLine(@"  \draw[dashed] (0,0) coordinate (O) -- (0,\h) coordinate (O');");
+                    sb.AppendLine(@"  % Thiết diện qua trục ABCD");
+                    sb.AppendLine(@"  \coordinate (A) at (-\r,0); \coordinate (B) at (\r,0);");
+                    sb.AppendLine(@"  \coordinate (C) at (\r,\h); \coordinate (D) at (-\r,\h);");
+                    sb.AppendLine(@"  \fill[blue!15, opacity=0.5] (A)--(B)--(C)--(D)--cycle;");
+                    sb.AppendLine(@"  \draw[blue, thick] (A)--(B)--(C)--(D)--cycle;");
+                    sb.AppendLine(@"  \filldraw (O) circle (1.2pt) node[below] {$O$};");
+                    sb.AppendLine(@"  \filldraw (O') circle (1.2pt) node[above] {$O'$};");
                     sb.Append(@"\end{tikzpicture}");
                     break;
 
                 case "cone":
-                case "cone_down":
-                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=0.95, {drawOpt}]");
-                    sb.AppendLine($@"  \def\r{{{v1 / 2.0}}} \def\h{{{v2}}}");
+                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=0.95, {drawOpt}, every node/.style={{font=\normalsize}}]");
+                    sb.AppendLine($@"  \def\r{{{v1 / 2.0}}} \def\h{{{v2}}} \def\e{{\r * 0.35}}");
                     sb.AppendLine(@"  \coordinate (S) at (0,\h); \coordinate (O) at (0,0);");
-                    sb.AppendLine(@"  \draw[dashed] (-\r,0) arc (180:0:\r cm and 0.7cm);");
-                    sb.AppendLine(@"  \draw (-\r,0) arc (180:360:\r cm and 0.7cm);");
+                    sb.AppendLine(@"  \draw[dashed] (-\r,0) arc (180:0:\r cm and \e cm);");
+                    sb.AppendLine(@"  \draw (-\r,0) arc (180:360:\r cm and \e cm);");
                     sb.AppendLine(@"  \draw (S) -- (-\r,0) (S) -- (\r,0);");
-                    sb.AppendLine(@"  \draw[dashed] (S) -- (O) node[midway,left,font=\small] {$h$};");
-                    sb.AppendLine(@"  \draw[dashed] (O) -- (\r,0) node[midway,below,font=\small] {$r$};");
+                    sb.AppendLine(@"  \draw[dashed] (S) -- (O) node[midway,left] {$h$};");
+                    sb.AppendLine(@"  \draw[dashed] (O) -- (\r,0) node[midway,below] {$r$};");
                     sb.AppendLine(@"  \filldraw (S) circle (1.2pt) node[above] {$S$};");
                     sb.AppendLine(@"  \filldraw (O) circle (1.2pt) node[below] {$O$};");
                     sb.Append(@"\end{tikzpicture}");
                     break;
 
+                case "cone_down":
+                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=0.95, {drawOpt}, every node/.style={{font=\normalsize}}]");
+                    sb.AppendLine($@"  \def\r{{{v1 / 2.0}}} \def\h{{{v2}}} \def\e{{\r * 0.35}}");
+                    sb.AppendLine(@"  \coordinate (S) at (0,0); \coordinate (O) at (0,\h);");
+                    sb.AppendLine(@"  \draw (O) ellipse (\r cm and \e cm);");
+                    sb.AppendLine(@"  \draw (S) -- (-\r,\h) (S) -- (\r,\h);");
+                    sb.AppendLine(@"  \draw[dashed] (S) -- (O) node[midway,left] {$h$};");
+                    sb.AppendLine(@"  \draw[dashed] (O) -- (\r,\h) node[midway,above] {$r$};");
+                    sb.AppendLine(@"  \filldraw (S) circle (1.2pt) node[below] {$S$};");
+                    sb.AppendLine(@"  \filldraw (O) circle (1.2pt) node[above] {$O$};");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
                 case "cone_frustum":
-                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=0.95, {drawOpt}]");
+                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=0.95, {drawOpt}, every node/.style={{font=\normalsize}}]");
                     sb.AppendLine($@"  \def\R{{{v1 / 2.0}}} \def\r{{{v2 / 2.0}}} \def\h{{{(v3 > 0 ? v3 : 3.5)}}}");
-                    sb.AppendLine(@"  \draw[dashed] (-\R,0) arc (180:0:\R cm and 0.7cm);");
-                    sb.AppendLine(@"  \draw (-\R,0) arc (180:360:\R cm and 0.7cm);");
-                    sb.AppendLine(@"  \draw (0,\h) ellipse (\r cm and 0.45cm);");
+                    sb.AppendLine(@"  \def\e1{\R * 0.35} \def\e2{\r * 0.35}");
+                    sb.AppendLine(@"  \draw[dashed] (-\R,0) arc (180:0:\R cm and \e1 cm);");
+                    sb.AppendLine(@"  \draw (-\R,0) arc (180:360:\R cm and \e1 cm);");
+                    sb.AppendLine(@"  \draw (0,\h) ellipse (\r cm and \e2 cm);");
                     sb.AppendLine(@"  \draw (-\R,0) -- (-\r,\h) (\R,0) -- (\r,\h);");
                     sb.AppendLine(@"  \draw[dashed] (0,0) coordinate (O) -- (0,\h) coordinate (O');");
+                    sb.AppendLine(@"  \draw[dashed] (O) -- (\R,0) node[midway,below] {$R$};");
+                    sb.AppendLine(@"  \draw[dashed] (O') -- (\r,\h) node[midway,above] {$r$};");
+                    sb.AppendLine(@"  \filldraw (O) circle (1.2pt) node[below] {$O$};");
+                    sb.AppendLine(@"  \filldraw (O') circle (1.2pt) node[above] {$O'$};");
                     sb.Append(@"\end{tikzpicture}");
                     break;
 
                 case "sphere":
-                case "sphere_circle_section":
-                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=1.1, {drawOpt}]");
-                    sb.AppendLine($@"  \def\R{{{v1 / 2.0}}}");
+                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=1.1, {drawOpt}, every node/.style={{font=\normalsize}}]");
+                    sb.AppendLine($@"  \def\R{{{v1 / 2.0}}} \def\e{{\R * 0.35}}");
+                    sb.AppendLine(@"  \shade[ball color=cyan!15, opacity=0.35] (0,0) circle (\R);");
                     sb.AppendLine(@"  \draw (0,0) coordinate (O) circle (\R);");
-                    sb.AppendLine(@"  \draw[dashed] (-\R,0) arc (180:0:\R cm and 0.75cm);");
-                    sb.AppendLine(@"  \draw (-\R,0) arc (180:360:\R cm and 0.75cm);");
+                    sb.AppendLine(@"  \draw[dashed] (-\R,0) arc (180:0:\R cm and \e cm);");
+                    sb.AppendLine(@"  \draw (-\R,0) arc (180:360:\R cm and \e cm);");
                     sb.AppendLine(@"  \draw[dashed] (0,-\R) -- (0,\R);");
-                    sb.AppendLine(@"  \draw[dashed] (O) -- (35:\R) node[midway,above,font=\small] {$R$};");
+                    sb.AppendLine(@"  \draw[dashed] (O) -- (35:\R) node[midway,above] {$R$};");
                     sb.AppendLine(@"  \filldraw (O) circle (1.2pt) node[below left] {$O$};");
                     sb.Append(@"\end{tikzpicture}");
                     break;
 
+                case "sphere_circle_section":
+                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=1.1, {drawOpt}, every node/.style={{font=\normalsize}}]");
+                    double dCut = Math.Min(v2 > 0 ? v2 : 1.5, (v1 / 2.0) * 0.85);
+                    double rCut = Math.Round(Math.Sqrt(Math.Max(0.1, (v1 / 2.0) * (v1 / 2.0) - dCut * dCut)), 2);
+                    sb.AppendLine($@"  \def\R{{{v1 / 2.0}}} \def\d{{{dCut:F2}}} \def\rc{{{rCut:F2}}}");
+                    sb.AppendLine(@"  \def\e1{\R * 0.35} \def\e2{\rc * 0.35}");
+                    sb.AppendLine(@"  \shade[ball color=cyan!15, opacity=0.3] (0,0) circle (\R);");
+                    sb.AppendLine(@"  \draw (0,0) coordinate (O) circle (\R);");
+                    sb.AppendLine(@"  \draw[dashed,gray] (-\R,0) arc (180:0:\R cm and \e1 cm);");
+                    sb.AppendLine(@"  \draw[gray] (-\R,0) arc (180:360:\R cm and \e1 cm);");
+                    sb.AppendLine(@"  % Đường tròn thiết diện tại H");
+                    sb.AppendLine(@"  \coordinate (H) at (0,\d); \coordinate (M) at (\rc,\d);");
+                    sb.AppendLine(@"  \draw[dashed,blue] (-\rc,\d) arc (180:0:\rc cm and \e2 cm);");
+                    sb.AppendLine(@"  \draw[blue] (-\rc,\d) arc (180:360:\rc cm and \e2 cm);");
+                    sb.AppendLine(@"  \draw[dashed,thick] (O) -- (H) node[midway,left] {$d$} (H) -- (M) node[midway,above] {$r$} (O) -- (M) node[midway,below right] {$R$};");
+                    sb.AppendLine(@"  \filldraw (O) circle (1.2pt) node[below left] {$O$};");
+                    sb.AppendLine(@"  \filldraw (H) circle (1.2pt) node[above left] {$H$};");
+                    sb.AppendLine(@"  \filldraw (M) circle (1.2pt) node[right] {$M$};");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
                 case "cylinder_in_cone":
-                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=0.9, {drawOpt}]");
+                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=0.9, {drawOpt}, every node/.style={{font=\normalsize}}]");
                     sb.AppendLine($@"  \def\R{{{v1 / 2.0}}} \def\H{{{v2}}} \def\r{{{v1 * 0.3}}} \def\h{{{v2 * 0.4}}}");
                     sb.AppendLine(@"  \coordinate (S) at (0,\H); \coordinate (O) at (0,0);");
                     sb.AppendLine(@"  \draw[dashed] (-\R,0) arc (180:0:\R cm and 0.7cm);");
@@ -1031,6 +1086,76 @@ namespace MatrixExamAI.Desktop.Views
                     sb.AppendLine(@"  \draw[teal,thick] (-\r,0) -- (-\r,\h) (\r,0) -- (\r,\h);");
                     sb.AppendLine(@"  \filldraw (S) circle (1pt) node[above] {$S$};");
                     sb.AppendLine(@"  \filldraw (O) circle (1pt) node[below] {$O$};");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "cylinder_in_sphere":
+                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=1.0, {drawOpt}, every node/.style={{font=\normalsize}}]");
+                    double radSph = v1 / 2.0;
+                    double hCyl = v2 > 0 ? v2 : radSph * 1.2;
+                    double halfH = hCyl / 2.0;
+                    double rCylIn = Math.Round(Math.Sqrt(Math.Max(0.1, radSph * radSph - halfH * halfH)), 2);
+                    sb.AppendLine($@"  \def\R{{{radSph:F2}}} \def\h{{{halfH:F2}}} \def\rc{{{rCylIn:F2}}}");
+                    sb.AppendLine(@"  \shade[ball color=cyan!15, opacity=0.3] (0,0) circle (\R);");
+                    sb.AppendLine(@"  \draw (0,0) coordinate (O) circle (\R);");
+                    sb.AppendLine(@"  % Trụ nội tiếp");
+                    sb.AppendLine(@"  \draw[teal] (0,\h) ellipse (\rc cm and 0.4cm);");
+                    sb.AppendLine(@"  \draw[dashed,teal] (-\rc,-\h) arc (180:0:\rc cm and 0.4cm);");
+                    sb.AppendLine(@"  \draw[teal] (-\rc,-\h) arc (180:360:\rc cm and 0.4cm);");
+                    sb.AppendLine(@"  \draw[teal,thick] (-\rc,-\h) -- (-\rc,\h) (\rc,-\h) -- (\rc,\h);");
+                    sb.AppendLine(@"  \draw[dashed] (0,-\R) -- (0,\R);");
+                    sb.AppendLine(@"  \filldraw (O) circle (1.2pt) node[left] {$O$};");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "cone_in_sphere":
+                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=1.0, {drawOpt}, every node/.style={{font=\normalsize}}]");
+                    double rSphCone = v1 / 2.0;
+                    double hOffset = rSphCone * 0.4;
+                    double rConeBase = Math.Round(Math.Sqrt(Math.Max(0.1, rSphCone * rSphCone - hOffset * hOffset)), 2);
+                    sb.AppendLine($@"  \def\R{{{rSphCone:F2}}} \def\d{{{hOffset:F2}}} \def\rc{{{rConeBase:F2}}}");
+                    sb.AppendLine(@"  \shade[ball color=cyan!15, opacity=0.3] (0,0) circle (\R);");
+                    sb.AppendLine(@"  \draw (0,0) coordinate (O) circle (\R);");
+                    sb.AppendLine(@"  \coordinate (S) at (0,\R);");
+                    sb.AppendLine(@"  \draw[dashed,teal] (-\rc,-\d) arc (180:0:\rc cm and 0.45cm);");
+                    sb.AppendLine(@"  \draw[teal] (-\rc,-\d) arc (180:360:\rc cm and 0.45cm);");
+                    sb.AppendLine(@"  \draw[teal,thick] (S) -- (-\rc,-\d) (S) -- (\rc,-\d);");
+                    sb.AppendLine(@"  \draw[dashed] (S) -- (0,-\R);");
+                    sb.AppendLine(@"  \filldraw (S) circle (1.2pt) node[above] {$S$};");
+                    sb.AppendLine(@"  \filldraw (O) circle (1.2pt) node[below left] {$O$};");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "solid_rev_ox":
+                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=1.0, >=stealth, {drawOpt}, every node/.style={{font=\normalsize}}]");
+                    sb.AppendLine(@"  \draw[->, thick] (-1,0) -- (5,0) node[below] {$x$};");
+                    sb.AppendLine(@"  \draw[->, thick] (0,-2.5) -- (0,2.5) node[left] {$y$};");
+                    sb.AppendLine(@"  \node[below left] at (0,0) {$O$};");
+                    sb.AppendLine(@"  % Đường sinh cong y = sqrt(x)");
+                    sb.AppendLine(@"  \draw[thick, blue, domain=0:4, samples=80] plot (\x, {sqrt(\x)});");
+                    sb.AppendLine(@"  \draw[thick, blue, dashed, domain=0:4, samples=80] plot (\x, {-sqrt(\x)});");
+                    sb.AppendLine(@"  % Các lát cắt elip tại x = 1, 2.5, 4");
+                    sb.AppendLine(@"  \foreach \xx in {1.5, 3, 4} {");
+                    sb.AppendLine(@"    \pgfmathsetmacro{\yy}{sqrt(\xx)}");
+                    sb.AppendLine(@"    \draw[dashed] (\xx, -\yy) arc (-90:90:0.35cm and \yy cm);");
+                    sb.AppendLine(@"    \draw (\xx, -\yy) arc (270:90:0.35cm and \yy cm);");
+                    sb.AppendLine(@"  }");
+                    sb.AppendLine(@"  \draw[->, thick, teal] (4.5, 0.4) arc (60:300:0.4cm and 0.8cm);");
+                    sb.Append(@"\end{tikzpicture}");
+                    break;
+
+                case "solid_rev_oz":
+                    sb.AppendLine($@"\begin{{tikzpicture}}[scale=1.0, >=stealth, {drawOpt}, every node/.style={{font=\normalsize}}]");
+                    sb.AppendLine(@"  \draw[->, thick] (-3,0) -- (3,0) node[below] {$r$};");
+                    sb.AppendLine(@"  \draw[->, thick] (0,-0.5) -- (0,4.5) node[left] {$z$};");
+                    sb.AppendLine(@"  \node[below left] at (0,0) {$O$};");
+                    sb.AppendLine(@"  % Mặt tròn xoay hình chuông / paraboloid");
+                    sb.AppendLine(@"  \draw[thick, blue, domain=-2:2, samples=60] plot (\x, {0.8*\x*\x});");
+                    sb.AppendLine(@"  \draw[dashed] (-2, 3.2) arc (180:0:2cm and 0.5cm);");
+                    sb.AppendLine(@"  \draw (-2, 3.2) arc (180:360:2cm and 0.5cm);");
+                    sb.AppendLine(@"  \draw[dashed] (-1, 0.8) arc (180:0:1cm and 0.25cm);");
+                    sb.AppendLine(@"  \draw (-1, 0.8) arc (180:360:1cm and 0.25cm);");
+                    sb.AppendLine(@"  \draw[->, thick, teal] (0.5, 4.3) arc (30:330:0.8cm and 0.3cm);");
                     sb.Append(@"\end{tikzpicture}");
                     break;
 

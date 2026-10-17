@@ -269,6 +269,62 @@
   \\node at (1.25, 0.2) {$R$};
   \\node at (-0.2, 1.7) {$h$};
 \\end{tikzpicture}`
+      },
+      {
+        id: 'geom_cylinder',
+        title: 'Khối trụ tròn xoay trục OO\', bán kính r, chiều cao h',
+        code: `% KHỐI TRỤ TRÒN XOAY
+\\begin{tikzpicture}[scale=1.0, thick, every node/.style={font=\\normalsize},
+    declare function={r=2; h=3.6; b=0.65;}]
+  \\coordinate (O) at (0,0);
+  \\coordinate (O1) at (0,h);
+  \\draw[dashed, line width=0.5pt] (-r,0) arc (180:0:r and b);
+  \\draw[line width=0.7pt] (-r,0) arc (180:360:r and b);
+  \\draw[line width=0.7pt] (O1) ellipse (r and b);
+  \\draw[line width=0.7pt] (-r,0) -- (-r,h) (r,0) -- (r,h);
+  \\draw[dashed, line width=0.5pt] (O) -- (O1);
+  \\draw[dashed, line width=0.5pt] (O) -- (r,0) node[midway, below] {$r$};
+  \\fill (O) circle (1.2pt) node[below] {$O$};
+  \\fill (O1) circle (1.2pt) node[above] {$O'$};
+  \\draw[<->] (r+0.4,0) -- (r+0.4,h) node[midway, right] {$h$};
+\\end{tikzpicture}`
+      },
+      {
+        id: 'geom_sphere',
+        title: 'Mặt cầu tâm O bán kính R đổ bóng 3D',
+        code: `% MẶT CẦU TRÒN XOAY 3D
+\\begin{tikzpicture}[scale=1.1, thick, every node/.style={font=\\normalsize},
+    declare function={R=2.4; b=0.8;}]
+  \\coordinate (O) at (0,0);
+  \\shade[ball color=cyan!15, opacity=0.35] (O) circle (R);
+  \\draw[line width=0.7pt] (O) circle (R);
+  \\draw[dashed, line width=0.5pt] (-R,0) arc (180:0:R and b);
+  \\draw[line width=0.7pt] (-R,0) arc (180:360:R and b);
+  \\draw[dashed, line width=0.5pt] (0,-R) -- (0,R);
+  \\draw[dashed, line width=0.5pt] (O) -- (40:R) node[midway, above] {$R$};
+  \\fill (O) circle (1.2pt) node[below left] {$O$};
+\\end{tikzpicture}`
+      },
+      {
+        id: 'geom_sphere_section',
+        title: 'Mặt cầu cắt bởi mặt phẳng (Thiết diện tròn)',
+        code: `% MẶT CẦU CẮT MẶT PHẲNG THIẾT DIỆN TRÒN
+\\begin{tikzpicture}[scale=1.1, thick, every node/.style={font=\\normalsize},
+    declare function={R=2.5; d=1.4; b=0.8; rSec=sqrt(R*R - d*d); bSec=b*(rSec/R);}]
+  \\coordinate (O) at (0,0);
+  \\coordinate (H) at (0,d);
+  \\coordinate (M) at (rSec,d);
+  \\shade[ball color=cyan!15, opacity=0.35] (O) circle (R);
+  \\draw[line width=0.7pt] (O) circle (R);
+  \\draw[dashed, gray, line width=0.5pt] (-R,0) arc (180:0:R and b);
+  \\draw[gray, line width=0.5pt] (-R,0) arc (180:360:R and b);
+  \\draw[dashed, blue, line width=0.6pt] (-rSec,d) arc (180:0:rSec and bSec);
+  \\draw[blue, line width=0.7pt] (-rSec,d) arc (180:360:rSec and bSec);
+  \\draw[dashed, thick] (O) -- (H) node[midway, left] {$d$} (H) -- (M) node[midway, above] {$r$} (O) -- (M) node[midway, below right] {$R$};
+  \\fill (O) circle (1.2pt) node[below left] {$O$};
+  \\fill (H) circle (1.2pt) node[above left] {$H$};
+  \\fill (M) circle (1.2pt) node[right] {$M$};
+\\end{tikzpicture}`
       }
     ],
     Custom: [

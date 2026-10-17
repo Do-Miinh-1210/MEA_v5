@@ -26,6 +26,11 @@ namespace MatrixExamAI.Shared.Models
         HinhKhongGian,
 
         /// <summary>
+        /// Khối tròn xoay 3D (Hình nón, hình trụ, mặt cầu, nón cụt, chỏm cầu, thiết diện và khối lồng nhau).
+        /// </summary>
+        TronXoay,
+
+        /// <summary>
         /// Hình học phẳng / Tùy biến khác.
         /// </summary>
         Custom

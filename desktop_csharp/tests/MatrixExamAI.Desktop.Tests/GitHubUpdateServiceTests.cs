@@ -218,10 +218,10 @@ public class GitHubUpdateServiceTests
     public void CurrentVersion_ShouldBeAtLeast53018()
     {
         var service = GitHubUpdateService.Instance;
-        service.CurrentVersion.Should().Be("5.3.0.21");
-        service.DisplayVersion.Should().Be("5.3.0.21");
-        GitHubUpdateService.IsNewerVersion("5.3.0.21", "5.3.0.20").Should().BeTrue();
-        GitHubUpdateService.IsNewerVersion("5.3.0.20", "5.3.0.21").Should().BeFalse();
+        service.CurrentVersion.Should().Be("5.3.0.22");
+        service.DisplayVersion.Should().Be("5.3.0.22");
+        GitHubUpdateService.IsNewerVersion("5.3.0.22", "5.3.0.21").Should().BeTrue();
+        GitHubUpdateService.IsNewerVersion("5.3.0.21", "5.3.0.22").Should().BeFalse();
     }
 
     [Fact]
@@ -234,8 +234,8 @@ public class GitHubUpdateServiceTests
             {
                 var win = new MainWindow();
                 win.Should().NotBeNull();
-                win.TxtAppVersionTop.Text.Should().Be("v5.3.0.21");
-                win.TxtAppVersionBottom.Text.Should().Be("v5.3.0.21");
+                win.TxtAppVersionTop.Text.Should().Be("v5.3.0.22");
+                win.TxtAppVersionBottom.Text.Should().Be("v5.3.0.22");
             }
             catch (Exception e)
             {

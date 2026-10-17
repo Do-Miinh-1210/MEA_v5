@@ -256,6 +256,13 @@ namespace MatrixExamAI.Desktop.Tests.Tikz
         [InlineData("sphere_circum_cube", "mặt cầu ngoại tiếp")]
         [InlineData("octahedron_regular", "bát diện đều")]
         [InlineData("coord_3d_oxyz", "Oxyz")]
+        [InlineData("sphere_plane_section", "thiết diện tròn")]
+        [InlineData("cone_vertex_section", "thiết diện qua đỉnh")]
+        [InlineData("cylinder_parallel_section", "song song với trục")]
+        [InlineData("spherical_cap", "chỏm cầu")]
+        [InlineData("cylinder_inscribed_cone", "trụ nội tiếp")]
+        [InlineData("sphere_circum_cylinder", "cầu ngoại tiếp")]
+        [InlineData("solid_of_revolution_parabola", "Parabol")]
         public void Solid3D_AdvancedShapes_ShouldExistAndBeValid(string id, string expectedTitlePart)
         {
             var template = TikzTemplateLibrary.FindById(id);

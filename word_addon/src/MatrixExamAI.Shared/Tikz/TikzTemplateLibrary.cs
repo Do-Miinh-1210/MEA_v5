@@ -535,17 +535,20 @@ namespace MatrixExamAI.Shared.Tikz
                 CategoryName = cat3d.Name,
                 Tags = new[] { "3D", "hình nón", "nón tròn xoay", "khối tròn xoay" },
                 Description = "Hình nón tròn xoay có bán kính đáy r, chiều cao h và đường sinh l",
-                Code = @"\begin{tikzpicture}[scale=1.1, thick]
-  \draw         (-2,0) arc (180:360:2cm and 0.6cm);
-  \draw[dashed] (-2,0) arc (180:0  :2cm and 0.6cm);
-  \coordinate[label=above:$S$] (S) at (0,3);
-  \draw (-2,0) -- (S);
-  \draw ( 2,0) -- (S);
-  \fill (0,0) circle (1.5pt) node[below] {$O$};
-  \draw[dashed] (S)--(0,0);
-  \draw[<->] (0.1,0)--(2,0) node[midway, below] {$r$};
-  \draw[<->] (-0.3,0)--(-0.3,3) node[midway, left] {$h$};
-  \node[blue] at (1.3, 1.6) {$\ell$};
+                Code = @"\begin{tikzpicture}[scale=1.1, thick, every node/.style={font=\normalsize},
+    declare function={r=2.2; h=3.8; b=0.7;}]
+  \coordinate[label=above:$S$] (S) at (0,h);
+  \coordinate (O) at (0,0);
+  \coordinate (A) at (-r,0);
+  \coordinate (B) at (r,0);
+  \draw[dashed, line width=0.5pt] (-r,0) arc (180:0:r and b);
+  \draw[line width=0.7pt] (-r,0) arc (180:360:r and b);
+  \draw[line width=0.7pt] (A) -- (S) -- (B);
+  \draw[dashed, line width=0.5pt] (S) -- (O) -- (B);
+  \fill (O) circle (1.2pt) node[below] {$O$};
+  \node[left] at (0,h/2) {$h$};
+  \node[below] at (r/2,0) {$r$};
+  \node[above right] at (r/2,h/2) {$\ell$};
 \end{tikzpicture}"
             });
 
@@ -557,17 +560,19 @@ namespace MatrixExamAI.Shared.Tikz
                 CategoryName = cat3d.Name,
                 Tags = new[] { "3D", "hình trụ", "trụ tròn xoay", "khối tròn xoay" },
                 Description = "Hình trụ tròn xoay có trục OO', bán kính r và chiều cao h",
-                Code = @"\begin{tikzpicture}[scale=1.1, thick]
-  \draw         (-1.5,0) arc (180:360:1.5cm and 0.5cm);
-  \draw[dashed] (-1.5,0) arc (180:0  :1.5cm and 0.5cm);
-  \draw (0,3) ellipse (1.5cm and 0.5cm);
-  \draw (-1.5,0) -- (-1.5,3);
-  \draw ( 1.5,0) -- ( 1.5,3);
-  \draw[dashed] (0,0)--(0,3);
-  \fill (0,0) circle (1.5pt) node[below] {$O$};
-  \fill (0,3) circle (1.5pt) node[above] {$O'$};
-  \draw[<->] (0,0)--(1.5,0) node[midway, below] {$r$};
-  \draw[<->] (1.8,0)--(1.8,3) node[midway, right] {$h$};
+                Code = @"\begin{tikzpicture}[scale=1.1, thick, every node/.style={font=\normalsize},
+    declare function={r=2; h=3.6; b=0.65;}]
+  \coordinate (O) at (0,0);
+  \coordinate (O1) at (0,h);
+  \draw[dashed, line width=0.5pt] (-r,0) arc (180:0:r and b);
+  \draw[line width=0.7pt] (-r,0) arc (180:360:r and b);
+  \draw[line width=0.7pt] (O1) ellipse (r and b);
+  \draw[line width=0.7pt] (-r,0) -- (-r,h) (r,0) -- (r,h);
+  \draw[dashed, line width=0.5pt] (O) -- (O1);
+  \draw[dashed, line width=0.5pt] (O) -- (r,0) node[midway, below] {$r$};
+  \fill (O) circle (1.2pt) node[below] {$O$};
+  \fill (O1) circle (1.2pt) node[above] {$O'$};
+  \draw[<->] (r+0.4,0) -- (r+0.4,h) node[midway, right] {$h$};
 \end{tikzpicture}"
             });
 
@@ -579,12 +584,16 @@ namespace MatrixExamAI.Shared.Tikz
                 CategoryName = cat3d.Name,
                 Tags = new[] { "3D", "mặt cầu", "hình cầu", "bán kính R" },
                 Description = "Mặt cầu tròn xoay tâm O kèm đường tròn xích đạo elip và bán kính R",
-                Code = @"\begin{tikzpicture}[scale=1.1, thick]
-  \draw (0,0) circle (2cm);
-  \draw         (-2,0) arc (180:360:2cm and 0.6cm);
-  \draw[dashed] (-2,0) arc (180:0  :2cm and 0.6cm);
-  \fill (0,0) circle (1.5pt) node[below right] {$O$};
-  \draw[->, thick, blue] (0,0)--(50:2) node[midway, above left] {$R$};
+                Code = @"\begin{tikzpicture}[scale=1.1, thick, every node/.style={font=\normalsize},
+    declare function={R=2.4; b=0.8;}]
+  \coordinate (O) at (0,0);
+  \shade[ball color=cyan!15, opacity=0.35] (O) circle (R);
+  \draw[line width=0.7pt] (O) circle (R);
+  \draw[dashed, line width=0.5pt] (-R,0) arc (180:0:R and b);
+  \draw[line width=0.7pt] (-R,0) arc (180:360:R and b);
+  \draw[dashed, line width=0.5pt] (0,-R) -- (0,R);
+  \draw[dashed, line width=0.5pt] (O) -- (40:R) node[midway, above] {$R$};
+  \fill (O) circle (1.2pt) node[below left] {$O$};
 \end{tikzpicture}"
             });
 
@@ -747,21 +756,23 @@ namespace MatrixExamAI.Shared.Tikz
                 CategoryName = cat3d.Name,
                 Tags = new[] { "3D", "hình trụ", "thiết diện qua trục", "hình chữ nhật" },
                 Description = "Hình trụ tròn xoay với thiết diện qua trục là hình chữ nhật ABCD",
-                Code = @"\begin{tikzpicture}[scale=1.1, thick]
-  \draw         (-1.5,0) arc (180:360:1.5cm and 0.5cm);
-  \draw[dashed] (-1.5,0) arc (180:0  :1.5cm and 0.5cm);
-  \draw (0,3) ellipse (1.5cm and 0.5cm);
-  \draw (-1.5,0) -- (-1.5,3);
-  \draw ( 1.5,0) -- ( 1.5,3);
-  \draw[dashed] (0,0)--(0,3);
-  \fill (0,0) circle (1.5pt) node[below] {$O$};
-  \fill (0,3) circle (1.5pt) node[above] {$O'$};
-  \coordinate[label=below left:$A$]  (A) at (-1.5,0);
-  \coordinate[label=below right:$B$] (B) at ( 1.5,0);
-  \coordinate[label=above right:$C$] (C) at ( 1.5,3);
-  \coordinate[label=above left:$D$]  (D) at (-1.5,3);
+                Code = @"\begin{tikzpicture}[scale=1.1, thick, every node/.style={font=\normalsize},
+    declare function={r=2; h=3.6; b=0.65;}]
+  \coordinate (O) at (0,0);
+  \coordinate (O1) at (0,h);
+  \draw[dashed, line width=0.5pt] (-r,0) arc (180:0:r and b);
+  \draw[line width=0.7pt] (-r,0) arc (180:360:r and b);
+  \draw[line width=0.7pt] (O1) ellipse (r and b);
+  \draw[line width=0.7pt] (-r,0) -- (-r,h) (r,0) -- (r,h);
+  \draw[dashed, line width=0.5pt] (O) -- (O1);
+  \coordinate[label=below left:$A$]  (A) at (-r,0);
+  \coordinate[label=below right:$B$] (B) at (r,0);
+  \coordinate[label=above right:$C$] (C) at (r,h);
+  \coordinate[label=above left:$D$]  (D) at (-r,h);
   \fill[blue!15, opacity=0.5] (A)--(B)--(C)--(D)--cycle;
   \draw[blue, thick] (A)--(B)--(C)--(D)--cycle;
+  \fill (O) circle (1.2pt) node[below] {$O$};
+  \fill (O1) circle (1.2pt) node[above] {$O'$};
 \end{tikzpicture}"
             });
 
@@ -773,18 +784,198 @@ namespace MatrixExamAI.Shared.Tikz
                 CategoryName = cat3d.Name,
                 Tags = new[] { "3D", "hình nón", "nón cụt", "R r h" },
                 Description = "Hình nón cụt tròn xoay với bán kính đáy lớn R, đáy nhỏ r và chiều cao h",
-                Code = @"\begin{tikzpicture}[scale=1.1, thick]
-  \draw         (-2,0) arc (180:360:2cm and 0.6cm);
-  \draw[dashed] (-2,0) arc (180:0  :2cm and 0.6cm);
-  \draw (0,3) ellipse (1cm and 0.3cm);
-  \draw (-2,0) -- (-1,3);
-  \draw ( 2,0) -- ( 1,3);
-  \draw[dashed] (0,0)--(0,3);
-  \fill (0,0) circle (1.5pt) node[below] {$O$};
-  \fill (0,3) circle (1.5pt) node[above] {$O'$};
-  \draw[<->] (0.1,0)--(2,0) node[midway, below] {$R$};
-  \draw[<->] (0.1,3)--(1,3) node[midway, above] {$r$};
-  \draw[<->] (2.3,0)--(2.3,3) node[midway, right] {$h$};
+                Code = @"\begin{tikzpicture}[scale=1.1, thick, every node/.style={font=\normalsize},
+    declare function={R=2.4; r=1.3; h=3.4; b1=0.75; b2=0.4;}]
+  \coordinate (O) at (0,0);
+  \coordinate (O1) at (0,h);
+  \draw[dashed, line width=0.5pt] (-R,0) arc (180:0:R and b1);
+  \draw[line width=0.7pt] (-R,0) arc (180:360:R and b1);
+  \draw[line width=0.7pt] (O1) ellipse (r and b2);
+  \draw[line width=0.7pt] (-R,0) -- (-r,h) (R,0) -- (r,h);
+  \draw[dashed, line width=0.5pt] (O) -- (O1);
+  \draw[dashed, line width=0.5pt] (O) -- (R,0) node[midway, below] {$R$};
+  \draw[dashed, line width=0.5pt] (O1) -- (r,h) node[midway, above] {$r$};
+  \fill (O) circle (1.2pt) node[below] {$O$};
+  \fill (O1) circle (1.2pt) node[above] {$O'$};
+  \draw[<->] (R+0.4,0) -- (R+0.4,h) node[midway, right] {$h$};
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "sphere_plane_section",
+                Title = "Mặt cầu cắt bởi mặt phẳng (Thiết diện tròn)",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "mặt cầu", "thiết diện", "khoảng cách d", "bán kính r" },
+                Description = "Mặt cầu tâm O bán kính R bị cắt bởi mặt phẳng (P) cách tâm một khoảng d, tạo đường tròn thiết diện tâm H bán kính r = √(R² - d²)",
+                Code = @"\begin{tikzpicture}[scale=1.1, thick, every node/.style={font=\normalsize},
+    declare function={R=2.5; d=1.4; b=0.8; rSec=sqrt(R*R - d*d); bSec=b*(rSec/R);}]
+  \coordinate (O) at (0,0);
+  \coordinate (H) at (0,d);
+  \coordinate (M) at (rSec,d);
+  \shade[ball color=cyan!15, opacity=0.35] (O) circle (R);
+  \draw[line width=0.7pt] (O) circle (R);
+  \draw[dashed, gray, line width=0.5pt] (-R,0) arc (180:0:R and b);
+  \draw[gray, line width=0.5pt] (-R,0) arc (180:360:R and b);
+  \draw[dashed, blue, line width=0.6pt] (-rSec,d) arc (180:0:rSec and bSec);
+  \draw[blue, line width=0.7pt] (-rSec,d) arc (180:360:rSec and bSec);
+  \draw[dashed, thick] (O) -- (H) node[midway, left] {$d$} (H) -- (M) node[midway, above] {$r$} (O) -- (M) node[midway, below right] {$R$};
+  \fill (O) circle (1.2pt) node[below left] {$O$};
+  \fill (H) circle (1.2pt) node[above left] {$H$};
+  \fill (M) circle (1.2pt) node[right] {$M$};
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "cone_vertex_section",
+                Title = "Hình nón có thiết diện qua đỉnh SAB",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "hình nón", "thiết diện qua đỉnh", "tam giác cân" },
+                Description = "Hình nón đỉnh S cắt bởi mặt phẳng qua đỉnh tạo thiết diện là tam giác cân SAB với dây cung đáy AB",
+                Code = @"\begin{tikzpicture}[scale=1.1, thick, every node/.style={font=\normalsize},
+    declare function={r=2.5; h=4; b=0.8; xa=r*cos(215); ya=b*sin(215); xb=r*cos(325); yb=b*sin(325);}]
+  \coordinate[label=above:$S$] (S) at (0,h);
+  \coordinate (O) at (0,0);
+  \coordinate (A) at (xa,ya);
+  \coordinate (B) at (xb,yb);
+  \draw[dashed, line width=0.5pt] (-r,0) arc (180:0:r and b);
+  \draw[line width=0.7pt] (-r,0) arc (180:360:r and b);
+  \draw[line width=0.7pt] (-r,0) -- (S) -- (r,0);
+  \draw[dashed, line width=0.5pt] (S) -- (O);
+  \fill[blue!15, opacity=0.4] (S) -- (A) -- (B) -- cycle;
+  \draw[blue, thick] (S) -- (A) (S) -- (B);
+  \draw[blue, dashed, thick] (A) -- (B);
+  \fill (O) circle (1.2pt) node[below] {$O$};
+  \fill (A) circle (1.2pt) node[below left] {$A$};
+  \fill (B) circle (1.2pt) node[below right] {$B$};
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "cylinder_parallel_section",
+                Title = "Hình trụ có thiết diện song song với trục",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "hình trụ", "thiết diện song song trục", "hình chữ nhật" },
+                Description = "Hình trụ tròn xoay cắt bởi mặt phẳng song song với trục cách trục một khoảng d, tạo thiết diện hình chữ nhật ABB'A'",
+                Code = @"\begin{tikzpicture}[scale=1.1, thick, every node/.style={font=\normalsize},
+    declare function={r=2.2; h=3.8; b=0.7; d=1.2; xHalf=sqrt(r*r - d*d); yB=-b*(d/r);}]
+  \coordinate (O) at (0,0);
+  \coordinate (O1) at (0,h);
+  \draw[dashed, line width=0.5pt] (-r,0) arc (180:0:r and b);
+  \draw[line width=0.7pt] (-r,0) arc (180:360:r and b);
+  \draw[line width=0.7pt] (O1) ellipse (r and b);
+  \draw[line width=0.7pt] (-r,0) -- (-r,h) (r,0) -- (r,h);
+  \coordinate[label=below left:$A$]  (A) at (-xHalf,yB);
+  \coordinate[label=below right:$B$] (B) at (xHalf,yB);
+  \coordinate[label=above right:$B'$] (B1) at (xHalf,h+yB);
+  \coordinate[label=above left:$A'$]  (A1) at (-xHalf,h+yB);
+  \fill[blue!15, opacity=0.5] (A) -- (B) -- (B1) -- (A1) -- cycle;
+  \draw[blue, thick] (A) -- (B) -- (B1) -- (A1) -- cycle;
+  \draw[dashed, line width=0.5pt] (O) -- (O1);
+  \fill (O) circle (1.2pt) node[below] {$O$};
+  \fill (O1) circle (1.2pt) node[above] {$O'$};
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "spherical_cap",
+                Title = "Khối chỏm cầu tròn xoay",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "chỏm cầu", "khối tròn xoay", "thể tích", "chiều cao h" },
+                Description = "Khối chỏm cầu có bán kính mặt cầu R, chiều cao chỏm cầu h và mặt cắt tròn đáy chỏm cầu",
+                Code = @"\begin{tikzpicture}[scale=1.1, thick, every node/.style={font=\normalsize},
+    declare function={R=2.5; hCap=1.0; b=0.8; yCut=R-hCap; rCut=sqrt(R*R - yCut*yCut); bCut=b*(rCut/R);}]
+  \coordinate (O) at (0,0);
+  \coordinate (H) at (0,yCut);
+  \shade[ball color=cyan!15, opacity=0.35] (O) circle (R);
+  \draw[line width=0.7pt] (O) circle (R);
+  \draw[dashed, gray, line width=0.5pt] (-R,0) arc (180:0:R and b);
+  \draw[gray, line width=0.5pt] (-R,0) arc (180:360:R and b);
+  \fill[cyan!25, opacity=0.5] (0,yCut) ellipse (rCut and bCut);
+  \draw[dashed, blue, line width=0.6pt] (-rCut,yCut) arc (180:0:rCut and bCut);
+  \draw[blue, line width=0.7pt] (-rCut,yCut) arc (180:360:rCut and bCut);
+  \draw[dashed, line width=0.5pt] (0,0) -- (0,R);
+  \draw[<->] (-rCut-0.3,yCut) -- (-rCut-0.3,R) node[midway, left] {$h$};
+  \fill (O) circle (1.2pt) node[below] {$O$};
+  \fill (H) circle (1.2pt) node[below] {$H$};
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "cylinder_inscribed_cone",
+                Title = "Khối trụ nội tiếp khối nón tròn xoay",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "trụ nội tiếp nón", "khối lồng nhau", "cực trị thể tích" },
+                Description = "Hình trụ tròn xoay nội tiếp hình nón đỉnh S đáy tròn tâm O, bài toán tối ưu thể tích khối trụ",
+                Code = @"\begin{tikzpicture}[scale=1.0, thick, every node/.style={font=\normalsize},
+    declare function={R=2.6; H=4.2; bCone=0.8; r=1.3; h=2.1; bCyl=bCone*(r/R);}]
+  \coordinate[label=above:$S$] (S) at (0,H);
+  \coordinate (O) at (0,0);
+  \draw[dashed, line width=0.5pt] (-R,0) arc (180:0:R and bCone);
+  \draw[line width=0.7pt] (-R,0) arc (180:360:R and bCone);
+  \draw[line width=0.7pt] (-R,0) -- (S) -- (R,0);
+  \draw[dashed, line width=0.5pt] (S) -- (O);
+  \draw[teal, line width=0.7pt] (0,h) ellipse (r and bCyl);
+  \draw[dashed, teal, line width=0.5pt] (-r,0) arc (180:0:r and bCyl);
+  \draw[teal, line width=0.7pt] (-r,0) arc (180:360:r and bCyl);
+  \draw[teal, line width=0.7pt] (-r,0) -- (-r,h) (r,0) -- (r,h);
+  \fill (O) circle (1.2pt) node[below] {$O$};
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "sphere_circum_cylinder",
+                Title = "Mặt cầu ngoại tiếp hình trụ tròn xoay",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "mặt cầu ngoại tiếp", "hình trụ", "tâm I" },
+                Description = "Mặt cầu ngoại tiếp hình trụ tròn xoay có tâm I là trung điểm trục OO' và hai đường tròn đáy nằm trên mặt cầu",
+                Code = @"\begin{tikzpicture}[scale=1.1, thick, every node/.style={font=\normalsize},
+    declare function={R=2.5; h=2.6; b=0.8; halfH=h/2; rCyl=sqrt(R*R - halfH*halfH); bCyl=b*(rCyl/R);}]
+  \coordinate (O) at (0,0);
+  \shade[ball color=cyan!15, opacity=0.3] (O) circle (R);
+  \draw[line width=0.7pt] (O) circle (R);
+  \draw[dashed, gray, line width=0.5pt] (-R,0) arc (180:0:R and b);
+  \draw[gray, line width=0.5pt] (-R,0) arc (180:360:R and b);
+  \draw[teal, line width=0.7pt] (0,halfH) ellipse (rCyl and bCyl);
+  \draw[dashed, teal, line width=0.5pt] (-rCyl,-halfH) arc (180:0:rCyl and bCyl);
+  \draw[teal, line width=0.7pt] (-rCyl,-halfH) arc (180:360:rCyl and bCyl);
+  \draw[teal, line width=0.7pt] (-rCyl,-halfH) -- (-rCyl,halfH) (rCyl,-halfH) -- (rCyl,halfH);
+  \draw[dashed, line width=0.5pt] (0,-R) -- (0,R);
+  \fill (O) circle (1.2pt) node[left] {$I$};
+\end{tikzpicture}"
+            });
+
+            cat3d.Templates.Add(new TikzTemplate
+            {
+                Id = "solid_of_revolution_parabola",
+                Title = "Khối tròn xoay tạo bởi Parabol quay quanh Ox",
+                CategoryId = cat3d.Id,
+                CategoryName = cat3d.Name,
+                Tags = new[] { "3D", "khối tròn xoay", "tích phân", "parabol", "quay quanh Ox" },
+                Description = "Khối tròn xoay tạo thành khi quay hình phẳng giới hạn bởi parabol y = √(x) quanh trục hoành Ox",
+                Code = @"\begin{tikzpicture}[scale=1.1, >=stealth, thick, every node/.style={font=\normalsize}]
+  \draw[->, line width=0.7pt] (-0.8,0) -- (4.8,0) node[below] {$x$};
+  \draw[->, line width=0.7pt] (0,-2.4) -- (0,2.4) node[left] {$y$};
+  \node[below left] at (0,0) {$O$};
+  \draw[thick, blue, domain=0:4, samples=80] plot (\x, {sqrt(\x)});
+  \draw[thick, blue, dashed, domain=0:4, samples=80] plot (\x, {-sqrt(\x)});
+  \draw[dashed, line width=0.5pt] (4, -2) arc (-90:90:0.45cm and 2cm);
+  \draw[line width=0.7pt] (4, -2) arc (270:90:0.45cm and 2cm);
+  \draw[dashed, line width=0.5pt] (2, -1.414) arc (-90:90:0.35cm and 1.414cm);
+  \draw[line width=0.7pt] (2, -1.414) arc (270:90:0.35cm and 1.414cm);
+  \draw[->, thick, teal] (4.4, 0.4) arc (60:300:0.35cm and 0.8cm);
+  \node[above] at (2, 1.45) {$y=\sqrt{x}$};
 \end{tikzpicture}"
             });
 

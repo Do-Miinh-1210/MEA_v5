@@ -213,16 +213,23 @@ namespace MatrixExamAI.Shared.Tikz
         {
             double e = Math.Round(radius * 0.35, 2);
             var sb = new StringBuilder();
-            sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
-            sb.AppendLine($@"  \draw (0,0) ellipse ({F(radius)}cm and {F(e)}cm);");
+            sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick, every node/.style={font=\normalsize}]");
+            sb.AppendLine($@"  \coordinate (O) at (0,0);");
+            sb.AppendLine($@"  \coordinate (O1) at (0,{F(height)});");
+            sb.AppendLine($@"  % Đáy dưới: nửa sau đứt, nửa trước liền");
+            sb.AppendLine($@"  \draw[dashed] (-{F(radius)},0) arc (180:0:{F(radius)}cm and {F(e)}cm);");
+            sb.AppendLine($@"  \draw (-{F(radius)},0) arc (180:360:{F(radius)}cm and {F(e)}cm);");
+            sb.AppendLine($@"  % Đáy trên thấy toàn phần");
             sb.AppendLine($@"  \draw (0,{F(height)}) ellipse ({F(radius)}cm and {F(e)}cm);");
+            sb.AppendLine($@"  % Hai đường sinh biên");
             sb.AppendLine($@"  \draw (-{F(radius)},0)--(-{F(radius)},{F(height)});");
             sb.AppendLine($@"  \draw ({F(radius)},0)--({F(radius)},{F(height)});");
+            sb.AppendLine($@"  % Trục và bán kính");
             sb.AppendLine($@"  \draw[dashed] (0,0)--(0,{F(height)});");
-            sb.AppendLine(@"  \fill (0,0) circle (1.5pt) node[below]{$O$};");
-            sb.AppendLine($@"  \fill (0,{F(height)}) circle (1.5pt) node[above]{{$O'$}};");
-            sb.AppendLine($@"  \draw[<->] ({F(radius + 0.4)},0)--({F(radius + 0.4)},{F(height)}) node[midway,right]{{$h={F(height)}$}};");
-            sb.AppendLine($@"  \draw[<->] (0,{F(-e - 0.3)})--({F(radius)},{F(-e - 0.3)}) node[midway,below]{{$r={F(radius)}$}};");
+            sb.AppendLine($@"  \draw[dashed] (0,0)--({F(radius)},0) node[midway,below] {{$r$}};");
+            sb.AppendLine($@"  \fill (0,0) circle (1.2pt) node[below] {{$O$}};");
+            sb.AppendLine($@"  \fill (0,{F(height)}) circle (1.2pt) node[above] {{$O'$}};");
+            sb.AppendLine($@"  \draw[<->] ({F(radius + 0.4)},0)--({F(radius + 0.4)},{F(height)}) node[midway,right] {{$h={F(height)}$}};");
             sb.AppendLine(@"\end{tikzpicture}");
             return sb.ToString().TrimEnd();
         }
@@ -231,13 +238,21 @@ namespace MatrixExamAI.Shared.Tikz
         {
             double e = Math.Round(radius * 0.35, 2);
             var sb = new StringBuilder();
-            sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
-            sb.AppendLine($@"  \draw (0,0) ellipse ({F(radius)}cm and {F(e)}cm);");
+            sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick, every node/.style={font=\normalsize}]");
             sb.AppendLine($@"  \coordinate[label=above:$S$] (S) at (0,{F(height)});");
+            sb.AppendLine($@"  \coordinate (O) at (0,0);");
+            sb.AppendLine($@"  % Đáy elip: nửa sau đứt, nửa trước liền");
+            sb.AppendLine($@"  \draw[dashed] (-{F(radius)},0) arc (180:0:{F(radius)}cm and {F(e)}cm);");
+            sb.AppendLine($@"  \draw (-{F(radius)},0) arc (180:360:{F(radius)}cm and {F(e)}cm);");
+            sb.AppendLine($@"  % Hai đường sinh biên");
             sb.AppendLine($@"  \draw (-{F(radius)},0)--(S)--({F(radius)},0);");
-            sb.AppendLine($@"  \draw[dashed] (0,0)--(S);");
-            sb.AppendLine(@"  \fill (0,0) circle (1.5pt) node[below right]{$O$};");
-            sb.AppendLine(@"  \fill (S) circle (1.5pt);");
+            sb.AppendLine($@"  % Trục và bán kính");
+            sb.AppendLine($@"  \draw[dashed] (S)--(0,0);");
+            sb.AppendLine($@"  \draw[dashed] (0,0)--({F(radius)},0) node[midway,below] {{$r$}};");
+            sb.AppendLine($@"  \fill (0,0) circle (1.2pt) node[below right] {{$O$}};");
+            sb.AppendLine($@"  \fill (S) circle (1.2pt);");
+            sb.AppendLine($@"  \node[left] at (0,{F(height / 2.0)}) {{$h$}};");
+            sb.AppendLine($@"  \node[above right] at ({F(radius / 2.0)},{F(height / 2.0)}) {{$\ell$}};");
             sb.AppendLine(@"\end{tikzpicture}");
             return sb.ToString().TrimEnd();
         }
@@ -246,12 +261,100 @@ namespace MatrixExamAI.Shared.Tikz
         {
             double e = Math.Round(radius * 0.35, 2);
             var sb = new StringBuilder();
-            sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick]");
-            sb.AppendLine($@"  \shade[ball color=blue!10!white, opacity=0.5] (0,0) circle ({F(radius)}cm);");
+            sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick, every node/.style={font=\normalsize}]");
+            sb.AppendLine($@"  \shade[ball color=cyan!15, opacity=0.35] (0,0) circle ({F(radius)}cm);");
             sb.AppendLine($@"  \draw (0,0) circle ({F(radius)}cm);");
-            sb.AppendLine($@"  \draw[dashed] (0,0) ellipse ({F(radius)}cm and {F(e)}cm);");
-            sb.AppendLine(@"  \fill (0,0) circle (1.5pt) node[below right]{$O$};");
-            sb.AppendLine($@"  \draw[<->] (0,0)--({F(radius)},0) node[midway,above]{{$R={F(radius)}$}};");
+            sb.AppendLine($@"  % Đường xích đạo: nửa sau đứt, nửa trước liền");
+            sb.AppendLine($@"  \draw[dashed] (-{F(radius)},0) arc (180:0:{F(radius)}cm and {F(e)}cm);");
+            sb.AppendLine($@"  \draw (-{F(radius)},0) arc (180:360:{F(radius)}cm and {F(e)}cm);");
+            sb.AppendLine($@"  % Trục đứng nét đứt");
+            sb.AppendLine($@"  \draw[dashed] (0,-{F(radius)})--(0,{F(radius)});");
+            sb.AppendLine($@"  \draw[dashed] (0,0)--({F(radius)},0) node[midway,above] {{$R$}};");
+            sb.AppendLine($@"  \fill (0,0) circle (1.2pt) node[below left] {{$O$}};");
+            sb.AppendLine(@"\end{tikzpicture}");
+            return sb.ToString().TrimEnd();
+        }
+
+        public static string GenerateConeFrustum(double bigR, double smallR, double height)
+        {
+            double e1 = Math.Round(bigR * 0.35, 2);
+            double e2 = Math.Round(smallR * 0.35, 2);
+            var sb = new StringBuilder();
+            sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick, every node/.style={font=\normalsize}]");
+            sb.AppendLine($@"  \coordinate (O) at (0,0); \coordinate (O1) at (0,{F(height)});");
+            sb.AppendLine($@"  % Đáy dưới");
+            sb.AppendLine($@"  \draw[dashed] (-{F(bigR)},0) arc (180:0:{F(bigR)}cm and {F(e1)}cm);");
+            sb.AppendLine($@"  \draw (-{F(bigR)},0) arc (180:360:{F(bigR)}cm and {F(e1)}cm);");
+            sb.AppendLine($@"  % Đáy trên");
+            sb.AppendLine($@"  \draw (O1) ellipse ({F(smallR)}cm and {F(e2)}cm);");
+            sb.AppendLine($@"  % Đường sinh biên");
+            sb.AppendLine($@"  \draw (-{F(bigR)},0)--(-{F(smallR)},{F(height)}) ({F(bigR)},0)--({F(smallR)},{F(height)});");
+            sb.AppendLine($@"  % Trục và bán kính");
+            sb.AppendLine($@"  \draw[dashed] (O)--(O1);");
+            sb.AppendLine($@"  \draw[dashed] (O)--({F(bigR)},0) node[midway,below] {{$R$}};");
+            sb.AppendLine($@"  \draw[dashed] (O1)--({F(smallR)},{F(height)}) node[midway,above] {{$r$}};");
+            sb.AppendLine($@"  \fill (O) circle (1.2pt) node[below] {{$O$}};");
+            sb.AppendLine($@"  \fill (O1) circle (1.2pt) node[above] {{$O'$}};");
+            sb.AppendLine($@"  \draw[<->] ({F(bigR + 0.4)},0)--({F(bigR + 0.4)},{F(height)}) node[midway,right] {{$h$}};");
+            sb.AppendLine(@"\end{tikzpicture}");
+            return sb.ToString().TrimEnd();
+        }
+
+        public static string GenerateSpherePlaneSection(double radius, double cutDistance)
+        {
+            double d = Math.Min(cutDistance, radius * 0.85);
+            double rSec = Math.Round(Math.Sqrt(Math.Max(0.1, radius * radius - d * d)), 2);
+            double eSec = Math.Round(rSec * 0.35, 2);
+            double eEq = Math.Round(radius * 0.35, 2);
+            var sb = new StringBuilder();
+            sb.AppendLine(@"\begin{tikzpicture}[scale=1.1, thick, every node/.style={font=\normalsize}]");
+            sb.AppendLine($@"  \coordinate (O) at (0,0); \coordinate (H) at (0,{F(d)});");
+            sb.AppendLine($@"  \coordinate (M) at ({F(rSec)},{F(d)});");
+            sb.AppendLine($@"  \shade[ball color=cyan!15, opacity=0.3] (0,0) circle ({F(radius)}cm);");
+            sb.AppendLine($@"  \draw (0,0) circle ({F(radius)}cm);");
+            sb.AppendLine($@"  % Xích đạo");
+            sb.AppendLine($@"  \draw[dashed, gray] (-{F(radius)},0) arc (180:0:{F(radius)}cm and {F(eEq)}cm);");
+            sb.AppendLine($@"  \draw[gray] (-{F(radius)},0) arc (180:360:{F(radius)}cm and {F(eEq)}cm);");
+            sb.AppendLine($@"  % Đường tròn thiết diện cắt tại H");
+            sb.AppendLine($@"  \draw[dashed, blue] (-{F(rSec)},{F(d)}) arc (180:0:{F(rSec)}cm and {F(eSec)}cm);");
+            sb.AppendLine($@"  \draw[blue] (-{F(rSec)},{F(d)}) arc (180:360:{F(rSec)}cm and {F(eSec)}cm);");
+            sb.AppendLine($@"  % Tam giác vuông OHM");
+            sb.AppendLine($@"  \draw[dashed, thick] (O)--(H) node[midway,left] {{$d$}} (H)--(M) node[midway,above] {{$r$}} (O)--(M) node[midway,below right] {{$R$}};");
+            sb.AppendLine($@"  \fill (O) circle (1.2pt) node[below left] {{$O$}};");
+            sb.AppendLine($@"  \fill (H) circle (1.2pt) node[above left] {{$H$}};");
+            sb.AppendLine($@"  \fill (M) circle (1.2pt) node[right] {{$M$}};");
+            sb.AppendLine(@"\end{tikzpicture}");
+            return sb.ToString().TrimEnd();
+        }
+
+        public static string GenerateCylinderSection(double radius, double height, double chordDist = 0.8)
+        {
+            double d = Math.Min(chordDist, radius * 0.9);
+            double halfChord = Math.Round(Math.Sqrt(Math.Max(0.1, radius * radius - d * d)), 2);
+            double e = Math.Round(radius * 0.35, 2);
+            var sb = new StringBuilder();
+            sb.AppendLine(@"\begin{tikzpicture}[scale=1, thick, every node/.style={font=\normalsize}]");
+            sb.AppendLine($@"  \coordinate (O) at (0,0); \coordinate (O1) at (0,{F(height)});");
+            sb.AppendLine($@"  % Đáy dưới");
+            sb.AppendLine($@"  \draw[dashed] (-{F(radius)},0) arc (180:0:{F(radius)}cm and {F(e)}cm);");
+            sb.AppendLine($@"  \draw (-{F(radius)},0) arc (180:360:{F(radius)}cm and {F(e)}cm);");
+            sb.AppendLine($@"  % Đáy trên");
+            sb.AppendLine($@"  \draw (O1) ellipse ({F(radius)}cm and {F(e)}cm);");
+            sb.AppendLine($@"  % Đường sinh biên");
+            sb.AppendLine($@"  \draw (-{F(radius)},0)--(-{F(radius)},{F(height)}) ({F(radius)},0)--({F(radius)},{F(height)});");
+            sb.AppendLine($@"  % Thiết diện song song trục ABB'A'");
+            double yBottom = -Math.Round(e * (d / radius), 2);
+            sb.AppendLine($@"  \coordinate (A) at (-{F(halfChord)},{F(yBottom)});");
+            sb.AppendLine($@"  \coordinate (B) at ({F(halfChord)},{F(yBottom)});");
+            sb.AppendLine($@"  \coordinate (B1) at ({F(halfChord)},{F(height + yBottom)});");
+            sb.AppendLine($@"  \coordinate (A1) at (-{F(halfChord)},{F(height + yBottom)});");
+            sb.AppendLine($@"  \fill[blue!15, opacity=0.5] (A)--(B)--(B1)--(A1)--cycle;");
+            sb.AppendLine($@"  \draw[blue, thick] (A)--(B)--(B1)--(A1)--cycle;");
+            sb.AppendLine($@"  \draw[dashed] (O)--(O1);");
+            sb.AppendLine($@"  \fill (O) circle (1.2pt) node[below] {{$O$}};");
+            sb.AppendLine($@"  \fill (O1) circle (1.2pt) node[above] {{$O'$}};");
+            sb.AppendLine($@"  \node[below left] at (A) {{$A$}}; \node[below right] at (B) {{$B$}};");
+            sb.AppendLine($@"  \node[above right] at (B1) {{$B'$}}; \node[above left] at (A1) {{$A'$}};");
             sb.AppendLine(@"\end{tikzpicture}");
             return sb.ToString().TrimEnd();
         }
