@@ -953,9 +953,9 @@ namespace MatrixExamAI.Desktop.Views
         private Point _lastMousePos;
         private string? _lastCompileError;
 
-        private void SetZoom(double zoom)
+        private void CenterDiagramContent(double zoom)
         {
-            _currentZoom = Math.Clamp(zoom, 0.1, 5.0);
+            _currentZoom = Math.Clamp(zoom, 0.05, 5.0);
             if (ImgScaleTransform != null)
             {
                 ImgScaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, null);
@@ -963,51 +963,98 @@ namespace MatrixExamAI.Desktop.Views
                 ImgScaleTransform.ScaleX = _currentZoom;
                 ImgScaleTransform.ScaleY = _currentZoom;
             }
+
+            if (ImgTranslateTransform != null && CanvasDiagramContainer != null)
+            {
+                double imgW = (ImgDiagramPreview.Source is BitmapSource bs && bs.Width > 0) ? bs.Width : 400;
+                double imgH = (ImgDiagramPreview.Source is BitmapSource bs2 && bs2.Height > 0) ? bs2.Height : 300;
+                double canvasW = CanvasDiagramContainer.ActualWidth > 0 ? CanvasDiagramContainer.ActualWidth : imgW;
+                double canvasH = CanvasDiagramContainer.ActualHeight > 0 ? CanvasDiagramContainer.ActualHeight : imgH;
+
+                ImgTranslateTransform.X = (canvasW / 2.0) * (1.0 - _currentZoom);
+                ImgTranslateTransform.Y = (canvasH / 2.0) * (1.0 - _currentZoom);
+            }
+
             if (TxtZoomLevel != null)
             {
                 TxtZoomLevel.Text = $"Thu phóng: {_currentZoom * 100:0}%";
             }
         }
 
-        private void BtnZoomIn_Click(object sender, RoutedEventArgs e) => SetZoom(_currentZoom * 1.25);
-        private void BtnZoomOut_Click(object sender, RoutedEventArgs e) => SetZoom(_currentZoom / 1.25);
-        private void BtnZoomReset_Click(object sender, RoutedEventArgs e)
+        private void SetDiagramZoomAt(double targetZoom, Point focalPoint)
         {
-            if (ImgTranslateTransform != null)
+            double newZoom = Math.Clamp(targetZoom, 0.05, 5.0);
+            if (Math.Abs(newZoom - _currentZoom) < 0.0001) return;
+
+            if (ImgTranslateTransform != null && ViewportDiagramContainer != null && CanvasDiagramContainer != null)
             {
-                ImgTranslateTransform.X = 0;
-                ImgTranslateTransform.Y = 0;
+                double ratio = newZoom / _currentZoom;
+                double imgW = (ImgDiagramPreview.Source is BitmapSource bs && bs.Width > 0) ? bs.Width : 400;
+                double imgH = (ImgDiagramPreview.Source is BitmapSource bs2 && bs2.Height > 0) ? bs2.Height : 300;
+                double canvasW = CanvasDiagramContainer.ActualWidth > 0 ? CanvasDiagramContainer.ActualWidth : imgW;
+                double canvasH = CanvasDiagramContainer.ActualHeight > 0 ? CanvasDiagramContainer.ActualHeight : imgH;
+
+                double originX = (ViewportDiagramContainer.ActualWidth - canvasW) / 2.0;
+                double originY = (ViewportDiagramContainer.ActualHeight - canvasH) / 2.0;
+
+                ImgTranslateTransform.X = (focalPoint.X - originX) - (focalPoint.X - originX - ImgTranslateTransform.X) * ratio;
+                ImgTranslateTransform.Y = (focalPoint.Y - originY) - (focalPoint.Y - originY - ImgTranslateTransform.Y) * ratio;
             }
-            SetZoom(1.0);
+
+            _currentZoom = newZoom;
+            if (ImgScaleTransform != null)
+            {
+                ImgScaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+                ImgScaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, null);
+                ImgScaleTransform.ScaleX = _currentZoom;
+                ImgScaleTransform.ScaleY = _currentZoom;
+            }
+
+            if (TxtZoomLevel != null)
+            {
+                TxtZoomLevel.Text = $"Thu phóng: {_currentZoom * 100:0}%";
+            }
         }
+
+        private void SetZoom(double zoom) => CenterDiagramContent(zoom);
+
+        private void BtnZoomIn_Click(object sender, RoutedEventArgs e)
+        {
+            Point center = new Point(ViewportDiagramContainer.ActualWidth / 2.0, ViewportDiagramContainer.ActualHeight / 2.0);
+            SetDiagramZoomAt(_currentZoom * 1.25, center);
+        }
+
+        private void BtnZoomOut_Click(object sender, RoutedEventArgs e)
+        {
+            Point center = new Point(ViewportDiagramContainer.ActualWidth / 2.0, ViewportDiagramContainer.ActualHeight / 2.0);
+            SetDiagramZoomAt(_currentZoom / 1.25, center);
+        }
+
+        private void BtnZoomReset_Click(object sender, RoutedEventArgs e) => CenterDiagramContent(1.0);
 
         private void BtnZoomFit_Click(object sender, RoutedEventArgs e)
         {
-            if (ImgTranslateTransform != null)
-            {
-                ImgTranslateTransform.X = 0;
-                ImgTranslateTransform.Y = 0;
-            }
-            if (ImgDiagramPreview.Source is BitmapSource bs && bs.PixelWidth > 0 && bs.PixelHeight > 0 && ScrollDiagramContainer != null)
+            if (ImgDiagramPreview.Source is BitmapSource bs && bs.PixelWidth > 0 && bs.PixelHeight > 0 && ViewportDiagramContainer != null)
             {
                 double imgW = bs.Width > 0 ? bs.Width : bs.PixelWidth;
                 double imgH = bs.Height > 0 ? bs.Height : bs.PixelHeight;
-                double availW = Math.Max(50, ScrollDiagramContainer.ActualWidth - 32);
-                double availH = Math.Max(50, ScrollDiagramContainer.ActualHeight - 32);
+                double availW = Math.Max(50, ViewportDiagramContainer.ActualWidth - 32);
+                double availH = Math.Max(50, ViewportDiagramContainer.ActualHeight - 32);
                 double fit = Math.Min(availW / imgW, availH / imgH) * 0.95;
-                if (fit >= 0.1 && fit <= 5.0) SetZoom(fit);
-                else SetZoom(1.0);
+                if (fit >= 0.05 && fit <= 5.0) CenterDiagramContent(fit);
+                else CenterDiagramContent(1.0);
             }
             else
             {
-                SetZoom(1.0);
+                CenterDiagramContent(1.0);
             }
         }
 
-        private void ScrollDiagramContainer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        private void ViewportDiagramContainer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            double factor = e.Delta > 0 ? 1.15 : 0.85;
-            SetZoom(_currentZoom * factor);
+            double factor = e.Delta > 0 ? 1.15 : (1.0 / 1.15);
+            Point mousePos = e.GetPosition(ViewportDiagramContainer);
+            SetDiagramZoomAt(_currentZoom * factor, mousePos);
             e.Handled = true;
         }
 
@@ -1022,8 +1069,8 @@ namespace MatrixExamAI.Desktop.Views
                     return;
                 }
                 _isDragging = true;
-                _lastMousePos = e.GetPosition(ScrollDiagramContainer);
-                CanvasDiagramContainer.CaptureMouse();
+                _lastMousePos = e.GetPosition(ViewportDiagramContainer);
+                ViewportDiagramContainer.CaptureMouse();
             }
         }
 
@@ -1031,7 +1078,7 @@ namespace MatrixExamAI.Desktop.Views
         {
             if (_isDragging && ImgTranslateTransform != null)
             {
-                var cur = e.GetPosition(ScrollDiagramContainer);
+                var cur = e.GetPosition(ViewportDiagramContainer);
                 double dx = cur.X - _lastMousePos.X;
                 double dy = cur.Y - _lastMousePos.Y;
                 ImgTranslateTransform.X += dx;
@@ -1045,7 +1092,7 @@ namespace MatrixExamAI.Desktop.Views
             if (_isDragging)
             {
                 _isDragging = false;
-                CanvasDiagramContainer.ReleaseMouseCapture();
+                ViewportDiagramContainer.ReleaseMouseCapture();
             }
         }
 

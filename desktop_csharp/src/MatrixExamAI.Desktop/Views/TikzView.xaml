@@ -449,12 +449,10 @@
                             CornerRadius="6" ClipToBounds="True"
                             MouseEnter="BorderDiagramWrapper_MouseEnter" MouseLeave="BorderDiagramWrapper_MouseLeave"
                             ToolTip="Nhấp đúp chuột để mở cửa sổ xem hình chi tiết | Kéo chuột để di chuyển | Lăn bánh xe chuột để thu phóng">
-                        <ScrollViewer x:Name="ScrollDiagramContainer" 
-                                      HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                                      PreviewMouseWheel="ScrollDiagramContainer_PreviewMouseWheel">
-                            <Grid x:Name="CanvasDiagramContainer" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="14"
-                                  RenderTransformOrigin="0.5, 0.5"
-                                  MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" Cursor="Hand">
+                        <Grid x:Name="ViewportDiagramContainer" ClipToBounds="True" Background="Transparent"
+                              PreviewMouseWheel="ViewportDiagramContainer_PreviewMouseWheel"
+                              MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" Cursor="Hand">
+                            <Grid x:Name="CanvasDiagramContainer" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <Grid.RenderTransform>
                                     <TransformGroup>
                                         <ScaleTransform x:Name="ImgScaleTransform" ScaleX="1" ScaleY="1" />
@@ -473,7 +471,7 @@
                                                FontSize="10" Foreground="#CBD5E1" HorizontalAlignment="Center" Margin="0,2,0,0" />
                                 </StackPanel>
                             </Grid>
-                        </ScrollViewer>
+                        </Grid>
                     </Border>
 
                     <!-- Thanh trạng thái kết quả vẽ -->

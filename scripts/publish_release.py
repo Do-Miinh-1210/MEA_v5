@@ -27,9 +27,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.10"
-TITLE = "MatrixExamAI Pro v5.3.0.10 (Opaque Dark Dropdown Background & High Contrast Border)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.10: Chuyển nền popup ComboBox xổ xuống sang màu đen đặc (#202020) chống xuyên thấu và viền tương phản cao (#3F3F46), khắc phục triệt để hiện tượng chữ trong menu đè lên các nút nền phía dưới."
+TAG = "v5.3.0.11"
+TITLE = "MatrixExamAI Pro v5.3.0.11 (Focal-Point Zoom & Centered Viewport Canvas)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.11: Nâng cấp hoàn chỉnh cơ chế Pan/Zoom cho khung xem hình TikZ chi tiết và phân hệ TikzView; thu phóng chuẩn xác tại vị trí con trỏ chuột (Focal Point Zoom), ảnh luôn tự động căn giữa khung nhìn, loại bỏ triệt để hiện tượng lệch vào một góc màn hình."
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)

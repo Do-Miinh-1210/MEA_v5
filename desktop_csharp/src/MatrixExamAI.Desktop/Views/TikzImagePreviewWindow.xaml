@@ -58,13 +58,12 @@
             </DockPanel>
         </Border>
 
-        <!-- Main Image Canvas Viewer with ScrollViewer (Dark Slate Studio Canvas) -->
+        <!-- Main Image Canvas Viewer (Dark Slate Studio Canvas) -->
         <Border Grid.Row="1" Background="#0F172A" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}" 
                 BorderThickness="1" CornerRadius="6" ClipToBounds="True">
-            <ScrollViewer x:Name="ScrollViewerContainer" 
-                          HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-                <Grid x:Name="CanvasContainer" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24"
-                      MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" Cursor="Hand"
+            <Grid x:Name="ViewportContainer" ClipToBounds="True" Background="#0F172A"
+                  MouseDown="Canvas_MouseDown" MouseMove="Canvas_MouseMove" MouseUp="Canvas_MouseUp" Cursor="Hand">
+                <Grid x:Name="CanvasContainer" HorizontalAlignment="Center" VerticalAlignment="Center"
                       Background="Transparent">
                     <Grid.RenderTransform>
                         <TransformGroup>
@@ -83,7 +82,7 @@
                         <Image x:Name="ImgFullPreview" Stretch="None" RenderOptions.BitmapScalingMode="HighQuality" />
                     </Border>
                 </Grid>
-            </ScrollViewer>
+            </Grid>
         </Border>
 
         <!-- Footer / Status Bar -->
