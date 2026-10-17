@@ -39,6 +39,9 @@ namespace MatrixExamAI.Desktop.Views
         private string _lastPrompt = string.Empty;
         private bool _isWebViewInitialized = false;
         private string? _tempHtmlPath;
+        private System.Threading.CancellationTokenSource? _activeAiCts;
+        private System.Windows.Threading.DispatcherTimer? _aiLiveTimer;
+        private readonly Stopwatch _aiStopwatch = new();
 
         public HtmlModelView()
         {
@@ -280,12 +283,12 @@ namespace MatrixExamAI.Desktop.Views
             await RunModelAsync();
         }
 
-        public async Task RunModelAsync()
+        public async Task RunModelAsync(double? aiElapsedSec = null)
         {
             string html = TxtHtmlCode.Text.Trim();
             if (string.IsNullOrWhiteSpace(html))
             {
-                System.Windows.MessageBox.Show("Chưa có mã nguồn HTML để hiển thị mô hình.\nHãy chọn 'Mẫu chuẩn' hoặc bấm 'AI tạo' để bắt đầu.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                System.Windows.MessageBox.Show("Chưa có mã nguồn HTML để hiển thị mô hình.\nHãy bấm 'AI tạo' hoặc 'Kho mô hình' để bắt đầu.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -293,7 +296,7 @@ namespace MatrixExamAI.Desktop.Views
             TxtHtmlCode.Text = html;
 
             var sw = Stopwatch.StartNew();
-            TxtModelStats.Text = "⏳ Đang nạp mô hình...";
+            TxtModelStats.Text = "⏳ Đang nạp mô hình vào khung xem trước...";
 
             try
             {
@@ -320,8 +323,16 @@ namespace MatrixExamAI.Desktop.Views
                 sw.Stop();
                 int lineCount = html.Split('\n').Length;
                 double sizeKb = Encoding.UTF8.GetByteCount(html) / 1024.0;
-                TxtModelStats.Text = $"Mô hình 3D: {lineCount} dòng ({sizeKb:F1} KB)";
-                TxtRenderTime.Text = $"Thời gian nạp: {sw.ElapsedMilliseconds} ms";
+                if (aiElapsedSec.HasValue)
+                {
+                    TxtModelStats.Text = $"Mô hình 3D: {lineCount} dòng ({sizeKb:F1} KB) • Thời gian AI tạo: {aiElapsedSec.Value:F1}s";
+                    TxtRenderTime.Text = $"Hoàn tất: {aiElapsedSec.Value:F1}s (Nạp web: {sw.ElapsedMilliseconds} ms)";
+                }
+                else
+                {
+                    TxtModelStats.Text = $"Mô hình 3D: {lineCount} dòng ({sizeKb:F1} KB)";
+                    TxtRenderTime.Text = $"Thời gian nạp: {sw.ElapsedMilliseconds} ms";
+                }
             }
             catch (Exception ex)
             {
@@ -387,15 +398,59 @@ namespace MatrixExamAI.Desktop.Views
 
         #region AI TẠO, SỬA ĐỔI, TỐI ƯU VÀ DÁN ẢNH
 
+        private void StartAiLiveTimer(string actionTitle)
+        {
+            _aiLiveTimer?.Stop();
+            _aiStopwatch.Restart();
+
+            TxtLoadingTitle.Text = actionTitle;
+            TxtLoadingTimer.Text = "⏳ Thời gian xử lý: 0.0s";
+            BorderLoadingOverlay.Visibility = Visibility.Visible;
+
+            _aiLiveTimer = new System.Windows.Threading.DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(100)
+            };
+            _aiLiveTimer.Tick += (s, e) =>
+            {
+                double sec = _aiStopwatch.Elapsed.TotalSeconds;
+                TxtLoadingTimer.Text = $"⏳ Thời gian xử lý: {sec:F1}s";
+                TxtModelStats.Text = $"⏳ {actionTitle}... ({sec:F1}s)";
+                TxtRenderTime.Text = $"Đang chạy: {sec:F1}s";
+                InfoHtmlNotification.Title = $"Đang xử lý ({sec:F1}s)";
+                InfoHtmlNotification.Message = $"AI đang phân tích và lập trình mô hình 3D... ({sec:F1}s)";
+            };
+            _aiLiveTimer.Start();
+        }
+
+        private void StopAiLiveTimer()
+        {
+            _aiLiveTimer?.Stop();
+            _aiStopwatch.Stop();
+            BorderLoadingOverlay.Visibility = Visibility.Collapsed;
+        }
+
+        private void BtnCancelAiAction_Click(object sender, RoutedEventArgs e)
+        {
+            _activeAiCts?.Cancel();
+            double sec = _aiStopwatch.Elapsed.TotalSeconds;
+            StopAiLiveTimer();
+            TxtModelStats.Text = $"Đã hủy tác vụ sau {sec:F1}s";
+            TxtRenderTime.Text = "Đã dừng";
+            InfoHtmlNotification.Severity = InfoBarSeverity.Informational;
+            InfoHtmlNotification.Title = $"Đã hủy tác vụ AI ({sec:F1}s)";
+            InfoHtmlNotification.Message = $"Người dùng đã dừng tác vụ sau {sec:F1}s.";
+            InfoHtmlNotification.IsOpen = true;
+            BtnAiGenerate.IsEnabled = true;
+            BtnAiEdit.IsEnabled = true;
+            BtnAiOptimize.IsEnabled = true;
+        }
+
         private async void BtnAiGenerate_Click(object sender, RoutedEventArgs e)
         {
             string prompt = TxtPrompt.Text.Trim();
-            if (string.IsNullOrWhiteSpace(prompt) && _attachedImageBytes == null)
-            {
-                System.Windows.MessageBox.Show("Vui lòng nhập mô tả đề bài / mô hình 3D hoặc dán ảnh bài toán.", "Chưa có thông tin", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
 
+            // Luôn mở hộp thoại để người dùng dán ảnh hoặc nhập đề bài linh hoạt
             var dlg = new HtmlModelAiGenerateDialog(prompt, _attachedImageBytes)
             {
                 Owner = Window.GetWindow(this),
@@ -425,13 +480,24 @@ namespace MatrixExamAI.Desktop.Views
             string? base64 = (imgBytes != null && imgBytes.Length > 0) ? Convert.ToBase64String(imgBytes) : null;
 
             BtnAiGenerate.IsEnabled = false;
-            TxtModelStats.Text = "⏳ AI đang phân tích và lập trình mô hình 3D HTML...";
-            var sw = Stopwatch.StartNew();
+            _activeAiCts?.Dispose();
+            _activeAiCts = new System.Threading.CancellationTokenSource();
+
+            string title = imgBytes != null 
+                ? "AI đang phân tích ảnh & lập trình mô hình 3D HTML" 
+                : "AI đang lập trình mô hình 3D HTML từ đề bài";
+            StartAiLiveTimer(title);
+
+            InfoHtmlNotification.Severity = InfoBarSeverity.Informational;
+            InfoHtmlNotification.Title = "AI đang xử lý (0.0s)";
+            InfoHtmlNotification.Message = "Đang dựng cấu trúc Three.js, KaTeX và giao diện tương tác...";
+            InfoHtmlNotification.IsOpen = true;
 
             try
             {
-                var result = await DesktopGeminiFactory.GenerateHtmlModelAsync(prompt, category, base64);
-                sw.Stop();
+                var result = await DesktopGeminiFactory.GenerateHtmlModelAsync(prompt, category, base64, _activeAiCts.Token);
+                double totalSec = _aiStopwatch.Elapsed.TotalSeconds;
+                StopAiLiveTimer();
 
                 if (result.Success && !string.IsNullOrWhiteSpace(result.Content))
                 {
@@ -439,23 +505,43 @@ namespace MatrixExamAI.Desktop.Views
                     TxtHtmlCode.Text = html;
 
                     InfoHtmlNotification.Severity = InfoBarSeverity.Success;
-                    InfoHtmlNotification.Title = "AI Tạo mô hình thành công";
-                    InfoHtmlNotification.Message = $"Mô hình 3D đã được tạo trong {sw.ElapsedMilliseconds} ms ({result.ModelUsed}).";
+                    InfoHtmlNotification.Title = $"AI Tạo mô hình thành công ({totalSec:F1}s)";
+                    InfoHtmlNotification.Message = $"Mô hình 3D tương tác đã được tạo thành công trong {totalSec:F1}s ({result.ModelUsed}).";
                     InfoHtmlNotification.IsOpen = true;
 
-                    await RunModelAsync();
+                    await RunModelAsync(totalSec);
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show($"AI không thể tạo mô hình: {result.ErrorMessage}", "Lỗi sinh mã", MessageBoxButton.OK, MessageBoxImage.Error);
+                    if (_activeAiCts.IsCancellationRequested)
+                    {
+                        InfoHtmlNotification.Severity = InfoBarSeverity.Informational;
+                        InfoHtmlNotification.Title = $"Đã hủy sau {totalSec:F1}s";
+                        InfoHtmlNotification.Message = "Tác vụ tạo mô hình đã được người dùng dừng.";
+                    }
+                    else
+                    {
+                        TxtModelStats.Text = $"Lỗi sau {totalSec:F1}s: {result.ErrorMessage}";
+                        System.Windows.MessageBox.Show($"AI không thể tạo mô hình: {result.ErrorMessage}", "Lỗi sinh mã", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                double totalSec = _aiStopwatch.Elapsed.TotalSeconds;
+                StopAiLiveTimer();
+                TxtModelStats.Text = $"Đã hủy sau {totalSec:F1}s";
             }
             catch (Exception ex)
             {
+                double totalSec = _aiStopwatch.Elapsed.TotalSeconds;
+                StopAiLiveTimer();
+                TxtModelStats.Text = $"Lỗi sau {totalSec:F1}s: {ex.Message}";
                 System.Windows.MessageBox.Show($"Lỗi trong quá trình AI tạo mô hình: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
+                StopAiLiveTimer();
                 BtnAiGenerate.IsEnabled = true;
             }
         }
@@ -465,7 +551,7 @@ namespace MatrixExamAI.Desktop.Views
             string prompt = string.IsNullOrWhiteSpace(_lastPrompt) ? TxtPrompt.Text.Trim() : _lastPrompt;
             if (string.IsNullOrWhiteSpace(prompt) && _attachedImageBytes == null)
             {
-                System.Windows.MessageBox.Show("Chưa có mô tả trước đó để tạo lại.\nHãy nhập mô tả vào ô đề bài.", "Chưa có mô tả", MessageBoxButton.OK, MessageBoxImage.Information);
+                System.Windows.MessageBox.Show("Chưa có mô tả trước đó để tạo lại.\nHãy nhập mô tả vào ô đề bài hoặc bấm 'AI tạo'.", "Chưa có mô tả", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -493,14 +579,33 @@ namespace MatrixExamAI.Desktop.Views
                 byte[]? imgBytes = dlg.ResultImageBytes;
                 string? base64 = (imgBytes != null && imgBytes.Length > 0) ? Convert.ToBase64String(imgBytes) : null;
 
+                if (imgBytes != null && imgBytes.Length > 0)
+                {
+                    _attachedImageBytes = imgBytes;
+                    LoadAttachedImage(imgBytes);
+                }
+
                 BtnAiEdit.IsEnabled = false;
-                TxtModelStats.Text = "⏳ AI đang chỉnh sửa mã HTML theo yêu cầu...";
-                var sw = Stopwatch.StartNew();
+                _activeAiCts?.Dispose();
+                _activeAiCts = new System.Threading.CancellationTokenSource();
+
+                string title = imgBytes != null 
+                    ? "AI đang quan sát ảnh & chỉnh sửa mô hình 3D HTML" 
+                    : "AI đang chỉnh sửa mã HTML theo yêu cầu";
+                StartAiLiveTimer(title);
+
+                InfoHtmlNotification.Severity = InfoBarSeverity.Informational;
+                InfoHtmlNotification.Title = "Đang áp dụng chỉnh sửa (0.0s)";
+                InfoHtmlNotification.Message = imgBytes != null
+                    ? "AI đang đối chiếu ảnh minh họa với mã HTML Three.js..."
+                    : "AI đang cập nhật mã HTML theo mô tả...";
+                InfoHtmlNotification.IsOpen = true;
 
                 try
                 {
-                    var result = await DesktopGeminiFactory.EditHtmlModelAsync(currentHtml, editReq, base64);
-                    sw.Stop();
+                    var result = await DesktopGeminiFactory.EditHtmlModelAsync(currentHtml, editReq, base64, _activeAiCts.Token);
+                    double totalSec = _aiStopwatch.Elapsed.TotalSeconds;
+                    StopAiLiveTimer();
 
                     if (result.Success && !string.IsNullOrWhiteSpace(result.Content))
                     {
@@ -508,23 +613,42 @@ namespace MatrixExamAI.Desktop.Views
                         TxtHtmlCode.Text = updatedHtml;
 
                         InfoHtmlNotification.Severity = InfoBarSeverity.Success;
-                        InfoHtmlNotification.Title = "AI Sửa mô hình hoàn tất";
-                        InfoHtmlNotification.Message = $"Đã cập nhật mô hình 3D trong {sw.ElapsedMilliseconds} ms ({result.ModelUsed}).";
+                        InfoHtmlNotification.Title = $"AI Sửa mô hình hoàn tất ({totalSec:F1}s)";
+                        InfoHtmlNotification.Message = $"Đã cập nhật mô hình 3D trong {totalSec:F1}s ({result.ModelUsed}).";
                         InfoHtmlNotification.IsOpen = true;
 
-                        await RunModelAsync();
+                        await RunModelAsync(totalSec);
                     }
                     else
                     {
-                        System.Windows.MessageBox.Show($"AI không thể chỉnh sửa: {result.ErrorMessage}", "Lỗi chỉnh sửa", MessageBoxButton.OK, MessageBoxImage.Error);
+                        if (_activeAiCts.IsCancellationRequested)
+                        {
+                            InfoHtmlNotification.Severity = InfoBarSeverity.Informational;
+                            InfoHtmlNotification.Title = $"Đã hủy sau {totalSec:F1}s";
+                        }
+                        else
+                        {
+                            TxtModelStats.Text = $"Lỗi sau {totalSec:F1}s: {result.ErrorMessage}";
+                            System.Windows.MessageBox.Show($"AI không thể chỉnh sửa: {result.ErrorMessage}", "Lỗi chỉnh sửa", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
+                }
+                catch (OperationCanceledException)
+                {
+                    double totalSec = _aiStopwatch.Elapsed.TotalSeconds;
+                    StopAiLiveTimer();
+                    TxtModelStats.Text = $"Đã hủy sau {totalSec:F1}s";
                 }
                 catch (Exception ex)
                 {
+                    double totalSec = _aiStopwatch.Elapsed.TotalSeconds;
+                    StopAiLiveTimer();
+                    TxtModelStats.Text = $"Lỗi sau {totalSec:F1}s: {ex.Message}";
                     System.Windows.MessageBox.Show($"Lỗi trong quá trình AI chỉnh sửa: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 finally
                 {
+                    StopAiLiveTimer();
                     BtnAiEdit.IsEnabled = true;
                 }
             }
@@ -536,13 +660,21 @@ namespace MatrixExamAI.Desktop.Views
             if (string.IsNullOrWhiteSpace(currentHtml)) return;
 
             BtnAiOptimize.IsEnabled = false;
-            TxtModelStats.Text = "⏳ AI đang tối ưu Three.js & KaTeX...";
-            var sw = Stopwatch.StartNew();
+            _activeAiCts?.Dispose();
+            _activeAiCts = new System.Threading.CancellationTokenSource();
+
+            StartAiLiveTimer("AI đang tối ưu Three.js & KaTeX");
+
+            InfoHtmlNotification.Severity = InfoBarSeverity.Informational;
+            InfoHtmlNotification.Title = "Đang tối ưu mô hình (0.0s)";
+            InfoHtmlNotification.Message = "AI đang làm sạch cú pháp JavaScript, tối ưu hiệu năng Three.js...";
+            InfoHtmlNotification.IsOpen = true;
 
             try
             {
-                var result = await DesktopGeminiFactory.OptimizeHtmlModelAsync(currentHtml);
-                sw.Stop();
+                var result = await DesktopGeminiFactory.OptimizeHtmlModelAsync(currentHtml, _activeAiCts.Token);
+                double totalSec = _aiStopwatch.Elapsed.TotalSeconds;
+                StopAiLiveTimer();
 
                 if (result.Success && !string.IsNullOrWhiteSpace(result.Content))
                 {
@@ -550,23 +682,29 @@ namespace MatrixExamAI.Desktop.Views
                     TxtHtmlCode.Text = optHtml;
 
                     InfoHtmlNotification.Severity = InfoBarSeverity.Success;
-                    InfoHtmlNotification.Title = "AI Tối ưu hoàn tất";
-                    InfoHtmlNotification.Message = $"Đã tối ưu hóa mã nguồn mô hình trong {sw.ElapsedMilliseconds} ms.";
+                    InfoHtmlNotification.Title = $"AI Tối ưu hoàn tất ({totalSec:F1}s)";
+                    InfoHtmlNotification.Message = $"Đã tối ưu hóa mã nguồn mô hình trong {totalSec:F1}s.";
                     InfoHtmlNotification.IsOpen = true;
 
-                    await RunModelAsync();
+                    await RunModelAsync(totalSec);
                 }
                 else
                 {
-                    System.Windows.MessageBox.Show($"Lỗi tối ưu: {result.ErrorMessage}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    TxtModelStats.Text = $"Lỗi sau {totalSec:F1}s: {result.ErrorMessage}";
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                StopAiLiveTimer();
             }
             catch (Exception ex)
             {
+                StopAiLiveTimer();
                 System.Windows.MessageBox.Show($"Lỗi tối ưu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
+                StopAiLiveTimer();
                 BtnAiOptimize.IsEnabled = true;
             }
         }
@@ -605,11 +743,11 @@ namespace MatrixExamAI.Desktop.Views
 
         private void BtnPasteImage_Click(object sender, RoutedEventArgs e)
         {
-            if (System.Windows.Clipboard.ContainsImage())
+            if (SafeClipboard.ContainsImage())
             {
                 try
                 {
-                    var img = System.Windows.Clipboard.GetImage();
+                    var img = SafeClipboard.GetImage();
                     if (img != null)
                     {
                         using var ms = new MemoryStream();
@@ -624,17 +762,42 @@ namespace MatrixExamAI.Desktop.Views
                         InfoHtmlNotification.Title = "Đã dán ảnh đề bài";
                         InfoHtmlNotification.Message = "Đã nhận ảnh mẫu từ Clipboard. Bấm 'AI tạo' (Ctrl+Shift+G) để dựng mô hình 3D.";
                         InfoHtmlNotification.IsOpen = true;
+                        return;
                     }
                 }
                 catch (Exception ex)
                 {
                     System.Windows.MessageBox.Show($"Lỗi dán ảnh: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
                 }
             }
-            else
+
+            try
             {
-                System.Windows.MessageBox.Show("Bộ nhớ tạm (Clipboard) không có dữ liệu hình ảnh.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                if (System.Windows.Clipboard.ContainsFileDropList())
+                {
+                    var files = System.Windows.Clipboard.GetFileDropList();
+                    if (files != null && files.Count > 0)
+                    {
+                        string file = files[0]!;
+                        string ext = Path.GetExtension(file).ToLowerInvariant();
+                        if (ext is ".png" or ".jpg" or ".jpeg" or ".bmp" or ".webp")
+                        {
+                            byte[] bytes = File.ReadAllBytes(file);
+                            LoadAttachedImage(bytes);
+
+                            InfoHtmlNotification.Severity = InfoBarSeverity.Informational;
+                            InfoHtmlNotification.Title = "Đã nhận tệp ảnh";
+                            InfoHtmlNotification.Message = $"Đã tải tệp ảnh '{Path.GetFileName(file)}'. Bấm 'AI tạo' (Ctrl+Shift+G) để dựng mô hình 3D.";
+                            InfoHtmlNotification.IsOpen = true;
+                            return;
+                        }
+                    }
+                }
             }
+            catch { }
+
+            System.Windows.MessageBox.Show("Bộ nhớ tạm (Clipboard) không có dữ liệu hình ảnh hợp lệ.\nHãy chụp màn hình (Win+Shift+S) rồi dán lại (Ctrl+V).", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void LoadAttachedImage(byte[] bytes)
@@ -814,7 +977,7 @@ namespace MatrixExamAI.Desktop.Views
                 BtnAiGenerate_Click(BtnAiGenerate, new RoutedEventArgs());
                 e.Handled = true;
             }
-            else if (e.Key == Key.V && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && System.Windows.Clipboard.ContainsImage())
+            else if (e.Key == Key.V && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 BtnPasteImage_Click(BtnPasteImage, new RoutedEventArgs());
                 e.Handled = true;

@@ -34,9 +34,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.25"
-TITLE = "MatrixExamAI Pro v5.3.0.25 (Tách biệt 100% Phân hệ Mô hình 3D HTML & Xóa Mã Mẫu Mặc Định)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.25: Tách biệt hoàn toàn phân hệ Mô hình Toán học HTML khỏi TikZ với 2 hộp thoại AI Tạo (HtmlModelAiGenerateDialog) và AI Sửa (HtmlModelAiEditDialog) chuyên biệt cho Three.js/KaTeX/STEM; Xóa sạch mã mẫu và tiêu đề pre-load mặc định khi mở tab để người dùng tự do sáng tạo từ đầu hoặc nạp từ kho lưu trữ khi cần."
+TAG = "v5.3.0.26"
+TITLE = "MatrixExamAI Pro v5.3.0.26 (Đồng Hồ Đếm Giờ AI Thời Gian Thực & Mở Rộng Dán Ảnh Toàn Diện)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.26: Khắc phục triệt để luồng tạo mô hình — Cho phép bấm 'AI tạo' mọi lúc mà không bị ép nhập đề/ảnh trước; Nâng cấp cơ chế dán ảnh SafeClipboard + FileDrop siêu mượt trên toàn bộ tab và hộp thoại; Bổ sung đồng hồ đếm giây thời gian thực (0.1s) và lớp phủ chờ (Loading Overlay) khi AI đang tạo, chỉnh sửa hoặc tối ưu hóa mô hình 3D HTML; Hiển thị chuẩn xác tổng thời gian hoàn tất tác vụ."
 
 def compute_sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest().lower()

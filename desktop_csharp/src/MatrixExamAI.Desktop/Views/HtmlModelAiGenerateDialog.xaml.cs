@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
+using MatrixExamAI.Desktop.Services;
 
 namespace MatrixExamAI.Desktop.Views
 {
@@ -39,11 +40,11 @@ namespace MatrixExamAI.Desktop.Views
 
         private void PasteImageFromClipboard()
         {
-            if (Clipboard.ContainsImage())
+            try
             {
-                try
+                if (SafeClipboard.ContainsImage())
                 {
-                    var bitmap = Clipboard.GetImage();
+                    var bitmap = SafeClipboard.GetImage();
                     if (bitmap != null)
                     {
                         var encoder = new PngBitmapEncoder();
@@ -53,16 +54,32 @@ namespace MatrixExamAI.Desktop.Views
                         _imageBytes = ms.ToArray();
                         LoadImageToPreview(_imageBytes);
                         TxtStatus.Text = "✓ Đã dán ảnh thành công từ Clipboard.";
+                        return;
                     }
                 }
-                catch (Exception ex)
+
+                if (Clipboard.ContainsFileDropList())
                 {
-                    MessageBox.Show($"Không thể dán ảnh: {ex.Message}", "Lỗi dán ảnh", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    var files = Clipboard.GetFileDropList();
+                    if (files != null && files.Count > 0)
+                    {
+                        string file = files[0]!;
+                        string ext = Path.GetExtension(file).ToLowerInvariant();
+                        if (ext is ".png" or ".jpg" or ".jpeg" or ".bmp" or ".webp")
+                        {
+                            _imageBytes = File.ReadAllBytes(file);
+                            LoadImageToPreview(_imageBytes);
+                            TxtStatus.Text = $"✓ Đã tải ảnh: {Path.GetFileName(file)}";
+                            return;
+                        }
+                    }
                 }
-            }
-            else
-            {
+
                 MessageBox.Show("Clipboard không chứa hình ảnh hợp lệ.\nHãy chụp màn hình (Win+Shift+S) rồi thử lại.", "Không tìm thấy ảnh", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể dán ảnh: {ex.Message}", "Lỗi dán ảnh", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

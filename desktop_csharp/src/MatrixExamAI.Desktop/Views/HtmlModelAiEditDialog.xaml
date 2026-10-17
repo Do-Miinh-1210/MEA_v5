@@ -65,7 +65,7 @@
                         AllowDrop="True" DragOver="BorderDropZone_DragOver" Drop="BorderDropZone_Drop" Cursor="Hand"
                         MouseLeftButtonDown="BorderDropZone_MouseLeftButtonDown">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Text="🖼️" FontSize="18" HorizontalAlignment="Center" Margin="0,0,0,3" />
+                        <ui:SymbolIcon Symbol="Image24" FontSize="20" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" Margin="0,0,0,4" />
                         <TextBlock Text="Nhấn Ctrl+V để dán ảnh từ Clipboard, kéo thả ảnh hoặc bấm 'Chọn ảnh...'"
                                    FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
                     </StackPanel>

@@ -381,6 +381,23 @@
                                 <TextBlock Text="Nhập đề bài rồi bấm 'AI tạo' (Ctrl+Shift+G) hoặc mở 'Kho mô hình' (Ctrl+B)" 
                                            FontSize="10.5" Foreground="#94A3B8" HorizontalAlignment="Center" Margin="0,3,0,0" />
                             </StackPanel>
+
+                            <!-- Loading Overlay trực quan kèm đồng hồ đếm giây thời gian thực (0.0s) -->
+                            <Border x:Name="BorderLoadingOverlay" Visibility="Collapsed" Background="#EB0F172A" CornerRadius="6"
+                                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <ui:ProgressRing IsIndeterminate="True" Width="44" Height="44" Foreground="#38BDF8" Margin="0,0,0,12" HorizontalAlignment="Center" />
+                                    <TextBlock x:Name="TxtLoadingTitle" Text="AI đang phân tích &amp; lập trình mô hình 3D HTML..." 
+                                               FontSize="13" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" />
+                                    <TextBlock x:Name="TxtLoadingTimer" Text="⏳ Thời gian xử lý: 0.0s" 
+                                               FontSize="12" FontWeight="SemiBold" Foreground="#38BDF8" HorizontalAlignment="Center" Margin="0,5,0,14" />
+                                    <ui:Button x:Name="BtnCancelAiAction" Style="{StaticResource AccentVibrantButtonStyle}"
+                                               Background="#EF4444" Foreground="White" FontWeight="Bold"
+                                               Icon="{ui:SymbolIcon Dismiss24}" Content="Hủy tác vụ"
+                                               Height="28" Padding="14,0" FontSize="11" HorizontalAlignment="Center"
+                                               Click="BtnCancelAiAction_Click" />
+                                </StackPanel>
+                            </Border>
                         </Grid>
                     </Border>
 
