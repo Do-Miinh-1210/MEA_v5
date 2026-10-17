@@ -1473,11 +1473,23 @@ namespace MatrixExamAI.Desktop.Views
                 return;
             }
 
-            string? editRequest = ShowInputPrompt(
-                "Yêu cầu AI Chỉnh sửa Hình TikZ",
-                "Nhập yêu cầu cần AI chỉnh sửa (ví dụ: 'Đổi màu đồ thị thành xanh', 'Thêm điểm M trên BC', 'Gắn nhãn độ dài a = 4'):");
+            var dlg = new AiEditPromptDialog(string.Empty, _attachedImageBytes)
+            {
+                Owner = Window.GetWindow(this)
+            };
 
-            if (string.IsNullOrWhiteSpace(editRequest)) return;
+            if (dlg.ShowDialog() != true) return;
+
+            string editRequest = dlg.ResultDescription?.Trim() ?? string.Empty;
+            byte[]? imageBytes = dlg.ResultImageBytes;
+            string? imageBase64 = dlg.ResultImageBase64;
+
+            if (string.IsNullOrWhiteSpace(editRequest) && imageBytes == null) return;
+
+            if (imageBytes != null && imageBytes.Length > 0)
+            {
+                _attachedImageBytes = imageBytes;
+            }
 
             _activeTikzCts?.Dispose();
             _activeTikzCts = new System.Threading.CancellationTokenSource();
@@ -1486,21 +1498,20 @@ namespace MatrixExamAI.Desktop.Views
             BtnStopTikzAction.Visibility = Visibility.Visible;
             InfoTikzNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Informational;
             InfoTikzNotification.Title = "Đang áp dụng chỉnh sửa";
-            InfoTikzNotification.Message = "AI Gemini đang cập nhật hình vẽ theo yêu cầu...";
+            InfoTikzNotification.Message = imageBytes != null
+                ? "AI đang quan sát ảnh minh họa và đối chiếu mã TikZ để cập nhật..."
+                : "AI đang cập nhật hình vẽ theo yêu cầu...";
             InfoTikzNotification.IsOpen = true;
 
             try
             {
-                string prompt = $"Mã TikZ hiện tại:\n{currentCode}\n\nYêu cầu chỉnh sửa: {editRequest}\nHãy giữ nguyên cấu trúc và chỉ cập nhật theo đúng yêu cầu.";
-                var req = new TikzPromptRequest
-                {
-                    Prompt = prompt,
-                    DiagramType = (DiagramType)CmbDiagramType.SelectedIndex
-                };
-                var res = await DesktopGeminiFactory.GenerateTikzAsync(req, _activeTikzCts.Token);
+                var res = await DesktopGeminiFactory.EditTikzAsync(currentCode, editRequest, imageBase64, _activeTikzCts.Token);
                 if (res.Success && !string.IsNullOrWhiteSpace(res.TikzCode))
                 {
                     TxtTikzCode.Text = res.TikzCode;
+                    InfoTikzNotification.Severity = Wpf.Ui.Controls.InfoBarSeverity.Success;
+                    InfoTikzNotification.Title = "Chỉnh sửa hoàn tất";
+                    InfoTikzNotification.Message = "Đã cập nhật mã TikZ theo yêu cầu. Tự động biên dịch lại hình ảnh...";
                     BtnCompile_Click(this, new RoutedEventArgs());
                 }
                 else
@@ -1524,94 +1535,6 @@ namespace MatrixExamAI.Desktop.Views
                 BtnAiEdit.IsEnabled = true;
                 BtnStopTikzAction.Visibility = Visibility.Collapsed;
             }
-        }
-
-        private static string? ShowInputPrompt(string title, string promptText)
-        {
-            var win = new Window
-            {
-                Title = title,
-                Width = 480,
-                SizeToContent = SizeToContent.Height,
-                WindowStartupLocation = WindowStartupLocation.CenterScreen,
-                ResizeMode = ResizeMode.NoResize,
-                WindowStyle = WindowStyle.SingleBorderWindow
-            };
-
-            win.SetResourceReference(Window.BackgroundProperty, "ApplicationBackgroundBrush");
-            win.SetResourceReference(System.Windows.Documents.TextElement.ForegroundProperty, "TextFillColorPrimaryBrush");
-
-            var sp = new StackPanel { Margin = new Thickness(16, 14, 16, 16) };
-            
-            var txtPrompt = new TextBlock
-            {
-                Text = promptText,
-                TextWrapping = TextWrapping.Wrap,
-                Margin = new Thickness(0, 0, 0, 10),
-                FontSize = 11.5,
-                LineHeight = 17
-            };
-            txtPrompt.SetResourceReference(TextBlock.ForegroundProperty, "TextFillColorPrimaryBrush");
-
-            var tb = new Wpf.Ui.Controls.TextBox
-            {
-                MinHeight = 32,
-                FontSize = 11.5,
-                Padding = new Thickness(8, 4, 8, 4),
-                VerticalContentAlignment = VerticalAlignment.Center,
-                PlaceholderText = "Nhập yêu cầu chỉnh sửa..."
-            };
-
-            var btnPanel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                HorizontalAlignment = HorizontalAlignment.Right,
-                Margin = new Thickness(0, 14, 0, 0)
-            };
-
-            var btnOk = new Button
-            {
-                Content = "Đồng ý",
-                MinWidth = 85,
-                Height = 30,
-                Margin = new Thickness(0, 0, 8, 0),
-                IsDefault = true,
-                Background = new SolidColorBrush(Color.FromRgb(37, 99, 235)),
-                Foreground = Brushes.White,
-                FontWeight = FontWeights.SemiBold,
-                FontSize = 11,
-                BorderThickness = new Thickness(0),
-                Cursor = System.Windows.Input.Cursors.Hand
-            };
-
-            var btnCancel = new Button
-            {
-                Content = "Hủy",
-                MinWidth = 80,
-                Height = 30,
-                IsCancel = true,
-                Background = new SolidColorBrush(Color.FromArgb(35, 128, 128, 128)),
-                Foreground = (Brush)Application.Current.TryFindResource("TextFillColorPrimaryBrush") ?? Brushes.White,
-                FontSize = 11,
-                BorderThickness = new Thickness(1),
-                Cursor = System.Windows.Input.Cursors.Hand
-            };
-            btnCancel.SetResourceReference(Button.BorderBrushProperty, "ControlStrokeColorDefaultBrush");
-
-            btnOk.Click += (s, e) => { win.DialogResult = true; win.Close(); };
-            btnCancel.Click += (s, e) => { win.DialogResult = false; win.Close(); };
-
-            btnPanel.Children.Add(btnOk);
-            btnPanel.Children.Add(btnCancel);
-
-            sp.Children.Add(txtPrompt);
-            sp.Children.Add(tb);
-            sp.Children.Add(btnPanel);
-
-            win.Content = sp;
-            tb.Focus();
-
-            return win.ShowDialog() == true ? tb.Text.Trim() : null;
         }
 
         private void BtnCopyEmf_Click(object sender, RoutedEventArgs e)

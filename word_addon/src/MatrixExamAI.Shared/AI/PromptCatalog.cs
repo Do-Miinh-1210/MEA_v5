@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using MatrixExamAI.Shared.Models;
 
@@ -257,13 +258,22 @@ Bước 5: Tự kiểm tra đối chiếu (2 chiều) các quy tắc font \norma
         }
 
         /// <summary>
-        /// Tạo prompt chỉnh sửa mã TikZ hiện tại theo yêu cầu người dùng.
+        /// Tạo prompt chỉnh sửa mã TikZ hiện tại theo yêu cầu người dùng và ảnh minh họa tùy chọn.
         /// </summary>
-        public static string GetEditPrompt(string currentCode, string editRequest)
+        public static string GetEditPrompt(string currentCode, string editRequest, bool hasImage = false)
         {
+            string imageNotice = hasImage
+                ? @"══════════════════════════════════════════════════════════════════════════
+HÌNH ẢNH MINH HỌA ĐÍNH KÈM (MULTIMODAL VISION):
+Người dùng đã gửi kèm HÌNH ẢNH MINH HỌA bài toán hoặc hình vẽ cần chỉnh sửa.
+Bạn hãy QUAN SÁT KỸ HÌNH ẢNH đính kèm, đối chiếu trực tiếp với CODE TIKZ HIỆN TẠI và YÊU CẦU CHỈNH SỬA
+để cập nhật mã TikZ sao cho hình vẽ kết quả khớp chuẩn xác nhất với hình ảnh và yêu cầu đã nêu.
+══════════════════════════════════════════════════════════════════════════" + Environment.NewLine
+                : string.Empty;
+
             return $@"{GetSystemPrompt()}
 
-══════════════════════════════════════════════════════════════════════════
+{imageNotice}══════════════════════════════════════════════════════════════════════════
 CODE TIKZ HIỆN TẠI:
 ══════════════════════════════════════════════════════════════════════════
 {currentCode.Trim()}
@@ -275,7 +285,7 @@ YÊU CẦU CHỈNH SỬA:
 
 ══════════════════════════════════════════════════════════════════════════
 QUY TẮC CHỈNH SỬA:
-1. BẢO TỒN NGUYÊN TRẠNG các phần không liên quan; chỉ sửa hoặc bổ sung phần được yêu cầu.
+1. BẢO TỒN NGUYÊN TRẠNG các phần không liên quan; chỉ sửa hoặc bổ sung phần được yêu cầu hoặc theo ảnh đính kèm.
 2. Áp dụng chuẩn Thầy Đỗ Minh (declare function, \normalsize, shift góc cho nhãn, không line cap=round).
 3. Đảm bảo toàn bộ quan hệ hình học (vuông góc, song song, tiếp xúc, tỉ lệ) đúng tuyệt đối.
 4. Trả về toàn bộ code TikZ hoàn chỉnh từ \begin{{tikzpicture}} đến \end{{tikzpicture}}.

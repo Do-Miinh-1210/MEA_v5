@@ -163,12 +163,18 @@
     }
 
     /**
-     * Yêu cầu AI sửa mã TikZ hiện tại theo mô tả chỉnh sửa
+     * Yêu cầu AI sửa mã TikZ hiện tại theo mô tả chỉnh sửa và hình ảnh đính kèm (Vision Multimodal)
      */
     async aiEditTikz(currentCode, editInstruction, options = {}) {
-      const prompt = `Mã TikZ hiện tại:\n${currentCode}\n\nYêu cầu chỉnh sửa: ${editInstruction}\nHãy giữ nguyên cấu trúc toán học và chỉ cập nhật theo đúng yêu cầu. Chỉ trả về khối mã \\begin{tikzpicture} ... \\end{tikzpicture}.`;
+      const hasImage = !!options.imageBase64;
+      const imageNote = hasImage
+        ? "Người dùng đã đính kèm HÌNH ẢNH MINH HỌA. Hãy quan sát kỹ hình ảnh, đối chiếu với mã TikZ hiện tại và yêu cầu chỉnh sửa để cập nhật mã TikZ chính xác nhất.\n\n"
+        : "";
+      const prompt = `${imageNote}Mã TikZ hiện tại:\n${currentCode}\n\nYêu cầu chỉnh sửa: ${editInstruction}\nHãy giữ nguyên cấu trúc toán học và chỉ cập nhật theo đúng yêu cầu. Chỉ trả về khối mã \\begin{tikzpicture} ... \\end{tikzpicture}.`;
       return this.generateTikz(prompt, {
         diagramType: options.diagramType || 'Custom',
+        imageBase64: options.imageBase64 || null,
+        imageMimeType: options.imageMimeType || 'image/png',
         timeoutMs: 240000
       });
     }

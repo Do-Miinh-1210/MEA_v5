@@ -327,6 +327,51 @@ namespace MatrixExamAI.Desktop.Services
         }
 
         /// <summary>
+        /// Chỉnh sửa mã TikZ hiện tại theo yêu cầu người dùng và ảnh minh họa đính kèm (Vision Multimodal).
+        /// </summary>
+        public static async Task<TikzGenerationResult> EditTikzAsync(string currentCode, string editRequest, string? imageBase64 = null, CancellationToken ct = default)
+        {
+            var sw = Stopwatch.StartNew();
+            bool hasImage = !string.IsNullOrEmpty(imageBase64);
+            string promptText = PromptCatalog.GetEditPrompt(currentCode, editRequest, hasImage);
+
+            var execResult = await ExecutePromptAsync(
+                promptText,
+                imageBase64,
+                "image/png",
+                ct).ConfigureAwait(false);
+
+            sw.Stop();
+
+            if (!execResult.Success)
+            {
+                return TikzGenerationResult.Fail(
+                    execResult.ErrorMessage ?? "Không thể hoàn thành chỉnh sửa mã TikZ từ AI.",
+                    execResult.ProviderUsed,
+                    execResult.ModelUsed,
+                    sw.ElapsedMilliseconds);
+            }
+
+            string tikzCode = TikzCodeExtractor.ExtractTikzCode(execResult.Content);
+            if (string.IsNullOrWhiteSpace(tikzCode))
+            {
+                return TikzGenerationResult.Fail(
+                    "AI không trả về khối mã TikZ hợp lệ sau chỉnh sửa.",
+                    execResult.ProviderUsed,
+                    execResult.ModelUsed,
+                    sw.ElapsedMilliseconds,
+                    execResult.Content);
+            }
+
+            return TikzGenerationResult.Ok(
+                tikzCode,
+                execResult.ProviderUsed,
+                execResult.ModelUsed,
+                sw.ElapsedMilliseconds,
+                execResult.Content);
+        }
+
+        /// <summary>
         /// Thực thi truy vấn AI văn bản và Vision hỗ trợ đa nhà cung cấp với Multi-Key Rotation và Fallback.
         /// </summary>
         public static async Task<AiExecutionResult> ExecutePromptAsync(

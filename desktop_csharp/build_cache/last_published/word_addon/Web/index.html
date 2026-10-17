@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>MatrixExamAI — Trợ lý Soạn thảo & Vẽ hình</title>
+  <link rel="stylesheet" href="css/sidebar.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand-wrapper">
+        <div class="brand-icon">M</div>
+        <div class="brand-title">Matrix<span>ExamAI</span></div>
+        <span class="brand-version">v5.0</span>
+      </div>
+      <div class="header-actions">
+        <button id="btn-open-settings" class="icon-btn" title="Cài đặt API Key & Nhà cung cấp" aria-label="Cài đặt">
+          ⚙️
+        </button>
+      </div>
+    </header>
+
+    <!-- Focused Module Header (Chế độ tập trung theo phân hệ đang dùng - Tinh gọn, không rối mắt) -->
+    <div class="focused-module-bar">
+      <div class="focused-module-info">
+        <span id="focused-module-icon" class="focused-module-icon">📐</span>
+        <div class="focused-module-text">
+          <span id="focused-module-title" class="focused-module-title">Vẽ hình TikZ AI</span>
+          <span id="focused-module-subtitle" class="focused-module-subtitle">Biên dịch LaTeX & Chèn Word 2 chiều</span>
+        </div>
+      </div>
+      <div class="module-switch-wrapper">
+        <button id="btn-toggle-module-menu" class="btn-module-switch" title="Chuyển sang phân hệ khác" aria-haspopup="true" aria-expanded="false">
+          <span>Chuyển mục</span> <span class="arrow-down">▾</span>
+        </button>
+        <div id="module-dropdown-menu" class="module-dropdown-menu">
+          <button id="nav-btn-tikz" class="module-menu-item active" data-tab="tikz">
+            <span class="menu-icon">📐</span>
+            <div class="menu-desc">
+              <strong>Vẽ hình TikZ AI</strong>
+              <span>Đồ thị, BBT, bảng xét dấu, 3D</span>
+            </div>
+          </button>
+          <button id="nav-btn-authoring" class="module-menu-item" data-tab="ai-authoring">
+            <span class="menu-icon">✨</span>
+            <div class="menu-desc">
+              <strong>Soạn thảo & Giải bài AI</strong>
+              <span>Giải bài, viết tiếp, sinh câu hỏi</span>
+            </div>
+          </button>
+          <button id="nav-btn-convert" class="module-menu-item" data-tab="convert">
+            <span class="menu-icon">🔄</span>
+            <div class="menu-desc">
+              <strong>Convert Đề thi AI</strong>
+              <span>Ảnh, clipboard → Câu hỏi Word</span>
+            </div>
+          </button>
+          <button id="nav-btn-questionbank" class="module-menu-item" data-tab="question-bank">
+            <span class="menu-icon">🗃️</span>
+            <div class="menu-desc">
+              <strong>Ngân hàng câu hỏi</strong>
+              <span>Tìm kiếm, lưu từ Word, chèn đề</span>
+            </div>
+          </button>
+          <button id="nav-btn-matrix" class="module-menu-item" data-tab="exam-matrix">
+            <span class="menu-icon">📊</span>
+            <div class="menu-desc">
+              <strong>Ma trận & Trộn đề thi</strong>
+              <span>Cấu trúc chuẩn BGD 3 phần</span>
+            </div>
+          </button>
+          <button id="nav-btn-normalize" class="module-menu-item" data-tab="normalize">
+            <span class="menu-icon">📑</span>
+            <div class="menu-desc">
+              <strong>Chuẩn hóa định dạng Word</strong>
+              <span>Font chữ, cỡ chữ, giãn dòng đề thi</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Word Active Selection Banner (Visible when a TikZ shape is selected in Word) -->
+    <div id="selection-banner" class="selection-banner">
+      <div class="selection-info">
+        <span class="selection-badge">Word</span>
+        <span id="selection-title" class="selection-text">Đang chọn hình trong Word</span>
+      </div>
+      <span style="font-size: 11px; color: #38bdf8;">Đã nạp mã</span>
+    </div>
+
+    <!-- Toast / Notification Bar -->
+    <div id="status-toast" class="status-toast">
+      <span id="toast-message" class="toast-message">Sẵn sàng</span>
+      <button id="toast-close" class="toast-close" aria-label="Đóng">&times;</button>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- ========================================================================= -->
+    <!-- PHÂN HỆ 1: AI VẼ HÌNH TOÁN HỌC TIKZ (CHUẨN 100% GIAO DIỆN DESKTOP APP)    -->
+    <!-- ========================================================================= -->
+    <div id="panel-tikz" class="feature-panel active">
+      <!-- Toolbar Hàng 1: Thể loại & Mẫu dựng sẵn -->
+      <div class="tikz-header-card">
+        <div class="tikz-category-bar">
+          <div class="tikz-select-group">
+            <label for="tikz-diagram-type" class="tikz-select-label">Thể loại:</label>
+            <select id="tikz-diagram-type" class="tikz-select" title="Định hướng thể loại hình vẽ cho AI">
+              <option value="DoThi" selected>Đồ thị hàm số</option>
+              <option value="BBT">Bảng biến thiên</option>
+              <option value="BXD">Bảng xét dấu</option>
+              <option value="HinhKhongGian">Hình không gian</option>
+              <option value="Custom">Hình học phẳng</option>
+            </select>
+          </div>
+          <div class="tikz-select-group">
+            <label for="tikz-template-select" class="tikz-select-label">Mẫu:</label>
+            <select id="tikz-template-select" class="tikz-select" title="Chọn mẫu hình học để nạp mã TikZ">
+              <option value="">-- Chọn mẫu dựng sẵn --</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Ô nhập đề bài / mô tả hình ảnh trực tiếp (Hỗ trợ kéo thả ảnh từ Word/Desktop) -->
+        <div class="prompt-card" id="tikz-prompt-card" style="padding: 6px 8px; margin: 0;">
+          <div class="prompt-textarea-wrapper">
+            <textarea 
+              id="prompt-input" 
+              class="prompt-textarea" 
+              style="min-height: 48px; max-height: 120px; font-size: 12px;"
+              placeholder="Nhập đề bài / mô tả hình hoặc kéo thả / dán ảnh bài toán vào đây (Ctrl+V)..."
+            ></textarea>
+            <button id="clear-prompt-btn" class="clear-prompt-btn" title="Xóa nội dung">&times;</button>
+          </div>
+
+          <!-- Thumbnail ảnh đính kèm (Vision Multimodal) -->
+          <div id="image-preview-container" class="image-preview-container" style="padding: 4px 8px;">
+            <div class="image-thumb-wrapper">
+              <img id="image-thumb" class="image-thumb" alt="Ảnh mẫu">
+              <div class="image-meta">
+                <span class="image-title">Ảnh bài toán (Vision)</span>
+                <span id="image-meta-details" class="image-details">image/png • 0 KB</span>
+              </div>
+            </div>
+            <button id="remove-image-btn" class="remove-image-btn" title="Gỡ ảnh">&times; Gỡ ảnh</button>
+          </div>
+        </div>
+
+        <!-- Toolbar Hàng 2: Bộ nút hành động màu sắc trực quan (Chuẩn 100% Desktop App) -->
+        <div class="tikz-actions-wrap">
+          <button id="btn-generate-ai" class="tikz-action-btn btn-accent-purple" title="AI phân tích đề bài / ảnh để vẽ hình TikZ (Ctrl+Shift+G)">
+            <span>✨</span> AI vẽ
+          </button>
+          <button id="btn-shape-builder" class="tikz-action-btn btn-accent-amber" title="Mở công cụ vẽ hình trực quan nhanh">
+            <span>🔷</span> Tạo hình
+          </button>
+          <button id="btn-ai-redraw" class="tikz-action-btn btn-accent-orange" title="Vẽ lại hình bằng mô tả hoặc ảnh gần nhất khi chưa ưng ý">
+            <span>🔄</span> Vẽ lại
+          </button>
+          <button id="btn-ai-edit" class="tikz-action-btn btn-accent-blue" title="Yêu cầu AI chỉnh sửa hoặc bổ sung chi tiết vào hình vẽ này">
+            <span>✏️</span> AI sửa
+          </button>
+          <button id="btn-ai-optimize" class="tikz-action-btn btn-accent-violet" title="Tối ưu hóa tọa độ, chuẩn hóa bounding box và làm sạch mã TikZ">
+            <span>🪄</span> AI tối ưu
+          </button>
+          <button id="btn-paste-clipboard-image" class="tikz-action-btn btn-accent-slate" title="Dán ảnh mẫu từ Clipboard để AI Vision phân tích (Ctrl+V)">
+            <span>🖼️</span> Dán ảnh
+          </button>
+          <button id="btn-open-figure-bank" class="tikz-action-btn btn-accent-cyan" title="Duyệt kho mẫu hơn 200+ hình vẽ TikZ chuẩn SGK">
+            <span>📚</span> Kho hình
+          </button>
+          <button id="btn-clean-code" class="tikz-action-btn btn-accent-gray" title="Lọc bỏ mã thừa, chuẩn hóa về khối tikzpicture duy nhất">
+            <span>🧹</span> Lọc mã
+          </button>
+          <button id="btn-clear-all" class="tikz-action-btn btn-accent-red" title="Xóa trắng mã soạn thảo để bắt đầu vẽ hình mới">
+            <span>🗑️</span> Xóa trắng
+          </button>
+          <button id="btn-compile-tikz" class="tikz-action-btn btn-accent-emerald" title="Biên dịch hình vẽ ra ảnh 600 DPI sắc nét (F5 hoặc Ctrl+Enter)">
+            <span>▶️</span> Biên dịch (F5)
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Progress & Timer Tracker (Không bao giờ bị timeout giả) -->
+      <div id="tikz-progress-card" class="tikz-progress-card" style="display: none; margin-bottom: 8px;">
+        <div class="progress-header">
+          <div class="progress-status-info">
+            <span class="progress-spinner"></span>
+            <span id="tikz-progress-stage" class="progress-stage-text">Đang kết nối AI...</span>
+          </div>
+          <span id="tikz-progress-timer" class="progress-timer-badge">⏱️ 00:00.0</span>
+        </div>
+        <div class="progress-bar-track">
+          <div id="tikz-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
+        </div>
+        <div class="progress-footer">
+          <span id="tikz-progress-subtext" class="progress-subtext">Đang chuẩn bị prompt và ảnh gửi đến AI</span>
+          <span id="tikz-progress-percent" class="progress-percent-badge">0%</span>
+        </div>
+      </div>
+
+      <!-- Khung Split View / Tabs: Mã nguồn TikZ vs Xem trước Hình ảnh -->
+      <section style="margin-bottom: 8px;">
+        <div class="tab-controls">
+          <button id="tab-editor-btn" class="tab-btn active">
+            <span>📝</span> Mã nguồn TikZ
+          </button>
+          <button id="tab-preview-btn" class="tab-btn">
+            <span>👁️</span> Xem trước (Zoom/Pan)
+          </button>
+        </div>
+
+        <!-- Tab Content 1: Code Editor with Line Numbers -->
+        <div id="tab-editor-content" class="tab-content active">
+          <div class="code-editor-header">
+            <div class="editor-info">
+              <span id="code-line-count">0 dòng</span>
+              <span>•</span>
+              <span>LaTeX TikZ 600 DPI</span>
+            </div>
+            <div class="editor-actions">
+              <button id="btn-copy-code" class="editor-mini-btn" title="Sao chép toàn bộ mã">
+                📋 Sao chép
+              </button>
+              <button id="btn-clear-code" class="editor-mini-btn" title="Xóa mã">
+                🗑️ Xóa
+              </button>
+            </div>
+          </div>
+          <div class="code-wrapper">
+            <div id="line-numbers" class="line-numbers">1</div>
+            <textarea 
+              id="code-textarea" 
+              class="code-textarea" 
+              spellcheck="false" 
+              placeholder="% Mã TikZ sẽ xuất hiện ở đây..."
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Tab Content 2: Visual Zoom & Pan Preview -->
+        <div id="tab-preview-content" class="tab-content">
+          <div class="preview-card" style="border-radius: 8px 8px 0 0; border-bottom: none;">
+            <div class="preview-toolbar">
+              <div class="zoom-controls">
+                <button id="btn-zoom-out" class="zoom-btn" title="Thu nhỏ">-</button>
+                <button id="btn-zoom-reset" class="zoom-btn" title="Đặt lại 100%">100%</button>
+                <button id="btn-zoom-in" class="zoom-btn" title="Phóng to">+</button>
+                <button id="btn-zoom-fit" class="zoom-btn" title="Vừa khung">Fit</button>
+              </div>
+              <div class="format-selector">
+                <button class="format-btn active" data-format="png" title="PNG 600 DPI sắc nét">PNG 600DPI</button>
+                <button class="format-btn" data-format="svg" title="Vector SVG">SVG</button>
+                <button class="format-btn" data-format="emf" title="Vector EMF chuẩn Word">EMF</button>
+              </div>
+            </div>
+
+            <div id="preview-viewport" class="preview-viewport" title="Kéo chuột để cuộn, lăn chuột để phóng to/thu nhỏ">
+              <div id="preview-canvas-wrapper" class="preview-canvas-wrapper">
+                <img id="preview-image" class="preview-image" alt="TikZ Visual Preview" style="display: none;">
+                <div id="preview-empty-state" class="preview-empty-state">
+                  <span class="empty-icon">🖼️</span>
+                  <span>Chưa có hình xem trước</span>
+                  <span style="font-size: 11px;">Bấm "Biên dịch (F5)" hoặc "AI vẽ"</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Thanh nút xuất hình chuẩn Desktop App TikzView -->
+          <div class="preview-export-toolbar">
+            <button id="btn-insert-word" class="tikz-action-btn btn-accent-sky" style="font-size: 11px; padding: 0 10px;" title="Chèn hình ảnh trực tiếp vào Word (Ctrl+Shift+W)">
+              <span>📥</span> Chèn Word
+            </button>
+            <button id="btn-copy-image" class="tikz-action-btn btn-accent-blue" style="font-size: 10.5px;" title="Sao chép ảnh 600 DPI vào Clipboard">
+              <span>📋</span> Copy ảnh
+            </button>
+            <button id="btn-copy-code-preview" class="tikz-action-btn btn-accent-purple" style="font-size: 10.5px;" title="Sao chép toàn bộ mã TikZ">
+              <span>📋</span> Copy mã
+            </button>
+            <button id="btn-copy-emf" class="btn btn-secondary btn-compact" style="font-size: 10.5px; height: 26px; padding: 0 8px;" title="Sao chép vector EMF dán sắc nét vào Word">
+              <span>📋</span> Copy EMF
+            </button>
+            <button id="btn-save-png" class="btn btn-secondary btn-compact" style="font-size: 10.5px; height: 26px; padding: 0 8px;" title="Tải file ảnh PNG 600 DPI">
+              <span>💾</span> Lưu PNG
+            </button>
+            <button id="btn-save-svg" class="btn btn-secondary btn-compact" style="font-size: 10.5px; height: 26px; padding: 0 8px;" title="Tải file vector SVG">
+              <span>💾</span> Lưu SVG
+            </button>
+            <button id="btn-update-word" class="tikz-action-btn btn-accent-cyan" style="font-size: 10.5px; display: none;" title="Cập nhật hình ảnh đang chọn trong Word">
+              <span>🔄</span> Cập nhật hình
+            </button>
+          </div>
+        </div>
+
+        <!-- LaTeX Error Panel (If compilation fails) -->
+        <div id="latex-error-panel" class="latex-error-panel">
+          <div class="latex-error-header">
+            <span>⚠️ Lỗi biên dịch LaTeX:</span>
+          </div>
+          <pre id="latex-error-content" class="latex-error-content"></pre>
+        </div>
+      </section>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- PHÂN HỆ 2: TRỢ LÝ SOẠN THẢO & PHÂN TÍCH ĐỀ BẰNG AI (GEMINI 3.8 FLASH)      -->
+    <!-- ========================================================================= -->
+    <div id="panel-authoring" class="feature-panel" style="display: none;">
+      <!-- Selected Text in Word -->
+      <section>
+        <div class="section-label">
+          <span>Văn bản bôi đen trong Word</span>
+          <button id="btn-reload-selection" class="editor-mini-btn" title="Đọc lại văn bản đang bôi đen trong Word">
+            🔄 Lấy lại vùng chọn
+          </button>
+        </div>
+        <div class="authoring-card">
+          <textarea 
+            id="authoring-selected-text" 
+            class="authoring-textarea" 
+            placeholder="Bôi đen câu hỏi trong tài liệu Word rồi bấm 'Lấy lại vùng chọn', hoặc nhập câu hỏi trực tiếp vào đây..."
+          ></textarea>
+          <div class="authoring-meta-bar">
+            <span id="authoring-meta-count">0 từ • 0 ký tự</span>
+            <span id="authoring-meta-badge" class="badge-tag">Chưa có văn bản</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pedagogical Action Grid -->
+      <section>
+        <div class="section-label">Tác vụ AI 1-chạm (Gemini 3.8 Flash)</div>
+        <div class="action-grid-2col">
+          <button id="btn-act-explain" class="action-tile" data-task="explain">
+            <span class="tile-icon">📝</span>
+            <div class="tile-content">
+              <span class="tile-title">Giải chi tiết</span>
+              <span class="tile-desc">Từng bước & chỉ rõ đáp án</span>
+            </div>
+          </button>
+
+          <button id="btn-act-standardize" class="action-tile" data-task="authoring">
+            <span class="tile-icon">💡</span>
+            <div class="tile-content">
+              <span class="tile-title">Chuẩn hóa câu hỏi</span>
+              <span class="tile-desc">Căn chỉnh A, B, C, D chuẩn BGD</span>
+            </div>
+          </button>
+
+          <button id="btn-act-similar" class="action-tile" data-task="rewrite">
+            <span class="tile-icon">🔄</span>
+            <div class="tile-content">
+              <span class="tile-title">Tạo câu tương tự</span>
+              <span class="tile-desc">1-3 biến thể cùng dạng đề</span>
+            </div>
+          </button>
+
+          <button id="btn-act-complete" class="action-tile" data-task="solve">
+            <span class="tile-icon">✍️</span>
+            <div class="tile-content">
+              <span class="tile-title">Viết tiếp câu hỏi</span>
+              <span class="tile-desc">Hoàn thiện ý đề đang soạn</span>
+            </div>
+          </button>
+        </div>
+
+        <!-- Custom Prompt Input -->
+        <div class="custom-prompt-container">
+          <div class="prompt-input-row">
+            <input 
+              id="authoring-custom-prompt" 
+              class="form-input" 
+              type="text" 
+              placeholder="Ghi chú thêm (vd: 'Mức độ Vận dụng cao', 'Giải bằng tọa độ')..."
+            >
+            <button id="btn-execute-custom-ai" class="btn btn-primary btn-compact" title="Thực hiện yêu cầu riêng">
+              <span>⚡</span> Chạy
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Authoring Progress & Timer Tracker -->
+        <div id="authoring-progress-card" class="tikz-progress-card" style="display: none; margin-top: 8px;">
+          <div class="progress-header">
+            <div class="progress-status-info">
+              <span class="progress-spinner"></span>
+              <span id="authoring-progress-stage" class="progress-stage-text">AI đang phân tích câu hỏi...</span>
+            </div>
+            <span id="authoring-progress-timer" class="progress-timer-badge">⏱️ 00:00.0</span>
+          </div>
+          <div class="progress-bar-track">
+            <div id="authoring-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
+          </div>
+          <div class="progress-footer">
+            <span id="authoring-progress-subtext" class="progress-subtext">Đang kết nối Gemini...</span>
+            <span id="authoring-progress-percent" class="progress-percent-badge">0%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- AI Result Section -->
+      <section id="authoring-result-section" style="display: none;">
+        <div class="section-label">
+          <span>Kết quả từ Trợ lý AI</span>
+          <span id="authoring-model-used" style="font-size: 10.5px; color: #38bdf8;">Gemini 3.8 Flash</span>
+        </div>
+        <div class="result-card">
+          <div class="result-card-header">
+            <span id="authoring-task-title" class="result-badge">Lời giải chi tiết</span>
+            <div class="editor-actions">
+              <button id="btn-copy-result" class="editor-mini-btn" title="Sao chép toàn bộ">📋 Sao chép</button>
+              <button id="btn-clear-result" class="editor-mini-btn" title="Xóa kết quả">🗑️ Xóa</button>
+            </div>
+          </div>
+          <div id="authoring-result-content" class="result-content-body" contenteditable="true" spellcheck="false"></div>
+        </div>
+
+          <div class="action-grid" style="margin-top: 10px;">
+          <button id="btn-replace-word-text" class="btn btn-cyan" title="Thay thế đoạn bôi đen trong Word bằng kết quả này">
+            <span class="btn-icon">🔄</span> Thay thế vùng chọn
+          </button>
+          <button id="btn-insert-word-text" class="btn btn-success" title="Chèn lời giải vào ngay bên dưới câu hỏi">
+            <span class="btn-icon">📥</span> Chèn tiếp sau câu hỏi
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- PHÂN HỆ CONVERT: CHUYỂN ĐỔI ĐỀ THI TỪ ẢNH / TÀI LIỆU SANG WORD (AI VISION) -->
+    <!-- ========================================================================= -->
+    <div id="panel-convert" class="feature-panel" style="display: none;">
+      <!-- Sub-tabs Switcher: Ảnh → Câu hỏi vs Text/LaTeX → Câu hỏi -->
+      <div class="tabs-nav" style="margin-bottom: 12px; background: rgba(15, 23, 42, 0.6); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; gap: 4px;">
+        <button id="convert-subtab-img" class="tab-btn active" style="flex: 1; padding: 6px 10px; font-size: 11.5px; border-radius: 6px; font-weight: 600;">
+          <span>🖼️ Ảnh → Câu hỏi</span>
+        </button>
+        <button id="convert-subtab-text" class="tab-btn" style="flex: 1; padding: 6px 10px; font-size: 11.5px; border-radius: 6px; font-weight: 600;">
+          <span>🤖 Text/LaTeX → Câu hỏi</span>
+        </button>
+      </div>
+
+      <!-- CHẾ ĐỘ 1: ẢNH → CÂU HỎI (AI VISION) -->
+      <div id="convert-mode-image">
+        <!-- Section 1: Nạp ảnh đề thi -->
+        <section>
+          <div class="section-label">
+            <span>Nạp ảnh chụp đề thi / tài liệu</span>
+            <span class="badge-tag" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">Gemini 3.8 Vision</span>
+          </div>
+          <div class="normalize-card">
+            <p style="font-size: 11.5px; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+              Dán ảnh chụp màn hình (bấm <strong>Ctrl+V</strong>) hoặc chọn file ảnh đề thi. AI Vision tự động nhận diện câu hỏi và giữ nguyên công thức toán LaTeX chuẩn.
+            </p>
+
+            <!-- Input Action Buttons -->
+            <div class="action-grid" style="margin-top: 8px;">
+              <button id="btn-convert-paste" class="btn btn-primary" title="Dán ảnh từ Clipboard (Ctrl+V)">
+                <span class="btn-icon">📋</span> Dán ảnh đề thi
+              </button>
+              <button id="btn-convert-pick-file" class="btn btn-secondary" title="Chọn file ảnh từ máy tính">
+                <span class="btn-icon">📂</span> Chọn file ảnh...
+              </button>
+              <input type="file" id="convert-file-input" accept="image/*,.pdf" style="display: none;">
+            </div>
+
+            <!-- Image Preview Thumbnail -->
+            <div id="convert-image-preview-container" style="display: none; margin-top: 10px; background: rgba(15, 23, 42, 0.7); border: 1px solid var(--border-color); border-radius: 8px; padding: 8px; position: relative;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+                <span id="convert-image-meta" style="font-size: 11px; color: #38bdf8; font-weight: 600;">Ảnh đã nạp (0 KB)</span>
+                <button id="btn-convert-clear-image" class="editor-mini-btn" style="color: #ef4444;" title="Xóa ảnh này">🗑️ Xóa</button>
+              </div>
+              <div style="max-height: 140px; overflow: hidden; border-radius: 4px; display: flex; justify-content: center; background: #000;">
+                <img id="convert-image-thumb" src="" alt="Đề thi đã chọn" style="max-width: 100%; max-height: 140px; object-fit: contain;">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2: Tùy chọn cấu hình nhận diện -->
+        <section>
+          <div class="section-label">Cấu hình loại câu hỏi & Lời giải</div>
+          <div class="normalize-card">
+            <div class="form-group">
+              <label class="form-label" for="convert-qtype-select">Chế độ phân loại:</label>
+              <select id="convert-qtype-select" class="form-input">
+                <option value="auto" selected>Tự động nhận diện theo đề</option>
+                <option value="TN">Trắc nghiệm 4 lựa chọn (Phần I chuẩn BGD)</option>
+                <option value="DS">Đúng / Sai 4 ý a,b,c,d (Phần II chuẩn BGD)</option>
+                <option value="TLN">Trả lời ngắn (Phần III chuẩn BGD)</option>
+                <option value="TL">Tự luận giải toán</option>
+              </select>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+              <input type="checkbox" id="convert-include-solution" checked style="accent-color: #0284c7; cursor: pointer;">
+              <label for="convert-include-solution" style="font-size: 12px; color: var(--text-primary); cursor: pointer; user-select: none;">
+                Yêu cầu AI giải chi tiết & kiểm tra đáp án
+              </label>
+            </div>
+
+            <button id="btn-convert-run" class="btn btn-success" style="width: 100%; margin-top: 10px; font-weight: 700;">
+              <span>⚡</span> Nhận diện & Xuất vào Word
+            </button>
+
+            <!-- Live Convert Image Progress & Timer Tracker -->
+            <div id="convert-img-progress-card" class="tikz-progress-card" style="display: none; margin-top: 8px;">
+              <div class="progress-header">
+                <div class="progress-status-info">
+                  <span class="progress-spinner"></span>
+                  <span id="convert-img-progress-stage" class="progress-stage-text">Đang nhận diện AI Vision...</span>
+                </div>
+                <span id="convert-img-progress-timer" class="progress-timer-badge">⏱️ 00:00.0</span>
+              </div>
+              <div class="progress-bar-track">
+                <div id="convert-img-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
+              </div>
+              <div class="progress-footer">
+                <span id="convert-img-progress-subtext" class="progress-subtext">Đang bóc tách câu hỏi và công thức...</span>
+                <span id="convert-img-progress-percent" class="progress-percent-badge">0%</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- CHẾ ĐỘ 2: TEXT/LATEX → CÂU HỎI (DÁN HOẶC TẢI CẤU TRÚC APP / LATEX) -->
+      <div id="convert-mode-text" style="display: none;">
+        <section>
+          <!-- Toolbar Header -->
+          <div style="background: rgba(124, 58, 237, 0.12); border: 1px solid rgba(124, 58, 237, 0.3); border-radius: 8px 8px 0 0; padding: 8px 10px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-size: 12px; font-weight: 700; color: #a78bfa;">🤖 Dán hoặc tải cấu trúc app / LaTeX</span>
+              <button id="btn-convert-clear-text" class="editor-mini-btn" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);" title="Xóa nội dung nhập">
+                <span>🗑️</span> Xóa
+              </button>
+            </div>
+
+            <!-- Toolbar Controls Row -->
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; flex-wrap: wrap;">
+              <div style="display: flex; gap: 6px;">
+                <button id="btn-convert-copy-prompt" class="btn btn-secondary btn-compact" style="background: #7c3aed; color: #fff; border: none; font-size: 11px;" title="Sao chép mẫu prompt chuẩn để dán vào ChatGPT / Claude / Gemini">
+                  <span>📋</span> Copy Prompt hỏi Chatbot
+                </button>
+                <button id="btn-convert-load-text-file" class="btn btn-secondary btn-compact" style="background: #2563eb; color: #fff; border: none; font-size: 11px;" title="Tải file .tex, .txt, .md từ máy tính">
+                  <span>📂</span> Tải TeX/TXT
+                </button>
+                <input type="file" id="convert-text-file-picker" accept=".tex,.txt,.md,.doc,.docx" style="display: none;">
+              </div>
+
+              <!-- Lớp & Môn Selectors -->
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 11px; color: var(--text-secondary);">Lớp:</span>
+                <select id="convert-text-grade" class="form-input" style="padding: 2px 6px; font-size: 11px; width: 55px;">
+                  <option value="12" selected>12</option>
+                  <option value="11">11</option>
+                  <option value="10">10</option>
+                  <option value="9">9</option>
+                  <option value="8">8</option>
+                  <option value="7">7</option>
+                  <option value="6">6</option>
+                </select>
+
+                <span style="font-size: 11px; color: var(--text-secondary);">Môn:</span>
+                <select id="convert-text-subject" class="form-input" style="padding: 2px 6px; font-size: 11px; width: 75px;">
+                  <option value="Toán" selected>Toán</option>
+                  <option value="Vật lí">Vật lí</option>
+                  <option value="Hóa học">Hóa học</option>
+                  <option value="Sinh học">Sinh học</option>
+                  <option value="Tin học">Tin học</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Large Textarea with detailed placeholder -->
+          <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 8px 8px; padding: 8px;">
+            <textarea 
+              id="convert-raw-text" 
+              class="form-input" 
+              style="width: 100%; height: 180px; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.5; resize: vertical; border: 1px solid var(--border-color); background: rgba(10, 15, 29, 0.8);" 
+              placeholder="Dán văn bản câu hỏi từ ChatGPT, Gemini, Claude... vào đây.&#10;&#10;Cách dùng:&#10;1. Nhấn &quot;Copy Prompt hỏi Chatbot&quot; → dán prompt lên ChatGPT/Gemini&#10;2. Copy kết quả từ chatbot → dán vào đây&#10;3. Chọn Lớp ngay bên trên → Nhấn &quot;🚀 Xuất vào Word&quot;&#10;&#10;App nhận diện TRỰC TIẾP (không tốn lượt API) các dạng:&#10;• Khung ===CAU===...===KETCAU===&#10;• LaTeX ex_test: \begin{ex}...\end{ex}, \begin{bt}...\end{bt}&#10;• Tự động loại bỏ các thẻ [cite: 41, 42] và chuẩn hóa bảng Markdown/LaTeX&#10;• &quot;Câu N:&quot; + A./B./C./D. + &quot;Đáp án: X&quot;&#10;• &quot;Câu N:&quot; + a)/b)/c)/d) + &quot;Đáp án: a=Đ,b=S,...&quot; (Đúng-Sai)&#10;• &quot;Câu N:&quot; + &quot;Đáp án: &lt;số&gt;&quot; (Trả lời ngắn)"
+            ></textarea>
+
+            <!-- Text Actions Grid: 1 Nút Xuất vào Word duy nhất -->
+            <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px;">
+              <div style="display: flex; gap: 6px;">
+                <button id="btn-convert-text-insert-word" class="btn btn-primary" style="flex: 2; font-weight: 700;" title="Chuẩn hóa cấu trúc khung đề (bảng tiêu đề, in đậm) và xuất thẳng vào Word">
+                  <span>🚀</span> Xuất vào Word
+                </button>
+                <button id="btn-convert-text-call-ai" class="btn btn-cyan btn-compact" style="flex: 1;" title="Dùng AI Gemini chuẩn hóa nếu văn bản quá lộn xộn">
+                  <span>🤖</span> AI chuẩn hóa
+                </button>
+              </div>
+
+              <div style="display: flex; gap: 6px;">
+                <button id="btn-convert-text-save-bank" class="btn btn-secondary btn-compact" style="flex: 1; background: #6d28d9; color: #fff; border: none;" title="Lưu vào Ngân hàng câu hỏi SQLite">
+                  <span>⬆️</span> Thêm NHCH
+                </button>
+                <button id="btn-convert-text-copy" class="btn btn-secondary btn-compact" style="flex: 1;" title="Sao chép toàn bộ nội dung">
+                  <span>📋</span> Copy
+                </button>
+              </div>
+            </div>
+
+            <!-- Live Convert Text Progress & Timer Tracker -->
+            <div id="convert-text-progress-card" class="tikz-progress-card" style="display: none; margin-top: 8px;">
+              <div class="progress-header">
+                <div class="progress-status-info">
+                  <span class="progress-spinner"></span>
+                  <span id="convert-text-progress-stage" class="progress-stage-text">AI đang chuẩn hóa văn bản...</span>
+                </div>
+                <span id="convert-text-progress-timer" class="progress-timer-badge">⏱️ 00:00.0</span>
+              </div>
+              <div class="progress-bar-track">
+                <div id="convert-text-progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
+              </div>
+              <div class="progress-footer">
+                <span id="convert-text-progress-subtext" class="progress-subtext">Đang xử lý cấu trúc câu hỏi và LaTeX...</span>
+                <span id="convert-text-progress-percent" class="progress-percent-badge">0%</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Section 3: Kết quả câu hỏi nhận diện được (Ẩn để chèn thẳng vào Word) -->
+      <section id="convert-result-section" style="display: none !important; margin-top: 12px;">
+        <div class="section-label">
+          <span>Kết quả câu hỏi trích xuất</span>
+          <span id="convert-result-badge" class="badge-tag">0 câu</span>
+        </div>
+        <div class="result-card">
+          <div class="result-card-header">
+            <span id="convert-meta-summary" class="result-badge">Toán • Lớp 12</span>
+            <div class="editor-actions">
+              <button id="btn-convert-copy-result" class="editor-mini-btn" title="Sao chép toàn bộ">📋 Sao chép</button>
+              <button id="btn-convert-clear-result" class="editor-mini-btn" title="Xóa kết quả">🗑️ Xóa</button>
+            </div>
+          </div>
+          <div id="convert-result-content" class="result-content-body" contenteditable="true" spellcheck="false" style="max-height: 260px;"></div>
+        </div>
+
+        <div class="action-grid" style="margin-top: 10px;">
+          <button id="btn-convert-insert-word" class="btn btn-primary" title="Chèn toàn bộ câu hỏi đã nhận diện vào tài liệu Word">
+            <span class="btn-icon">📥</span> Chèn vào Word
+          </button>
+          <button id="btn-convert-save-qb" class="btn btn-cyan" title="Lưu danh sách câu hỏi này vào Ngân hàng SQLite">
+            <span class="btn-icon">🗃️</span> Lưu vào Kho
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- PHÂN HỆ 3: NGÂN HÀNG CÂU HỎI SQLITE                                       -->
+    <!-- ========================================================================= -->
+    <div id="panel-questionbank" class="feature-panel" style="display: none;">
+      <!-- Search & Filters -->
+      <section>
+        <div class="section-label">
+          <span>Tìm kiếm ngân hàng câu hỏi</span>
+          <span id="qb-count-badge" class="badge-tag">0 câu</span>
+        </div>
+        <div class="qb-search-bar">
+          <input id="qb-search-input" class="form-input" type="text" placeholder="Tìm theo từ khóa, chuyên đề, mã câu...">
+          <button id="qb-btn-search" class="btn btn-primary btn-compact" title="Tìm kiếm">
+            <span>🔍</span> Tìm
+          </button>
+        </div>
+        <div class="qb-filter-grid">
+          <select id="qb-filter-grade" class="form-input">
+            <option value="">Tất cả lớp</option>
+            <option value="12">Lớp 12</option>
+            <option value="11">Lớp 11</option>
+            <option value="10">Lớp 10</option>
+          </select>
+          <select id="qb-filter-level" class="form-input">
+            <option value="">Mọi mức độ</option>
+            <option value="Nhận biết">Nhận biết</option>
+            <option value="Thông hiểu">Thông hiểu</option>
+            <option value="Vận dụng">Vận dụng</option>
+            <option value="Vận dụng cao">Vận dụng cao</option>
+          </select>
+          <select id="qb-filter-type" class="form-input">
+            <option value="">Mọi định dạng</option>
+            <option value="MultipleChoice4">Trắc nghiệm 4 lựa chọn</option>
+            <option value="TrueFalse4">Đúng / Sai</option>
+            <option value="ShortAnswer">Trả lời ngắn</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Quick Add from Word Selection -->
+      <section>
+        <div class="action-grid">
+          <button id="qb-btn-save-selection" class="btn btn-secondary" title="Lưu đoạn đang bôi đen trong Word vào ngân hàng câu hỏi">
+            <span>📥</span> Lưu bôi đen vào kho
+          </button>
+          <button id="qb-btn-refresh" class="btn btn-cyan btn-compact" title="Tải lại danh sách">
+            <span>🔄</span> Tải lại
+          </button>
+        </div>
+      </section>
+
+      <!-- Questions List Cards -->
+      <section>
+        <div class="section-label">Danh sách câu hỏi trong kho</div>
+        <div id="qb-questions-list" class="qb-questions-container">
+          <div class="preview-empty-state">
+            <span class="empty-icon">🗃️</span>
+            <span>Chưa có câu hỏi nào</span>
+            <span style="font-size: 11px;">Bấm 'Tải lại' hoặc 'Lưu bôi đen vào kho'</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- PHÂN HỆ 4: MA TRẬN ĐỀ THI CHUẨN BỘ GD&ĐT                                  -->
+    <!-- ========================================================================= -->
+    <div id="panel-matrix" class="feature-panel" style="display: none;">
+      <section>
+        <div class="section-label">Cấu hình khung ma trận đề thi</div>
+        <div class="matrix-config-card">
+          <div class="form-group">
+            <label class="form-label" for="matrix-title-input">Tiêu đề đề thi:</label>
+            <input id="matrix-title-input" class="form-input" type="text" value="ĐỀ KIỂM TRA ĐỊNH KỲ MÔN TOÁN 12">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="matrix-grade-select">Khối lớp:</label>
+            <select id="matrix-grade-select" class="form-input">
+              <option value="12" selected>Lớp 12 (Thi TN THPT 2025+)</option>
+              <option value="11">Lớp 11</option>
+              <option value="10">Lớp 10</option>
+            </select>
+          </div>
+          <div class="matrix-parts-grid">
+            <div class="matrix-part-item">
+              <span class="part-title">Phần I: Trắc nghiệm 4 lựa chọn</span>
+              <div class="part-count-row">
+                <input id="matrix-p1-count" class="form-input part-number-input" type="number" min="0" max="40" value="12">
+                <span class="part-hint">câu (3.0 đ)</span>
+              </div>
+            </div>
+            <div class="matrix-part-item">
+              <span class="part-title">Phần II: Đúng / Sai 4 ý</span>
+              <div class="part-count-row">
+                <input id="matrix-p2-count" class="form-input part-number-input" type="number" min="0" max="10" value="4">
+                <span class="part-hint">câu (4.0 đ)</span>
+              </div>
+            </div>
+            <div class="matrix-part-item">
+              <span class="part-title">Phần III: Trả lời ngắn</span>
+              <div class="part-count-row">
+                <input id="matrix-p3-count" class="form-input part-number-input" type="number" min="0" max="20" value="6">
+                <span class="part-hint">câu (3.0 đ)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <button id="matrix-btn-generate" class="btn btn-primary" style="width: 100%;">
+          <span>⚡</span> Trộn đề theo ma trận từ Ngân hàng
+        </button>
+      </section>
+
+      <!-- Matrix Generation Result Preview -->
+      <section id="matrix-result-section" style="display: none;">
+        <div class="section-label">
+          <span>Xem trước bản thảo đề thi</span>
+          <span id="matrix-result-badge" class="badge-tag">22 câu</span>
+        </div>
+        <div class="result-card">
+          <div id="matrix-result-content" class="result-content-body" style="max-height: 260px; overflow-y: auto;"></div>
+        </div>
+        <div class="action-grid" style="margin-top: 10px;">
+          <button id="matrix-btn-export-word" class="btn btn-success" style="width: 100%;">
+            <span>📥</span> Xuất toàn bộ đề thi ra Word
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- ========================================================================= -->
+    <!-- PHÂN HỆ 5: CHUẨN HÓA ĐỊNH DẠNG ĐỀ THI WORD                                -->
+    <!-- ========================================================================= -->
+    <div id="panel-normalize" class="feature-panel" style="display: none;">
+      <!-- Section 1: Standardize Document Format -->
+      <section>
+        <div class="section-label">Chuẩn hóa định dạng đề thi Word</div>
+        <div class="normalize-card">
+          <div class="form-group">
+            <label class="form-label" for="norm-font-name">Font chữ chuẩn:</label>
+            <select id="norm-font-name" class="form-input">
+              <option value="Times New Roman" selected>Times New Roman (Chuẩn văn bản)</option>
+              <option value="Arial">Arial</option>
+              <option value="Calibri">Calibri</option>
+            </select>
+          </div>
+          <div class="qb-filter-grid">
+            <div class="form-group">
+              <label class="form-label" for="norm-font-size">Cỡ chữ:</label>
+              <select id="norm-font-size" class="form-input">
+                <option value="12" selected>12 pt (Chuẩn đề thi)</option>
+                <option value="11">11 pt</option>
+                <option value="13">13 pt</option>
+                <option value="14">14 pt</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="norm-line-spacing">Giãn dòng:</label>
+              <select id="norm-line-spacing" class="form-input">
+                <option value="1.15" selected>1.15 dòng</option>
+                <option value="1.2">1.2 dòng</option>
+                <option value="1.5">1.5 dòng</option>
+                <option value="1.0">1.0 dòng</option>
+              </select>
+            </div>
+          </div>
+
+          <p style="font-size: 11.5px; color: var(--text-secondary); margin: 4px 0 0; line-height: 1.5;">
+            Áp dụng quy chuẩn font chữ, cỡ chữ và dãn dòng chuẩn của Bộ Giáo dục &amp; Đào tạo cho đề kiểm tra và đề thi mà không can thiệp hay làm biến đổi công thức toán trong tài liệu.
+          </p>
+
+          <div class="action-grid" style="margin-top: 8px;">
+            <button id="btn-standardize-selection" class="btn btn-cyan">
+              <span>📐</span> Chuẩn hóa vùng chọn
+            </button>
+            <button id="btn-standardize-doc" class="btn btn-primary">
+              <span>📑</span> Chuẩn hóa cả tài liệu
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Settings Modal Dialog -->
+  <div id="settings-modal" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <span>⚙️ Cài đặt AI Provider & Khóa API</span>
+        <button id="btn-close-settings" class="icon-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="provider-select">Nhà cung cấp AI:</label>
+          <select id="provider-select" class="form-input">
+            <option value="9Router">9Router (Local / Proxy)</option>
+            <option value="Google Gemini">Google Gemini</option>
+            <option value="OpenAI GPT">OpenAI GPT</option>
+            <option value="Anthropic Claude">Anthropic Claude</option>
+            <option value="DeepSeek">DeepSeek</option>
+          </select>
+          <span class="form-hint">Đồng bộ tự động với MatrixExamAI Desktop App.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="model-select">Mô hình AI mặc định:</label>
+          <select id="model-select" class="form-input"></select>
+        </div>
+
+        <div class="form-group">
+          <label id="api-key-label" class="form-label" for="api-key-input">Khóa API (API Key):</label>
+          <input id="api-key-input" class="form-input" type="password" placeholder="sk-... hoặc AIzaSy...">
+          <span id="api-key-hint" class="form-hint">Nhập khóa API tương ứng với nhà cung cấp đã chọn.</span>
+        </div>
+
+        <div id="settings-test-status" style="font-size: 11.5px; padding: 6px 10px; border-radius: 6px; display: none; margin-top: 6px;"></div>
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+        <button id="btn-test-connection" class="btn btn-secondary btn-compact" style="font-size: 11.5px; padding: 6px 12px;">
+          <span>⚡</span> Kiểm tra kết nối
+        </button>
+        <button id="btn-save-settings" class="btn btn-primary" style="font-size: 11.5px; padding: 6px 16px;">
+          <span>💾</span> Lưu cấu hình
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/wordBridge.js"></script>
+  <script src="js/sidebarApp.js"></script>
+</body>
+</html>
