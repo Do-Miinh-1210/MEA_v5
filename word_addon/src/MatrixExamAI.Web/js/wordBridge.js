@@ -104,7 +104,7 @@
     /**
      * Gửi yêu cầu JSON-RPC đến C# và chờ phản hồi qua Promise
      */
-    async call(action, payload = {}, timeoutMs = 90000) {
+    async call(action, payload = {}, timeoutMs = 240000) {
       if (!this.isWebView2) {
         return this._mockCall(action, payload);
       }
@@ -115,7 +115,7 @@
         const timeoutId = setTimeout(() => {
           if (this.pendingRequests.has(id)) {
             this.pendingRequests.delete(id);
-            reject(new Error(`Yêu cầu '${action}' quá thời gian chờ (${timeoutMs / 1000}s).`));
+            reject(new Error(`Yêu cầu '${action}' quá thời gian chờ (${Math.round(timeoutMs / 1000)}s). Vui lòng thử lại.`));
           }
         }, timeoutMs);
 
@@ -139,7 +139,7 @@
     /**
      * Alias tương thích cho call(action, payload, timeoutMs)
      */
-    async request(action, payload = {}, timeoutMs = 90000) {
+    async request(action, payload = {}, timeoutMs = 240000) {
       return this.call(action, payload, timeoutMs);
     }
 
@@ -149,6 +149,7 @@
      * Sinh mã TikZ từ prompt và ảnh (Multimodal Vision)
      */
     async generateTikz(prompt, options = {}) {
+      const timeout = options.timeoutMs || 240000;
       return this.call('tikz/generate', {
         prompt: prompt,
         imageBase64: options.imageBase64 || null,
@@ -158,7 +159,36 @@
         enableNotes: options.enableNotes !== false,
         bbtNoFrame: !!options.bbtNoFrame,
         modelOverride: options.modelOverride || null
+      }, timeout);
+    }
+
+    /**
+     * Yêu cầu AI sửa mã TikZ hiện tại theo mô tả chỉnh sửa
+     */
+    async aiEditTikz(currentCode, editInstruction, options = {}) {
+      const prompt = `Mã TikZ hiện tại:\n${currentCode}\n\nYêu cầu chỉnh sửa: ${editInstruction}\nHãy giữ nguyên cấu trúc toán học và chỉ cập nhật theo đúng yêu cầu. Chỉ trả về khối mã \\begin{tikzpicture} ... \\end{tikzpicture}.`;
+      return this.generateTikz(prompt, {
+        diagramType: options.diagramType || 'Custom',
+        timeoutMs: 240000
       });
+    }
+
+    /**
+     * Yêu cầu AI tối ưu hóa mã TikZ
+     */
+    async aiOptimizeTikz(currentCode, options = {}) {
+      const prompt = `Bạn là chuyên gia LaTeX TikZ. Hãy tối ưu hóa đoạn mã TikZ dưới đây: chuẩn hóa tọa độ, loại bỏ các lệnh rác/dư thừa, đảm bảo nét vẽ và nhãn sắc nét, giữ nguyên ý nghĩa toán học. Chỉ trả về khối mã TikZ sạch bắt đầu bằng \\begin{tikzpicture} và kết thúc bằng \\end{tikzpicture}:\n\n${currentCode}`;
+      return this.generateTikz(prompt, {
+        diagramType: options.diagramType || 'Custom',
+        timeoutMs: 240000
+      });
+    }
+
+    /**
+     * Lọc mã sạch bằng regex / TikzCodeExtractor
+     */
+    async cleanTikzCode(code) {
+      return this.call('tikz/cleanCode', { code: code }, 30000);
     }
 
     /**
@@ -170,7 +200,28 @@
         format: format,
         border: options.border || '2pt',
         autoHeal: options.autoHeal !== false
-      });
+      }, 120000);
+    }
+
+    /**
+     * Sao chép vector EMF vào Clipboard
+     */
+    async copyEmf(tikzCode) {
+      return this.call('tikz/copyEmf', { tikzCode: tikzCode }, 60000);
+    }
+
+    /**
+     * Sao chép ảnh đã compile vào Clipboard
+     */
+    async copyImage(imagePath) {
+      return this.call('tikz/copyImage', { imagePath: imagePath }, 30000);
+    }
+
+    /**
+     * Lấy danh mục mẫu hình vẽ từ C#
+     */
+    async getTikzTemplates() {
+      return this.call('tikz/templates', {}, 30000);
     }
 
     /**

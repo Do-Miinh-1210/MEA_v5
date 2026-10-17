@@ -102,47 +102,45 @@
     </div>
 
     <!-- ========================================================================= -->
-    <!-- PHÂN HỆ 1: VẼ HÌNH TIKZ TOÁN HỌC                                          -->
+    <!-- ========================================================================= -->
+    <!-- PHÂN HỆ 1: AI VẼ HÌNH TOÁN HỌC TIKZ (CHUẨN 100% GIAO DIỆN DESKTOP APP)    -->
     <!-- ========================================================================= -->
     <div id="panel-tikz" class="feature-panel active">
-      <!-- Presets Section -->
-      <section>
-        <div class="section-label">Loại hình toán học</div>
-        <div class="presets-container">
-          <button class="preset-chip active" data-type="DoThi">
-            <span class="preset-icon">📈</span> Đồ thị hàm số
-          </button>
-          <button class="preset-chip" data-type="BBT">
-            <span class="preset-icon">📋</span> Bảng biến thiên 3 dòng
-          </button>
-          <button class="preset-chip" data-type="BXD">
-            <span class="preset-icon">➕</span> Bảng xét dấu
-          </button>
-          <button class="preset-chip" data-type="HinhKhongGian">
-            <span class="preset-icon">📐</span> Hình không gian 3D
-          </button>
-        </div>
-      </section>
-
-      <!-- Prompt & Multimodal Image Paste Section -->
-      <section>
-        <div class="section-label">
-          <span>Mô tả hoặc dán ảnh bài toán</span>
-          <span style="font-weight: 500; font-size: 10.5px; text-transform: none; color: #38bdf8;">Kéo thả / Ctrl+V để dán ảnh</span>
+      <!-- Toolbar Hàng 1: Thể loại & Mẫu dựng sẵn -->
+      <div class="tikz-header-card">
+        <div class="tikz-category-bar">
+          <div class="tikz-select-group">
+            <label for="tikz-diagram-type" class="tikz-select-label">Thể loại:</label>
+            <select id="tikz-diagram-type" class="tikz-select" title="Định hướng thể loại hình vẽ cho AI">
+              <option value="DoThi" selected>Đồ thị hàm số</option>
+              <option value="BBT">Bảng biến thiên</option>
+              <option value="BXD">Bảng xét dấu</option>
+              <option value="HinhKhongGian">Hình không gian</option>
+              <option value="Custom">Hình học phẳng</option>
+            </select>
+          </div>
+          <div class="tikz-select-group">
+            <label for="tikz-template-select" class="tikz-select-label">Mẫu:</label>
+            <select id="tikz-template-select" class="tikz-select" title="Chọn mẫu hình học để nạp mã TikZ">
+              <option value="">-- Chọn mẫu dựng sẵn --</option>
+            </select>
+          </div>
         </div>
 
-        <div class="prompt-card" id="tikz-prompt-card">
+        <!-- Ô nhập đề bài / mô tả hình ảnh trực tiếp (Hỗ trợ kéo thả ảnh từ Word/Desktop) -->
+        <div class="prompt-card" id="tikz-prompt-card" style="padding: 6px 8px; margin: 0;">
           <div class="prompt-textarea-wrapper">
             <textarea 
               id="prompt-input" 
               class="prompt-textarea" 
-              placeholder="Nhập mô tả bài toán hoặc kéo thả ảnh từ Word / Desktop vào đây (hoặc Ctrl+V)..."
+              style="min-height: 48px; max-height: 120px; font-size: 12px;"
+              placeholder="Nhập đề bài / mô tả hình hoặc kéo thả / dán ảnh bài toán vào đây (Ctrl+V)..."
             ></textarea>
             <button id="clear-prompt-btn" class="clear-prompt-btn" title="Xóa nội dung">&times;</button>
           </div>
 
-          <!-- Clipboard Pasted Image Preview -->
-          <div id="image-preview-container" class="image-preview-container">
+          <!-- Thumbnail ảnh đính kèm (Vision Multimodal) -->
+          <div id="image-preview-container" class="image-preview-container" style="padding: 4px 8px;">
             <div class="image-thumb-wrapper">
               <img id="image-thumb" class="image-thumb" alt="Ảnh mẫu">
               <div class="image-meta">
@@ -152,33 +150,45 @@
             </div>
             <button id="remove-image-btn" class="remove-image-btn" title="Gỡ ảnh">&times; Gỡ ảnh</button>
           </div>
-
-          <div class="prompt-toolbar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
-            <div style="display: flex; gap: 6px; align-items: center;">
-              <button id="btn-get-word-image" class="btn btn-secondary btn-compact" style="font-size: 11px; padding: 4px 8px;" title="Lấy hình ảnh đang chọn trong Word hoặc từ Clipboard">
-                <span>🖼️</span> Lấy ảnh từ Word
-              </button>
-              <button id="btn-paste-clipboard-image" class="btn btn-secondary btn-compact" style="font-size: 11px; padding: 4px 8px;" title="Dán ảnh từ bộ nhớ đệm (Ctrl+V)">
-                <span>📋</span> Dán ảnh
-              </button>
-            </div>
-            <span class="paste-hint" style="font-size: 10.5px; color: #94a3b8;">Kéo thả ảnh hoặc <kbd>Ctrl</kbd>+<kbd>V</kbd></span>
-          </div>
         </div>
-      </section>
 
-      <!-- AI & Compile Action Buttons -->
-      <div class="action-grid">
-        <button id="btn-generate-ai" class="btn btn-primary">
-          <span class="btn-icon">✨</span> Tạo hình bằng AI
-        </button>
-        <button id="btn-compile-tikz" class="btn btn-secondary">
-          <span class="btn-icon">⚙️</span> Biên dịch lại
-        </button>
+        <!-- Toolbar Hàng 2: Bộ nút hành động màu sắc trực quan (Chuẩn 100% Desktop App) -->
+        <div class="tikz-actions-wrap">
+          <button id="btn-generate-ai" class="tikz-action-btn btn-accent-purple" title="AI phân tích đề bài / ảnh để vẽ hình TikZ (Ctrl+Shift+G)">
+            <span>✨</span> AI vẽ
+          </button>
+          <button id="btn-shape-builder" class="tikz-action-btn btn-accent-amber" title="Mở công cụ vẽ hình trực quan nhanh">
+            <span>🔷</span> Tạo hình
+          </button>
+          <button id="btn-ai-redraw" class="tikz-action-btn btn-accent-orange" title="Vẽ lại hình bằng mô tả hoặc ảnh gần nhất khi chưa ưng ý">
+            <span>🔄</span> Vẽ lại
+          </button>
+          <button id="btn-ai-edit" class="tikz-action-btn btn-accent-blue" title="Yêu cầu AI chỉnh sửa hoặc bổ sung chi tiết vào hình vẽ này">
+            <span>✏️</span> AI sửa
+          </button>
+          <button id="btn-ai-optimize" class="tikz-action-btn btn-accent-violet" title="Tối ưu hóa tọa độ, chuẩn hóa bounding box và làm sạch mã TikZ">
+            <span>🪄</span> AI tối ưu
+          </button>
+          <button id="btn-paste-clipboard-image" class="tikz-action-btn btn-accent-slate" title="Dán ảnh mẫu từ Clipboard để AI Vision phân tích (Ctrl+V)">
+            <span>🖼️</span> Dán ảnh
+          </button>
+          <button id="btn-open-figure-bank" class="tikz-action-btn btn-accent-cyan" title="Duyệt kho mẫu hơn 200+ hình vẽ TikZ chuẩn SGK">
+            <span>📚</span> Kho hình
+          </button>
+          <button id="btn-clean-code" class="tikz-action-btn btn-accent-gray" title="Lọc bỏ mã thừa, chuẩn hóa về khối tikzpicture duy nhất">
+            <span>🧹</span> Lọc mã
+          </button>
+          <button id="btn-clear-all" class="tikz-action-btn btn-accent-red" title="Xóa trắng mã soạn thảo để bắt đầu vẽ hình mới">
+            <span>🗑️</span> Xóa trắng
+          </button>
+          <button id="btn-compile-tikz" class="tikz-action-btn btn-accent-emerald" title="Biên dịch hình vẽ ra ảnh 600 DPI sắc nét (F5 hoặc Ctrl+Enter)">
+            <span>▶️</span> Biên dịch (F5)
+          </button>
+        </div>
       </div>
 
-      <!-- Live Progress & Timer Tracker -->
-      <div id="tikz-progress-card" class="tikz-progress-card" style="display: none;">
+      <!-- Live Progress & Timer Tracker (Không bao giờ bị timeout giả) -->
+      <div id="tikz-progress-card" class="tikz-progress-card" style="display: none; margin-bottom: 8px;">
         <div class="progress-header">
           <div class="progress-status-info">
             <span class="progress-spinner"></span>
@@ -195,8 +205,8 @@
         </div>
       </div>
 
-      <!-- Tabs: Code Viewer vs Visual Preview -->
-      <section>
+      <!-- Khung Split View / Tabs: Mã nguồn TikZ vs Xem trước Hình ảnh -->
+      <section style="margin-bottom: 8px;">
         <div class="tab-controls">
           <button id="tab-editor-btn" class="tab-btn active">
             <span>📝</span> Mã nguồn TikZ
@@ -212,7 +222,7 @@
             <div class="editor-info">
               <span id="code-line-count">0 dòng</span>
               <span>•</span>
-              <span>LaTeX TikZ</span>
+              <span>LaTeX TikZ 600 DPI</span>
             </div>
             <div class="editor-actions">
               <button id="btn-copy-code" class="editor-mini-btn" title="Sao chép toàn bộ mã">
@@ -236,14 +246,13 @@
 
         <!-- Tab Content 2: Visual Zoom & Pan Preview -->
         <div id="tab-preview-content" class="tab-content">
-          <div class="preview-card">
+          <div class="preview-card" style="border-radius: 8px 8px 0 0; border-bottom: none;">
             <div class="preview-toolbar">
               <div class="zoom-controls">
-                <button id="btn-zoom-in" class="zoom-btn" title="Phóng to">+</button>
                 <button id="btn-zoom-out" class="zoom-btn" title="Thu nhỏ">-</button>
-                <span id="zoom-level-display" class="zoom-level">100%</span>
-                <button id="btn-zoom-reset" class="zoom-btn" title="Đặt lại 100%">1:1</button>
-                <button id="btn-zoom-fit" class="zoom-btn" title="Vừa khung">⛶</button>
+                <button id="btn-zoom-reset" class="zoom-btn" title="Đặt lại 100%">100%</button>
+                <button id="btn-zoom-in" class="zoom-btn" title="Phóng to">+</button>
+                <button id="btn-zoom-fit" class="zoom-btn" title="Vừa khung">Fit</button>
               </div>
               <div class="format-selector">
                 <button class="format-btn active" data-format="png" title="PNG 600 DPI sắc nét">PNG 600DPI</button>
@@ -258,10 +267,35 @@
                 <div id="preview-empty-state" class="preview-empty-state">
                   <span class="empty-icon">🖼️</span>
                   <span>Chưa có hình xem trước</span>
-                  <span style="font-size: 11px;">Bấm "Biên dịch lại" hoặc "Tạo hình bằng AI"</span>
+                  <span style="font-size: 11px;">Bấm "Biên dịch (F5)" hoặc "AI vẽ"</span>
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- Thanh nút xuất hình chuẩn Desktop App TikzView -->
+          <div class="preview-export-toolbar">
+            <button id="btn-insert-word" class="tikz-action-btn btn-accent-sky" style="font-size: 11px; padding: 0 10px;" title="Chèn hình ảnh trực tiếp vào Word (Ctrl+Shift+W)">
+              <span>📥</span> Chèn Word
+            </button>
+            <button id="btn-copy-image" class="tikz-action-btn btn-accent-blue" style="font-size: 10.5px;" title="Sao chép ảnh 600 DPI vào Clipboard">
+              <span>📋</span> Copy ảnh
+            </button>
+            <button id="btn-copy-code-preview" class="tikz-action-btn btn-accent-purple" style="font-size: 10.5px;" title="Sao chép toàn bộ mã TikZ">
+              <span>📋</span> Copy mã
+            </button>
+            <button id="btn-copy-emf" class="btn btn-secondary btn-compact" style="font-size: 10.5px; height: 26px; padding: 0 8px;" title="Sao chép vector EMF dán sắc nét vào Word">
+              <span>📋</span> Copy EMF
+            </button>
+            <button id="btn-save-png" class="btn btn-secondary btn-compact" style="font-size: 10.5px; height: 26px; padding: 0 8px;" title="Tải file ảnh PNG 600 DPI">
+              <span>💾</span> Lưu PNG
+            </button>
+            <button id="btn-save-svg" class="btn btn-secondary btn-compact" style="font-size: 10.5px; height: 26px; padding: 0 8px;" title="Tải file vector SVG">
+              <span>💾</span> Lưu SVG
+            </button>
+            <button id="btn-update-word" class="tikz-action-btn btn-accent-cyan" style="font-size: 10.5px; display: none;" title="Cập nhật hình ảnh đang chọn trong Word">
+              <span>🔄</span> Cập nhật hình
+            </button>
           </div>
         </div>
 
@@ -271,19 +305,6 @@
             <span>⚠️ Lỗi biên dịch LaTeX:</span>
           </div>
           <pre id="latex-error-content" class="latex-error-content"></pre>
-        </div>
-      </section>
-
-      <!-- Word Insertion Actions -->
-      <section>
-        <div class="section-label">Thao tác tài liệu Word</div>
-        <div class="action-grid">
-          <button id="btn-insert-word" class="btn btn-success" title="Chèn ảnh vào vị trí con trỏ chuột trong Word">
-            <span class="btn-icon">📥</span> Chèn vào Word
-          </button>
-          <button id="btn-update-word" class="btn btn-cyan" title="Cập nhật hình ảnh đang chọn trong Word" disabled>
-            <span class="btn-icon">🔄</span> Cập nhật hình Word
-          </button>
         </div>
       </section>
     </div>

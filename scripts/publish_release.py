@@ -34,9 +34,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.18"
-TITLE = "MatrixExamAI Pro v5.3.0.18 (UI Version Badges & Bulletproof Delta Update Engine)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.18: Hiển thị số hiệu phiên bản trên TitleBar và StatusBar, nâng cấp cơ chế cập nhật vi mô Delta Patch tự phục hồi kèm fallback tự động sang bản vá toàn diện, loại bỏ triệt để lỗi không thể cập nhật và tối ưu dung lượng tải về."
+TAG = "v5.3.0.19"
+TITLE = "MatrixExamAI Pro v5.3.0.19 (100% Đồng bộ Giao diện AI TikZ & Tăng Timeout 240s)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.19: Đồng bộ 100% giao diện và tính năng tab AI TikZ trong Word Add-in giống TikzView Desktop App, nâng timeout AI Vision lên 240s loại bỏ lỗi quá thời gian chờ, bổ sung đầy đủ bộ nút thao tác và xuất ảnh chất lượng cao."
 
 def compute_sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest().lower()
@@ -57,6 +57,17 @@ def build_patch_zip(publish_dir: Path, output_zip: Path):
             if fpath.exists():
                 zf.write(fpath, arcname=fname)
                 print(f"  + Added to full patch: {fname} ({fpath.stat().st_size} bytes)")
+        
+        word_addon_dir = publish_dir.parent.parent / "word_addon" / "src" / "MatrixExamAI.WordAddIn" / "bin" / "Debug" / "net48"
+        if word_addon_dir.exists():
+            for root, dirs, files in os.walk(word_addon_dir):
+                for file in files:
+                    full_path = Path(root) / file
+                    rel_path = full_path.relative_to(word_addon_dir)
+                    arcname = f"word_addon/{rel_path.as_posix()}"
+                    zf.write(full_path, arcname=arcname)
+            print(f"  + Added word_addon folder to full patch")
+
     print(f"[OK] Created full patch zip: {output_zip.name} ({output_zip.stat().st_size} bytes)")
 
 def build_delta_zip(publish_dir: Path, output_delta_zip: Path, cache_dir: Path):
@@ -157,9 +168,18 @@ def build_delta_zip(publish_dir: Path, output_delta_zip: Path, cache_dir: Path):
     manifest_path = staging_dir / "delta_manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    word_addon_dir = publish_dir.parent.parent / "word_addon" / "src" / "MatrixExamAI.WordAddIn" / "bin" / "Debug" / "net48"
+    if word_addon_dir.exists():
+        word_addon_staging = staging_dir / "word_addon"
+        shutil.copytree(word_addon_dir, word_addon_staging, dirs_exist_ok=True)
+        print(f"  + Added word_addon folder to delta staging")
+
     with zipfile.ZipFile(output_delta_zip, "w", zipfile.ZIP_DEFLATED) as zf:
-        for f in staging_dir.iterdir():
-            zf.write(f, arcname=f.name)
+        for root, dirs, files in os.walk(staging_dir):
+            for file in files:
+                full_path = Path(root) / file
+                arcname = full_path.relative_to(staging_dir).as_posix()
+                zf.write(full_path, arcname=arcname)
 
     shutil.rmtree(staging_dir, ignore_errors=True)
     print(f"[OK] Created delta patch zip: {output_delta_zip.name} ({output_delta_zip.stat().st_size} bytes)")

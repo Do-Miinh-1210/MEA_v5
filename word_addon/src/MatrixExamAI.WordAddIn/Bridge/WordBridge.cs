@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -157,6 +158,10 @@ namespace MatrixExamAI.WordAddIn.Bridge
             // TikZ engine wiring
             RegisterHandler("tikz/generate", HandleTikzGenerateAsync);
             RegisterHandler("tikz/compile", HandleTikzCompileAsync);
+            RegisterHandler("tikz/cleanCode", HandleCleanTikzCodeAsync);
+            RegisterHandler("tikz/templates", HandleGetTikzTemplatesAsync);
+            RegisterHandler("tikz/copyEmf", HandleCopyEmfAsync);
+            RegisterHandler("tikz/copyImage", HandleCopyImageAsync);
 
             // Configuration
             RegisterHandler("system/getConfig", HandleGetConfigAsync);
@@ -664,6 +669,106 @@ namespace MatrixExamAI.WordAddIn.Bridge
                 parsedError = compileResult.ParsedError?.ToString(),
                 rawLog = compileResult.RawLatexLog
             };
+        }
+
+        private Task<object?> HandleCleanTikzCodeAsync(JsonElement? payload)
+        {
+            string code = string.Empty;
+            if (payload.HasValue && payload.Value.TryGetProperty("code", out var pCode))
+            {
+                code = pCode.GetString() ?? string.Empty;
+            }
+            string cleanCode = TikzCodeExtractor.ExtractTikzCode(code);
+            return Task.FromResult<object?>(new { success = true, cleanCode });
+        }
+
+        private Task<object?> HandleGetTikzTemplatesAsync(JsonElement? payload)
+        {
+            var categories = TikzTemplateLibrary.Categories.Select(c => new
+            {
+                id = c.Id,
+                name = c.Name,
+                icon = c.Icon,
+                templates = c.Templates.Select(t => new
+                {
+                    id = t.Id,
+                    title = t.Title,
+                    description = t.Description,
+                    tags = t.Tags,
+                    code = t.Code
+                }).ToList()
+            }).ToList();
+
+            return Task.FromResult<object?>(new { success = true, categories });
+        }
+
+        private async Task<object?> HandleCopyEmfAsync(JsonElement? payload)
+        {
+            string tikzCode = string.Empty;
+            if (payload.HasValue && payload.Value.TryGetProperty("tikzCode", out var pCode))
+            {
+                tikzCode = pCode.GetString() ?? string.Empty;
+            }
+            if (string.IsNullOrWhiteSpace(tikzCode))
+            {
+                return new { success = false, errorMessage = "Mã TikZ rỗng" };
+            }
+
+            var compileRes = await _tikzCompiler.CompileAsync(new SharedModels.TikzCompileRequest
+            {
+                TikzCode = tikzCode,
+                Format = SharedModels.TikzExportFormat.Emf,
+                Border = "2pt"
+            });
+
+            if (compileRes.Success && !string.IsNullOrEmpty(compileRes.ImagePath) && File.Exists(compileRes.ImagePath))
+            {
+                await InvokeOnStaThreadAsync(() =>
+                {
+                    try
+                    {
+                        using var img = System.Drawing.Image.FromFile(compileRes.ImagePath);
+                        System.Windows.Forms.Clipboard.SetImage(img);
+                    }
+                    catch (Exception ex)
+                    {
+                        AddInLog.LogError("[WordBridge] HandleCopyEmfAsync clipboard error", ex);
+                    }
+                    return Task.CompletedTask;
+                });
+                return new { success = true, imagePath = compileRes.ImagePath };
+            }
+
+            return new { success = false, errorMessage = compileRes.ErrorMessage ?? "Không thể tạo file EMF" };
+        }
+
+        private async Task<object?> HandleCopyImageAsync(JsonElement? payload)
+        {
+            string imagePath = string.Empty;
+            if (payload.HasValue && payload.Value.TryGetProperty("imagePath", out var pImg))
+            {
+                imagePath = pImg.GetString() ?? string.Empty;
+            }
+
+            if (!string.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
+            {
+                await InvokeOnStaThreadAsync(() =>
+                {
+                    try
+                    {
+                        using var img = System.Drawing.Image.FromFile(imagePath);
+                        System.Windows.Forms.Clipboard.SetImage(img);
+                    }
+                    catch (Exception ex)
+                    {
+                        AddInLog.LogError("[WordBridge] HandleCopyImageAsync clipboard error", ex);
+                    }
+                    return Task.CompletedTask;
+                });
+                return new { success = true };
+            }
+
+            return new { success = false, errorMessage = "File ảnh không tồn tại" };
         }
 
         private Task<object?> HandleGetConfigAsync(JsonElement? payload)

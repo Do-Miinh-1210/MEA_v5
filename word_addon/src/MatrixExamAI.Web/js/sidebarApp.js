@@ -30,12 +30,97 @@
   \\node at (0,-1) [left] {$-1$};
 \\end{tikzpicture}`;
 
-  // Presets mapping
-  const PRESET_TEMPLATES = {
-    BBT: {
-      label: 'Bảng biến thiên 3 dòng',
-      prompt: 'Vẽ bảng biến thiên 3 dòng hàm số y = (2x - 1)/(x + 1) có tiệm cận đứng x = -1 và tiệm cận ngang y = 2',
-      sampleCode: `% BẢNG BIẾN THIÊN 3 DÒNG (tkz-tab)
+  // Thư viện mẫu TikZ phong phú (Kế thừa từ TikzTemplateLibrary & Desktop TikzView)
+  const TIKZ_CATALOG = {
+    DoThi: [
+      {
+        id: 'graph_cubic_s',
+        title: 'Hàm bậc 3: y = x^3 - 3x + 1 (2 cực trị)',
+        code: DEFAULT_TIKZ_CODE
+      },
+      {
+        id: 'graph_cubic_neg',
+        title: 'Hàm bậc 3: y = -x^3 + 3x^2 - 4',
+        code: `\\begin{tikzpicture}[scale=0.9, >=stealth]
+  \\draw[->] (-2.5,0) -- (4,0) node[below] {$x$};
+  \\draw[->] (0,-5) -- (0,2) node[left] {$y$};
+  \\draw[dashed] (2,0) node[below] {$2$} -- (2,0);
+  \\fill (0,0) circle (1.5pt) node[below left] {$O$};
+  \\fill (0,-4) circle (1.5pt) node[left] {$-4$};
+  \\fill (2,0) circle (1.5pt);
+  \\draw[thick, blue, smooth, samples=100, domain=-1.2:3.2] plot (\\x, {-(\\x)^3 + 3*(\\x)^2 - 4});
+\\end{tikzpicture}`
+      },
+      {
+        id: 'graph_quartic',
+        title: 'Hàm trùng phương: y = x^4 - 2x^2 - 1',
+        code: `\\begin{tikzpicture}[scale=0.9, >=stealth]
+  \\draw[->] (-2.5,0) -- (2.5,0) node[below] {$x$};
+  \\draw[->] (0,-3) -- (0,3) node[left] {$y$};
+  \\fill (0,0) circle (1.5pt) node[below right] {$O$};
+  \\draw[dashed] (-1,0) node[above] {$-1$} -- (-1,-2) -- (1,-2) -- (1,0) node[above] {$1$};
+  \\draw[dashed] (-1,-2) -- (0,-2) node[right] {$-2$};
+  \\fill (-1,-2) circle (1.5pt);
+  \\fill (1,-2) circle (1.5pt);
+  \\fill (0,-1) circle (1.5pt) node[above right] {$-1$};
+  \\draw[thick, red, smooth, samples=100, domain=-1.8:1.8] plot (\\x, {(\\x)^4 - 2*(\\x)^2 - 1});
+\\end{tikzpicture}`
+      },
+      {
+        id: 'graph_rational',
+        title: 'Hàm phân thức: y = (2x - 1)/(x + 1)',
+        code: `\\begin{tikzpicture}[scale=0.85, >=stealth]
+  \\draw[->] (-5,0) -- (4,0) node[below] {$x$};
+  \\draw[->] (0,-4) -- (0,6) node[left] {$y$};
+  \\fill (0,0) circle (1.5pt) node[below left] {$O$};
+  \\draw[dashed, red, thick] (-1,-4) -- (-1,6) node[above] {$x=-1$};
+  \\draw[dashed, red, thick] (-5,2) -- (4,2) node[right] {$y=2$};
+  \\draw[thick, blue, smooth, samples=100, domain=-5:-1.2] plot (\\x, {(2*\\x - 1)/(\\x + 1)});
+  \\draw[thick, blue, smooth, samples=100, domain=-0.8:3.5] plot (\\x, {(2*\\x - 1)/(\\x + 1)});
+\\end{tikzpicture}`
+      },
+      {
+        id: 'graph_sin',
+        title: 'Hàm lượng giác: y = sin(x)',
+        code: `\\begin{tikzpicture}[scale=1.2, >=stealth]
+  \\draw[->] (-3.5,0) -- (3.5,0) node[below] {$x$};
+  \\draw[->] (0,-1.5) -- (0,1.5) node[left] {$y$};
+  \\fill (0,0) circle (1.5pt) node[below left] {$O$};
+  \\draw[thick, teal, smooth, samples=100, domain=-3.14:3.14] plot (\\x, {sin(\\x r)});
+  \\node at (1.57, 1) [above] {$(\\frac{\\pi}{2}; 1)$};
+  \\node at (-1.57, -1) [below] {$(-\\frac{\\pi}{2}; -1)$};
+\\end{tikzpicture}`
+      }
+    ],
+    BBT: [
+      {
+        id: 'bbt_cubic',
+        title: 'Bảng biến thiên: Hàm bậc 3 (2 cực trị)',
+        code: `% BẢNG BIẾN THIÊN HÀM BẬC 3
+\\begin{tikzpicture}
+  \\tkzTabInit[lgt=1.5, espcl=2.5, deltacl=0.6]
+    {$x$ / 1, $y'$ / 1, $y$ / 2.5}
+    {$-\\infty$, $-1$, $1$, $+\\infty$}
+  \\tkzTabLine{ , +, 0, -, 0, +, }
+  \\tkzTabVar{-/ $-\\infty$, +/ $3$, -/ $-1$, +/ $+\\infty$}
+\\end{tikzpicture}`
+      },
+      {
+        id: 'bbt_quartic',
+        title: 'Bảng biến thiên: Hàm bậc 4 trùng phương',
+        code: `% BẢNG BIẾN THIÊN HÀM TRÙNG PHƯƠNG
+\\begin{tikzpicture}
+  \\tkzTabInit[lgt=1.5, espcl=2.0, deltacl=0.6]
+    {$x$ / 1, $y'$ / 1, $y$ / 2.5}
+    {$-\\infty$, $-1$, $0$, $1$, $+\\infty$}
+  \\tkzTabLine{ , -, 0, +, 0, -, 0, +, }
+  \\tkzTabVar{+/ $+\\infty$, -/ $-2$, +/ $-1$, -/ $-2$, +/ $+\\infty$}
+\\end{tikzpicture}`
+      },
+      {
+        id: 'bbt_rational',
+        title: 'Bảng biến thiên: Hàm phân thức y = (2x-1)/(x+1)',
+        code: `% BẢNG BIẾN THIÊN HÀM PHÂN THỨC
 \\begin{tikzpicture}
   \\tkzTabInit[lgt=1.5, espcl=2.5, deltacl=0.6]
     {$x$ / 1, $y'$ / 1, $y$ / 2.5}
@@ -43,17 +128,207 @@
   \\tkzTabLine{ , +, d, +, }
   \\tkzTabVar{-/ $2$, +D-/ $+\\infty$ / $-\\infty$, +/ $2$}
 \\end{tikzpicture}`
-    },
-    BXD: {
-      label: 'Bảng xét dấu',
-      prompt: 'Vẽ bảng xét dấu đạo hàm f\'(x) = (x^2 - 4)(3 - x) với các nghiệm -2, 2, 3',
-      sampleCode: `% BẢNG XÉT DẤU
+      },
+      {
+        id: 'bbt_monotonic',
+        title: 'Bảng biến thiên: Hàm số đồng biến trên R',
+        code: `% BẢNG BIẾN THIÊN ĐỒNG BIẾN TRÊN R
 \\begin{tikzpicture}
-  \\tkzTabInit[lgt=1.2, espcl=2.2, deltacl=0.6]
+  \\tkzTabInit[lgt=1.5, espcl=3.5, deltacl=0.6]
+    {$x$ / 1, $y'$ / 1, $y$ / 2.5}
+    {$-\\infty$, $+\\infty$}
+  \\tkzTabLine{ , +, }
+  \\tkzTabVar{-/ $-\\infty$, +/ $+\\infty$}
+\\end{tikzpicture}`
+      }
+    ],
+    BXD: [
+      {
+        id: 'bxd_linear',
+        title: 'Bảng xét dấu: Nhị thức bậc nhất f(x) = 2x - 4',
+        code: `% BẢNG XÉT DẤU NHỊ THỨC BẬC NHẤT
+\\begin{tikzpicture}
+  \\tkzTabInit[lgt=1.2, espcl=3.0, deltacl=0.6]
+    {$x$ / 1, $f(x)$ / 1}
+    {$-\\infty$, $2$, $+\\infty$}
+  \\tkzTabLine{ , -, 0, +, }
+\\end{tikzpicture}`
+      },
+      {
+        id: 'bxd_quadratic',
+        title: 'Bảng xét dấu: Tam thức bậc 2 có 2 nghiệm',
+        code: `% BẢNG XÉT DẤU TAM THỨC BẬC HAI
+\\begin{tikzpicture}
+  \\tkzTabInit[lgt=1.5, espcl=2.5, deltacl=0.6]
+    {$x$ / 1, $f'(x)$ / 1}
+    {$-\\infty$, $-2$, $3$, $+\\infty$}
+  \\tkzTabLine{ , +, 0, -, 0, +, }
+\\end{tikzpicture}`
+      },
+      {
+        id: 'bxd_product',
+        title: 'Bảng xét dấu: Tích f\'(x) = (x^2 - 4)(3 - x)',
+        code: `% BẢNG XÉT DẤU TÍCH THƯƠNG
+\\begin{tikzpicture}
+  \\tkzTabInit[lgt=1.5, espcl=2.2, deltacl=0.6]
     {$x$ / 1, $f'(x)$ / 1}
     {$-\\infty$, $-2$, $2$, $3$, $+\\infty$}
   \\tkzTabLine{ , +, 0, -, 0, +, 0, -, }
 \\end{tikzpicture}`
+      }
+    ],
+    HinhKhongGian: [
+      {
+        id: 'geom_pyramid_s_abcd',
+        title: 'Hình chóp S.ABCD: Đáy hình bình hành, SA ⊥ đáy',
+        code: `% HÌNH CHÓP S.ABCD (SA VUÔNG GÓC ĐÁY)
+\\begin{tikzpicture}[scale=0.85, >=stealth]
+  \\coordinate (A) at (0,0);
+  \\coordinate (B) at (-1.5,-1.2);
+  \\coordinate (C) at (2.5,-1.2);
+  \\coordinate (D) at (4,0);
+  \\coordinate (S) at (0,3.5);
+
+  \\draw[dashed, thick] (A) -- (B) (A) -- (D) (A) -- (S);
+  \\draw[thick] (S) -- (B) -- (C) -- (D) -- (S) -- (C);
+
+  \\draw (0,0.3) -- (0.3,0.3) -- (0.3,0);
+  \\node at (S) [above] {$S$};
+  \\node at (A) [above left] {$A$};
+  \\node at (B) [below left] {$B$};
+  \\node at (C) [below right] {$C$};
+  \\node at (D) [right] {$D$};
+\\end{tikzpicture}`
+      },
+      {
+        id: 'geom_pyramid_s_abc',
+        title: 'Hình chóp tam giác S.ABC: SA ⊥ đáy',
+        code: `% HÌNH CHÓP S.ABC
+\\begin{tikzpicture}[scale=0.9]
+  \\coordinate (A) at (0,0);
+  \\coordinate (B) at (1.5,-1.2);
+  \\coordinate (C) at (4.5,0);
+  \\coordinate (S) at (0,3.5);
+
+  \\draw[dashed, thick] (A) -- (C);
+  \\draw[thick] (S) -- (A) -- (B) -- (C) -- (S) (S) -- (B);
+
+  \\draw (0,0.3) -- (0.3,0.3) -- (0.3,0);
+  \\draw (1.3,-1.0) -- (1.5,-0.8) -- (1.7,-1.0);
+
+  \\node at (S) [above] {$S$};
+  \\node at (A) [left] {$A$};
+  \\node at (B) [below] {$B$};
+  \\node at (C) [right] {$C$};
+\\end{tikzpicture}`
+      },
+      {
+        id: 'geom_prism_abc',
+        title: 'Lăng trụ đứng tam giác ABC.A\'B\'C\'',
+        code: `% LĂNG TRỤ TAM GIÁC
+\\begin{tikzpicture}[scale=0.85]
+  \\coordinate (A) at (0,0);
+  \\coordinate (B) at (1.5,-1);
+  \\coordinate (C) at (4,0);
+  \\coordinate (A1) at (0,3.5);
+  \\coordinate (B1) at (1.5,2.5);
+  \\coordinate (C1) at (4,3.5);
+
+  \\draw[dashed, thick] (A) -- (C);
+  \\draw[thick] (A) -- (B) -- (C);
+  \\draw[thick] (A1) -- (B1) -- (C1) -- cycle;
+  \\draw[thick] (A) -- (A1) (B) -- (B1) (C) -- (C1);
+
+  \\node at (A) [left] {$A$};
+  \\node at (B) [below] {$B$};
+  \\node at (C) [right] {$C$};
+  \\node at (A1) [left] {$A'$};
+  \\node at (B1) [below] {$B'$};
+  \\node at (C1) [right] {$C'$};
+\\end{tikzpicture}`
+      },
+      {
+        id: 'geom_cone',
+        title: 'Khối nón tròn xoay đỉnh S, đáy bán kính R',
+        code: `% KHỐI NÓN TRÒN XOAY
+\\begin{tikzpicture}[scale=0.9]
+  \\coordinate (O) at (0,0);
+  \\coordinate (S) at (0,3.5);
+  \\coordinate (A) at (-2.5,0);
+  \\coordinate (B) at (2.5,0);
+
+  \\draw[thick] (A) arc (180:360:2.5 and 0.8);
+  \\draw[dashed, thick] (A) arc (180:0:2.5 and 0.8);
+
+  \\draw[thick] (A) -- (S) -- (B);
+  \\draw[dashed] (S) -- (O) -- (B);
+  \\fill (O) circle (1.5pt) node[below left] {$O$};
+  \\node at (S) [above] {$S$};
+  \\node at (A) [left] {$A$};
+  \\node at (B) [right] {$B$};
+  \\node at (1.25, 0.2) {$R$};
+  \\node at (-0.2, 1.7) {$h$};
+\\end{tikzpicture}`
+      }
+    ],
+    Custom: [
+      {
+        id: 'plane_tri_right',
+        title: 'Tam giác vuông ABC tại A',
+        code: `% TAM GIÁC VUÔNG ABC TẠI A
+\\begin{tikzpicture}[scale=1.3, thick]
+  \\coordinate[label=below left:$A$]  (A) at (0,0);
+  \\coordinate[label=below right:$B$] (B) at (3,0);
+  \\coordinate[label=above left:$C$]  (C) at (0,2);
+  \\draw (A)--(B)--(C)--cycle;
+  \\draw (0,0.25) -- (0.25,0.25) -- (0.25,0);
+  \\node at (1.5,0)   [below]  {$c$};
+  \\node at (0,1)     [left]   {$b$};
+  \\node at (1.55,1)  [above right] {$a$};
+\\end{tikzpicture}`
+      },
+      {
+        id: 'plane_incircle',
+        title: 'Tam giác ABC có đường tròn nội tiếp (I)',
+        code: `% TAM GIÁC NỘI TIẾP ĐƯỜNG TRÒN
+\\begin{tikzpicture}[scale=1.2]
+  \\coordinate[label=below left:$A$] (A) at (0,0);
+  \\coordinate[label=below right:$B$] (B) at (4,0);
+  \\coordinate[label=above:$C$] (C) at (1.5,3);
+  \\draw[thick] (A) -- (B) -- (C) -- cycle;
+  \\coordinate[label=above:$I$] (I) at (1.68, 0.98);
+  \\fill (I) circle (1.5pt);
+  \\draw[blue, thick] (I) circle (0.98);
+\\end{tikzpicture}`
+      },
+      {
+        id: 'plane_trapezoid',
+        title: 'Hình thang vuông ABCD tại A và D',
+        code: `% HÌNH THANG VUÔNG
+\\begin{tikzpicture}[scale=1.1, thick]
+  \\coordinate[label=below left:$A$] (A) at (0,0);
+  \\coordinate[label=below right:$B$] (B) at (4,0);
+  \\coordinate[label=above right:$C$] (C) at (2.5,2);
+  \\coordinate[label=above left:$D$] (D) at (0,2);
+  \\draw (A) -- (B) -- (C) -- (D) -- cycle;
+  \\draw (0,0.2) -- (0.2,0.2) -- (0.2,0);
+  \\draw (0,1.8) -- (0.2,1.8) -- (0.2,2);
+\\end{tikzpicture}`
+      }
+    ]
+  };
+
+  // Presets mapping tương thích
+  const PRESET_TEMPLATES = {
+    BBT: {
+      label: 'Bảng biến thiên',
+      prompt: 'Vẽ bảng biến thiên hàm số bậc 3 y = x^3 - 3x + 1 có 2 cực trị',
+      sampleCode: TIKZ_CATALOG.BBT[0].code
+    },
+    BXD: {
+      label: 'Bảng xét dấu',
+      prompt: 'Vẽ bảng xét dấu đạo hàm f\'(x) = (x^2 - 4)(3 - x)',
+      sampleCode: TIKZ_CATALOG.BXD[0].code
     },
     DoThi: {
       label: 'Đồ thị hàm số',
@@ -63,30 +338,12 @@
     HinhKhongGian: {
       label: 'Hình không gian 3D',
       prompt: 'Vẽ hình chóp tam giác S.ABC có đáy ABC là tam giác vuông tại B, SA vuông góc với đáy (ABC)',
-      sampleCode: `% HÌNH CHÓP S.ABC
-\\begin{tikzpicture}[scale=0.9]
-  \\coordinate (A) at (0,0);
-  \\coordinate (B) at (1.5,-1.2);
-  \\coordinate (C) at (4.5,0);
-  \\coordinate (S) at (0,3.5);
-
-  % Nét đứt (khuất)
-  \\draw[dashed, thick] (A) -- (C);
-  
-  % Nét liền (thấy)
-  \\draw[thick] (S) -- (A) -- (B) -- (C) -- (S);
-  \\draw[thick] (S) -- (B);
-
-  % Ký hiệu vuông góc
-  \\draw (0,0.3) -- (0.3,0.3) -- (0.3,0);
-  \\draw (1.3,-1.0) -- (1.5,-0.8) -- (1.7,-1.0);
-
-  % Nhãn điểm
-  \\node at (S) [above] {$S$};
-  \\node at (A) [left] {$A$};
-  \\node at (B) [below] {$B$};
-  \\node at (C) [right] {$C$};
-\\end{tikzpicture}`
+      sampleCode: TIKZ_CATALOG.HinhKhongGian[1].code
+    },
+    Custom: {
+      label: 'Hình học phẳng 2D',
+      prompt: 'Vẽ tam giác vuông ABC tại A',
+      sampleCode: TIKZ_CATALOG.Custom[0].code
     }
   };
 
@@ -103,6 +360,7 @@
     compiledFormat: 'png',
     hasWordTikzSelected: false,
     selectedWordShapeTitle: '',
+    lastFigurePrompt: '',
     isGenerating: false,
     isCompiling: false,
     isInserting: false,
@@ -136,6 +394,22 @@
       imageMetaDetails: document.getElementById('image-meta-details'),
       removeImageBtn: document.getElementById('remove-image-btn'),
       
+      // TikzView Component Elements
+      tikzDiagramTypeSelect: document.getElementById('tikz-diagram-type'),
+      tikzTemplateSelect: document.getElementById('tikz-template-select'),
+      btnShapeBuilder: document.getElementById('btn-shape-builder'),
+      btnAiRedraw: document.getElementById('btn-ai-redraw'),
+      btnAiEdit: document.getElementById('btn-ai-edit'),
+      btnAiOptimize: document.getElementById('btn-ai-optimize'),
+      btnOpenFigureBank: document.getElementById('btn-open-figure-bank'),
+      btnCleanCode: document.getElementById('btn-clean-code'),
+      btnClearAll: document.getElementById('btn-clear-all'),
+      btnCopyImage: document.getElementById('btn-copy-image'),
+      btnCopyCodePreview: document.getElementById('btn-copy-code-preview'),
+      btnCopyEmf: document.getElementById('btn-copy-emf'),
+      btnSavePng: document.getElementById('btn-save-png'),
+      btnSaveSvg: document.getElementById('btn-save-svg'),
+
       btnGenerateAi: document.getElementById('btn-generate-ai'),
       btnCompileTikz: document.getElementById('btn-compile-tikz'),
       btnInsertWord: document.getElementById('btn-insert-word'),
@@ -707,6 +981,253 @@
 
       // Tự động biên dịch mẫu tức thì để người dùng xem trước
       compileTikzCode(false);
+    }
+  }
+
+  // Populate templates dropdown according to diagram type
+  function populateTikzTemplates(typeKey) {
+    if (!dom.tikzTemplateSelect) return;
+    dom.tikzTemplateSelect.innerHTML = '<option value="">-- Chọn mẫu dựng sẵn --</option>';
+    const list = TIKZ_CATALOG[typeKey] || [];
+    list.forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item.id;
+      opt.textContent = item.title;
+      dom.tikzTemplateSelect.appendChild(opt);
+    });
+  }
+
+  function handleSelectTikzTemplate(templateId) {
+    if (!templateId) return;
+    const typeKey = state.selectedDiagramType || 'DoThi';
+    const list = TIKZ_CATALOG[typeKey] || [];
+    const item = list.find(x => x.id === templateId);
+    if (item && item.code) {
+      dom.codeTextarea.value = item.code;
+      state.currentTikzCode = item.code;
+      if (dom.promptTextarea && !dom.promptTextarea.value.trim()) {
+        dom.promptTextarea.value = item.title;
+      }
+      updateLineNumbers();
+      showToast(`✓ Đã nạp mẫu: "${item.title}"`, 'success', 2000);
+      compileTikzCode(false);
+    }
+  }
+
+  // Handler: Vẽ lại (Ưu tiên ảnh bài toán hoặc prompt gần nhất, timeout 240s)
+  async function handleAiRedraw() {
+    let prompt = dom.promptTextarea ? dom.promptTextarea.value.trim() : '';
+    if (!prompt) {
+      if (state.pastedImageBase64) {
+        prompt = "Vẽ lại hình ảnh toán học này sang mã LaTeX TikZ chuẩn SGK";
+        if (dom.promptTextarea) dom.promptTextarea.value = prompt;
+      } else if (state.lastFigurePrompt) {
+        prompt = state.lastFigurePrompt;
+        if (dom.promptTextarea) dom.promptTextarea.value = prompt;
+      } else {
+        showToast('Vui lòng nhập mô tả hoặc dán ảnh bài toán để vẽ lại!', 'warning', 3000);
+        if (dom.promptTextarea) dom.promptTextarea.focus();
+        return;
+      }
+    }
+    state.lastFigurePrompt = prompt;
+    showToast('🔄 Đang vẽ lại hình bằng AI (Vision)...', 'info', 2000);
+    await generateTikzFromAi();
+  }
+
+  // Handler: AI Sửa (Nhập yêu cầu bổ sung/sửa đổi, timeout 240s)
+  async function handleAiEdit() {
+    const currentCode = dom.codeTextarea ? dom.codeTextarea.value.trim() : '';
+    if (!currentCode) {
+      showToast('Chưa có mã TikZ để chỉnh sửa! Vui lòng nạp hoặc vẽ hình trước.', 'warning', 3000);
+      return;
+    }
+
+    const editInstruction = window.prompt(
+      'Yêu cầu AI Chỉnh sửa Hình TikZ:\nNhập yêu cầu cần AI chỉnh sửa (ví dụ: "Đổi màu đồ thị thành xanh", "Thêm điểm M trên BC", "Gắn nhãn độ dài a = 4"):'
+    );
+    if (!editInstruction || !editInstruction.trim()) return;
+
+    state.isGenerating = true;
+    updateActionButtons();
+    tikzProgress.start('✏️ AI đang cập nhật hình vẽ...', editInstruction.trim());
+
+    try {
+      const res = await window.WordBridge.aiEditTikz(currentCode, editInstruction.trim(), {
+        diagramType: state.selectedDiagramType
+      });
+
+      if (res && res.success && res.tikzCode) {
+        dom.codeTextarea.value = res.tikzCode;
+        state.currentTikzCode = res.tikzCode;
+        updateLineNumbers();
+        tikzProgress.finish(true, 'Đã cập nhật hình vẽ theo yêu cầu!');
+        showToast('✓ AI đã sửa xong hình! Đang biên dịch lại...', 'success', 2500);
+        await compileTikzCode(true, true);
+      } else {
+        throw new Error(res?.errorMessage || 'Không thể chỉnh sửa mã TikZ.');
+      }
+    } catch (err) {
+      console.error('[SidebarApp] AI Edit error:', err);
+      tikzProgress.finish(false, err.message || err);
+      showToast('Lỗi AI sửa: ' + (err.message || err), 'error', 6000);
+    } finally {
+      state.isGenerating = false;
+      updateActionButtons();
+    }
+  }
+
+  // Handler: AI Tối ưu (Chuẩn hóa tọa độ, loại bỏ lệnh thừa, timeout 240s)
+  async function handleAiOptimize() {
+    const currentCode = dom.codeTextarea ? dom.codeTextarea.value.trim() : '';
+    if (!currentCode) {
+      showToast('Chưa có mã TikZ trong khung soạn thảo để tối ưu hóa.', 'warning', 3000);
+      return;
+    }
+
+    state.isGenerating = true;
+    updateActionButtons();
+    tikzProgress.start('🪄 AI đang tối ưu hóa mã TikZ...', 'Chuẩn hóa tọa độ & làm sạch cú pháp');
+
+    try {
+      const res = await window.WordBridge.aiOptimizeTikz(currentCode, {
+        diagramType: state.selectedDiagramType
+      });
+
+      if (res && res.success && res.tikzCode) {
+        dom.codeTextarea.value = res.tikzCode;
+        state.currentTikzCode = res.tikzCode;
+        updateLineNumbers();
+        tikzProgress.finish(true, 'Tối ưu hóa mã TikZ hoàn tất!');
+        showToast('✓ Tối ưu hóa hoàn tất! Đang tự động biên dịch...', 'success', 2500);
+        await compileTikzCode(true, true);
+      } else {
+        throw new Error(res?.errorMessage || 'Không thể tối ưu mã TikZ.');
+      }
+    } catch (err) {
+      console.error('[SidebarApp] AI Optimize error:', err);
+      tikzProgress.finish(false, err.message || err);
+      showToast('Lỗi AI tối ưu: ' + (err.message || err), 'error', 6000);
+    } finally {
+      state.isGenerating = false;
+      updateActionButtons();
+    }
+  }
+
+  // Handler: Lọc mã sạch (Bỏ văn bản rác, giữ đúng khối tikzpicture)
+  function handleCleanCode() {
+    const code = dom.codeTextarea ? dom.codeTextarea.value : '';
+    if (!code || !code.trim()) {
+      showToast('Chưa có mã TikZ để lọc sạch.', 'info', 2000);
+      return;
+    }
+
+    const match = code.match(/\\begin\{tikzpicture\}[\s\S]*?\\end\{tikzpicture\}/);
+    if (match) {
+      dom.codeTextarea.value = match[0];
+      state.currentTikzCode = match[0];
+      updateLineNumbers();
+      showToast('✓ Đã lọc mã sạch (giữ nguyên khối tikzpicture duy nhất)', 'success', 2500);
+    } else {
+      showToast('Không tìm thấy khối \\begin{tikzpicture}...\\end{tikzpicture}', 'info', 2000);
+    }
+  }
+
+  // Handler: Xóa trắng (Soạn thảo, đề bài, ảnh đính kèm)
+  function handleClearAll() {
+    if (window.confirm('Bạn có chắc chắn muốn xóa trắng mã soạn thảo, ô mô tả và ảnh mẫu hiện tại để bắt đầu vẽ hình mới?')) {
+      if (dom.codeTextarea) dom.codeTextarea.value = '';
+      if (dom.promptTextarea) dom.promptTextarea.value = '';
+      removePastedImage();
+      state.currentTikzCode = '';
+      state.compiledImagePath = null;
+      state.compiledPreviewUrl = null;
+      updateLineNumbers();
+      if (dom.previewImage) dom.previewImage.style.display = 'none';
+      if (dom.previewEmptyState) dom.previewEmptyState.style.display = 'flex';
+      showToast('Đã xóa trắng trình soạn thảo.', 'info', 2000);
+    }
+  }
+
+  // Handler: Copy ảnh đã biên dịch vào Clipboard
+  async function handleCopyImageToClipboard() {
+    if (!state.compiledImagePath) {
+      showToast('Chưa có hình ảnh đã biên dịch để sao chép! Hãy bấm "Biên dịch (F5)".', 'warning', 3000);
+      return;
+    }
+
+    try {
+      showToast('📋 Đang sao chép hình ảnh vào Clipboard...', 'info', 1000);
+      const res = await window.WordBridge.copyImage(state.compiledImagePath);
+      if (res && res.success) {
+        showToast('✓ Đã sao chép ảnh 600 DPI vào Clipboard thành công! (Ctrl+V để dán)', 'success', 3500);
+      } else {
+        showToast('Không thể sao chép ảnh: ' + (res?.errorMessage || 'Lỗi hệ thống'), 'error', 3000);
+      }
+    } catch (e) {
+      showToast('Lỗi sao chép ảnh: ' + e.message, 'error', 3000);
+    }
+  }
+
+  // Handler: Copy vector EMF vào Clipboard
+  async function handleCopyEmfToClipboard() {
+    const code = dom.codeTextarea ? dom.codeTextarea.value.trim() : '';
+    if (!code) {
+      showToast('Chưa có mã TikZ để tạo vector EMF.', 'warning', 2500);
+      return;
+    }
+
+    showToast('📋 Đang xuất và sao chép vector EMF vào Clipboard...', 'info', 1500);
+    try {
+      const res = await window.WordBridge.copyEmf(code);
+      if (res && res.success) {
+        showToast('✓ Đã sao chép vector EMF vào Clipboard! (Dán sắc nét vào Word)', 'success', 3500);
+      } else {
+        showToast('Lỗi sao chép EMF: ' + (res?.errorMessage || 'Chưa hỗ trợ định dạng này'), 'error', 3000);
+      }
+    } catch (e) {
+      showToast('Lỗi sao chép EMF: ' + e.message, 'error', 3000);
+    }
+  }
+
+  // Handler: Tải file ảnh PNG về máy
+  function handleSavePngFile() {
+    if (!state.compiledPreviewUrl) {
+      showToast('Chưa có hình ảnh để tải về. Hãy bấm "Biên dịch (F5)" trước.', 'warning', 3000);
+      return;
+    }
+    const a = document.createElement('a');
+    a.href = state.compiledPreviewUrl;
+    a.download = `TikZ_Figure_${Date.now()}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    showToast('✓ Đã tải file ảnh PNG 600 DPI về máy!', 'success', 2500);
+  }
+
+  // Handler: Tải file SVG về máy
+  async function handleSaveSvgFile() {
+    const code = dom.codeTextarea ? dom.codeTextarea.value.trim() : '';
+    if (!code) {
+      showToast('Chưa có mã TikZ để xuất SVG.', 'warning', 2500);
+      return;
+    }
+    showToast('Đang biên dịch tệp vector SVG...', 'info', 1500);
+    try {
+      const res = await window.WordBridge.compileTikz(code, 'svg');
+      if (res && res.success && res.previewDataUrl) {
+        const a = document.createElement('a');
+        a.href = res.previewDataUrl;
+        a.download = `TikZ_Figure_${Date.now()}.svg`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('✓ Đã xuất và tải file vector SVG về máy!', 'success', 3000);
+      } else {
+        showToast('Lỗi xuất SVG: ' + (res?.errorMessage || 'Lỗi biên dịch'), 'error', 3500);
+      }
+    } catch (e) {
+      showToast('Lỗi xuất SVG: ' + e.message, 'error', 3500);
     }
   }
 
@@ -2193,14 +2714,122 @@
     }
 
     // Remove Image button
-    dom.removeImageBtn.addEventListener('click', removePastedImage);
+    if (dom.removeImageBtn) {
+      dom.removeImageBtn.addEventListener('click', removePastedImage);
+    }
 
-    // Preset Chips
+    // TikZ Thể loại dropdown
+    if (dom.tikzDiagramTypeSelect) {
+      dom.tikzDiagramTypeSelect.addEventListener('change', (e) => {
+        const typeKey = e.target.value;
+        state.selectedDiagramType = typeKey;
+        populateTikzTemplates(typeKey);
+      });
+    }
+
+    // TikZ Mẫu dropdown
+    if (dom.tikzTemplateSelect) {
+      dom.tikzTemplateSelect.addEventListener('change', (e) => {
+        handleSelectTikzTemplate(e.target.value);
+      });
+    }
+
+    // Bộ nút hành động chuẩn 100% Desktop App
+    if (dom.btnShapeBuilder) {
+      dom.btnShapeBuilder.addEventListener('click', () => {
+        showToast('💡 Đã chuyển sang danh mục Hình học. Bạn có thể chọn mẫu hoặc yêu cầu AI dựng hình!', 'info', 3000);
+        if (dom.tikzDiagramTypeSelect) {
+          dom.tikzDiagramTypeSelect.value = 'HinhKhongGian';
+          state.selectedDiagramType = 'HinhKhongGian';
+          populateTikzTemplates('HinhKhongGian');
+        }
+      });
+    }
+
+    if (dom.btnAiRedraw) {
+      dom.btnAiRedraw.addEventListener('click', handleAiRedraw);
+    }
+
+    if (dom.btnAiEdit) {
+      dom.btnAiEdit.addEventListener('click', handleAiEdit);
+    }
+
+    if (dom.btnAiOptimize) {
+      dom.btnAiOptimize.addEventListener('click', handleAiOptimize);
+    }
+
+    if (dom.btnOpenFigureBank) {
+      dom.btnOpenFigureBank.addEventListener('click', () => {
+        if (dom.tikzTemplateSelect) {
+          dom.tikzTemplateSelect.focus();
+          showToast('📚 Hãy chọn một mẫu trong danh mục để nạp mã TikZ', 'info', 2500);
+        }
+      });
+    }
+
+    if (dom.btnCleanCode) {
+      dom.btnCleanCode.addEventListener('click', handleCleanCode);
+    }
+
+    if (dom.btnClearAll) {
+      dom.btnClearAll.addEventListener('click', handleClearAll);
+    }
+
+    // Preview Export Toolbar Actions
+    if (dom.btnCopyImage) {
+      dom.btnCopyImage.addEventListener('click', handleCopyImageToClipboard);
+    }
+
+    if (dom.btnCopyCodePreview) {
+      dom.btnCopyCodePreview.addEventListener('click', () => {
+        const code = dom.codeTextarea ? dom.codeTextarea.value : '';
+        if (!code) {
+          showToast('Chưa có mã TikZ để sao chép!', 'warning', 2000);
+          return;
+        }
+        navigator.clipboard.writeText(code).then(() => {
+          showToast('✓ Đã sao chép toàn bộ mã TikZ vào Clipboard!', 'success', 2500);
+        });
+      });
+    }
+
+    if (dom.btnCopyEmf) {
+      dom.btnCopyEmf.addEventListener('click', handleCopyEmfToClipboard);
+    }
+
+    if (dom.btnSavePng) {
+      dom.btnSavePng.addEventListener('click', handleSavePngFile);
+    }
+
+    if (dom.btnSaveSvg) {
+      dom.btnSaveSvg.addEventListener('click', handleSaveSvgFile);
+    }
+
+    // Preset Chips tương thích
     dom.presetChips.forEach(chip => {
       chip.addEventListener('click', () => {
         const typeKey = chip.getAttribute('data-type');
         selectPreset(typeKey);
       });
+    });
+
+    // Global Key Shortcuts (F5, Ctrl+Enter -> Biên dịch; Ctrl+Shift+G -> AI vẽ)
+    window.addEventListener('keydown', (e) => {
+      // F5 hoặc Ctrl+Enter -> Biên dịch
+      if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'Enter')) {
+        e.preventDefault();
+        compileTikzCode(false);
+      }
+      // Ctrl+Shift+G -> AI vẽ hình
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'G' || e.key === 'g')) {
+        e.preventDefault();
+        generateTikzFromAi();
+      }
+      // Ctrl+Shift+W -> Chèn Word
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'W' || e.key === 'w')) {
+        e.preventDefault();
+        insertIntoWord();
+      }
     });
 
     // Code Textarea Input & Indent
@@ -2278,7 +2907,9 @@
     dom.btnGenerateAi.addEventListener('click', generateTikzFromAi);
     dom.btnCompileTikz.addEventListener('click', () => compileTikzCode(false));
     dom.btnInsertWord.addEventListener('click', insertIntoWord);
-    dom.btnUpdateWord.addEventListener('click', updateSelectedWordPicture);
+    if (dom.btnUpdateWord) {
+      dom.btnUpdateWord.addEventListener('click', updateSelectedWordPicture);
+    }
 
     // Toast Close
     dom.toastClose.addEventListener('click', hideToast);
@@ -2764,7 +3395,8 @@
     attachEventListeners();
     attachBridgeListeners();
 
-    // Init defaults
+    // Init defaults & template dropdown
+    populateTikzTemplates('DoThi');
     dom.codeTextarea.value = state.currentTikzCode;
     updateLineNumbers();
     autoExpandTextarea(dom.promptTextarea);
