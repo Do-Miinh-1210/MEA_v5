@@ -19,6 +19,7 @@ Tăng số phiên bản đồng bộ tại 4 vị trí:
 ```powershell
 dotnet publish desktop_csharp\src\MatrixExamAI.Desktop\MatrixExamAI.Desktop.csproj -c Release -r win-x64 --self-contained false -o desktop_csharp\publish
 ```
+> **LƯU Ý:** TUYỆT ĐỐI KHÔNG tự ý copy file vào `C:\Program Files\MatrixExamAI Pro\` để người dùng mở app trực tiếp kiểm tra luồng cập nhật tự động.
 
 ### 3. Xuất bản GitHub Release & Upload Assets
 Cập nhật `TAG`, `TITLE`, `BODY` trong tệp `scripts/publish_release.py` rồi chạy:
