@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
 
         <!-- 1. Fluent TitleBar -->
-        <ui:TitleBar x:Name="MainTitleBar" Grid.Row="0" Title="MatrixExamAI Pro v5.3.0.24 • Trợ lý Soạn đề &amp; Chuyển đổi Tài liệu AI">
+        <ui:TitleBar x:Name="MainTitleBar" Grid.Row="0" Title="MatrixExamAI Pro v5.3.0.25 • Trợ lý Soạn đề &amp; Chuyển đổi Tài liệu AI">
             <ui:TitleBar.Header>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
                     <Image Source="Assets/logo.png" Width="24" Height="24" Margin="0,0,8,0" RenderOptions.BitmapScalingMode="HighQuality" />
@@ -31,7 +31,7 @@
                         <TextBlock Text="Bản quyền PRO" FontSize="10" Foreground="#0D9488" FontWeight="SemiBold" />
                     </Border>
                     <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="6,0,0,0" VerticalAlignment="Center">
-                        <TextBlock x:Name="TxtAppVersionTop" Text="v5.3.0.24" FontSize="10" Foreground="#38BDF8" FontWeight="SemiBold" />
+                        <TextBlock x:Name="TxtAppVersionTop" Text="v5.3.0.25" FontSize="10" Foreground="#38BDF8" FontWeight="SemiBold" />
                     </Border>
                 </StackPanel>
             </ui:TitleBar.Header>
@@ -175,7 +175,7 @@
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <Border Background="#1E293B" CornerRadius="4" Padding="6,1" Margin="0,0,6,0">
-                        <TextBlock x:Name="TxtAppVersionBottom" Text="v5.3.0.24" FontSize="10.5" Foreground="#38BDF8" FontWeight="SemiBold" />
+                        <TextBlock x:Name="TxtAppVersionBottom" Text="v5.3.0.25" FontSize="10.5" Foreground="#38BDF8" FontWeight="SemiBold" />
                     </Border>
                     <TextBlock Text=" | " FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,0,6,0" />
                     <TextBlock Text="RAM: ~42MB" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />

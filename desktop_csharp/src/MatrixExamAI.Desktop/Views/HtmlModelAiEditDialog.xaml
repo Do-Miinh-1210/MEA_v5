@@ -1,0 +1,111 @@
+<Window x:Class="MatrixExamAI.Desktop.Views.HtmlModelAiEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        Title="AI Chỉnh Sửa &amp; Bổ Sung Mô Hình 3D HTML"
+        Height="470" Width="680" MinWidth="580" MinHeight="420"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResizeWithGrip"
+        Background="{DynamicResource ApplicationBackgroundBrush}"
+        Focusable="True"
+        KeyDown="HtmlModelAiEditDialog_KeyDown">
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 1. Header Banner -->
+        <Border Grid.Row="0" Background="#2563EB" CornerRadius="6" Padding="12,10" Margin="0,0,0,12">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,3">
+                    <ui:SymbolIcon Symbol="Edit24" FontSize="14" Foreground="White" VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <TextBlock Text="Yêu cầu AI Chỉnh Sửa Mô Hình 3D HTML" FontSize="13" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" />
+                </StackPanel>
+                <TextBlock Text="Nhập mô tả chi tiết hoặc dán ảnh minh họa (Ctrl+V) để AI nhận diện và cập nhật mã HTML Three.js / KaTeX chính xác nhất."
+                           FontSize="10.5" Foreground="#DBEAFE" TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+
+        <!-- 2. Text Request Card -->
+        <ui:Card Grid.Row="1" Margin="0,0,0,10" Padding="12,10">
+            <StackPanel>
+                <TextBlock Text="1. Nội dung yêu cầu chỉnh sửa (Văn bản)" 
+                           FontWeight="Bold" FontSize="11.5" Foreground="{DynamicResource TextFillColorPrimaryBrush}" Margin="0,0,0,6" />
+                <ui:TextBox x:Name="TxtEditRequest" MinHeight="75" MaxHeight="130" AcceptsReturn="True" TextWrapping="Wrap"
+                            VerticalContentAlignment="Top" FontSize="11.5"
+                            PlaceholderText="Ví dụ: Thêm thanh trượt thay đổi góc xoay, đổi màu thiết diện cắt sang vàng cam, bổ sung nhãn đỉnh A, B, C, sửa công thức KaTeX trong bước 2..." />
+            </StackPanel>
+        </ui:Card>
+
+        <!-- 3. Image Attachment Card -->
+        <ui:Card Grid.Row="2" Margin="0,0,0,12" Padding="12,10">
+            <StackPanel>
+                <DockPanel Margin="0,0,0,6" LastChildFill="False">
+                    <TextBlock DockPanel.Dock="Left" Text="2. Hình ảnh minh họa (Tùy chọn - Vision Multimodal)" 
+                               FontWeight="Bold" FontSize="11.5" Foreground="{DynamicResource TextFillColorPrimaryBrush}" VerticalAlignment="Center" />
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <ui:Button x:Name="BtnPasteImage" Icon="{ui:SymbolIcon ClipboardPaste24}" Content="Dán ảnh (Ctrl+V)" Background="#475569" Foreground="White" 
+                                   FontWeight="SemiBold" Height="28" Padding="10,0" FontSize="10.5" Margin="0,0,6,0"
+                                   Click="BtnPasteImage_Click" />
+                        <ui:Button x:Name="BtnChooseImage" Icon="{ui:SymbolIcon FolderOpen24}" Content="Chọn ảnh..." Background="#2563EB" Foreground="White" 
+                                   FontWeight="SemiBold" Height="28" Padding="10,0" FontSize="10.5" Margin="0,0,6,0"
+                                   Click="BtnChooseImage_Click" />
+                        <ui:Button x:Name="BtnClearImage" Icon="{ui:SymbolIcon Delete24}" Content="Xóa ảnh" Background="#EF4444" Foreground="White" 
+                                   FontWeight="SemiBold" Height="28" Padding="10,0" FontSize="10.5" Visibility="Collapsed"
+                                   Click="BtnClearImage_Click" />
+                    </StackPanel>
+                </DockPanel>
+
+                <!-- Drop & Paste Zone khi chưa có ảnh -->
+                <Border x:Name="BorderDropZone" Background="{DynamicResource ControlFillColorSecondaryBrush}" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1" CornerRadius="6" Padding="14,12" Margin="0,2,0,0"
+                        AllowDrop="True" DragOver="BorderDropZone_DragOver" Drop="BorderDropZone_Drop" Cursor="Hand"
+                        MouseLeftButtonDown="BorderDropZone_MouseLeftButtonDown">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="🖼️" FontSize="18" HorizontalAlignment="Center" Margin="0,0,0,3" />
+                        <TextBlock Text="Nhấn Ctrl+V để dán ảnh từ Clipboard, kéo thả ảnh hoặc bấm 'Chọn ảnh...'"
+                                   FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Preview container khi đã có ảnh -->
+                <Border x:Name="BorderImagePreview" Visibility="Collapsed" Background="#0A000000" BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,2,0,0"
+                        Cursor="Hand" MouseLeftButtonDown="BorderImagePreview_MouseLeftButtonDown"
+                        ToolTip="Nhấp chuột để xem phóng to ảnh đính kèm">
+                    <DockPanel LastChildFill="True">
+                        <Border DockPanel.Dock="Left" Background="White" CornerRadius="4" Padding="2" Margin="0,0,12,0" MaxWidth="120" MaxHeight="80">
+                            <Image x:Name="ImgPreview" MaxWidth="116" MaxHeight="76" Stretch="Uniform" />
+                        </Border>
+                        <StackPanel VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,2">
+                                <TextBlock x:Name="TxtImageDimensions" Text="Kích thước: 0 x 0 px" FontWeight="SemiBold" FontSize="11" />
+                                <TextBlock Text=" (Bấm để xem lớn)" FontSize="10" Foreground="#2563EB" FontWeight="SemiBold" Margin="6,0,0,0" />
+                            </StackPanel>
+                            <TextBlock x:Name="TxtImageSize" Text="Dung lượng: 0 KB" FontSize="10" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Text="✓ Sẵn sàng gửi kèm yêu cầu cho AI Vision đối chiếu trực quan mô hình" FontSize="10" Foreground="#059669" FontWeight="SemiBold" Margin="0,2,0,0" />
+                        </StackPanel>
+                    </DockPanel>
+                </Border>
+            </StackPanel>
+        </ui:Card>
+
+        <!-- 4. Action Buttons -->
+        <DockPanel Grid.Row="3" LastChildFill="False">
+            <TextBlock x:Name="TxtStatus" DockPanel.Dock="Left" Text="Mẹo: Có thể dán ảnh đề bài từ Word/Web rồi bấm Cập nhật."
+                       FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" VerticalAlignment="Center" />
+
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                <ui:Button x:Name="BtnCancel" Content="Hủy" MinWidth="80" Height="30" Margin="0,0,8,0"
+                           Background="#475569" Foreground="White" FontSize="11"
+                           Click="BtnCancel_Click" />
+                <ui:Button x:Name="BtnOk" Content="Cập nhật mô hình HTML" MinWidth="140" Height="30"
+                           Background="#2563EB" Foreground="White" FontWeight="SemiBold" FontSize="11"
+                           Click="BtnOk_Click" />
+            </StackPanel>
+        </DockPanel>
+    </Grid>
+</Window>

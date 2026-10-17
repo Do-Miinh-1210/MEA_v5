@@ -250,5 +250,56 @@ Chúc bạn thành công!";
 
             error.Should().BeNull();
         }
+
+        [Fact]
+        public void HtmlModelAiGenerateDialog_CreationOnSta_ShouldSucceed()
+        {
+            Exception? error = null;
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    var dlg = new HtmlModelAiGenerateDialog("Đề bài mẫu mô phỏng 3D");
+                    dlg.Should().NotBeNull();
+                    dlg.TxtUserPrompt.Text.Should().Be("Đề bài mẫu mô phỏng 3D");
+                    dlg.Close();
+                }
+                catch (Exception ex)
+                {
+                    error = ex;
+                }
+            });
+
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+
+            error.Should().BeNull();
+        }
+
+        [Fact]
+        public void HtmlModelAiEditDialog_CreationOnSta_ShouldSucceed()
+        {
+            Exception? error = null;
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    var dlg = new HtmlModelAiEditDialog("<!DOCTYPE html><html><body>Test</body></html>");
+                    dlg.Should().NotBeNull();
+                    dlg.Close();
+                }
+                catch (Exception ex)
+                {
+                    error = ex;
+                }
+            });
+
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+
+            error.Should().BeNull();
+        }
     }
 }

@@ -378,7 +378,7 @@
                                 <ui:SymbolIcon Symbol="Cube24" FontSize="42" Foreground="#CBD5E1" HorizontalAlignment="Center" Margin="0,0,0,8" />
                                 <TextBlock Text="Mô hình 3D HTML sẽ hiển thị tương tác trực tiếp tại đây" 
                                            FontSize="12" FontWeight="SemiBold" Foreground="#64748B" HorizontalAlignment="Center" />
-                                <TextBlock Text="Chọn 'Mẫu chuẩn' hoặc nhập đề bài rồi bấm 'AI tạo' (Ctrl+Shift+G) / 'Chạy thử (F5)'" 
+                                <TextBlock Text="Nhập đề bài rồi bấm 'AI tạo' (Ctrl+Shift+G) hoặc mở 'Kho mô hình' (Ctrl+B)" 
                                            FontSize="10.5" Foreground="#94A3B8" HorizontalAlignment="Center" Margin="0,3,0,0" />
                             </StackPanel>
                         </Grid>

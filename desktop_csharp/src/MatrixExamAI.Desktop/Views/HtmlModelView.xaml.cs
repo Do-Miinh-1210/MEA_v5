@@ -52,13 +52,11 @@ namespace MatrixExamAI.Desktop.Views
                     InitializeLayout();
                     await InitializeWebViewAsync();
 
-                    // Mặc định nạp mẫu Câu 6 Khối tròn xoay của người dùng
-                    if (string.IsNullOrWhiteSpace(TxtHtmlCode.Text) && _templates.Count > 0)
-                    {
-                        var defaultItem = _templates.FirstOrDefault(t => t.Id == "solid_rev_cau6") ?? _templates[0];
-                        TxtHtmlCode.Text = defaultItem.HtmlCode;
-                        await RunModelAsync();
-                    }
+                    // Để trống hoàn toàn để người dùng tự tạo hoặc mở kho mô hình
+                    TxtHtmlCode.Text = string.Empty;
+                    TxtPrompt.Text = string.Empty;
+                    PanelPlaceholder.Visibility = Visibility.Visible;
+                    TxtModelStats.Text = "Sẵn sàng • Nhập đề bài bấm 'AI tạo' hoặc mở 'Kho mô hình'";
                 }), System.Windows.Threading.DispatcherPriority.Loaded);
             };
         }
@@ -131,7 +129,7 @@ namespace MatrixExamAI.Desktop.Views
 
         private void CmbTemplateItem_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (CmbTemplateItem.SelectedItem is HtmlModelTemplateItem item && !string.IsNullOrWhiteSpace(item.HtmlCode))
+            if (CmbTemplateItem.IsDropDownOpen && CmbTemplateItem.SelectedItem is HtmlModelTemplateItem item && !string.IsNullOrWhiteSpace(item.HtmlCode))
             {
                 TxtPrompt.Text = item.Title;
             }
@@ -398,7 +396,7 @@ namespace MatrixExamAI.Desktop.Views
                 return;
             }
 
-            var dlg = new AiDrawPromptDialog(prompt, _attachedImageBytes)
+            var dlg = new HtmlModelAiGenerateDialog(prompt, _attachedImageBytes)
             {
                 Owner = Window.GetWindow(this),
                 Title = "AI Tạo Mô hình Mô phỏng 3D HTML & Khoa học"
@@ -483,7 +481,7 @@ namespace MatrixExamAI.Desktop.Views
                 return;
             }
 
-            var dlg = new AiEditPromptDialog(currentHtml, _attachedImageBytes)
+            var dlg = new HtmlModelAiEditDialog(currentHtml, _attachedImageBytes)
             {
                 Owner = Window.GetWindow(this),
                 Title = "AI Chỉnh Sửa & Bổ Sung Mô Hình 3D HTML"
