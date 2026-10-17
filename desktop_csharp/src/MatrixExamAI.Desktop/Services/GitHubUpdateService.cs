@@ -34,8 +34,8 @@ public class GitHubUpdateService
 {
     public static GitHubUpdateService Instance { get; } = new();
 
-    public string CurrentVersion { get; set; } = "5.3.0.13";
-    public string DisplayVersion => "5.3.0.13";
+    public string CurrentVersion { get; set; } = "5.3.0.14";
+    public string DisplayVersion => "5.3.0.14";
     public string GitHubRepo { get; set; } = "Do-Miinh-1210/MEA_v5";
     public DateTime? LastCheckedTime { get; private set; }
 
@@ -187,14 +187,14 @@ public class GitHubUpdateService
                 return null;
             }
 
-            string patchUrl = $"https://github.com/{repo}/releases/download/{tagName}/MatrixExamAI_Patch.zip";
+            string deltaUrl = $"https://github.com/{repo}/releases/download/{tagName}/MatrixExamAI_Delta.zip";
             return new UpdateInfo(
                 Version: version,
                 TagName: tagName,
                 ReleaseNotes: $"Bản phát hành MatrixExamAI Pro {tagName}.",
-                DownloadUrl: patchUrl,
-                FileSize: 564844,
-                AssetName: "MatrixExamAI_Patch.zip",
+                DownloadUrl: deltaUrl,
+                FileSize: 280000,
+                AssetName: "MatrixExamAI_Delta.zip",
                 PublishedAt: DateTimeOffset.UtcNow,
                 IsPatch: true
             );
@@ -244,20 +244,29 @@ public class GitHubUpdateService
 
             if (root.TryGetProperty("assets", out var assetsProp) && assetsProp.ValueKind == JsonValueKind.Array)
             {
+                var deltaCandidate = assetsProp.EnumerateArray()
+                    .FirstOrDefault(a =>
+                    {
+                        string name = a.TryGetProperty("name", out var np) ? np.GetString() ?? "" : "";
+                        return name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) &&
+                               name.Contains("delta", StringComparison.OrdinalIgnoreCase);
+                    });
+
                 var patchCandidate = assetsProp.EnumerateArray()
                     .FirstOrDefault(a =>
                     {
                         string name = a.TryGetProperty("name", out var np) ? np.GetString() ?? "" : "";
                         return name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) &&
-                               (name.Contains("patch", StringComparison.OrdinalIgnoreCase) || name.Contains("delta", StringComparison.OrdinalIgnoreCase));
+                               name.Contains("patch", StringComparison.OrdinalIgnoreCase);
                     });
 
-                if (patchCandidate.ValueKind != JsonValueKind.Undefined)
+                var chosenCandidate = deltaCandidate.ValueKind != JsonValueKind.Undefined ? deltaCandidate : patchCandidate;
+                if (chosenCandidate.ValueKind != JsonValueKind.Undefined)
                 {
                     isPatch = true;
-                    assetName = patchCandidate.TryGetProperty("name", out var np) ? np.GetString() ?? "" : "";
-                    downloadUrl = patchCandidate.TryGetProperty("browser_download_url", out var bp) ? bp.GetString() ?? "" : "";
-                    fileSize = patchCandidate.TryGetProperty("size", out var sp) ? sp.GetInt64() : 0;
+                    assetName = chosenCandidate.TryGetProperty("name", out var np) ? np.GetString() ?? "" : "";
+                    downloadUrl = chosenCandidate.TryGetProperty("browser_download_url", out var bp) ? bp.GetString() ?? "" : "";
+                    fileSize = chosenCandidate.TryGetProperty("size", out var sp) ? sp.GetInt64() : 0;
                 }
                 else
                 {
@@ -377,6 +386,13 @@ public class GitHubUpdateService
         ZipFile.ExtractToDirectory(zipPath, patchStaging, overwriteFiles: true);
 
         string targetDir = AppDomain.CurrentDomain.BaseDirectory.TrimEnd('\\', '/');
+        string manifestPath = Path.Combine(patchStaging, "delta_manifest.json");
+
+        if (File.Exists(manifestPath))
+        {
+            ApplyDeltaManifest(manifestPath, patchStaging, targetDir);
+        }
+
         string exeName = "MatrixExamAI.Desktop.exe";
         int currentPid = Environment.ProcessId;
 
@@ -481,5 +497,61 @@ public class GitHubUpdateService
                 Environment.Exit(0);
             }
         }
+    }
+
+    public static void ApplyDeltaManifest(string manifestPath, string stagingDir, string targetDir)
+    {
+        string json = File.ReadAllText(manifestPath);
+        using var doc = JsonDocument.Parse(json);
+        var root = doc.RootElement;
+
+        if (root.TryGetProperty("files", out var filesProp) && filesProp.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var item in filesProp.EnumerateArray())
+            {
+                string name = item.GetProperty("name").GetString() ?? "";
+                bool isDelta = item.TryGetProperty("is_delta", out var dp) && dp.GetBoolean();
+
+                if (isDelta)
+                {
+                    string deltaFile = item.GetProperty("delta_file").GetString() ?? "";
+                    string baseSha = item.TryGetProperty("base_sha256", out var bsp) ? bsp.GetString() ?? "" : "";
+                    string targetSha = item.TryGetProperty("target_sha256", out var tsp) ? tsp.GetString() ?? "" : "";
+
+                    string oldFilePath = Path.Combine(targetDir, name);
+                    string patchFilePath = Path.Combine(stagingDir, deltaFile);
+                    string outputFilePath = Path.Combine(stagingDir, name);
+
+                    if (!File.Exists(oldFilePath))
+                    {
+                        throw new FileNotFoundException($"Không tìm thấy tệp gốc '{name}' để áp dụng bản vá vi sai.");
+                    }
+
+                    if (!string.IsNullOrEmpty(baseSha))
+                    {
+                        string currentBaseSha = BinaryDeltaPatcher.ComputeSha256(oldFilePath);
+                        if (!string.Equals(currentBaseSha, baseSha, StringComparison.OrdinalIgnoreCase))
+                        {
+                            throw new InvalidDataException($"Mã băm SHA256 tệp gốc '{name}' ({currentBaseSha}) không khớp với phiên bản cơ sở ({baseSha}).");
+                        }
+                    }
+
+                    BinaryDeltaPatcher.ApplyPatch(oldFilePath, patchFilePath, outputFilePath);
+
+                    if (!string.IsNullOrEmpty(targetSha))
+                    {
+                        string generatedSha = BinaryDeltaPatcher.ComputeSha256(outputFilePath);
+                        if (!string.Equals(generatedSha, targetSha, StringComparison.OrdinalIgnoreCase))
+                        {
+                            throw new InvalidDataException($"Mã băm SHA256 tệp sau vá '{name}' không khớp mã kiểm tra tính toàn vẹn.");
+                        }
+                    }
+
+                    try { File.Delete(patchFilePath); } catch { }
+                }
+            }
+        }
+
+        try { File.Delete(manifestPath); } catch { }
     }
 }

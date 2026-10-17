@@ -1,11 +1,18 @@
 import json
 import os
 import sys
+import shutil
+import hashlib
 from pathlib import Path
 import urllib.request
 import urllib.parse
 import zipfile
 import subprocess
+
+try:
+    import bsdiff4
+except ImportError:
+    bsdiff4 = None
 
 if sys.stdout.encoding.lower() != 'utf-8':
     try:
@@ -27,9 +34,12 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.13"
-TITLE = "MatrixExamAI Pro v5.3.0.13 (Fitted Base Zoom Lock & Enhanced Diagram Viewing)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.13: Cải tiến tính năng thu phóng hình vẽ TikZ; khóa chặn dưới ở kích thước vừa vặn/gốc để tránh co nhỏ hình không cần thiết; hỗ trợ phóng to sắc nét bám tâm chuột và tự động căn giữa khi trở về kích thước ban đầu."
+TAG = "v5.3.0.14"
+TITLE = "MatrixExamAI Pro v5.3.0.14 (Binary Delta Patch Integration & Ultra-Fast Updates)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.14: Tích hợp công nghệ cập nhật vi sai nhị phân (Binary Delta Patch chuẩn BSDIFF); giảm dung lượng gói cập nhật từ 6.9 MB xuống chỉ còn ~200-300 KB (tiết kiệm hơn 95% dữ liệu và thời gian tải); tự động khôi phục mã nguồn và cập nhật mượt mà."
+
+def compute_sha256(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest().lower()
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)
@@ -45,8 +55,104 @@ def build_patch_zip(publish_dir: Path, output_zip: Path):
             fpath = publish_dir / fname
             if fpath.exists():
                 zf.write(fpath, arcname=fname)
-                print(f"  + Added to patch: {fname} ({fpath.stat().st_size} bytes)")
-    print(f"[OK] Created patch zip: {output_zip.name} ({output_zip.stat().st_size} bytes)")
+                print(f"  + Added to full patch: {fname} ({fpath.stat().st_size} bytes)")
+    print(f"[OK] Created full patch zip: {output_zip.name} ({output_zip.stat().st_size} bytes)")
+
+def build_delta_zip(publish_dir: Path, output_delta_zip: Path, cache_dir: Path):
+    if bsdiff4 is None:
+        print("[WARN] bsdiff4 is not available, skipping delta zip.")
+        return False
+
+    output_delta_zip.parent.mkdir(parents=True, exist_ok=True)
+    last_pub = cache_dir / "last_published"
+    last_pub.mkdir(parents=True, exist_ok=True)
+
+    ref_dll = last_pub / "MatrixExamAI.Desktop.dll"
+    if not ref_dll.exists():
+        try:
+            print("[INFO] Fetching latest baseline patch from GitHub for delta reference...")
+            prev_patch_url = f"https://github.com/{REPO}/releases/latest/download/MatrixExamAI_Patch.zip"
+            tmp_zip = cache_dir / "prev_patch.zip"
+            urllib.request.urlretrieve(prev_patch_url, tmp_zip)
+            with zipfile.ZipFile(tmp_zip, "r") as zf:
+                zf.extractall(last_pub)
+            tmp_zip.unlink(missing_ok=True)
+            print("[OK] Loaded reference baseline files into cache.")
+        except Exception as ex:
+            print(f"[WARN] Could not fetch baseline patch: {ex}")
+            return False
+
+    if not (last_pub / "MatrixExamAI.Desktop.dll").exists():
+        print("[WARN] Baseline dll not found, skipping delta.")
+        return False
+
+    files_to_pack = [
+        "MatrixExamAI.Desktop.dll",
+        "MatrixExamAI.Desktop.exe",
+        "MatrixExamAI.Shared.dll",
+        "MatrixExamAI.Desktop.deps.json",
+        "MatrixExamAI.Desktop.runtimeconfig.json"
+    ]
+
+    manifest = {"files": []}
+    staging_dir = output_delta_zip.parent / "staging_delta"
+    if staging_dir.exists():
+        shutil.rmtree(staging_dir)
+    staging_dir.mkdir(parents=True, exist_ok=True)
+
+    for fname in files_to_pack:
+        new_path = publish_dir / fname
+        old_path = last_pub / fname
+        if not new_path.exists():
+            continue
+
+        new_bytes = new_path.read_bytes()
+        new_sha = compute_sha256(new_bytes)
+
+        if old_path.exists() and fname.endswith(".dll"):
+            old_bytes = old_path.read_bytes()
+            old_sha = compute_sha256(old_bytes)
+            if old_sha != new_sha:
+                diff_bytes = bsdiff4.diff(old_bytes, new_bytes)
+                diff_name = fname + ".bsdiff"
+                (staging_dir / diff_name).write_bytes(diff_bytes)
+                reduction = (1 - len(diff_bytes) / len(new_bytes)) * 100
+                print(f"  + Delta diff for {fname}: {len(diff_bytes)} bytes (was {len(new_bytes)} bytes, -{reduction:.1f}%)")
+                manifest["files"].append({
+                    "name": fname,
+                    "is_delta": True,
+                    "delta_file": diff_name,
+                    "base_sha256": old_sha,
+                    "target_sha256": new_sha
+                })
+            else:
+                print(f"  = Unchanged: {fname}")
+        else:
+            (staging_dir / fname).write_bytes(new_bytes)
+            print(f"  + Added file to delta: {fname} ({len(new_bytes)} bytes)")
+            manifest["files"].append({
+                "name": fname,
+                "is_delta": False,
+                "target_sha256": new_sha
+            })
+
+    manifest_path = staging_dir / "delta_manifest.json"
+    manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    with zipfile.ZipFile(output_delta_zip, "w", zipfile.ZIP_DEFLATED) as zf:
+        for f in staging_dir.iterdir():
+            zf.write(f, arcname=f.name)
+
+    shutil.rmtree(staging_dir, ignore_errors=True)
+    print(f"[OK] Created delta patch zip: {output_delta_zip.name} ({output_delta_zip.stat().st_size} bytes)")
+
+    # Update cache for next version
+    for fname in files_to_pack:
+        src = publish_dir / fname
+        if src.exists():
+            shutil.copy2(src, last_pub / fname)
+
+    return True
 
 def create_release_and_upload():
     token = get_github_token()
@@ -56,12 +162,15 @@ def create_release_and_upload():
 
     base_dir = Path(__file__).resolve().parent.parent
     publish_dir = base_dir / "desktop_csharp" / "publish"
+    cache_dir = base_dir / "desktop_csharp" / "build_cache"
     dist_dir = base_dir / "dist" / "installer"
     patch_zip_path = dist_dir / "MatrixExamAI_Patch.zip"
+    delta_zip_path = dist_dir / "MatrixExamAI_Delta.zip"
     installer_path = dist_dir / "MatrixExamAI_Pro_Setup.exe"
 
-    # 1. Build patch zip
+    # 1. Build patch zips
     if publish_dir.exists():
+        build_delta_zip(publish_dir, delta_zip_path, cache_dir)
         build_patch_zip(publish_dir, patch_zip_path)
 
     # 2. Create or fetch release
@@ -97,6 +206,8 @@ def create_release_and_upload():
 
     # 3. List of files to upload
     files_to_upload = []
+    if delta_zip_path.exists():
+        files_to_upload.append(delta_zip_path)
     if patch_zip_path.exists():
         files_to_upload.append(patch_zip_path)
     if installer_path.exists():
