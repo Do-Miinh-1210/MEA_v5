@@ -165,14 +165,14 @@
                               MaxHeight="{TemplateBinding MaxDropDownHeight}"
                               SnapsToDevicePixels="True">
                             <Border x:Name="dropDownBorder"
-                                    Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
-                                    BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                    Background="#202020"
+                                    BorderBrush="#3F3F46"
                                     BorderThickness="1"
                                     CornerRadius="6"
-                                    Padding="2"
+                                    Padding="3"
                                     Margin="0,2,0,4">
                                 <Border.Effect>
-                                    <DropShadowEffect BlurRadius="8" ShadowDepth="2" Direction="270" Opacity="0.25" Color="Black" />
+                                    <DropShadowEffect BlurRadius="14" ShadowDepth="4" Direction="270" Opacity="0.65" Color="Black" />
                                 </Border.Effect>
                                 <ScrollViewer CanContentScroll="True"
                                               Foreground="{DynamicResource TextFillColorPrimaryBrush}">

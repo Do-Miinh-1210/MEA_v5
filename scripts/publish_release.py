@@ -27,9 +27,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.9"
-TITLE = "MatrixExamAI Pro v5.3.0.9 (Fix ComboBox Chevron Arrow Alignment & Full-Width Toggle Stretch)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.9: Sửa triệt để lỗi mũi tên ComboBox nằm đè lên chữ/số; thiết lập cấu trúc 2 cột cố định (Cột 0 dành cho chữ, Cột 1 dành cho mũi tên bên phải cùng); ToggleButton trải dài 100% bề rộng không bị co rút; bảo toàn nền tối trong suốt chữ trắng sắc nét."
+TAG = "v5.3.0.10"
+TITLE = "MatrixExamAI Pro v5.3.0.10 (Opaque Dark Dropdown Background & High Contrast Border)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.10: Chuyển nền popup ComboBox xổ xuống sang màu đen đặc (#202020) chống xuyên thấu và viền tương phản cao (#3F3F46), khắc phục triệt để hiện tượng chữ trong menu đè lên các nút nền phía dưới."
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)
