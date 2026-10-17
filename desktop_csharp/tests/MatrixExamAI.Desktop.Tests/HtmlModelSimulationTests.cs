@@ -185,5 +185,70 @@ Chúc bạn thành công!";
 
             error.Should().BeNull();
         }
+
+        [Fact]
+        public void HtmlModelBankService_LoadAllEntries_ShouldContainAllTemplates()
+        {
+            var entries = MatrixExamAI.Desktop.Services.HtmlModelBankService.LoadAllEntries();
+            entries.Should().NotBeNullOrEmpty();
+            entries.Count.Should().BeGreaterOrEqualTo(8);
+            entries.Should().Contain(e => e.Id == "solid_rev_cau6");
+            entries.Should().Contain(e => e.Category.Contains("Khối tròn xoay"));
+
+            var solidCau6 = entries.First(e => e.Id == "solid_rev_cau6");
+            string code = MatrixExamAI.Desktop.Services.HtmlModelBankService.GetHtmlCode(solidCau6);
+            code.Should().Contain("LatheGeometry");
+        }
+
+        [Fact]
+        public void HtmlModelBankService_SaveAndDeleteUserEntry_ShouldWorkCorrectly()
+        {
+            string testTitle = "Mô hình Test Unit Test " + Guid.NewGuid().ToString("N");
+            string testHtml = "<!DOCTYPE html><html><body>Test Unit Test</body></html>";
+
+            var entry = MatrixExamAI.Desktop.Services.HtmlModelBankService.SaveUserEntry(
+                testTitle, "Toán học: Kiểm thử", "Mô tả test", testHtml);
+
+            entry.Should().NotBeNull();
+            entry.Title.Should().Be(testTitle);
+
+            var all = MatrixExamAI.Desktop.Services.HtmlModelBankService.LoadAllEntries();
+            all.Should().Contain(e => e.Id == entry.Id);
+
+            string readCode = MatrixExamAI.Desktop.Services.HtmlModelBankService.GetHtmlCode(entry);
+            readCode.Should().Be(testHtml);
+
+            bool deleted = MatrixExamAI.Desktop.Services.HtmlModelBankService.DeleteUserEntry(entry.Id);
+            deleted.Should().BeTrue();
+
+            var afterDelete = MatrixExamAI.Desktop.Services.HtmlModelBankService.LoadAllEntries();
+            afterDelete.Should().NotContain(e => e.Id == entry.Id);
+        }
+
+        [Fact]
+        public void HtmlModelBankDialog_CreationOnSta_ShouldSucceed()
+        {
+            Exception? error = null;
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    var dlg = new HtmlModelBankDialog();
+                    dlg.Should().NotBeNull();
+                    dlg.ReloadData();
+                    dlg.Close();
+                }
+                catch (Exception ex)
+                {
+                    error = ex;
+                }
+            });
+
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            thread.Join();
+
+            error.Should().BeNull();
+        }
     }
 }

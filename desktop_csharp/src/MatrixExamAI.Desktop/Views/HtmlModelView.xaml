@@ -104,42 +104,24 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <!-- Hàng 1: Thể loại, Mẫu mô hình & Ô Nhập Trực tiếp Đề bài / Mô tả -->
+                <!-- Hàng 1: Ô Nhập Trực tiếp Đề bài / Mô tả Bài toán (Thoáng đãng, rộng rãi) -->
                 <Grid Grid.Row="0" Margin="0,0,0,6">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <WrapPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="Thể loại:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <ComboBox x:Name="CmbCategory" Width="210" Height="34" FontSize="11"
-                                  VerticalContentAlignment="Center" Margin="0,0,14,0"
-                                  ToolTip="Chọn lĩnh vực hoặc chuyên đề mô hình"
-                                  SelectionChanged="CmbCategory_SelectionChanged" />
+                    <!-- ComboBoxes ẩn để bảo toàn code-behind / category fallback -->
+                    <ComboBox x:Name="CmbCategory" Visibility="Collapsed" SelectionChanged="CmbCategory_SelectionChanged" />
+                    <ComboBox x:Name="CmbTemplateItem" Visibility="Collapsed" SelectionChanged="CmbTemplateItem_SelectionChanged" />
 
-                        <TextBlock Text="Mẫu:" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,6,0"
-                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                        <ComboBox x:Name="CmbTemplateItem" Width="290" Height="34" FontSize="11"
-                                  VerticalContentAlignment="Center" Margin="0,0,14,0"
-                                  DisplayMemberPath="Title"
-                                  ToolTip="Chọn mẫu mô phỏng 3D để nạp mã HTML"
-                                  SelectionChanged="CmbTemplateItem_SelectionChanged" />
-                    </WrapPanel>
-
-                    <!-- Ô NHẬP ĐỀ BÀI HOẶC MÔ TẢ MÔ HÌNH -->
-                    <Grid Grid.Column="1" VerticalAlignment="Center">
-                        <ui:TextBox x:Name="TxtPrompt" Height="34" FontSize="11" Padding="8,3"
-                                    MaxWidth="320" HorizontalAlignment="Left"
-                                    VerticalContentAlignment="Center"
-                                    PlaceholderText="Nhập đề bài hoặc mô tả mô hình 3D..."
-                                    ToolTip="Nhập đề bài hoặc mô tả để AI tạo mô hình tương tác (Enter hoặc bấm 'AI tạo')"
-                                    KeyDown="TxtPrompt_KeyDown" />
-                    </Grid>
+                    <ui:TextBox x:Name="TxtPrompt" Height="34" FontSize="11" Padding="10,3"
+                                VerticalContentAlignment="Center"
+                                PlaceholderText="Nhập đề bài toán học / KHTN hoặc mô tả mô hình mô phỏng 3D cần tạo (Nhấn Enter hoặc bấm 'AI tạo')..."
+                                ToolTip="Nhập đề bài hoặc mô tả để AI tạo mô hình tương tác (Enter hoặc bấm 'AI tạo')"
+                                KeyDown="TxtPrompt_KeyDown" />
                 </Grid>
 
-                <!-- Hàng 2: Bộ nút hành động màu sắc trực quan -->
+                <!-- Hàng 2: Bộ nút hành động màu sắc trực quan (Công thái học, 1 Nút - 1 Icon) -->
                 <WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
                     <!-- AI Tạo: Màu Tím Violet #7C3AED -->
                     <ui:Button x:Name="BtnAiGenerate" Style="{StaticResource AccentVibrantButtonStyle}"
@@ -149,13 +131,21 @@
                                ToolTip="AI phân tích đề bài / ảnh để sinh mô hình 3D HTML (Ctrl+Shift+G)"
                                Click="BtnAiGenerate_Click" />
 
-                    <!-- Mẫu chuẩn: Màu Cam Hổ Phách #D97706 -->
-                    <ui:Button x:Name="BtnLoadTemplate" Style="{StaticResource AccentVibrantButtonStyle}"
-                               Background="#D97706" Foreground="White" FontWeight="SemiBold"
-                               Icon="{ui:SymbolIcon Shapes24}" Content="Mẫu chuẩn"
+                    <!-- Kho mô hình: Cyan đậm #0891B2 -->
+                    <ui:Button x:Name="BtnOpenModelBank" Style="{StaticResource AccentVibrantButtonStyle}"
+                               Background="#0891B2" Foreground="White" FontWeight="SemiBold"
+                               Icon="{ui:SymbolIcon Book24}" Content="Kho mô hình"
                                Height="26" Padding="8,0" Margin="0,0,4,4" FontSize="10.5"
-                               ToolTip="Nạp mẫu mô hình mô phỏng chuẩn đã chọn"
-                               Click="BtnLoadTemplate_Click" />
+                               ToolTip="Mở kho lưu trữ duyệt và nạp các mẫu mô hình mô phỏng 3D HTML (Ctrl+B)"
+                               Click="BtnOpenModelBank_Click" />
+
+                    <!-- Lưu kho: Ngọc lục bảo #10B981 -->
+                    <ui:Button x:Name="BtnSaveModelBank" Style="{StaticResource AccentVibrantButtonStyle}"
+                               Background="#10B981" Foreground="White" FontWeight="SemiBold"
+                               Icon="{ui:SymbolIcon Save24}" Content="Lưu kho"
+                               Height="26" Padding="8,0" Margin="0,0,4,4" FontSize="10.5"
+                               ToolTip="Lưu mô hình HTML hiện tại vào kho lưu trữ cá nhân (Ctrl+Shift+S)"
+                               Click="BtnSaveModelBank_Click" />
 
                     <!-- Tạo lại: Màu Vàng cam #F59E0B -->
                     <ui:Button x:Name="BtnAiRegenerate" Style="{StaticResource AccentVibrantButtonStyle}"
@@ -189,17 +179,17 @@
                                ToolTip="Dán ảnh đề bài từ Clipboard để AI Vision phân tích dựng mô hình 3D (Ctrl+V)"
                                Click="BtnPasteImage_Click" />
 
-                    <!-- Lưu file HTML: Ngọc lục bảo #10B981 -->
+                    <!-- Lưu file HTML: Xanh lá #059669 -->
                     <ui:Button x:Name="BtnSaveHtml" Style="{StaticResource AccentVibrantButtonStyle}"
-                               Background="#10B981" Foreground="White" FontWeight="SemiBold"
-                               Icon="{ui:SymbolIcon Save24}" Content="Lưu HTML"
+                               Background="#059669" Foreground="White" FontWeight="SemiBold"
+                               Icon="{ui:SymbolIcon DocumentSave24}" Content="Lưu HTML"
                                Height="26" Padding="8,0" Margin="0,0,4,4" FontSize="10"
                                ToolTip="Lưu tệp HTML hoàn chỉnh để mở trên web hoặc đưa lên LMS (Ctrl+S)"
                                Click="BtnSaveHtml_Click" />
 
-                    <!-- Mở file: Cyan đậm #0891B2 -->
+                    <!-- Mở file: Xanh dương #0284C7 -->
                     <ui:Button x:Name="BtnOpenHtml" Style="{StaticResource AccentVibrantButtonStyle}"
-                               Background="#0891B2" Foreground="White" FontWeight="SemiBold"
+                               Background="#0284C7" Foreground="White" FontWeight="SemiBold"
                                Icon="{ui:SymbolIcon FolderOpen24}" Content="Mở file"
                                Height="26" Padding="8,0" Margin="0,0,4,4" FontSize="10"
                                ToolTip="Mở tệp HTML mô hình có sẵn trên máy tính (Ctrl+O)"
@@ -221,9 +211,9 @@
                                ToolTip="Xóa trắng mã soạn thảo"
                                Click="BtnClear_Click" />
 
-                    <!-- Chạy thử: Xanh ngọc Emerald #059669 -->
+                    <!-- Chạy thử: Hổ phách #EA580C -->
                     <ui:Button x:Name="BtnRun" Style="{StaticResource AccentVibrantButtonStyle}"
-                               Background="#059669" Foreground="White" FontWeight="Bold"
+                               Background="#EA580C" Foreground="White" FontWeight="Bold"
                                Icon="{ui:SymbolIcon Play24}" Content="Chạy thử (F5)"
                                Height="26" Padding="12,0" Margin="0,0,0,4" FontSize="10.5"
                                ToolTip="Chạy mô phỏng tương tác trên khung xem trước (F5 hoặc Ctrl+Enter)"

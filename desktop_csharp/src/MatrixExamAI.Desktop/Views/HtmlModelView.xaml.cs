@@ -137,19 +137,50 @@ namespace MatrixExamAI.Desktop.Views
             }
         }
 
-        private async void BtnLoadTemplate_Click(object sender, RoutedEventArgs e)
+        private async void BtnOpenModelBank_Click(object sender, RoutedEventArgs e)
         {
-            if (CmbTemplateItem.SelectedItem is HtmlModelTemplateItem item && !string.IsNullOrWhiteSpace(item.HtmlCode))
+            var dlg = new HtmlModelBankDialog();
+            dlg.Owner = Window.GetWindow(this);
+            if (dlg.ShowDialog() == true && !string.IsNullOrWhiteSpace(dlg.SelectedHtmlCode))
             {
-                TxtHtmlCode.Text = item.HtmlCode;
-                TxtPrompt.Text = item.Title;
+                TxtHtmlCode.Text = dlg.SelectedHtmlCode;
                 InfoHtmlNotification.Severity = InfoBarSeverity.Success;
-                InfoHtmlNotification.Title = "Đã nạp mẫu mô hình";
-                InfoHtmlNotification.Message = $"Đã nạp thành công mẫu '{item.Title}'. Đang khởi chạy mô phỏng...";
+                InfoHtmlNotification.Title = "Đã nạp mô hình từ kho";
+                InfoHtmlNotification.Message = "Đã nạp thành công mô hình từ kho lưu trữ. Đang khởi chạy mô phỏng...";
                 InfoHtmlNotification.IsOpen = true;
 
                 await RunModelAsync();
             }
+        }
+
+        private void BtnSaveModelBank_Click(object sender, RoutedEventArgs e)
+        {
+            string code = TxtHtmlCode.Text.Trim();
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                System.Windows.MessageBox.Show("Chưa có mã nguồn HTML để lưu vào kho.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            string title = TxtPrompt.Text.Trim();
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                var match = System.Text.RegularExpressions.Regex.Match(code, @"<title>(.*?)</title>", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                title = match.Success ? match.Groups[1].Value.Trim() : $"Mô hình 3D {DateTime.Now:dd/MM/yyyy HH:mm}";
+            }
+
+            string category = CmbCategory.SelectedItem as string ?? "Mô hình cá nhân tự lưu";
+            var entry = HtmlModelBankService.SaveUserEntry(title, category, "Mô hình được lưu từ phiên làm việc MatrixExamAI.", code);
+
+            InfoHtmlNotification.Severity = InfoBarSeverity.Success;
+            InfoHtmlNotification.Title = "Đã lưu vào kho mô hình";
+            InfoHtmlNotification.Message = $"Đã lưu thành công '{entry.Title}' vào kho lưu trữ cá nhân!";
+            InfoHtmlNotification.IsOpen = true;
+        }
+
+        private void BtnLoadTemplate_Click(object sender, RoutedEventArgs e)
+        {
+            BtnOpenModelBank_Click(sender, e);
         }
 
         #region LAYOUT MODES (SPLIT, MODEL ONLY, CODE ONLY)
@@ -788,6 +819,16 @@ namespace MatrixExamAI.Desktop.Views
             else if (e.Key == Key.V && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && System.Windows.Clipboard.ContainsImage())
             {
                 BtnPasteImage_Click(BtnPasteImage, new RoutedEventArgs());
+                e.Handled = true;
+            }
+            else if (e.Key == Key.B && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            {
+                BtnOpenModelBank_Click(BtnOpenModelBank, new RoutedEventArgs());
+                e.Handled = true;
+            }
+            else if (e.Key == Key.S && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
+            {
+                BtnSaveModelBank_Click(BtnSaveModelBank, new RoutedEventArgs());
                 e.Handled = true;
             }
             else if (e.Key == Key.S && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)

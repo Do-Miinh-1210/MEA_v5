@@ -34,9 +34,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.23"
-TITLE = "MatrixExamAI Pro v5.3.0.23 (Ra mắt Tab Mô hình Toán học & Khoa học 3D HTML Tương tác Trực quan)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.23: Bổ sung phân hệ hoàn toàn mới 'Mô hình Toán học HTML' mô phỏng 3D tương tác thời gian thực bằng Three.js, Tailwind CSS, KaTeX. Tích hợp trọn bộ thư viện mẫu 3D chuẩn xác (khối tròn xoay ứng dụng tích phân theo đề bài thi, mặt cầu cắt thiết diện, hình chóp, mặt cong giải tích Oxyz, con lắc vật lý, phân tử hóa học, chuỗi xoắn kép ADN). Cung cấp đầy đủ công cụ AI tạo mã, AI chỉnh sửa ngữ cảnh, dán ảnh đính kèm (Vision), lọc mã, chạy thử nghiệm WebView2 và mở trực tiếp trên trình duyệt Web."
+TAG = "v5.3.0.24"
+TITLE = "MatrixExamAI Pro v5.3.0.24 (Tối ưu Thanh công cụ & Ra mắt Kho Lưu trữ Mô hình 3D HTML Chuyên dụng)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.24: Tinh gọn 100% thanh công cụ tab 'Mô hình Toán học HTML' với ô nhập đề bài thoáng đãng, loại bỏ các combo mẫu gây rối mắt. Ra mắt phân hệ 'Kho lưu trữ mô hình mô phỏng 3D' (HtmlModelBankDialog) chuyên dụng cho phép duyệt, tìm kiếm, lọc theo chuyên đề và nạp nhanh các mẫu STEM chuẩn cũng như lưu trữ mô hình cá nhân không giới hạn."
 
 def compute_sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest().lower()
