@@ -90,22 +90,20 @@ namespace MatrixExamAI.Shared.AI
                     candidateModels.Add(baseModel);
                     if (baseModel.StartsWith("ag/", StringComparison.OrdinalIgnoreCase))
                     {
-                        candidateModels.Add(baseModel.Substring(3));
+                        if (baseModel.EndsWith("-high", StringComparison.OrdinalIgnoreCase))
+                        {
+                            candidateModels.Add(baseModel.Substring(0, baseModel.Length - 5));
+                        }
                     }
                     else
                     {
                         candidateModels.Add($"ag/{baseModel}");
                     }
-
-                    if (baseModel.EndsWith("-high", StringComparison.OrdinalIgnoreCase))
-                    {
-                        string fastModel = baseModel.Substring(0, baseModel.Length - 5);
-                        candidateModels.Add(fastModel);
-                        candidateModels.Add(fastModel.StartsWith("ag/", StringComparison.OrdinalIgnoreCase) ? fastModel.Substring(3) : $"ag/{fastModel}");
-                    }
                 }
+                candidateModels.Add("ag/gemini-3.8-flash-high");
                 candidateModels.Add("ag/gemini-3.8-flash");
-                candidateModels.Add("gemini-3.8-flash");
+                candidateModels.Add("ag/gemini-3.7-flash-high");
+                candidateModels.Add("ag/claude-sonnet-5-5");
 
                 foreach (var modelAttempt in candidateModels.Distinct(StringComparer.OrdinalIgnoreCase))
                 {
@@ -204,7 +202,8 @@ namespace MatrixExamAI.Shared.AI
             {
                 Model = model,
                 Temperature = temperature,
-                MaxTokens = maxTokens
+                MaxTokens = maxTokens,
+                Stream = false
             };
 
             var userMsg = new OpenAiMessage { Role = "user" };
@@ -255,10 +254,50 @@ namespace MatrixExamAI.Shared.AI
                             responseBody);
                     }
 
-                    var chatResponse = JsonSerializer.Deserialize<OpenAiChatResponse>(responseBody, JsonOptions);
-                    string? assistantContent = chatResponse?.Choices != null && chatResponse.Choices.Count > 0
-                        ? chatResponse.Choices[0].Message?.Content
-                        : null;
+                    string? assistantContent = null;
+
+                    // Hỗ trợ xử lý cả dạng SSE Stream (data: {...}) và JSON Object chuẩn
+                    if (responseBody.Contains("data:") && !responseBody.TrimStart().StartsWith("{"))
+                    {
+                        var sb = new StringBuilder();
+                        foreach (var line in responseBody.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            string t = line.Trim();
+                            if (t.StartsWith("data:") && t.Length > 5)
+                            {
+                                string chunkJson = t.Substring(5).Trim();
+                                if (chunkJson == "[DONE]") continue;
+                                try
+                                {
+                                    using var cdoc = JsonDocument.Parse(chunkJson);
+                                    if (cdoc.RootElement.TryGetProperty("choices", out var ch) && ch.GetArrayLength() > 0)
+                                    {
+                                        if (ch[0].TryGetProperty("delta", out var delta) && delta.TryGetProperty("content", out var cVal))
+                                        {
+                                            sb.Append(cVal.GetString());
+                                        }
+                                        else if (ch[0].TryGetProperty("message", out var msg) && msg.TryGetProperty("content", out var mVal))
+                                        {
+                                            sb.Append(mVal.GetString());
+                                        }
+                                    }
+                                }
+                                catch { }
+                            }
+                        }
+                        if (sb.Length > 0)
+                        {
+                            assistantContent = sb.ToString();
+                        }
+                    }
+
+                    if (assistantContent == null)
+                    {
+                        var chatResponse = JsonSerializer.Deserialize<OpenAiChatResponse>(responseBody, JsonOptions);
+                        assistantContent = chatResponse?.Choices != null && chatResponse.Choices.Count > 0
+                            ? chatResponse.Choices[0].Message?.Content
+                            : null;
+                    }
 
                     if (string.IsNullOrWhiteSpace(assistantContent))
                     {

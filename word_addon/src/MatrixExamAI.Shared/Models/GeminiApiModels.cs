@@ -135,6 +135,9 @@ namespace MatrixExamAI.Shared.Models
 
         [JsonPropertyName("max_tokens")]
         public int MaxTokens { get; set; } = 8192;
+
+        [JsonPropertyName("stream")]
+        public bool Stream { get; set; } = false;
     }
 
     public class OpenAiMessage
