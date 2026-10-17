@@ -250,7 +250,7 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel>
                             <TextBlock Text="Phiên bản hiện tại:" FontWeight="Medium" />
-                            <TextBlock Text="MatrixExamAI Pro v5.3.0.8" 
+                            <TextBlock Text="MatrixExamAI Pro v5.3.0.9" 
                                        FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Margin="0,2,0,0" />
                             <TextBlock x:Name="TxtLastCheckUpdate" Text="Lần cập nhật gần nhất: Chưa kiểm tra" 
                                        FontSize="11" Foreground="{DynamicResource TextFillColorTertiaryBrush}" Margin="0,3,0,0" />

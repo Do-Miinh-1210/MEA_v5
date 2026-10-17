@@ -58,70 +58,64 @@
                 </Setter>
             </Style>
 
-            <!-- ControlTemplate cho ToggleButton của ComboBox: Bỏ hoàn toàn Aero2 chrome trắng, tích hợp DynamicResource Dark/Light chuẩn Fluent -->
-            <ControlTemplate x:Key="GlobalComboBoxToggleButtonTemplate" TargetType="ToggleButton">
-                <Border x:Name="templateRoot"
-                        Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="4"
-                        SnapsToDevicePixels="True">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="22" />
-                        </Grid.ColumnDefinitions>
-                        <Path x:Name="arrow"
-                              Grid.Column="1"
-                              Data="M 0 0 L 3.5 3.5 L 7 0"
-                              HorizontalAlignment="Center"
-                              VerticalAlignment="Center"
-                              Stroke="{DynamicResource TextFillColorSecondaryBrush}"
-                              StrokeThickness="1.5"
-                              SnapsToDevicePixels="True" />
-                    </Grid>
-                </Border>
-                <ControlTemplate.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter TargetName="templateRoot" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-                        <Setter TargetName="arrow" Property="Stroke" Value="{DynamicResource TextFillColorPrimaryBrush}" />
-                    </Trigger>
-                    <Trigger Property="IsChecked" Value="True">
-                        <Setter TargetName="templateRoot" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
-                        <Setter TargetName="templateRoot" Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
-                        <Setter TargetName="arrow" Property="Stroke" Value="{DynamicResource AccentFillColorDefaultBrush}" />
-                    </Trigger>
-                    <Trigger Property="IsEnabled" Value="False">
-                        <Setter TargetName="templateRoot" Property="Opacity" Value="0.45" />
-                    </Trigger>
-                </ControlTemplate.Triggers>
-            </ControlTemplate>
-
-            <!-- ControlTemplate cho TextBox bên trong ComboBox khi IsEditable="True" -->
-            <ControlTemplate x:Key="GlobalComboBoxTextBoxTemplate" TargetType="TextBox">
-                <Border x:Name="PART_ContentHost"
-                        Focusable="False"
-                        Background="Transparent" />
-            </ControlTemplate>
-
-            <!-- ControlTemplate toàn cục cho ComboBox: Nền tối/sáng tự động theo Theme, chữ luôn tương phản rõ nét -->
+            <!-- ControlTemplate toàn cục cho ComboBox: Nền tối/sáng tự động theo Theme, mũi tên nằm bên phải, chữ không đè mũi tên -->
             <ControlTemplate x:Key="GlobalComboBoxTemplate" TargetType="ComboBox">
                 <Grid x:Name="templateRoot" SnapsToDevicePixels="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="26" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- ToggleButton làm nền toàn phần, luôn Stretch 100% chiều rộng ComboBox, không bị style ngoài ghi đè -->
                     <ToggleButton x:Name="toggleButton"
-                                  Template="{StaticResource GlobalComboBoxToggleButtonTemplate}"
+                                  Grid.ColumnSpan="2"
+                                  Style="{x:Null}"
+                                  HorizontalAlignment="Stretch"
+                                  VerticalAlignment="Stretch"
+                                  HorizontalContentAlignment="Stretch"
+                                  VerticalContentAlignment="Stretch"
+                                  Margin="0"
+                                  Padding="0"
                                   Background="{TemplateBinding Background}"
                                   BorderBrush="{TemplateBinding BorderBrush}"
                                   BorderThickness="{TemplateBinding BorderThickness}"
                                   IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                   Focusable="False"
-                                  ClickMode="Press" />
+                                  ClickMode="Press">
+                        <ToggleButton.Template>
+                            <ControlTemplate TargetType="ToggleButton">
+                                <Border x:Name="toggleRoot"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="5"
+                                        SnapsToDevicePixels="True" />
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="toggleRoot" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                        <Setter TargetName="toggleRoot" Property="BorderBrush" Value="{DynamicResource ControlStrokeColorDefaultBrush}" />
+                                    </Trigger>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter TargetName="toggleRoot" Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                                        <Setter TargetName="toggleRoot" Property="BorderBrush" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter TargetName="toggleRoot" Property="Opacity" Value="0.45" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </ToggleButton.Template>
+                    </ToggleButton>
+
+                    <!-- Khung chữ hiển thị mục đang chọn (Nằm ở Column 0, không bao giờ chạm tới mũi tên ở Column 1) -->
                     <ContentPresenter x:Name="contentPresenter"
+                                      Grid.Column="0"
                                       IsHitTestVisible="False"
                                       Content="{TemplateBinding SelectionBoxItem}"
                                       ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                       ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                       ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
-                                      Margin="{TemplateBinding Padding}"
+                                      Margin="10,0,2,0"
                                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                       TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
@@ -129,20 +123,38 @@
                             <Style TargetType="TextBlock">
                                 <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
                                 <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
                             </Style>
                         </ContentPresenter.Resources>
                     </ContentPresenter>
+
+                    <!-- Mũi tên Chevron cố định ở Column 1 (Bên phải cùng), không thể đè chữ -->
+                    <Path x:Name="arrow"
+                          Grid.Column="1"
+                          Data="M 0 0 L 3.5 3.5 L 7 0"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          IsHitTestVisible="False"
+                          Stroke="{DynamicResource TextFillColorSecondaryBrush}"
+                          StrokeThickness="1.5"
+                          SnapsToDevicePixels="True" />
+
+                    <!-- TextBox khi IsEditable="True" -->
                     <TextBox x:Name="PART_EditableTextBox"
-                             Template="{StaticResource GlobalComboBoxTextBoxTemplate}"
+                             Grid.Column="0"
+                             Margin="8,0,2,0"
                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                             Margin="{TemplateBinding Padding}"
                              Focusable="True"
                              Background="Transparent"
+                             BorderThickness="0"
                              Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                              Visibility="Collapsed"
                              IsReadOnly="{TemplateBinding IsReadOnly}" />
+
+                    <!-- Popup xổ danh sách mục chọn -->
                     <Popup x:Name="PART_Popup"
+                           Grid.ColumnSpan="2"
                            AllowsTransparency="True"
                            IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                            Placement="Bottom"
@@ -173,6 +185,12 @@
                     </Popup>
                 </Grid>
                 <ControlTemplate.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter TargetName="arrow" Property="Stroke" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                    </Trigger>
+                    <Trigger Property="IsDropDownOpen" Value="True">
+                        <Setter TargetName="arrow" Property="Stroke" Value="{DynamicResource AccentFillColorDefaultBrush}" />
+                    </Trigger>
                     <Trigger Property="HasItems" Value="False">
                         <Setter TargetName="dropDownBorder" Property="MinHeight" Value="48" />
                     </Trigger>
@@ -199,7 +217,6 @@
                 <Setter Property="BorderThickness" Value="1" />
                 <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
                 <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
-                <Setter Property="Padding" Value="10,0,24,0" />
                 <Setter Property="MinHeight" Value="32" />
                 <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
                 <Setter Property="ScrollViewer.PanningMode" Value="Both" />
