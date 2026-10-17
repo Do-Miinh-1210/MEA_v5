@@ -337,7 +337,7 @@
                     </Grid.ColumnDefinitions>
                     <Image Source="/MatrixExamAI.Desktop;component/Assets/logo.png" Width="64" Height="64" Margin="0,0,20,0" RenderOptions.BitmapScalingMode="HighQuality" VerticalAlignment="Center" />
                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                        <TextBlock Text="MatrixExamAI Pro v5.3.0.14" FontWeight="Bold" FontSize="15" />
+                        <TextBlock Text="MatrixExamAI Pro v5.3.0.15" FontWeight="Bold" FontSize="15" />
                         <TextBlock Text="Phần mềm Trợ lý Soạn đề &amp; Chuyển đổi Tài liệu AI" FontSize="12" Margin="0,2,0,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                         <TextBlock Text="Tác giả: Thầy Đỗ Minh (Đỗ Miinh Math)" FontSize="11" Margin="0,4,0,0" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                     </StackPanel>

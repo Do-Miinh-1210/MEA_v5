@@ -278,6 +278,12 @@ body {
   box-shadow: 0 0 0 2px var(--primary-glow);
 }
 
+.prompt-card.drag-over {
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.4) !important;
+  background: rgba(56, 189, 248, 0.08) !important;
+}
+
 .prompt-textarea-wrapper {
   position: relative;
   width: 100%;

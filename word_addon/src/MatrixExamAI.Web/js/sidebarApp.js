@@ -125,8 +125,11 @@
 
   function initDomElements() {
     dom = {
+      promptCard: document.getElementById('tikz-prompt-card'),
       promptTextarea: document.getElementById('prompt-input'),
       clearPromptBtn: document.getElementById('clear-prompt-btn'),
+      btnGetWordImage: document.getElementById('btn-get-word-image'),
+      btnPasteClipboardImage: document.getElementById('btn-paste-clipboard-image'),
       presetChips: document.querySelectorAll('.preset-chip'),
       imagePreviewContainer: document.getElementById('image-preview-container'),
       imageThumb: document.getElementById('image-thumb'),
@@ -173,10 +176,13 @@
       settingsModal: document.getElementById('settings-modal'),
       btnCloseSettings: document.getElementById('btn-close-settings'),
       btnSaveSettings: document.getElementById('btn-save-settings'),
-      apiKeyInput: document.getElementById('api-key-input'),
+      providerSelect: document.getElementById('provider-select'),
       modelSelect: document.getElementById('model-select'),
-      nineRouterKeyInput: document.getElementById('ninerouter-key-input'),
-      openAiKeyInput: document.getElementById('openai-key-input'),
+      apiKeyLabel: document.getElementById('api-key-label'),
+      apiKeyInput: document.getElementById('api-key-input'),
+      apiKeyHint: document.getElementById('api-key-hint'),
+      btnTestConnection: document.getElementById('btn-test-connection'),
+      settingsTestStatus: document.getElementById('settings-test-status'),
 
       // Feature Nav & Panels (5 tabs)
       navBtnTikz: document.getElementById('nav-btn-tikz'),
@@ -345,51 +351,156 @@
     }
   }
 
-  // Clipboard Image Paste Handler
+  // Set TikZ Image to Preview & State
+  function setTikzImage(base64Data, mimeType, sizeKb, dataUrl) {
+    if (!base64Data) return;
+    mimeType = mimeType || 'image/png';
+    sizeKb = sizeKb || Math.round(base64Data.length * 0.75 / 1024);
+    dataUrl = dataUrl || `data:${mimeType};base64,${base64Data}`;
+
+    state.pastedImageBase64 = base64Data;
+    state.pastedImageMimeType = mimeType;
+    state.pastedImageSizeKB = sizeKb;
+
+    if (dom.imageThumb) dom.imageThumb.src = dataUrl;
+    if (dom.imageMetaDetails) {
+      dom.imageMetaDetails.innerText = `${mimeType} • ${sizeKb} KB • Ảnh bài toán`;
+    }
+    if (dom.imagePreviewContainer) {
+      dom.imagePreviewContainer.classList.add('active');
+    }
+  }
+
+  // Lấy ảnh đang chọn trong Word hoặc từ Clipboard
+  async function loadWordSelectedImage() {
+    try {
+      showToast('Đang quét ảnh từ Word & Clipboard...', 'info', 1500);
+      const res = await window.WordBridge.request('word/getSelectedImage');
+      if (res && res.success && res.hasImage && res.imageBase64) {
+        setTikzImage(res.imageBase64, res.mimeType || 'image/png', res.sizeKb);
+        showToast('✓ Đã nạp hình ảnh từ Word thành công!', 'success', 3000);
+        return true;
+      } else {
+        const nativeOk = await pasteTikzImageFromNativeClipboard();
+        if (!nativeOk) {
+          showToast('Vui lòng chọn hình ảnh trong tài liệu Word hoặc sao chép ảnh (Ctrl+C) trước!', 'warning', 3500);
+        }
+        return nativeOk;
+      }
+    } catch (e) {
+      console.warn('loadWordSelectedImage error:', e);
+      return await pasteTikzImageFromNativeClipboard();
+    }
+  }
+
+  // Clipboard Image Paste Handler (Web + Native Word Fallback)
   function handleClipboardPaste(e) {
     const items = (e.clipboardData || e.originalEvent?.clipboardData)?.items;
-    if (!items) return;
+    let foundWebImage = false;
 
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      if (item.type.indexOf('image') !== -1) {
-        e.preventDefault();
-        const file = item.getAsFile();
-        if (!file) continue;
+    if (items) {
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.type.indexOf('image') !== -1) {
+          e.preventDefault();
+          foundWebImage = true;
+          const file = item.getAsFile();
+          if (!file) continue;
 
-        const reader = new FileReader();
-        reader.onload = function (event) {
-          const dataUrl = event.target.result;
-          const base64Data = dataUrl.split(',')[1];
-          const mimeType = file.type || 'image/png';
-          const sizeKb = Math.round(file.size / 1024);
+          const reader = new FileReader();
+          reader.onload = function (event) {
+            const dataUrl = event.target.result;
+            const base64Data = dataUrl.split(',')[1];
+            const mimeType = file.type || 'image/png';
+            const sizeKb = Math.round(file.size / 1024);
 
-          // Route to Convert tab if active
-          if (state.activeMainTab === 'convert') {
-            switchConvertSubtab('image');
-            setConvertImage(base64Data, mimeType, sizeKb, dataUrl);
-            return;
-          }
+            // Route to Convert tab if active
+            if (state.activeMainTab === 'convert') {
+              switchConvertSubtab('image');
+              setConvertImage(base64Data, mimeType, sizeKb, dataUrl);
+              return;
+            }
 
-          state.pastedImageBase64 = base64Data;
-          state.pastedImageMimeType = mimeType;
-          state.pastedImageSizeKB = sizeKb;
-
-          // Update UI
-          if (dom.imageThumb) dom.imageThumb.src = dataUrl;
-          if (dom.imageMetaDetails) {
-            dom.imageMetaDetails.innerText = `${mimeType} • ${sizeKb} KB • Ảnh từ Clipboard`;
-          }
-          if (dom.imagePreviewContainer) {
-            dom.imagePreviewContainer.classList.add('active');
-          }
-
-          showToast('Đã dán ảnh từ Clipboard (Ctrl+V) thành công!', 'success');
-        };
-        reader.readAsDataURL(file);
-        break;
+            setTikzImage(base64Data, mimeType, sizeKb, dataUrl);
+            showToast('✓ Đã dán ảnh (Ctrl+V) thành công!', 'success');
+          };
+          reader.readAsDataURL(file);
+          break;
+        }
       }
     }
+
+    // Nếu không tìm thấy format web image (ảnh copy từ Word), gọi native Windows clipboard
+    if (!foundWebImage && state.activeMainTab === 'tikz') {
+      pasteTikzImageFromNativeClipboard();
+    }
+  }
+
+  // Drag & Drop handlers for Prompt Card
+  function setupPromptDragAndDrop() {
+    const dropTargets = [dom.promptCard, dom.promptTextarea].filter(Boolean);
+    dropTargets.forEach(target => {
+      target.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (dom.promptCard) dom.promptCard.classList.add('drag-over');
+      });
+
+      target.addEventListener('dragenter', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (dom.promptCard) dom.promptCard.classList.add('drag-over');
+      });
+
+      target.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (dom.promptCard) dom.promptCard.classList.remove('drag-over');
+      });
+
+      target.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (dom.promptCard) dom.promptCard.classList.remove('drag-over');
+
+        const files = e.dataTransfer && e.dataTransfer.files;
+        if (files && files.length > 0) {
+          const file = files[0];
+          if (file.type && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+              const dataUrl = ev.target.result;
+              const base64Data = dataUrl.split(',')[1];
+              const mimeType = file.type || 'image/png';
+              const sizeKb = Math.round(file.size / 1024);
+              setTikzImage(base64Data, mimeType, sizeKb, dataUrl);
+              showToast('✓ Đã nạp hình ảnh từ thao tác kéo thả thành công!', 'success');
+            };
+            reader.readAsDataURL(file);
+            return;
+          }
+        }
+
+        // Kiểm tra drag từ Word (HTML OLE / image) hoặc gọi fallback
+        const html = e.dataTransfer ? e.dataTransfer.getData('text/html') : '';
+        if (html && html.indexOf('<img') !== -1) {
+          const match = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+          if (match && match[1]) {
+            const src = match[1];
+            if (src.startsWith('data:image')) {
+              const parts = src.split(',');
+              const mime = parts[0].match(/:(.*?);/)?.[1] || 'image/png';
+              const b64 = parts[1];
+              setTikzImage(b64, mime, Math.round(b64.length * 0.75 / 1024), src);
+              showToast('✓ Đã nạp hình ảnh kéo thả từ Word!', 'success');
+              return;
+            }
+          }
+        }
+
+        loadWordSelectedImage();
+      });
+    });
   }
 
   function removePastedImage() {
@@ -1802,6 +1913,19 @@
       }
     });
 
+    // Drag & Drop for prompt card
+    setupPromptDragAndDrop();
+
+    // Button: Lấy ảnh từ Word
+    if (dom.btnGetWordImage) {
+      dom.btnGetWordImage.addEventListener('click', loadWordSelectedImage);
+    }
+
+    // Button: Dán ảnh từ Clipboard
+    if (dom.btnPasteClipboardImage) {
+      dom.btnPasteClipboardImage.addEventListener('click', pasteTikzImageFromNativeClipboard);
+    }
+
     // Remove Image button
     dom.removeImageBtn.addEventListener('click', removePastedImage);
 
@@ -2069,19 +2193,121 @@
     if (dom.btnConvertClearResult) {
       dom.btnConvertClearResult.addEventListener('click', clearConvertedResult);
     }
+
+    // Settings Provider & Connection Listeners
+    if (dom.providerSelect) {
+      dom.providerSelect.addEventListener('change', handleProviderChange);
+    }
+    if (dom.btnTestConnection) {
+      dom.btnTestConnection.addEventListener('click', testAiConnection);
+    }
+  }
+
+  // Multi-Provider Models Dictionary (đồng bộ với Desktop App)
+  const MODELS_BY_PROVIDER = {
+    '9Router': [
+      'ag/gemini-3.8-flash-high',
+      'ag/gemini-3.8-flash',
+      'ag/gemini-3.7-flash-high',
+      'ag/gemini-3.6-flash-high',
+      'ag/gemini-3.1-pro-low',
+      'ag/claude-sonnet-5-5',
+      'ag/claude-sonnet-4-6',
+      'ag/gpt-oss-120b-medium',
+      'gemini-3.8-flash'
+    ],
+    'Google Gemini': [
+      'gemini-3.8-flash',
+      'gemini-3.1-pro',
+      'gemini-3.8-live',
+      'gemini-3.6-flash',
+      'gemini-3.5-flash-lite',
+      'gemini-2.5-pro',
+      'gemini-2.5-flash'
+    ],
+    'Anthropic Claude': [
+      'claude-sonnet-5',
+      'claude-sonnet-4-6',
+      'claude-sonnet-4-5',
+      'claude-opus-5',
+      'claude-haiku-4-5'
+    ],
+    'DeepSeek': [
+      'deepseek-chat',
+      'deepseek-reasoner',
+      'deepseek-v4.1-flash'
+    ],
+    'OpenAI GPT': [
+      'gpt-4o',
+      'gpt-4o-mini',
+      'gpt-4.5'
+    ]
+  };
+
+  let cachedConfig = {};
+
+  function populateModelsForProvider(provider, selectedModel) {
+    if (!dom.modelSelect) return;
+    dom.modelSelect.innerHTML = '';
+    const models = MODELS_BY_PROVIDER[provider] || MODELS_BY_PROVIDER['9Router'];
+    models.forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m;
+      opt.textContent = m;
+      if (selectedModel && (m.toLowerCase() === selectedModel.toLowerCase() || m.endsWith(selectedModel))) {
+        opt.selected = true;
+      }
+      dom.modelSelect.appendChild(opt);
+    });
+
+    if (dom.apiKeyLabel) {
+      dom.apiKeyLabel.textContent = `Khóa API (${provider}):`;
+    }
+    if (dom.apiKeyInput) {
+      dom.apiKeyInput.placeholder = provider === 'Google Gemini' ? 'AIzaSy...' : 'sk-...';
+    }
+  }
+
+  function handleProviderChange() {
+    const prov = dom.providerSelect ? dom.providerSelect.value : '9Router';
+    let existingKey = '';
+    if (cachedConfig.keysByProvider && cachedConfig.keysByProvider[prov]) {
+      existingKey = cachedConfig.keysByProvider[prov];
+    } else if (prov === '9Router' && cachedConfig.nineRouterApiKey) {
+      existingKey = cachedConfig.nineRouterApiKey;
+    } else if (prov === cachedConfig.provider && cachedConfig.apiKey) {
+      existingKey = cachedConfig.apiKey;
+    }
+
+    populateModelsForProvider(prov);
+    if (dom.apiKeyInput) dom.apiKeyInput.value = existingKey;
   }
 
   // Settings Modal Handlers
   async function openSettingsModal() {
     dom.settingsModal.classList.add('active');
+    if (dom.settingsTestStatus) dom.settingsTestStatus.style.display = 'none';
+
     try {
       const cfg = await window.WordBridge.getConfig();
-      if (cfg) {
-        if (cfg.apiKey) dom.apiKeyInput.value = cfg.apiKey;
-        if (cfg.model) dom.modelSelect.value = cfg.model;
-        if (cfg.nineRouterApiKey) dom.nineRouterKeyInput.value = cfg.nineRouterApiKey;
-        if (cfg.openAiApiKey) dom.openAiKeyInput.value = cfg.openAiApiKey;
+      cachedConfig = cfg || {};
+      const activeProvider = cfg?.provider || '9Router';
+      const activeModel = cfg?.model || 'ag/gemini-3.8-flash-high';
+
+      if (dom.providerSelect) {
+        dom.providerSelect.value = activeProvider;
       }
+      populateModelsForProvider(activeProvider, activeModel);
+
+      let key = '';
+      if (cfg?.keysByProvider && typeof cfg.keysByProvider === 'object' && cfg.keysByProvider[activeProvider]) {
+        key = cfg.keysByProvider[activeProvider];
+      } else if (cfg?.apiKey) {
+        key = cfg.apiKey;
+      } else if (activeProvider === '9Router' && cfg?.nineRouterApiKey) {
+        key = cfg.nineRouterApiKey;
+      }
+      if (dom.apiKeyInput) dom.apiKeyInput.value = key;
     } catch (e) {
       console.warn('Error loading config:', e);
     }
@@ -2091,17 +2317,78 @@
     dom.settingsModal.classList.remove('active');
   }
 
+  async function testAiConnection() {
+    if (!dom.btnTestConnection) return;
+    dom.btnTestConnection.disabled = true;
+    dom.btnTestConnection.innerHTML = '<span class="spinner"></span> Đang thử...';
+    if (dom.settingsTestStatus) {
+      dom.settingsTestStatus.style.display = 'block';
+      dom.settingsTestStatus.style.background = 'rgba(56, 189, 248, 0.15)';
+      dom.settingsTestStatus.style.color = '#38bdf8';
+      dom.settingsTestStatus.textContent = 'Đang gửi truy vấn thử nghiệm đến máy chủ AI...';
+    }
+
+    const provider = dom.providerSelect ? dom.providerSelect.value : '9Router';
+    const model = dom.modelSelect ? dom.modelSelect.value : '';
+    const apiKey = dom.apiKeyInput ? dom.apiKeyInput.value.trim() : '';
+
+    try {
+      const res = await window.WordBridge.request('ai/testConnection', { provider, model, apiKey });
+      if (res && res.success) {
+        if (dom.settingsTestStatus) {
+          dom.settingsTestStatus.style.background = 'rgba(16, 185, 129, 0.15)';
+          dom.settingsTestStatus.style.color = '#10b981';
+          dom.settingsTestStatus.textContent = '✓ ' + (res.message || 'Kết nối AI thành công!');
+        }
+        showToast('✓ Kết nối AI thành công!', 'success', 2500);
+      } else {
+        if (dom.settingsTestStatus) {
+          dom.settingsTestStatus.style.background = 'rgba(239, 68, 68, 0.15)';
+          dom.settingsTestStatus.style.color = '#ef4444';
+          dom.settingsTestStatus.textContent = '⚠ ' + (res?.message || 'Kết nối thất bại.');
+        }
+        showToast('Kết nối thất bại: ' + (res?.message || ''), 'warning', 3500);
+      }
+    } catch (err) {
+      if (dom.settingsTestStatus) {
+        dom.settingsTestStatus.style.background = 'rgba(239, 68, 68, 0.15)';
+        dom.settingsTestStatus.style.color = '#ef4444';
+        dom.settingsTestStatus.textContent = '⚠ Lỗi kiểm tra: ' + err.message;
+      }
+    } finally {
+      dom.btnTestConnection.disabled = false;
+      dom.btnTestConnection.innerHTML = '<span>⚡</span> Kiểm tra kết nối';
+    }
+  }
+
   async function saveSettings() {
+    const provider = dom.providerSelect ? dom.providerSelect.value : '9Router';
+    const model = dom.modelSelect ? dom.modelSelect.value : 'ag/gemini-3.8-flash-high';
+    const apiKey = dom.apiKeyInput ? dom.apiKeyInput.value.trim() : '';
+
+    const keysByProvider = (cachedConfig.keysByProvider && typeof cachedConfig.keysByProvider === 'object')
+      ? { ...cachedConfig.keysByProvider }
+      : {};
+    keysByProvider[provider] = apiKey;
+
     const config = {
-      apiKey: dom.apiKeyInput.value.trim(),
-      model: dom.modelSelect.value,
-      nineRouterApiKey: dom.nineRouterKeyInput.value.trim(),
-      openAiApiKey: dom.openAiKeyInput.value.trim()
+      ...cachedConfig,
+      provider: provider,
+      model: model,
+      apiKey: apiKey,
+      keysByProvider: keysByProvider
     };
+
+    if (provider === '9Router') {
+      config.nineRouterApiKey = apiKey;
+    } else if (provider === 'OpenAI GPT') {
+      config.openAiApiKey = apiKey;
+    }
 
     try {
       await window.WordBridge.saveConfig(config);
-      showToast('Đã lưu cấu hình API thành công!', 'success');
+      cachedConfig = config;
+      showToast(`✓ Đã lưu cài đặt AI: ${provider} (${model})`, 'success');
       closeSettingsModal();
     } catch (err) {
       showToast('Lỗi khi lưu cấu hình: ' + err.message, 'error');

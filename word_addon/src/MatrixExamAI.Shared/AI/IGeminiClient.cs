@@ -20,6 +20,11 @@ namespace MatrixExamAI.Shared.AI
         FallbackOrchestrator Fallback { get; }
 
         /// <summary>
+        /// Tên nhà cung cấp AI hiện hành (Google Gemini, 9Router, OpenAI GPT, Claude, DeepSeek).
+        /// </summary>
+        string ActiveProvider { get; set; }
+
+        /// <summary>
         /// Tên model mặc định (mặc định gemini-3.8-flash).
         /// </summary>
         string DefaultModel { get; set; }

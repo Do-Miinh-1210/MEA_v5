@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using System.Threading;
@@ -186,8 +187,10 @@ namespace MatrixExamAI.WordAddIn.Bridge
             RegisterHandler("convert/parseText", HandleConvertParseTextAsync);
             RegisterHandler("convert/getPromptTemplate", HandleConvertGetPromptTemplateAsync);
 
-            // Native Windows Clipboard
+            // Native Windows Clipboard & Word Image Selection
             RegisterHandler("clipboard/getImage", HandleClipboardGetImageAsync);
+            RegisterHandler("word/getSelectedImage", HandleGetSelectedImageAsync);
+            RegisterHandler("ai/testConnection", HandleTestConnectionAsync);
         }
 
         #endregion
@@ -669,14 +672,18 @@ namespace MatrixExamAI.WordAddIn.Bridge
             string configFile = Path.Combine(appData, "config.json");
             if (File.Exists(configFile))
             {
-                string json = File.ReadAllText(configFile);
-                var doc = JsonDocument.Parse(json);
-                return Task.FromResult<object?>(doc.RootElement);
+                try
+                {
+                    string json = File.ReadAllText(configFile);
+                    var doc = JsonDocument.Parse(json);
+                    return Task.FromResult<object?>(doc.RootElement);
+                }
+                catch { }
             }
 
             return Task.FromResult<object?>(new
             {
-                provider = "gemini",
+                provider = _geminiClient.ActiveProvider,
                 model = _geminiClient.DefaultModel,
                 hasApiKey = _geminiClient.KeyPool.TotalKeys > 0
             });
@@ -689,9 +696,28 @@ namespace MatrixExamAI.WordAddIn.Bridge
                 string appData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MatrixExamAI");
                 Directory.CreateDirectory(appData);
                 string configFile = Path.Combine(appData, "config.json");
-                File.WriteAllText(configFile, payload.Value.GetRawText());
 
-                ApplyConfigElement(payload.Value);
+                var dict = new Dictionary<string, object>();
+                if (File.Exists(configFile))
+                {
+                    try
+                    {
+                        var existing = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(configFile));
+                        if (existing != null) dict = existing;
+                    }
+                    catch { }
+                }
+
+                foreach (var prop in payload.Value.EnumerateObject())
+                {
+                    dict[prop.Name] = JsonSerializer.Deserialize<object>(prop.Value.GetRawText())!;
+                }
+
+                string mergedJson = JsonSerializer.Serialize(dict, new JsonSerializerOptions { WriteIndented = true });
+                File.WriteAllText(configFile, mergedJson);
+
+                using var doc = JsonDocument.Parse(mergedJson);
+                ApplyConfigElement(doc.RootElement);
             }
 
             return Task.FromResult<object?>(new { saved = true });
@@ -728,21 +754,146 @@ namespace MatrixExamAI.WordAddIn.Bridge
 
         private void ApplyConfigElement(JsonElement root)
         {
-            if (root.TryGetProperty("apiKey", out var pKey) && !string.IsNullOrWhiteSpace(pKey.GetString()))
+            string provider = "Google Gemini";
+            if (root.TryGetProperty("provider", out var pProv) && !string.IsNullOrWhiteSpace(pProv.GetString()))
             {
-                _geminiClient.KeyPool.SetKeys(new[] { pKey.GetString()! });
+                provider = pProv.GetString()!;
             }
+            _geminiClient.ActiveProvider = provider;
+
+            string model = "gemini-3.8-flash";
             if (root.TryGetProperty("model", out var pModel) && !string.IsNullOrWhiteSpace(pModel.GetString()))
             {
-                _geminiClient.DefaultModel = pModel.GetString()!;
+                model = pModel.GetString()!;
             }
+            _geminiClient.DefaultModel = model;
+            _geminiClient.Fallback.NineRouterModel = model;
+
+            string key = string.Empty;
+            if (root.TryGetProperty("apiKey", out var pKey) && !string.IsNullOrWhiteSpace(pKey.GetString()))
+            {
+                key = pKey.GetString()!;
+            }
+
+            if (root.TryGetProperty("keysByProvider", out var pDict) && pDict.ValueKind == JsonValueKind.Object)
+            {
+                if (pDict.TryGetProperty(provider, out var provKey) && !string.IsNullOrWhiteSpace(provKey.GetString()))
+                {
+                    key = provKey.GetString()!;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(key))
+            {
+                _geminiClient.KeyPool.SetKeys(new[] { key });
+            }
+
             if (root.TryGetProperty("nineRouterApiKey", out var p9R) && !string.IsNullOrWhiteSpace(p9R.GetString()))
             {
                 _geminiClient.Fallback.NineRouterApiKey = p9R.GetString();
             }
+            else if (provider.Equals("9Router", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(key))
+            {
+                _geminiClient.Fallback.NineRouterApiKey = key;
+            }
+
             if (root.TryGetProperty("openAiApiKey", out var pOai) && !string.IsNullOrWhiteSpace(pOai.GetString()))
             {
                 _geminiClient.Fallback.OpenAiApiKey = pOai.GetString();
+            }
+        }
+
+        private async Task<object?> HandleGetSelectedImageAsync(JsonElement? payload)
+        {
+            if (_documentService == null)
+            {
+                return new
+                {
+                    success = false,
+                    hasImage = false,
+                    errorMessage = "Dịch vụ Word Document Service chưa được khởi tạo."
+                };
+            }
+
+            var res = await _documentService.GetSelectedImageBase64Async().ConfigureAwait(false);
+            return new
+            {
+                success = res.success,
+                hasImage = res.success,
+                imageBase64 = res.imageBase64,
+                sizeKb = res.sizeKb,
+                mimeType = "image/png",
+                errorMessage = res.errorMessage
+            };
+        }
+
+        private async Task<object?> HandleTestConnectionAsync(JsonElement? payload)
+        {
+            var sw = Stopwatch.StartNew();
+            string provider = _geminiClient.ActiveProvider;
+            string model = _geminiClient.DefaultModel;
+            string apiKey = string.Empty;
+
+            if (payload.HasValue)
+            {
+                var root = payload.Value;
+                if (root.TryGetProperty("provider", out var pProv) && !string.IsNullOrWhiteSpace(pProv.GetString()))
+                    provider = pProv.GetString()!;
+                if (root.TryGetProperty("model", out var pMod) && !string.IsNullOrWhiteSpace(pMod.GetString()))
+                    model = pMod.GetString()!;
+                if (root.TryGetProperty("apiKey", out var pKey) && !string.IsNullOrWhiteSpace(pKey.GetString()))
+                    apiKey = pKey.GetString()!;
+            }
+
+            try
+            {
+                var req = new SharedModels.TikzPromptRequest
+                {
+                    Prompt = "1+1=? Trả lời ngắn gọn số.",
+                    ModelOverride = model
+                };
+
+                string oldProv = _geminiClient.ActiveProvider;
+                _geminiClient.ActiveProvider = provider;
+                if (!string.IsNullOrWhiteSpace(apiKey))
+                {
+                    _geminiClient.KeyPool.SetKeys(new[] { apiKey });
+                    if (provider.Equals("9Router", StringComparison.OrdinalIgnoreCase))
+                        _geminiClient.Fallback.NineRouterApiKey = apiKey;
+                }
+
+                var res = await _geminiClient.GenerateTikzAsync(req).ConfigureAwait(false);
+                _geminiClient.ActiveProvider = oldProv;
+                sw.Stop();
+
+                if (res.Success)
+                {
+                    return new
+                    {
+                        success = true,
+                        message = $"Kết nối {provider} ({model}) thành công trong {sw.ElapsedMilliseconds}ms!",
+                        latencyMs = sw.ElapsedMilliseconds
+                    };
+                }
+                else
+                {
+                    return new
+                    {
+                        success = false,
+                        message = res.ErrorMessage ?? "Không nhận được phản hồi từ AI.",
+                        latencyMs = sw.ElapsedMilliseconds
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                sw.Stop();
+                return new
+                {
+                    success = false,
+                    message = ex.Message,
+                    latencyMs = sw.ElapsedMilliseconds
+                };
             }
         }
 

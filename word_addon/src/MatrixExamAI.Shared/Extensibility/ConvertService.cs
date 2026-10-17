@@ -38,13 +38,22 @@ namespace MatrixExamAI.Shared.Extensibility
                     string json = System.IO.File.ReadAllText(configFile);
                     using var doc = JsonDocument.Parse(json);
                     var root = doc.RootElement;
+                    if (root.TryGetProperty("provider", out var pProv) && !string.IsNullOrWhiteSpace(pProv.GetString()))
+                    {
+                        client.ActiveProvider = pProv.GetString()!;
+                    }
                     if (root.TryGetProperty("apiKey", out var pKey) && !string.IsNullOrWhiteSpace(pKey.GetString()))
                     {
                         client.KeyPool.SetKeys(new[] { pKey.GetString()! });
+                        if (client.ActiveProvider.Equals("9Router", StringComparison.OrdinalIgnoreCase))
+                        {
+                            client.Fallback.NineRouterApiKey = pKey.GetString()!;
+                        }
                     }
                     if (root.TryGetProperty("model", out var pModel) && !string.IsNullOrWhiteSpace(pModel.GetString()))
                     {
                         client.DefaultModel = pModel.GetString()!;
+                        client.Fallback.NineRouterModel = pModel.GetString()!;
                     }
                     if (root.TryGetProperty("nineRouterApiKey", out var p9R) && !string.IsNullOrWhiteSpace(p9R.GetString()))
                     {

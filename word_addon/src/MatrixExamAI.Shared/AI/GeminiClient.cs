@@ -26,6 +26,7 @@ namespace MatrixExamAI.Shared.AI
 
         public ApiKeyPoolManager KeyPool { get; }
         public FallbackOrchestrator Fallback { get; }
+        public string ActiveProvider { get; set; } = "Google Gemini";
         public string DefaultModel { get; set; } = "gemini-3.8-flash";
         public string BaseUrl { get; set; } = "https://generativelanguage.googleapis.com/v1beta";
 
@@ -70,18 +71,31 @@ namespace MatrixExamAI.Shared.AI
                     request.ReferenceExamples ?? string.Empty);
             }
 
-            // Khởi tạo biến theo dõi quá trình gọi API
+            // 1. Nếu Provider là 9Router, OpenAI GPT hoặc DeepSeek -> định tuyến trực tiếp qua FallbackOrchestrator
+            if (ActiveProvider.Equals("9Router", StringComparison.OrdinalIgnoreCase) ||
+                ActiveProvider.Equals("OpenAI GPT", StringComparison.OrdinalIgnoreCase) ||
+                ActiveProvider.Equals("DeepSeek", StringComparison.OrdinalIgnoreCase))
+            {
+                if (ActiveProvider.Equals("9Router", StringComparison.OrdinalIgnoreCase) &&
+                    string.IsNullOrWhiteSpace(Fallback.NineRouterApiKey) &&
+                    KeyPool.TotalKeys > 0)
+                {
+                    Fallback.NineRouterApiKey = KeyPool.GetNextAvailableKey()?.Key;
+                }
+                var fallbackRes = await Fallback.ExecuteFallbackAsync(request, fullPromptText, ct).ConfigureAwait(false);
+                return fallbackRes;
+            }
+
+            // 2. Google Gemini: Xoay vòng key và dự phòng
             int attempts = 0;
             int maxKeyAttempts = Math.Max(1, KeyPool.TotalKeys);
             string lastError = string.Empty;
 
-            // Vòng lặp xoay key của Gemini và dự phòng
             while (attempts < maxKeyAttempts)
             {
                 var keyEntry = KeyPool.GetNextAvailableKey();
                 if (keyEntry == null)
                 {
-                    // Hết key khả dụng
                     break;
                 }
 
@@ -142,7 +156,7 @@ namespace MatrixExamAI.Shared.AI
                                 "GeminiDirect",
                                 model,
                                 stopwatch.ElapsedMilliseconds,
-                                responseBody);
+                                textContent ?? string.Empty);
                         }
 
                         // Xử lý mã lỗi HTTP

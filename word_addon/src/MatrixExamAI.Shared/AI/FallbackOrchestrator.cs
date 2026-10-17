@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -78,45 +79,68 @@ namespace MatrixExamAI.Shared.AI
 
             string lastErrorDetail = string.Empty;
 
-            // 1. Thử 9Router nếu có key
-            if (!string.IsNullOrWhiteSpace(NineRouterApiKey))
+            // 1. Thử 9Router nếu có key hoặc đang dùng 9Router
+            string key9 = !string.IsNullOrWhiteSpace(NineRouterApiKey) ? NineRouterApiKey! : "sk-local-9router";
+            if (!string.IsNullOrWhiteSpace(key9))
             {
-                try
+                string baseModel = !string.IsNullOrWhiteSpace(request.ModelOverride) ? request.ModelOverride! : NineRouterModel;
+                var candidateModels = new List<string>();
+                if (!string.IsNullOrWhiteSpace(baseModel))
                 {
-                    string model9Router = NineRouterModel;
-                    if (!string.IsNullOrWhiteSpace(model9Router) && !model9Router.StartsWith("ag/", StringComparison.OrdinalIgnoreCase))
+                    candidateModels.Add(baseModel);
+                    if (baseModel.StartsWith("ag/", StringComparison.OrdinalIgnoreCase))
                     {
-                        model9Router = $"ag/{model9Router}";
+                        candidateModels.Add(baseModel.Substring(3));
+                    }
+                    else
+                    {
+                        candidateModels.Add($"ag/{baseModel}");
                     }
 
-                    var result = await CallOpenAiCompatibleAsync(
-                        NineRouterEndpoint,
-                        NineRouterApiKey!,
-                        model9Router,
-                        fullPromptText,
-                        request.ImageBase64,
-                        request.ImageMimeType,
-                        request.Temperature,
-                        request.MaxOutputTokens,
-                        "9Router",
-                        stopwatch,
-                        ct).ConfigureAwait(false);
-
-                    if (result.Success)
+                    if (baseModel.EndsWith("-high", StringComparison.OrdinalIgnoreCase))
                     {
-                        return result;
+                        string fastModel = baseModel.Substring(0, baseModel.Length - 5);
+                        candidateModels.Add(fastModel);
+                        candidateModels.Add(fastModel.StartsWith("ag/", StringComparison.OrdinalIgnoreCase) ? fastModel.Substring(3) : $"ag/{fastModel}");
                     }
-                    lastErrorDetail = result.ErrorMessage ?? "9Router phản hồi không thành công.";
                 }
-                catch (HttpRequestException httpEx)
+                candidateModels.Add("ag/gemini-3.8-flash");
+                candidateModels.Add("gemini-3.8-flash");
+
+                foreach (var modelAttempt in candidateModels.Distinct(StringComparer.OrdinalIgnoreCase))
                 {
-                    lastErrorDetail = $"Không thể kết nối đến 9Router tại {NineRouterEndpoint}. Hãy khởi động 9Router (hoặc mở cổng 20128), hoặc cấu hình Google Gemini API Key (bắt đầu bằng AIza...) trong Cài đặt. Chi tiết: {httpEx.Message}";
-                    Debug.WriteLine($"[FallbackOrchestrator] 9Router connection error: {httpEx.Message}");
-                }
-                catch (Exception ex)
-                {
-                    lastErrorDetail = $"Lỗi gọi 9Router: {ex.Message}";
-                    Debug.WriteLine($"[FallbackOrchestrator] 9Router error: {ex.Message}");
+                    try
+                    {
+                        var result = await CallOpenAiCompatibleAsync(
+                            NineRouterEndpoint,
+                            key9,
+                            modelAttempt,
+                            fullPromptText,
+                            request.ImageBase64,
+                            request.ImageMimeType,
+                            request.Temperature,
+                            request.MaxOutputTokens,
+                            "9Router",
+                            stopwatch,
+                            ct).ConfigureAwait(false);
+
+                        if (result.Success)
+                        {
+                            return result;
+                        }
+                        lastErrorDetail = result.ErrorMessage ?? "9Router phản hồi không thành công.";
+                    }
+                    catch (HttpRequestException httpEx)
+                    {
+                        lastErrorDetail = $"Không thể kết nối đến 9Router tại {NineRouterEndpoint}. Hãy khởi động 9Router (hoặc mở cổng 20128). Chi tiết: {httpEx.Message}";
+                        Debug.WriteLine($"[FallbackOrchestrator] 9Router connection error: {httpEx.Message}");
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        lastErrorDetail = $"Lỗi gọi 9Router: {ex.Message}";
+                        Debug.WriteLine($"[FallbackOrchestrator] 9Router error: {ex.Message}");
+                    }
                 }
             }
 
@@ -252,7 +276,7 @@ namespace MatrixExamAI.Shared.AI
                         providerName,
                         model,
                         stopwatch.ElapsedMilliseconds,
-                        responseBody);
+                        assistantContent ?? string.Empty);
                 }
             }
         }

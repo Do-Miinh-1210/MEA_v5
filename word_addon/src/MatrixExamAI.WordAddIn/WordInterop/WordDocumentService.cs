@@ -1707,6 +1707,80 @@ namespace MatrixExamAI.WordAddIn.WordInterop
             }
         }
 
+        public Task<(bool success, string? imageBase64, int sizeKb, string? errorMessage)> GetSelectedImageBase64Async()
+        {
+            return Task.Run<(bool success, string? imageBase64, int sizeKb, string? errorMessage)>(() =>
+            {
+                try
+                {
+                    try
+                    {
+                        var sel = _wordApp.Selection;
+                        if (sel != null)
+                        {
+                            if (sel.InlineShapes != null && sel.InlineShapes.Count > 0)
+                            {
+                                sel.InlineShapes[1].Select();
+                                _wordApp.Selection.Copy();
+                            }
+                            else if (sel.ShapeRange != null && sel.ShapeRange.Count > 0)
+                            {
+                                sel.ShapeRange[1].Select();
+                                _wordApp.Selection.Copy();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"[WordDocumentService] Copy shape failed: {ex.Message}");
+                    }
+
+                    string? base64 = null;
+                    int sizeKb = 0;
+                    bool hasImg = false;
+
+                    var staThread = new System.Threading.Thread(() =>
+                    {
+                        try
+                        {
+                            if (System.Windows.Forms.Clipboard.ContainsImage())
+                            {
+                                using (var img = System.Windows.Forms.Clipboard.GetImage())
+                                {
+                                    if (img != null)
+                                    {
+                                        using (var ms = new MemoryStream())
+                                        {
+                                            img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                                            byte[] bytes = ms.ToArray();
+                                            base64 = Convert.ToBase64String(bytes);
+                                            sizeKb = (int)(bytes.Length / 1024);
+                                            hasImg = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch { }
+                    });
+                    staThread.SetApartmentState(System.Threading.ApartmentState.STA);
+                    staThread.Start();
+                    staThread.Join(2000);
+
+                    if (hasImg && !string.IsNullOrEmpty(base64))
+                    {
+                        return (true, base64, sizeKb, null);
+                    }
+
+                    return (false, null, 0, "Không tìm thấy hình ảnh nào đang được chọn trong Word hoặc trong Clipboard.");
+                }
+                catch (Exception ex)
+                {
+                    return (false, null, 0, ex.Message);
+                }
+            });
+        }
+
         #endregion
 
         #region IDisposable
