@@ -98,6 +98,20 @@ Chúc bạn thành công!";
         }
 
         [Fact]
+        public void HtmlModelTemplateLibrary_Sierpinski232_ShouldContainCanvasAndInteractivePedagogy()
+        {
+            var item = HtmlModelTemplateLibrary.GetTemplateSierpinski232();
+            item.Id.Should().Be("sierpinski_sgk11_232");
+            item.Category.Should().Contain("Toán 11");
+            item.HtmlCode.Should().Contain("h-screen", "Bắt buộc vừa khít 1 màn hình");
+            item.HtmlCode.Should().Contain("overflow-hidden", "Không tràn thanh cuộn toàn trang");
+            item.HtmlCode.Should().Contain("carpetCanvas", "Vẽ thảm Sierpinski bằng Canvas 2D");
+            item.HtmlCode.Should().Contain("toggleAreaResults", "Hỗ trợ ẩn hiện đáp số cho học sinh tự giải");
+            item.HtmlCode.Should().Contain("openPresentationMode", "Có chế độ trình chiếu toàn màn hình");
+            item.HtmlCode.Should().Contain("scale(2.0)", "Có hiệu ứng phóng to KaTeX khi rê chuột");
+        }
+
+        [Fact]
         public void PromptCatalog_HtmlModelSystemPrompt_ShouldContainKeyInvariants()
         {
             string systemPrompt = PromptCatalog.HtmlModelSystemPrompt;
@@ -109,6 +123,9 @@ Chúc bạn thành công!";
             systemPrompt.Should().Contain("SPLIT VIEW");
             systemPrompt.Should().Contain("LatheGeometry");
             systemPrompt.Should().Contain("localClippingEnabled");
+            systemPrompt.Should().Contain("1-SCREEN FIT INVARIANT");
+            systemPrompt.Should().Contain("PEDAGOGICAL ZOOM");
+            systemPrompt.Should().Contain("toggleAreaResults");
         }
 
         [Fact]

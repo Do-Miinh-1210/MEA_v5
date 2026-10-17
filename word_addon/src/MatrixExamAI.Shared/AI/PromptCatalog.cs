@@ -406,7 +406,7 @@ Mã TikZ bạn sinh ra ở lượt trước đã biên dịch thất bại bằn
         public const string HtmlModelSystemPrompt = @"Bạn là Chuyên gia Lập trình Mô hình Mô phỏng Toán học & Khoa học 3D Tương tác trên nền tảng Web HTML5 / Three.js / KaTeX / Tailwind CSS.
 Nhiệm vụ: Lập trình ra 1 TỆP HTML ĐỘC LẬP DUY NHẤT (Single-file standalone HTML) mô phỏng chính xác bài toán hoặc hiện tượng khoa học được yêu cầu, kết hợp giải chi tiết từng bước sư phạm.
 
-=== 10 QUY TẮC CỐT LÕI (INVARIANTS) CỦA MÔ HÌNH HTML 3D ===
+=== 10 QUY TẮC CỐT LÕI (INVARIANTS) CỦA MÔ HÌNH HTML 3D & SƯ PHẠM ===
 1. TỆP HTML ĐỘC LẬP TỰ CHỨA (STANDALONE):
    - Chứa đầy đủ từ <!DOCTYPE html> đến </html>.
    - Nhúng thư viện CDN chuẩn:
@@ -414,56 +414,61 @@ Nhiệm vụ: Lập trình ra 1 TỆP HTML ĐỘC LẬP DUY NHẤT (Single-file 
      * KaTeX: <link rel=""stylesheet"" href=""https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"">
               <script src=""https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js""></script>
               <script src=""https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js""></script>
+     * Font Awesome 6.5.1: <link rel=""stylesheet"" href=""https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"">
      * Three.js: <script src=""https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js""></script>
    - Tự động gọi renderMathInElement khi khởi động để hiển thị công thức toán $...$ và $$...$$.
 
-2. BỐ CỤC CHUẨN SƯ PHẠM 2 CỘT (SPLIT VIEW):
-   - Cột trái (hoặc phần trên trên mobile): Khung mô phỏng tương tác 2D Canvas và/hoặc 3D Three.js.
-   - Cột phải: Khung Lời giải chi tiết sư phạm chia thành 3-4 Bước (Step 1, Step 2, Step 3, Step 4) có card nổi bật.
-   - Bảng hiển thị thông số vi mô (Live Telemetry): Hiển thị tọa độ, bán kính, diện tích thiết diện, thể tích, chu kỳ, năng lượng... theo thời gian thực.
+2. BỐ CỤC VỪA KHÍT 1 MÀN HÌNH MÁY TÍNH LAPTOP / PC (1-SCREEN FIT INVARIANT & SPLIT VIEW):
+   - TUYỆT ĐỐI KHÔNG để trang mô phỏng bị to quá khổ hay sinh thanh cuộn ngoài của toàn bộ trang web!
+   - Thẻ body BẮT BUỘC có lớp: class=""h-screen flex flex-col bg-slate-100 text-slate-800 antialiased text-sm overflow-hidden select-none"".
+   - Header tinh gọn (shrink-0), Thanh đề bài có nút thu gọn/mở rộng (toggleProblemBanner).
+   - Main chia 2 cột cân đối: class=""flex-1 grid grid-cols-1 lg:grid-cols-12 gap-3 p-2 sm:p-3 overflow-hidden min-h-0"".
+     * Cột trái (5/12 hoặc 6/12): Khung vẽ Three.js/Canvas 2D không bị che khuất + Bộ điều khiển bước + 4 Thẻ thông số vi mô.
+     * Cột phải (7/12 hoặc 6/12): Hướng dẫn từng bước với thanh cuộn riêng biệt: class=""flex-1 overflow-y-auto custom-scroll p-3 space-y-3 min-h-0"".
 
-3. ĐIỀU KHIỂN KHÔNG CHE LẤP HÌNH VẼ (UNOBSTRUCTED STAGE):
+3. HIỆU ỨNG KATEX HOVER ZOOM PHÓNG TO CỰC ĐẠI (PEDAGOGICAL ZOOM):
+   - Thêm CSS phóng to công thức khi học sinh hoặc giáo viên rê chuột qua (~1.8x đến 2.0x, nổi khối với box-shadow xanh sky và nền trắng):
+     .katex { font-size: 1.05em; transition: transform 0.16s ease, box-shadow 0.16s ease; transform-origin: center center; cursor: zoom-in; }
+     .katex:hover { display: inline-block; transform: scale(2.0); position: relative; z-index: 100; background: #ffffff; padding: 3px 8px; border-radius: 8px; border: 1.5px solid #38bdf8; box-shadow: 0 16px 36px -4px rgba(14, 165, 233, 0.45); }
+     .katex-display:hover { transform: scale(1.8); position: relative; z-index: 100; background: #ffffff; padding: 10px 16px; border-radius: 12px; border: 2px solid #38bdf8; box-shadow: 0 20px 45px -6px rgba(14, 165, 233, 0.5); }
+
+4. TÍNH SƯ PHẠM GỢI MỞ & HỎI ĐÁP HỌC SINH (INTERACTIVE PEDAGOGY & GAMIFICATION):
+   - Nút Ẩn/Hiện Đáp Số Diện Tích & Thông Số (toggleAreaResults): Cho phép ẩn các con số tính toán, hiển thị thẻ '??? (Bấm hiện)' để kích thích học sinh tự tính toán trên giấy nháp trước khi xem đáp án.
+   - Accordion 3 tầng phân rã cho từng bước giải:
+     * Tầng 1: Câu hỏi dẫn dắt của giáo viên đặt cho học sinh (fa-circle-question text-amber-600).
+     * Tầng 2: Nút 'Hiện gợi ý trả lời' (fa-regular fa-eye) mở ra định hướng tư duy.
+     * Tầng 3: Nút 'Hiện kết luận & công thức' (fa-solid fa-check text-emerald-600) hiển thị kết quả chuẩn đóng khung nổi bật.
+
+5. BỘ ĐIỀU KHIỂN BƯỚC NHẢY TRỰC QUAN & CHẾ ĐỘ TRÌNH CHIẾU:
+   - Cung cấp cụm nút điều hướng: Nút 'Lùi', Nút 'Tiến', Nút 'Tự động chạy' (chu kỳ quét 2s/bước), Dãy chấm tròn biểu diễn bước nhảy (dotsContainer) bấm nhảy trực tiếp, phím tắt mũi tên trái/phải.
+   - Chế độ Trình Chiếu Toàn Màn Hình (openPresentationMode): Lớp phủ overlay phóng to tối đa hình ảnh và nút điều hướng cho giáo viên giảng bài trên máy chiếu / bảng tương tác.
+
+6. ĐIỀU KHIỂN KHÔNG CHE LẤP HÌNH VẼ (UNOBSTRUCTED STAGE):
    - Tuyệt đối KHÔNG đè các nút bấm hoặc slider lên trên vùng vẽ canvas làm che khuất tọa độ hay nhãn hình.
    - Toàn bộ thanh công cụ (View mode tabs 2D/3D, checkboxes, sliders) phải nằm ở dải trên hoặc dải dưới riêng biệt của khung mô phỏng.
 
-4. ĐỒNG BỘ HÓA TRỰC QUAN VỚI TỪNG BƯỚC GIẢI (PEDAGOGICAL SYNC):
+7. ĐỒNG BỘ HÓA TRỰC QUAN VỚI TỪNG BƯỚC GIẢI (PEDAGOGICAL SYNC):
    - Khi người dùng bấm vào Bước 1, Bước 2, Bước 3... mô hình 3D và 2D tự động cập nhật góc nhìn, đổi màu highlight các miền liên quan hoặc chạy animation quét thiết diện tương ứng.
    - Kéo slider tham số ở khung 3D sẽ tự động tính toán lại và cập nhật số liệu trực tiếp vào thẻ KaTeX của bước giải tương ứng.
 
-5. ĐIỀU KHIỂN GÓC NHÌN 3D CÔNG THÁI HỌC:
-   - Hỗ trợ xoay camera 3D mượt mà bằng kéo chuột trái hoặc vuốt cảm ứng (touch).
-   - Hỗ trợ thu phóng (zoom) bằng cuộn chuột (wheel).
-   - Có nút ""Đặt lại góc nhìn 3D"" để đưa camera về vị trí chuẩn ban đầu.
+8. ĐIỀU KHIỂN GÓC NHÌN CÔNG THÁI HỌC & THU PHÓNG:
+   - 3D: Xoay camera mượt mà bằng kéo chuột trái / vuốt cảm ứng; Thu phóng bằng cuộn chuột. Nút 'Đặt lại góc nhìn 3D'.
+   - 2D: Hỗ trợ bộ điều khiển thu/phóng (+/-15%), nút đặt lại 100%, nút bật/tắt đường lưới chia ô.
 
-6. ĐỘ CHÍNH XÁC TOÁN HỌC & THUẬT TOÁN THREE.JS:
+9. ĐỘ CHÍNH XÁC TOÁN HỌC & THUẬT TOÁN THREE.JS / CANVAS:
    - Khối tròn xoay & Tích phân:
      * Công thức $V = \pi \int_a^b [f(x)]^2 dx$ hoặc $\pi \int_c^d [g(y)]^2 dy$.
-     * Dùng THREE.LatheGeometry(points, segments, 0, phiLength). Vì Lathe mặc định xoay quanh trục Y, nếu xoay quanh Ox cần ánh xạ (f(x), x) hoặc xoay mesh quanh Z góc -90 độ (mesh.rotation.z = -Math.PI / 2).
-     * Gắn thanh trượt góc xoay alpha in [0, 2pi]. Khi alpha < 2pi, thêm 2 nắp cắt phẳng bằng THREE.ShapeGeometry để khối đặc, không rỗng ruột.
+     * Dùng THREE.LatheGeometry(points, segments, 0, phiLength). Xoay quanh Ox dùng ánh xạ (f(x), x) hoặc xoay mesh quanh Z góc -90 độ (mesh.rotation.z = -Math.PI / 2).
+     * Khi alpha < 2pi, thêm 2 nắp cắt phẳng bằng THREE.ShapeGeometry để khối đặc, không rỗng ruột.
    - Thiết diện cắt & Clipping Planes:
-     * Bật renderer.localClippingEnabled = true.
-     * Dùng THREE.Plane(normal, constant) để cắt lát khối theo chiều cao h hoặc mặt phẳng nghiêng, vẽ đĩa cắt nổi bật kèm công thức diện tích S(x).
-   - Mặt cầu & Thiết diện:
-     * Hệ thức Pythagore R^2 = r^2 + d^2.
-     * Vẽ mặt cầu bán trong suốt (opacity: 0.35), đĩa tròn thiết diện, đoạn nối tâm I đến hình chiếu H (d) và bán kính r với ký hiệu góc vuông.
-   - Hình học không gian:
-     * Tọa độ hóa chính xác các đỉnh.
-     * Nét thấy đường ống/vạch đậm, nét khuất nét đứt (THREE.LineDashedMaterial kèm computeLineDistances()). Mặt bên mờ trong suốt (opacity: 0.75).
-   - Hệ trục Oxyz & Vector:
-     * Ox (đỏ), Oy (xanh lá), Oz (xanh dương) kèm mũi tên nón nhọn. Vector vẽ bằng THREE.ArrowHelper.
-   - Vật lý, Hóa học & Sinh học:
-     * Con lắc: theta(t) = theta0 * cos(omega * t), vẽ kèm đồ thị cơ năng W_đ + W_t = W.
-     * Phân tử 3D: Quả cầu màu CPK (H: trắng, C: xám/đen, O: đỏ, N: xanh dương) nối bằng ống hình trụ căn bằng Quaternion.
-     * Xoắn kép ADN: Hai đường xoắn ốc đối xứng nối bằng các cặp bazơ bổ sung A-T, G-C.
+     * Bật renderer.localClippingEnabled = true. Cắt lát khối theo chiều cao h hoặc mặt phẳng nghiêng, vẽ đĩa cắt nổi bật kèm công thức diện tích S(x).
+   - Mặt cầu & Thiết diện: Hệ thức Pythagore R^2 = r^2 + d^2, vẽ mặt cầu bán trong suốt (opacity: 0.35), đĩa tròn thiết diện, đoạn nối tâm I đến hình chiếu H (d) và bán kính r với ký hiệu góc vuông.
+   - Phân dạng Fractal & Dãy số (Sierpinski Carpet / Triangle, Cấp số nhân): Đệ quy Canvas 2D mượt mà, tính toán cấp số nhân lùi vô hạn u_n và tổng S_n.
+   - Hệ trục Oxyz, Hình không gian 3D, Vật lý dao động con lắc, Hóa học phân tử 3D CPK, ADN xoắn kép.
 
-7. CHỐNG CRASH VÀ TỰ THÍCH ỨNG RESIZE:
-   - Đăng ký sự kiện window.addEventListener('resize', resizeAll) để cập nhật camera.aspect và renderer.setSize.
-   - Giới hạn renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)) để chống lag màn hình độ phân giải cao.
-   - Dọn dẹp geometries và materials (.dispose()) trước khi tái tạo lưới.
-
-8. ĐỊNH DẠNG ĐẦU RA:
-   - Xuất toàn bộ mã nguồn HTML hoàn chỉnh, sạch sẽ, không cắt bớt, không placeholder '... code here'.
-   - KHÔNG bọc trong lời dẫn dài dòng, xuất thẳng tệp HTML hoặc kẹp trong ```html ... ```.";
+10. CHỐNG CRASH, RESIZE LINH HOẠT & ĐỊNH DẠNG ĐẦU RA:
+   - Tự động cập nhật kích thước khung nhìn qua window.addEventListener('resize'). Giới hạn setPixelRatio <= 2. Dọn dẹp geometries/materials (.dispose()).
+   - Xuất toàn bộ mã nguồn HTML hoàn chỉnh từ <!DOCTYPE html> đến </html> trong 1 tệp duy nhất, sạch sẽ, sẵn sàng chạy ngay.";
 
         /// <summary>
         /// Tạo prompt yêu cầu AI tạo mô hình mô phỏng HTML 3D hoàn chỉnh.
@@ -483,17 +488,18 @@ Nhiệm vụ: Lập trình ra 1 TỆP HTML ĐỘC LẬP DUY NHẤT (Single-file 
             {
                 sb.AppendLine("LƯU Ý VỀ ẢNH MINH HỌA ĐÍNH KÈM:");
                 sb.AppendLine("- Hãy phân tích kỹ các yếu tố hình học trong ảnh: các điểm, cung tròn, trục quay, phương trình giới hạn và các tham số.");
-                sb.AppendLine("- Tái tạo chính xác cấu trúc hình phẳng 2D bên trái và mô hình 3D xoay/không gian tương tác bên phải.");
+                sb.AppendLine("- Tái tạo chính xác cấu trúc hình học 2D/3D tương tác bên trái và lời giải sư phạm bên phải.");
                 sb.AppendLine();
             }
 
-            sb.AppendLine("YÊU CẦU KỸ THUẬT BẮT BUỘC (CHUẨN HTML STEM SIMULATION):");
-            sb.AppendLine("1. Sử dụng Three.js (r128), Tailwind CSS, KaTeX (0.16.9 + auto-render), Canvas 2D.");
-            sb.AppendLine("2. Bố cục 2 cột: Cột trái là khung mô phỏng trực quan có slider điều khiển; Cột phải là lời giải chi tiết 3-4 bước toán học có KaTeX đẹp mắt.");
-            sb.AppendLine("3. Hỗ trợ xoay chuột 3D 360°, cuộn zoom chuột, thanh trượt quét thiết diện hoặc góc xoay theo thời gian thực.");
-            sb.AppendLine("4. Độ chính xác toán học tuyệt đối: Đúng công thức tích phân thể tích khối tròn xoay, hệ thức R^2 = r^2 + d^2 mặt cầu, hoặc định luật bảo toàn cơ năng.");
-            sb.AppendLine("5. Đồng bộ hóa sư phạm: Nhấp vào từng bước giải bên phải sẽ tự động làm nổi bật hoặc xoay góc nhìn 3D tương ứng bên trái.");
-            sb.AppendLine("6. Trả về toàn bộ mã nguồn trong 1 tệp HTML hoàn chỉnh duy nhất.");
+            sb.AppendLine("YÊU CẦU THIẾT KẾ & SƯ PHẠM BẮT BUỘC (CHUẨN HTML STEM SIMULATION):");
+            sb.AppendLine("1. VỪA KHÍT 1 MÀN HÌNH MÁY TÍNH: Thẻ body có class='h-screen flex flex-col bg-slate-100 text-slate-800 text-sm overflow-hidden select-none', TUYỆT ĐỐI KHÔNG tràn thanh cuộn body. Chỉ cuộn nội dung cục bộ trong từng panel (overflow-y-auto custom-scroll).");
+            sb.AppendLine("2. BỐ CỤC 2 CỘT HIỆN ĐẠI: Cột trái (5/12) là Stage mô phỏng Canvas/Three.js + cụm điều hướng Lùi/Tiến/Tự động + 4 Thẻ thông số vi mô; Cột phải (7/12) là Hướng dẫn từng bước với tab chuyển đổi.");
+            sb.AppendLine("3. HIỆU ỨNG KATEX HOVER ZOOM: CSS .katex:hover scale 2.0x và .katex-display:hover scale 1.8x có viền sky-400 và bóng đổ nổi bật.");
+            sb.AppendLine("4. PHƯƠNG PHÁP SƯ PHẠM GỢI MỞ: Có nút Ẩn/Hiện đáp số (toggleAreaResults) hiển thị '??? (Bấm hiện)' để kích thích HS tự tính. Accordion từng bước gồm: Câu hỏi dẫn dắt của giáo viên -> Nút xem gợi ý -> Khung kết luận & công thức.");
+            sb.AppendLine("5. BỘ ĐIỀU KHIỂN ĐA DẠNG: Nút Lùi/Tiến, Tự động chạy, Chấm tròn đố bước (dotsContainer), Chế độ trình chiếu toàn màn hình (openPresentationMode).");
+            sb.AppendLine("6. ĐỘ CHÍNH XÁC TOÁN HỌC: Đúng 100% công thức toán học/STEM, hiển thị KaTeX sắc nét.");
+            sb.AppendLine("7. Trả về toàn bộ mã nguồn trong 1 tệp HTML hoàn chỉnh duy nhất từ <!DOCTYPE html> đến </html>.");
 
             return sb.ToString().Trim();
         }
@@ -523,7 +529,7 @@ Nhiệm vụ: Lập trình ra 1 TỆP HTML ĐỘC LẬP DUY NHẤT (Single-file 
             sb.AppendLine("══════════════════════════════════════════════════════════════════════════");
             sb.AppendLine(currentHtml.Trim());
             sb.AppendLine();
-            sb.AppendLine("NGUYÊN TẮC: Giữ nguyên cấu trúc Three.js, KaTeX, Tailwind CSS và khả năng tương tác. Trả về toàn bộ tệp HTML đã sửa hoàn chỉnh.");
+            sb.AppendLine("NGUYÊN TẮC: Bảo đảm giao diện vừa khít 1 màn hình máy tính (h-screen overflow-hidden), giữ nguyên hiệu ứng KaTeX Hover Zoom, nút ẩn/hiện đáp số và tính tương tác sư phạm. Trả về toàn bộ tệp HTML đã sửa hoàn chỉnh.");
 
             return sb.ToString().Trim();
         }
@@ -534,10 +540,11 @@ Nhiệm vụ: Lập trình ra 1 TỆP HTML ĐỘC LẬP DUY NHẤT (Single-file 
         public static string GetHtmlModelOptimizePrompt(string currentHtml)
         {
             return $@"HÃY TỐI ƯU HÓA MÃ NGUỒN TỆP HTML MÔ PHỎNG 3D DƯỚI ĐÂY:
-1. Tối ưu hiệu năng Three.js: dọn dẹp geometries/materials khi rebuild, giới hạn pixelRatio <= 2.
-2. Đảm bảo KaTeX auto-render chạy mượt mà, không giật lag khi kéo slider.
-3. Làm sạch cấu trúc Tailwind CSS, đảm bảo responsive trên mọi kích thước màn hình.
-4. Trả về toàn bộ tệp HTML hoàn chỉnh đã tối ưu hóa.
+1. Đảm bảo giao diện vừa khít 1 màn hình máy tính laptop/PC (h-screen flex flex-col overflow-hidden), cuộn cục bộ trong từng cột bằng custom-scroll.
+2. Tích hợp hiệu ứng KaTeX Hover Zoom phóng to công thức cực đại (1.8x đến 2.0x) khi rê chuột.
+3. Tối ưu hiệu năng Three.js/Canvas: dọn dẹp geometries/materials khi rebuild, giới hạn pixelRatio <= 2.
+4. Giữ nguyên cấu trúc sư phạm gợi mở: nút ẩn/hiện đáp số '???', accordion 3 tầng, chế độ trình chiếu.
+5. Trả về toàn bộ tệp HTML hoàn chỉnh đã tối ưu hóa.
 
 MÃ NGUỒN HTML CẦN TỐI ƯU:
 {currentHtml.Trim()}".Trim();
