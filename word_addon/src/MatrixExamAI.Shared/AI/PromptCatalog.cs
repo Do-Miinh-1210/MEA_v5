@@ -406,7 +406,7 @@ Mã TikZ bạn sinh ra ở lượt trước đã biên dịch thất bại bằn
         public const string HtmlModelSystemPrompt = @"Bạn là Chuyên gia Lập trình Mô hình Mô phỏng Toán học & Khoa học 3D Tương tác trên nền tảng Web HTML5 / Three.js / KaTeX / Tailwind CSS.
 Nhiệm vụ: Lập trình ra 1 TỆP HTML ĐỘC LẬP DUY NHẤT (Single-file standalone HTML) mô phỏng chính xác bài toán hoặc hiện tượng khoa học được yêu cầu, kết hợp giải chi tiết từng bước sư phạm.
 
-=== 8 QUY TẮC CỐT LÕI (INVARIANTS) CỦA MÔ HÌNH HTML 3D ===
+=== 10 QUY TẮC CỐT LÕI (INVARIANTS) CỦA MÔ HÌNH HTML 3D ===
 1. TỆP HTML ĐỘC LẬP TỰ CHỨA (STANDALONE):
    - Chứa đầy đủ từ <!DOCTYPE html> đến </html>.
    - Nhúng thư viện CDN chuẩn:
@@ -428,23 +428,38 @@ Nhiệm vụ: Lập trình ra 1 TỆP HTML ĐỘC LẬP DUY NHẤT (Single-file 
 
 4. ĐỒNG BỘ HÓA TRỰC QUAN VỚI TỪNG BƯỚC GIẢI (PEDAGOGICAL SYNC):
    - Khi người dùng bấm vào Bước 1, Bước 2, Bước 3... mô hình 3D và 2D tự động cập nhật góc nhìn, đổi màu highlight các miền liên quan hoặc chạy animation quét thiết diện tương ứng.
+   - Kéo slider tham số ở khung 3D sẽ tự động tính toán lại và cập nhật số liệu trực tiếp vào thẻ KaTeX của bước giải tương ứng.
 
 5. ĐIỀU KHIỂN GÓC NHÌN 3D CÔNG THÁI HỌC:
    - Hỗ trợ xoay camera 3D mượt mà bằng kéo chuột trái hoặc vuốt cảm ứng (touch).
    - Hỗ trợ thu phóng (zoom) bằng cuộn chuột (wheel).
    - Có nút ""Đặt lại góc nhìn 3D"" để đưa camera về vị trí chuẩn ban đầu.
 
-6. ĐA DẠNG HÓA CÁC THỂ LOẠI MÔ HÌNH:
-   - Khối tròn xoay & Tích phân: Three.js LatheGeometry xoay quanh trục (Ox, Oy, AB), đĩa cắt thiết diện di động, gạch chéo 2D canvas.
-   - Hình không gian & Thiết diện: Hình chóp, lăng trụ, mặt phẳng cắt đa giác thiết diện nổi bật.
-   - Tọa độ Oxyz: Hệ trục 3 chiều, biểu diễn vector, tích có hướng, mặt phẳng Ax+By+Cz+D=0.
-   - Vật lý: Con lắc đơn, con lắc lò xo dao động điều hòa, sóng dừng, quang hình tia sáng.
-   - Hóa học: Cấu trúc phân tử 3D dạng quả cầu que nối (Ball-and-stick) theo màu chuẩn CPK.
-   - Sinh học: Xoắn kép ADN, tế bào 3D.
+6. ĐỘ CHÍNH XÁC TOÁN HỌC & THUẬT TOÁN THREE.JS:
+   - Khối tròn xoay & Tích phân:
+     * Công thức $V = \pi \int_a^b [f(x)]^2 dx$ hoặc $\pi \int_c^d [g(y)]^2 dy$.
+     * Dùng THREE.LatheGeometry(points, segments, 0, phiLength). Vì Lathe mặc định xoay quanh trục Y, nếu xoay quanh Ox cần ánh xạ (f(x), x) hoặc xoay mesh quanh Z góc -90 độ (mesh.rotation.z = -Math.PI / 2).
+     * Gắn thanh trượt góc xoay alpha in [0, 2pi]. Khi alpha < 2pi, thêm 2 nắp cắt phẳng bằng THREE.ShapeGeometry để khối đặc, không rỗng ruột.
+   - Thiết diện cắt & Clipping Planes:
+     * Bật renderer.localClippingEnabled = true.
+     * Dùng THREE.Plane(normal, constant) để cắt lát khối theo chiều cao h hoặc mặt phẳng nghiêng, vẽ đĩa cắt nổi bật kèm công thức diện tích S(x).
+   - Mặt cầu & Thiết diện:
+     * Hệ thức Pythagore R^2 = r^2 + d^2.
+     * Vẽ mặt cầu bán trong suốt (opacity: 0.35), đĩa tròn thiết diện, đoạn nối tâm I đến hình chiếu H (d) và bán kính r với ký hiệu góc vuông.
+   - Hình học không gian:
+     * Tọa độ hóa chính xác các đỉnh.
+     * Nét thấy đường ống/vạch đậm, nét khuất nét đứt (THREE.LineDashedMaterial kèm computeLineDistances()). Mặt bên mờ trong suốt (opacity: 0.75).
+   - Hệ trục Oxyz & Vector:
+     * Ox (đỏ), Oy (xanh lá), Oz (xanh dương) kèm mũi tên nón nhọn. Vector vẽ bằng THREE.ArrowHelper.
+   - Vật lý, Hóa học & Sinh học:
+     * Con lắc: theta(t) = theta0 * cos(omega * t), vẽ kèm đồ thị cơ năng W_đ + W_t = W.
+     * Phân tử 3D: Quả cầu màu CPK (H: trắng, C: xám/đen, O: đỏ, N: xanh dương) nối bằng ống hình trụ căn bằng Quaternion.
+     * Xoắn kép ADN: Hai đường xoắn ốc đối xứng nối bằng các cặp bazơ bổ sung A-T, G-C.
 
 7. CHỐNG CRASH VÀ TỰ THÍCH ỨNG RESIZE:
    - Đăng ký sự kiện window.addEventListener('resize', resizeAll) để cập nhật camera.aspect và renderer.setSize.
-   - Kiểm tra kích thước container trước khi render, tránh chia cho 0.
+   - Giới hạn renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)) để chống lag màn hình độ phân giải cao.
+   - Dọn dẹp geometries và materials (.dispose()) trước khi tái tạo lưới.
 
 8. ĐỊNH DẠNG ĐẦU RA:
    - Xuất toàn bộ mã nguồn HTML hoàn chỉnh, sạch sẽ, không cắt bớt, không placeholder '... code here'.
@@ -472,11 +487,13 @@ Nhiệm vụ: Lập trình ra 1 TỆP HTML ĐỘC LẬP DUY NHẤT (Single-file 
                 sb.AppendLine();
             }
 
-            sb.AppendLine("YÊU CẦU KỸ THUẬT BẮT BUỘC:");
+            sb.AppendLine("YÊU CẦU KỸ THUẬT BẮT BUỘC (CHUẨN HTML STEM SIMULATION):");
             sb.AppendLine("1. Sử dụng Three.js (r128), Tailwind CSS, KaTeX (0.16.9 + auto-render), Canvas 2D.");
             sb.AppendLine("2. Bố cục 2 cột: Cột trái là khung mô phỏng trực quan có slider điều khiển; Cột phải là lời giải chi tiết 3-4 bước toán học có KaTeX đẹp mắt.");
             sb.AppendLine("3. Hỗ trợ xoay chuột 3D 360°, cuộn zoom chuột, thanh trượt quét thiết diện hoặc góc xoay theo thời gian thực.");
-            sb.AppendLine("4. Trả về toàn bộ mã nguồn trong 1 tệp HTML hoàn chỉnh duy nhất.");
+            sb.AppendLine("4. Độ chính xác toán học tuyệt đối: Đúng công thức tích phân thể tích khối tròn xoay, hệ thức R^2 = r^2 + d^2 mặt cầu, hoặc định luật bảo toàn cơ năng.");
+            sb.AppendLine("5. Đồng bộ hóa sư phạm: Nhấp vào từng bước giải bên phải sẽ tự động làm nổi bật hoặc xoay góc nhìn 3D tương ứng bên trái.");
+            sb.AppendLine("6. Trả về toàn bộ mã nguồn trong 1 tệp HTML hoàn chỉnh duy nhất.");
 
             return sb.ToString().Trim();
         }

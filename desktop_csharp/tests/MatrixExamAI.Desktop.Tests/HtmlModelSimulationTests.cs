@@ -107,6 +107,8 @@ Chúc bạn thành công!";
             systemPrompt.Should().Contain("KaTeX");
             systemPrompt.Should().Contain("STANDALONE");
             systemPrompt.Should().Contain("SPLIT VIEW");
+            systemPrompt.Should().Contain("LatheGeometry");
+            systemPrompt.Should().Contain("localClippingEnabled");
         }
 
         [Fact]
