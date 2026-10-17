@@ -27,9 +27,9 @@ def get_github_token():
     return ""
 
 REPO = "Do-Miinh-1210/MEA_v5"
-TAG = "v5.3.0.7"
-TITLE = "MatrixExamAI Pro v5.3.0.7 (Fix ComboBox Text Clipping & Global Dropdown Typography)"
-BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.7: Khắc phục triệt để lỗi che chữ/cắt cụt chân chữ trên toàn bộ các ComboBox danh sách sổ xuống trong ứng dụng (ConvertView, TikzView, ExamMatrixView, QuestionBankView, ShuffleView, QuickGenDialog, SmartPromptDialog, FigureBankDialog, SourceMethodDialog); thiết lập Global ComboBox Style và đồng bộ chiều cao tối thiểu 32px chuẩn công thái học."
+TAG = "v5.3.0.8"
+TITLE = "MatrixExamAI Pro v5.3.0.8 (Dark Theme Fluent ComboBox Styling & Transparent Background)"
+BODY = "Bản phát hành MatrixExamAI Pro v5.3.0.8: Chuẩn hóa toàn diện giao diện ComboBox danh sách sổ xuống theo thiết kế Fluent Design Dark Theme; loại bỏ 100% hộp nền trắng chói Aero2; ComboBox tự động chuyển nền tối bán trong suốt (ControlFillColorDefaultBrush) đồng bộ tuyệt đối với các nút và ô nhập liệu xung quanh; màu chữ trắng rõ nét không che chữ."
 
 def build_patch_zip(publish_dir: Path, output_zip: Path):
     output_zip.parent.mkdir(parents=True, exist_ok=True)
